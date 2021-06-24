@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Departement;
 use App\Entity\PersonnelDepartement;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +21,16 @@ class PersonnelDepartementRepository extends ServiceEntityRepository
         parent::__construct($registry, PersonnelDepartement::class);
     }
 
-    // /**
-    //  * @return PersonnelDepartement[] Returns an array of PersonnelDepartement objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?PersonnelDepartement
+    public function findByDepartement(Departement $departement)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->innerJoin(User::class, 'u', 'WITH', 'u.id = p.user')
+            ->where('p.Departement = :departement')
+            ->setParameter('departement', $departement->getId())
+            ->orderBy('u.nom', 'ASC')
+            ->addOrderBy('u.prenom', 'ASC')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

@@ -38,8 +38,7 @@
                 <!-- User Menu Start -->
                 <div class="user-container d-flex">
                     <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="profile" alt="profile" src="" />
-                        <div class="name">Lisa Jackson</div>
+                        <div class="name">{{ app.user.display }}</div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end user-menu wide">
                         <div class="row mb-3 ms-0 me-0">
@@ -54,9 +53,6 @@
                                     <li>
                                         <a href="#">Preferences</a>
                                     </li>
-                                    <li>
-                                        <a href="#">Calendar</a>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -68,9 +64,6 @@
                                 <ul class="list-unstyled">
                                     <li>
                                         <a href="#">Themes</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Language</a>
                                     </li>
                                 </ul>
                             </div>
@@ -121,12 +114,6 @@
                     <li class="list-inline-item">
                         <a href="#" data-bs-toggle="modal" data-bs-target="#searchPagesModal">
                             <i data-cs-icon="search" data-cs-size="18"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#" id="pinButton" class="pin-button">
-                            <i data-cs-icon="lock-on" class="unpin" data-cs-size="18"></i>
-                            <i data-cs-icon="lock-off" class="pin" data-cs-size="18"></i>
                         </a>
                     </li>
                     <li class="list-inline-item">
@@ -186,7 +173,8 @@
                             </a>
                             <ul id="ref_competences">
                                 <li>
-                                    <a href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
+                                    <a href="{{ path('administration_apc_referentiel_index', {departement: user_data
+                                        .departement.id}) }}">
                                         <span class="label">Consulter</span>
                                     </a>
                                 </li>
@@ -261,13 +249,38 @@
                                 <span class="label">Admin.</span>
                             </a>
                             <ul id="ref_formation">
+                                {% if is_granted('ROLE_GT') %}
                                 <li>
                                     <a href="{{ path('administration_apc_referentiel_import') }}">
                                         <span class="label">Importer des référentiels</span>
                                     </a>
                                 </li>
+                                {% endif %}
+                                <li>
+                                    <a href="{{ path('administration_utilisateur_index') }}">
+                                        <span class="label">Gérer les accès</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
+                        {% if is_granted('ROLE_GT') %}
+                        <li>
+                            <a href="#ref_formation" data-href="Dashboards.html">
+                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <span class="label">B.U.T.</span>
+                            </a>
+                            <ul id="ref_formation">
+                                {% for specialite in specialites %}
+                                    {# todo: en big menu #}
+                                    <li>
+                                        <a href="{{ path('administration_apc_referentiel_import') }}">
+                                            <span class="label">{{specialite.sigle}}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
                 <!-- Menu End -->

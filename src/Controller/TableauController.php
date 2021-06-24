@@ -20,7 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class TableauController extends BaseController
 {
     #[Route('/structure', name: 'structure')]
-    public function structure(): Response {
+    public function structure(): Response
+    {
 //
 //        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
 //        $dataSemestres = $structure->setSemestres($semestres)->getDataTableau();
@@ -149,12 +150,33 @@ class TableauController extends BaseController
         ApcRessourceRepository $apcRessourceRepository,
         Semestre $semestre
     ) {
+        $saes = $apcSaeRepository->findBySemestre($semestre);
+        $ressources = $apcRessourceRepository->findBySemestre($semestre);
+        $tab = [];
+        $tab['saes'] = [];
+        $tab['ressources'] = [];
+
+        foreach ($saes as $sae) {
+            $tab['saes'][$sae->getId()] = [];
+            foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
+                $tab['saes'][$sae->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
+            }
+        }
+
+        foreach ($ressources as $ressource) {
+            $tab['ressources'][$ressource->getId()] = [];
+            foreach ($ressource->getApcRessourceApprentissageCritiques() as $ac) {
+                $tab['ressources'][$ressource->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
+            }
+        }
+
         return $this->render('tableau/_grilleSemestre.html.twig',
             [
                 'semestre' => $semestre,
                 'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
-                'saes' => $apcSaeRepository->findBySemestre($semestre),
-                'ressources' => $apcRessourceRepository->findBySemestre($semestre),
+                'saes' => $saes,
+                'ressources' => $ressources,
+                'tab' => $tab
             ]);
     }
 

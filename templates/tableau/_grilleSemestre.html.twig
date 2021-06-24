@@ -20,8 +20,9 @@
 
         {% for niveau in niveaux %}
             <tr>
-                <th rowspan="{{ niveau.apcApprentissageCritiques|length + 1 }}" class="bg_{{ niveau.competence.couleur }}">{{ niveau
-                    .competence.nomCourt }}</th>
+                <th rowspan="{{ niveau.apcApprentissageCritiques|length + 1 }}" class="bg_{{ niveau.competence.couleur }}">
+                    {{ niveau.competence.nomCourt }}
+                </th>
             </tr>
 
             {% for ac in niveau.apcApprentissageCritiques %}
@@ -29,13 +30,27 @@
                     <th class="bg_{{ niveau.competence.couleur }}">{{ ac.code }}</th>
                     <th>&nbsp;</th>
                     {% for sae in saes %}
-                        <td><input type="checkbox"/></td>
+                        <td>
+                            <input type="checkbox"
+                                   data-sae="{{ sae.id }}"
+                                   data-ac="{{ ac.id }}"
+                                   class="changeAcSae"
+                                   {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}checked{%
+                                endif %} />
+                        </td>
                     {% endfor %}
                     <td>P.</td>{# todo: obligatoire mais présent en SAE ? #}
                     <td>S.</td>{# todo: dynamique? #}
                     <th>&nbsp;</th>
                     {% for ressource in ressources %}
-                        <td><input type="checkbox"/></td>
+                        <td>
+                            <input type="checkbox"
+                                   data-ressource="{{ ressource.id }}"
+                                   data-ac="{{ ac.id }}"
+                                   class="changeAcRessource"
+                                   {% if tab.ressources[ressource.id] is defined and tab.ressources[ressource.id][ac.id] is defined %}checked{%
+                                endif %} />
+                        </td>
                     {% endfor %}
                 </tr>
             {% endfor %}
