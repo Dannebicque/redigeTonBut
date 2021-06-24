@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}User{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Civilite</th>
+                <td>{{ user.civilite }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ user.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ user.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>IsVerified</th>
+                <td>{{ user.isVerified ? 'Oui' : 'Non' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    //todo: changement de mot de passe
+
+    <a href="{{ path('administration_utilisateur_index') }}">back to list</a>
+
+    <a href="{{ path('administration_utilisateur_edit', {'id': user.id}) }}">edit</a>
+{% endblock %}

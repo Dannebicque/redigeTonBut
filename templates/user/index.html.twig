@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Gestion des utilisateurs{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.user.nom }}</td>
+                        <td>{{ user.user.prenom }}</td>
+                        <td>{{ user.user.email }}</td>
+                        <td>{{ user.user.roles ? user.user.roles|json_encode : '' }}</td>
+                        <td>
+                            <a href="{{ path('administration_utilisateur_show',
+                                {id: user.user.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info
+                                ms-1"
+                               type="button">
+                                <i class="bi-info-circle"></i>
+                                <span class="d-none d-xxl-inline-block">Voir</span>
+                            </a>
+                            <a href="{{ path('administration_utilisateur_edit',
+                                {id: user.user.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
+                                <i class="bi-pencil-square"></i>
+                                <span class="d-none d-xxl-inline-block">Modifier</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'Gestion des utilisateurs',
+        },
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('administration_utilisateur_new') }}" class="btn btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto"
+       id="dashboardTourButton">
+        <i data-cs-icon="plus"></i>
+        <span>Ajouter un utilisateur</span>
+    </a>
+{% endblock %}
