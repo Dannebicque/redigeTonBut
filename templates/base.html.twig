@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr" data-footer="true">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ block('header')|raw }} - Rédige Ton B.U.T.</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet" />
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+        <script src="{{ asset('csicons.min.js') }}"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+    <!-- Content Container Start -->
+    <div id="root">
+
+        <!-- Nav Content Start -->
+        <div id="nav" class="nav-container d-flex">
+            <div class="nav-content d-flex">
+                <!-- Logo Start -->
+                <div class="logo position-relative">
+                    <a href="/">
+                        <!-- Logo can be added directly -->
+                        <!-- <img src="img/logo/logo-white.svg" alt="logo" /> -->
+
+                        <!-- Or added via css to provide different ones for different color themes -->
+                        <div class="img"></div>
+                    </a>
+                </div>
+                <!-- Logo End -->
+
+                <!-- User Menu Start -->
+                <div class="user-container d-flex">
+                    <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="profile" alt="profile" src="" />
+                        <div class="name">Lisa Jackson</div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end user-menu wide">
+                        <div class="row mb-3 ms-0 me-0">
+                            <div class="col-12 ps-1 mb-2">
+                                <div class="text-extra-small text-primary">ACCOUNT</div>
+                            </div>
+                            <div class="col-12 ps-1 pe-1">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#">User Info</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Preferences</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Calendar</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row mb-1 ms-0 me-0">
+                            <div class="col-12 p-1 mb-2 pt-2">
+                                <div class="text-extra-small text-primary">APPLICATION</div>
+                            </div>
+                            <div class="col-12 ps-1 pe-1">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#">Themes</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Language</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row mb-1 ms-0 me-0">
+                            <div class="col-12 p-1 mb-3 pt-3">
+                                <div class="separator-light"></div>
+                            </div>
+                            <div class="col-6 ps-1 pe-1">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#">
+                                            <i data-cs-icon="help" class="me-2" data-cs-size="17"></i>
+                                            <span class="align-middle">Help</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i data-cs-icon="document-full" class="me-2" data-cs-size="17"></i>
+                                            <span class="align-middle">Docs</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-6 pe-1 ps-1">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#">
+                                            <i data-cs-icon="gear" class="me-2" data-cs-size="17"></i>
+                                            <span class="align-middle">Settings</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i>
+                                            <span class="align-middle">Logout</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- User Menu End -->
+
+                <!-- Icons Menu Start -->
+                <ul class="list-unstyled list-inline text-center menu-icons">
+                    <li class="list-inline-item">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#searchPagesModal">
+                            <i data-cs-icon="search" data-cs-size="18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" id="pinButton" class="pin-button">
+                            <i data-cs-icon="lock-on" class="unpin" data-cs-size="18"></i>
+                            <i data-cs-icon="lock-off" class="pin" data-cs-size="18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" id="colorButton">
+                            <i data-cs-icon="light-on" class="light" data-cs-size="18"></i>
+                            <i data-cs-icon="light-off" class="dark" data-cs-size="18"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" data-bs-toggle="dropdown" data-bs-target="#notifications" aria-haspopup="true" aria-expanded="false" class="notification-button">
+                            <div class="position-relative d-inline-flex">
+                                <i data-cs-icon="bell" data-cs-size="18"></i>
+                                <span class="position-absolute notification-dot rounded-xl"></span>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end wide notification-dropdown scroll-out" id="notifications">
+                            <div class="scroll">
+                                <ul class="list-unstyled border-last-none">
+                                    <li class="mb-3 pb-3 border-bottom border-separator-light d-flex">
+                                        <img src="" class="me-3 sw-4 sh-4 rounded-xl align-self-center" alt="..." />
+                                        <div class="align-self-center">
+                                            <a href="#">Joisse Kaycee just sent a new comment!</a>
+                                        </div>
+                                    </li>
+                                    <li class="mb-3 pb-3 border-bottom border-separator-light d-flex">
+                                        <img src="" class="me-3 sw-4 sh-4 rounded-xl align-self-center" alt="..." />
+                                        <div class="align-self-center">
+                                            <a href="#">New order received! It is total $147,20.</a>
+                                        </div>
+                                    </li>
+                                    <li class="mb-3 pb-3 border-bottom border-separator-light d-flex">
+                                        <img src="" class="me-3 sw-4 sh-4 rounded-xl align-self-center" alt="..." />
+                                        <div class="align-self-center">
+                                            <a href="#">3 items just added to wish list by a user!</a>
+                                        </div>
+                                    </li>
+                                    <li class="pb-3 pb-3 border-bottom border-separator-light d-flex">
+                                        <img src="" class="me-3 sw-4 sh-4 rounded-xl align-self-center" alt="..." />
+                                        <div class="align-self-center">
+                                            <a href="#">Kirby Peters just sent a new message!</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <!-- Icons Menu End -->
+
+                <!-- Menu Start -->
+                <div class="menu-container flex-grow-1">
+                    <ul id="menu" class="menu">
+                        <li>
+                            <a href="#ref_competences" data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
+                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <span class="label">Ref. Compétences</span>
+                            </a>
+                            <ul id="ref_competences">
+                                <li>
+                                    <a href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
+                                        <span class="label">Consulter</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% for annee in user_data.annees %}
+                        <li>
+                            <a href="#ref_formation" data-href="{{ path('but_annee', {annee: annee.id}) }}">
+                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <span class="label">BUT{{ annee.ordre }}</span>
+                            </a>
+                            <ul id="ref_formation">
+                                <li>
+                                    <a href="{{ path('but_annee', {annee: annee.id}) }}">
+                                        <span class="label">Consulter</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
+                                        <span class="label">Ressources</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
+                                        <span class="label">SAE</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
+                                        <span class="label">Tableau par année</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
+                                        <span class="label">Préconisations</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
+                                        <span class="label">Tableau par parcours</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endfor %}
+                        <li>
+                            <a href="#ref_formation" data-href="Dashboards.html">
+                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <span class="label">Tableaux</span>
+                            </a>
+                            <ul id="ref_formation">
+                                <li>
+                                    <a href="{{ path('tableau_structure') }}">
+                                        <span class="label">Structure des 3 années</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('tableau_croise_complet') }}">
+                                        <span class="label">Tableaux croisés des 3 années</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('tableau_preconisations_complet') }}">
+                                        <span class="label">Préconisations des 3 années</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#ref_formation" data-href="Dashboards.html">
+                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <span class="label">Admin.</span>
+                            </a>
+                            <ul id="ref_formation">
+                                <li>
+                                    <a href="{{ path('administration_apc_referentiel_import') }}">
+                                        <span class="label">Importer des référentiels</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Menu End -->
+
+                <!-- Mobile Buttons Start -->
+                <div class="mobile-buttons-container">
+                    <!-- Scrollspy Mobile Button Start -->
+                    <a href="#" id="scrollSpyButton" class="spy-button" data-bs-toggle="dropdown">
+                        <i data-cs-icon="menu-dropdown"></i>
+                    </a>
+                    <!-- Scrollspy Mobile Button End -->
+
+                    <!-- Scrollspy Mobile Dropdown Start -->
+                    <div class="dropdown-menu dropdown-menu-end" id="scrollSpyDropdown"></div>
+                    <!-- Scrollspy Mobile Dropdown End -->
+
+                    <!-- Menu Button Start -->
+                    <a href="#" id="mobileMenuButton" class="menu-button">
+                        <i data-cs-icon="menu"></i>
+                    </a>
+                    <!-- Menu Button End -->
+                </div>
+                <!-- Mobile Buttons End -->
+            </div>
+            <div class="nav-shadow"></div>
+        </div>
+        <!-- Nav Content End -->
+
+        <!-- Main Content Start -->
+        <main>
+            <div class="container">
+                <!-- Title and Top Buttons Start -->
+                <div class="page-title-container">
+                    <div class="row">
+                        <!-- Title Start -->
+                        <div class="col-12 col-sm-6">
+                            <h1 class="mb-0 pb-0 display-4" id="title">{% block header %}{% endblock %}</h1>
+                            <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
+                                {% block breadcrumb %}
+
+                                {% endblock %}
+
+                            </nav>
+                        </div>
+                        <!-- Title End -->
+
+                        <!-- Top Buttons Start -->
+                        <div class="col-12 col-sm-6 d-flex align-items-start justify-content-end">
+                            <!-- Tour Button Start -->
+                            {% block bouton_header %}
+{#                            <button type="button" class="btn btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto" id="dashboardTourButton">#}
+{#                                <span>Take a Tour</span>#}
+{#                                <i data-cs-icon="flag"></i>#}
+{#                            </button>#}
+                            {% endblock %}
+                            <!-- Tour Button End -->
+                        </div>
+                        <!-- Top Buttons End -->
+                    </div>
+                </div>
+                <!-- Title and Top Buttons End -->
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </main>
+        <!-- Main Content End -->
+
+        <!-- Footer Content Start -->
+        <footer>
+            <div class="footer-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+
+                            <ul class="breadcrumb pt-0 pe-0 mb-0">
+                                <li class="breadcrumb-item mb-0 text-medium">
+                                    <p class="mb-0 text-muted text-medium">&copy; 2021 David Annebicque </p>
+                                </li>
+                                <li class="breadcrumb-item mb-0 text-medium">
+                                    <a href="#" class="btn-link">Docs</a>
+                                </li>
+                                <li class="breadcrumb-item mb-0 text-medium">
+                                    <a href="#" class="btn-link">Usage des données</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6 d-none d-sm-block">
+                            <ul class="breadcrumb pt-0 pe-0 mb-0 float-end">
+                                <li class="breadcrumb-item mb-0 text-medium">
+                                    <a href="" target="_blank" class="btn-link"><i class="text-primary icon-14
+                                    bi-envelope"></i></a>
+                                </li>
+                                <li class="breadcrumb-item mb-0 text-medium">
+                                    <a href="" target="_blank" class="btn-link"><i class="text-primary icon-14
+                                    bi-github"></i></a>
+                                </li>
+                                <li class="breadcrumb-item mb-0 text-medium">
+                                    <a href="" target="_blank" class="btn-link">
+                                        <i class="text-primary icon-14  bi-twitter"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Footer Content End -->
+
+    </div>
+    <!-- Content Container End -->
+
+    </body>
+</html>

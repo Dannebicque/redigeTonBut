@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    {{ 'adm.referentiel.de.competence.heading'|trans({ '%departement%': departement.libelle}) }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'aide'|trans,
+        }
+    ]}) }}
+{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" data-bs-toggle="tab" href="#complet" role="tab" aria-selected="true">Référentiel
+                                                                                                            de
+                                                                                                            compétences
+                                                                                                            complet</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#parcours" role="tab" aria-selected="false">Référentiel par
+                                                                                                       parcours</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#annee" role="tab" aria-selected="false">Référentiel par
+                                                                                                    année</a>
+        </li>
+        <!-- An empty list to put overflowed links -->
+        {# <li class="nav-item dropdown ms-auto pe-0 d-none responsive-tab-dropdown"> #}
+        {# <a #}
+        {# class="btn btn-icon btn-icon-only btn-background pt-0 bg-transparent pe-0" #}
+        {# href="#" #}
+        {# data-bs-toggle="dropdown" #}
+        {# aria-haspopup="true" #}
+        {# aria-expanded="false" #}
+        {# > #}
+        {# <i data-cs-icon="more-horizontal"></i> #}
+        {# </a> #}
+        {# <ul class="dropdown-menu mt-2 dropdown-menu-end"></ul> #}
+        {# </li> #}
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="complet" role="tabpanel">
+            <div class="card">
+                <header class="card-header">
+                    <h4 class="card-title">Référentiel de compétences de la spécialité {{ departement.sigle }}</h4>
+                    <div class="card-header-actions" style="">
+                <span>
+                    <a href="{{ path('administration_apc_niveau_annee_synchro', {departement:departement.id}) }}"
+                       class="btn
+                    btn-sm btn btn-info"
+                       data-provide="tooltip"
+                       data-placement="bottom" title="Synchroniser les niveaux et les années"><i
+                                class="fas fa-sync"></i></a>
+                    <a href="{{ path('administration_apc_competence_new', {departement:departement.id}) }}" class="btn
+                    btn-sm btn btn-info"
+                       data-provide="tooltip"
+                       data-placement="bottom" title="Ajouter une compétences"><i
+                                class="fas fa-plus"></i></a>
+                </span>
+                    </div>
+                </header>
+                <div class="card-body">
+                    <ul class="nav nav-pills responsive-tabs nav-justified" role="tablist">
+                        {% for competence in competences %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link {% if loop.first %}active{% endif %}"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#competence_{{ competence.id }}"
+                                        role="tab" aria-selected="false" type="button">{{ competence.nomCourt }}</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="tab-content">
+                        {% for competence in competences %}
+                            <div class="tab-pane {% if loop.first %}fade active show{% endif %}" id="competence_{{ competence.id }}">
+                                {{ include('competences/_competence.html.twig') }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="parcours" role="tabpanel">
+            <div class="card">
+                <header class="card-header">
+                    <h4 class="card-title">{{ 'adm.apc.parcours.heading'|trans({ '%departement%': departement.libelle}) }}</h4>
+                    <div class="card-header-actions" style="">
+                <span>
+                    <a href="{{ path('administration_apc_parcours_new', {departement:departement.id}) }}" class="btn
+                    btn-sm btn btn-info"
+                       data-provide="tooltip"
+                       data-placement="bottom" title="Ajouter un parcours"><i
+                                class="fas fa-plus"></i></a>
+                </span>
+                    </div>
+                </header>
+
+                {# <nav class="nav nav-pills nav-justified"> #}
+                {# <a class="nav-item nav-link active" href="#">Active</a> #}
+                {# <a class="nav-item nav-link" href="#">Much longer nav link</a> #}
+                {# <a class="nav-item nav-link" href="#">Link</a> #}
+                {# <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> #}
+                {# </nav> #}
+
+                <div class="card-body">
+                    <ul class="nav nav-pills responsive-tabs nav-justified" role="tablist">
+                        {% for parcour in parcours %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#parcour_{{ parcour.id }}" role="tab" aria-selected="false" type="button">{{ parcour.libelle }}</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="tab-content">
+                        {% for parcour in parcours %}
+                            <div class="tab-pane {% if loop.first %}fade active show{% endif %}" id="parcour_{{ parcour.id }}">
+                                {{ include('competences/_parcour.html.twig', {parcour: parcour}) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane " id="annee" role="tabpanel">
+            <div class="card">
+                <header class="card-header">
+                    <h4 class="card-title">{{ 'adm.apc.annee.heading'|trans({ '%departement%': departement.libelle}) }}</h4>
+                    <div class="card-header-actions">
+                <span>
+                    <a href="{{ path('administration_apc_parcours_new', {departement:departement.id}) }}" class="btn
+                    btn-sm btn btn-info"
+                       data-provide="tooltip"
+                       data-placement="bottom" title="Ajouter un compétences"><i
+                                class="fas fa-plus"></i></a>
+                </span>
+                    </div>
+                </header>
+
+                <div class="card-body">
+                    <ul class="nav nav-pills responsive-tabs nav-justified" role="tablist">
+                        {% for annee in 1..3 %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#annee_{{ annee }}" role="tab" aria-selected="false" type="button">Année {{ annee }}</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="tab-content">
+                        {% for annee in 1..3 %}
+                            <div class="tab-pane {% if loop.first %}fade active show{% endif %}" id="annee_{{ annee }}">
+                                {{ include('competences/_annee.html.twig', {annee:annee}) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+

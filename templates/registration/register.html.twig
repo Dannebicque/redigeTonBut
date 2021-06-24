@@ -1,0 +1,22 @@
+{% extends 'base-speciale.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <div class="mb-5">
+        <h2 class="cta-1 mb-0 text-primary">Demander un accès</h2>
+    </div>
+
+    {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Mot de passe'
+        }) }}
+
+    <button class="btn btn-lg btn-primary" type="submit">Valider votre demande</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}

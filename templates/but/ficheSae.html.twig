@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}{{ apc_sae.display }} Fiche SAÉ{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {{ include('formation/apc_sae/_detail.html.twig') }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'B.U.T. ' ~apc_sae.semestre.annee.ordre,
+        },
+        {
+            href:'',
+            title: 'Les SAÉ',
+        },
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-warning
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+       id="dashboardTourButton">
+        <i class="bi-pencil-square"></i>
+        <span>Modifier</span>
+    </a>
+    <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-danger
+    btn-icon btn-icon-end
+    w-100 w-sm-auto"
+       id="dashboardTourButton">
+        <i class="bi-trash"></i>
+        <span>Supprimer</span>
+    </a>
+{% endblock %}

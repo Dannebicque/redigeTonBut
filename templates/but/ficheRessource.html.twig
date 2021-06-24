@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}{{ apc_ressource.display }} - Fiche ressource {% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {{ include('formation/apc_ressource/_detail.html.twig') }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'B.U.T. ' ~apc_ressource.semestre.annee.ordre,
+        },
+        {
+            href:'',
+            title: 'Les ressoruces',
+        },
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('formation_apc_ressource_edit', {id:apc_ressource.id}) }}" class="btn btn-outline-warning
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+       id="dashboardTourButton">
+        <i class="bi-pencil-square"></i>
+        <span>Modifier</span>
+    </a>
+    <a href="{{ path('formation_apc_ressource_edit', {id:apc_ressource.id}) }}" class="btn btn-outline-danger
+    btn-icon btn-icon-end
+    w-100 w-sm-auto"
+       id="dashboardTourButton">
+        <i class="bi-trash"></i>
+        <span>Supprimer</span>
+    </a>
+{% endblock %}

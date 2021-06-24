@@ -1,0 +1,87 @@
+<table class="table {% if apc_saes|length>0 %}table-striped{% endif%} table-bordered" data-provide="datatables">
+    <thead>
+    <tr>
+        <th>{{ 'table.code_sae'|trans }}</th>
+        <th>{{ 'table.code_element'|trans }}</th>
+        <th>{{ 'table.libelle'|trans }}</th>
+        <th>{{ 'table.semestre'|trans }}</th>
+        <th>Compétences</th>
+        <th>Heures CM</th>
+        <th>Heures TD</th>
+        <th>Heures TP</th>
+        <th>Heures Projet</th>
+        <th>{{ 'table.actions'|trans }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for apc_sae in apc_saes %}
+        <tr id="ligne_{{ apc_sae.id }}">
+            <td>{{ apc_sae.codeMatiere }}</td>
+            <td>{{ apc_sae.codeElement }}</td>
+            <td>{{ apc_sae.libelle }}</td>
+            <td>{{ apc_sae.semestre != null ? apc_sae.semestre.libelle : 'non.defini'|trans }}</td>
+            <td>
+                {% for competence in apc_sae.apcSaeCompetences %}
+                    <span class="badge badge-{{ competence.competence.couleur }}">
+                        {{ competence.competence.nomCourt }}
+                    </span>
+                {% endfor %}</td>
+            <td>
+                <a class="myedit"
+                   data-field="CmPpn"
+                   href="{{ path('administration_apc_sae_ajax_edit', {id:apc_sae.id}) }}"
+                   data-title="Corriger le volume horaire">
+                    {{ apc_sae.cmPpn }}</a> |
+                <a class="myedit"
+                   data-field="CmFormation"
+                   href="{{ path('administration_apc_sae_ajax_edit', {id:apc_sae.id}) }}"
+                   data-title="Corriger le volume horaire">
+                    {{ apc_sae.cmFormation }}</a>
+            </td>
+            <td>
+                <a class="myedit"
+                   data-field="TdPpn"
+                   href="{{ path('administration_apc_sae_ajax_edit', {id:apc_sae.id}) }}"
+                   data-title="Corriger le volume horaire">
+                    {{ apc_sae.tdPpn }}</a> |
+                <a class="myedit"
+                   data-field="TdFormation"
+                   href="{{ path('administration_apc_sae_ajax_edit', {id:apc_sae.id}) }}"
+                   data-title="Corriger le volume horaire">
+                    {{ apc_sae.tdFormation }}</a>
+            </td>
+            <td>
+                <a class="myedit"
+                   data-field="TpPpn"
+                   href="{{ path('administration_apc_sae_ajax_edit', {id:apc_sae.id}) }}"
+                   data-title="Corriger le volume horaire">
+                    {{ apc_sae.tpPpn }}</a> |
+                <a class="myedit"
+                   data-field="TpFormation"
+                   href="{{ path('administration_apc_sae_ajax_edit', {id:apc_sae.id}) }}"
+                   data-title="Corriger le volume horaire">
+                    {{ apc_sae.tpFormation }}</a>
+            </td>
+            <td>
+                <a class="myedit"
+                   data-field="ProjetPpn"
+                   href="{{ path('administration_apc_sae_ajax_edit', {id:apc_sae.id}) }}"
+                   data-title="Corriger le volume horaire">
+                    {{ apc_sae.projetPpn }}</a> |
+                <a class="myedit"
+                   data-field="ProjetFormation"
+                   href="{{ path('administration_apc_sae_ajax_edit', {id:apc_sae.id}) }}"
+                   data-title="Corriger le volume horaire">
+                    {{ apc_sae.projetFormation }}</a>
+            </td>
+            <td>
+                {{ include('composants/adm-buttons-table-index.html.twig', {elt: 'apc_sae', id: apc_sae.id}) }}
+            </td>
+        </tr>
+    {% else %}
+        <tr class="bg-pale-warning">
+            <td colspan="10">{{ 'no.record.found'|trans }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

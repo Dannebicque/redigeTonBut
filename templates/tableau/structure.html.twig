@@ -1,0 +1,409 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered table-sm">
+                <thead>
+                <tr>
+                    <th class="w-20">Semestres</th>
+                    {% for i in 1..6 %}
+                        <th class="w-10 text-center">S{{ i }}</th>
+                    {% endfor %}
+                    <th class="text-center">TOTAL</th>
+                    <th class="text-center">VALEURS<br> CIBLES</th>
+                    <th class="text-center">ECARTS</th>
+                </tr>
+                </thead>
+                <tbody x-data="update" x-init="donnees = await (await fetch(Routing.generate('tableau_api_structure')))
+                .json()">
+                <tr>
+                    <th>Nbre d'heures d'enseignement (ressources + SAé)</th>
+                    {% for i in 1..6 %}
+                        <td><input type="text" class="heures form-control"
+                                   data-field="nbHeuresRessourcesSae"
+                                   data-semestre="{{ i }}"
+                                   x-model.number="donnees[{{ i }}].nbHeuresRessourcesSae"
+                                   @keyup="update"
+                            /></td>
+                    {% endfor %}
+                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresRessourcesSae, {{ constant
+                        ('NB_HEURES_TOTAL', user_data.caracteristiques) }})">
+                    </td>
+                    <td class="text-center fw-bold">{{ constant('NB_HEURES_TOTAL', user_data.caracteristiques) }}</td>
+                    <td class="text-center">{{ (constant('NB_HEURES_TOTAL', user_data.caracteristiques) - semestres
+                        .dataDepartement.nbHeuresRessourcesSae)|badgeEgalite(0) }}</td>
+
+                </tr>
+                <tr>
+                    <th>Dont % d'adaptation locale<br>
+                        <p class="text-small">max 667 h (secondaire) 600h (tertaire) sur 3 ans<br>
+                                              max 40% du volume d'enseignement</p></th>
+                    {% for i in 1..6 %}
+                        <td>
+                            <div class="input-group mb-3">
+                                <input type="text" class="adaptationLocale form-control"
+                                       x-model.number="donnees[{{ i }}].pourcentageAdaptationLocale"
+                                       @keyup="update"
+                                       data-field="pourcentageAdaptationLocale"
+                                       data-semestre="{{ i }}"
+
+                                />
+                                <span class="input-group-text" id="pourcentage{{ i }}">%</span>
+                            </div>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center" x-html="badgeSeuil(donnees.departement.moyenneAdaptationLocale, {{ constant
+                        ('POURCENTAGE_ADAPTATION', user_data.caracteristiques) }})">
+                    </td>
+                    <td class="text-center">
+                        {{ constant('POURCENTAGE_ADAPTATION', user_data.caracteristiques) }} %
+                    </td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <th>Nbre d'heures d'adaptation locale</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center">
+                            <span x-text="donnees[{{ i }}].nbHeuresAdaptationLocale"></span>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresAdaptationLocale, {{ user_data.caracteristiques.heuresAdaptationLocale }})">
+                    </td>
+                    <td class="text-center fw-bold">
+                        {{ user_data.caracteristiques.heuresAdaptationLocale }}
+                    </td>
+                    <td class="text-center">
+                        {{ (user_data.caracteristiques.heuresAdaptationLocale - semestres.dataDepartement
+                        .nbHeuresAdaptationLocale)|badgeEgalite(0) }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Nbre Heures SAE</th>
+                    {% for i in 1..6 %}
+                        <td>
+                        <input type="text" class="heures form-control"
+                               x-model.number="donnees[{{ i }}].nbHeuresSae"
+                               @keyup="update"
+                               data-field="nbHeuresSae"
+                               data-semestre="{{ i }}"
+                        />
+
+                        </td>{# a lier avec les autres tableaux #}
+                    {% endfor %}
+                    <td class="text-center">
+                        <span x-text="donnees.departement.nbHeuresSae"></span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Nbres Heures Ressources</th>
+                    {% for i in 1..6 %}
+                        <td>
+                        <input type="text" class="heures form-control"
+                               x-model.number="donnees[{{ i }}].nbHeuresRessources"
+                               @keyup="update"
+                               data-field="nbHeuresRessources"
+                               data-semestre="{{ i }}"
+                        />
+                        </td>{# a lier avec les autres tableaux #}
+                    {% endfor %}
+                    <td class="text-center">
+                        <span x-text="donnees.departement.nbHeuresRessources"></span>
+</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="10"></td>
+                </tr>
+                <tr>
+                    <th>Nbre de semaines</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center">
+                            <span x-text="donnees[{{ i }}].nbSemaines"></span>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center">
+                        <span x-text="donnees.departement.nbSemaines"></span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Nbre de semaines de congés</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center">
+                            <span x-text="donnees[{{ i }}].nbSemainesConges"></span>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center">
+                        <span x-text="donnees.departement.nbSemainesConges"></span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th rowspan="2">Nbre de semaines de stage (SAé)<br>
+                        <p class="text-small"> 8 à 12 semaines BUT 1&2<br>
+                                               12 à 16 semaines BUT 3</p>
+                    </th>
+                    {% for i in 1..6 %}
+                        <td>
+                            <div class="form-floating mb-3">
+                                <input type="text"
+                                       class="stage form-control"
+                                       id="nbSemainesStageMin_{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbSemainesStageMin"
+                                       @keyup="update"
+                                       data-field="nbSemainesStageMin"
+                                       data-semestre="{{ i }}"
+                                       placeholder="Minimum">
+                                <label for="nbSemainesStageMin_{{ i }}">Minimum</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text"
+                                       class="stage form-control"
+                                       id="nbSemainesStageMax_{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbSemainesStageMax"
+                                       @keyup="update"
+                                       data-field="nbSemainesStageMax"
+                                       data-semestre="{{ i }}"
+                                       placeholder="Maximum">
+                                <label for="nbSemainesStageMax_{{ i }}">Maximum</label>
+                            </div>
+                        </td>
+                    {% endfor %}
+                    <td rowspan="2" class="text-center">
+                        <span x-text="donnees.departement.nbSemainesStageMin"></span> - <span
+                                x-text="donnees.departement.nbSemainesStageMax"></span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>Nbre de semaines d'enseignement + projet</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center">
+                            <span x-text="donnees[{{ i }}].nbSemainesCoursProjet"></span>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center">
+                        <span x-text="donnees.departement.nbSemainesCoursProjet"></span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th colspan="10"></th>
+                </tr>
+                <tr>
+                    <th>Nbre d'heures de projet (SAé)</th>
+                    {% for i in 1..6 %}
+                        <td>
+                            <input type="text" class="heuresProjet form-control"
+                                   x-model.number="donnees[{{ i }}].nbHeuresProjet"
+                                   @keyup="update"
+                                   data-field="nbHeuresProjet"
+                                   data-semestre="{{ i }}"
+                            />
+                        </td>
+                    {% endfor %}
+                    <td class="text-center"  x-html="badgeSeuil(donnees.departement.nbHeuresProjet, {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }})">
+                    </td>
+                    <td class="text-center fw-bold">
+                        {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }}
+                    </td>
+                    <td class="text-center">
+                        {{ (constant('NB_HEURES_PROJET', user_data.caracteristiques) - semestres
+                        .dataDepartement.nbHeuresProjet)|badgeEgalite(0) }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Nbre d"heures de projet/année min 150 h / max 250h</th>
+                    {% for i in range(1, 6, 2) %}
+                        <td class="text-center" colspan="2">
+                            <span x-text="donnees[{{ i }}].nbHeuresProjet + donnees[{{ i+1 }}].nbHeuresProjet"></span>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center">
+                        <span x-text="donnees.departement.nbHeuresProjet"></span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Nbre d'heures d'enseignement + projet</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center">
+                            <span x-text="donnees[{{ i }}].nbHeuresCoursProjet"></span>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresCoursProjet, {{ user_data
+                    .caracteristiques.totalHeuresAvecProjet }})">
+                       </td>
+                    <td class="text-center fw-bold">{{ user_data.caracteristiques.totalHeuresAvecProjet }}</td>
+                    <td class="text-center">{{ (semestres.dataDepartement.nbHeuresCoursProjet - user_data
+                        .caracteristiques.totalHeuresAvecProjet)|badgeEgalite(0) }}</td>
+                </tr>
+                <tr>
+                    <th>Nbre d'heures d'enseignement /année</th>
+                    {% for i in range(1, 6, 2) %}
+                        <td class="text-center" colspan="2">
+                            <span x-text="donnees[{{ i }}].nbHeuresRessourcesSae + donnees[{{ i+1 }}]
+                            .nbHeuresRessourcesSae"></span>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center">
+                        <span x-text="donnees.departement.nbHeuresRessourcesSae "></span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Nbre d'heures d'enseignement + projet/année</th>
+                    {% for i in 1..3 %}
+                        <td class="text-center" colspan="2">
+                            <span x-text="donnees[{{ i }}].nbHeuresCoursProjet + donnees[{{ i+1 }}]
+                            .nbHeuresCoursProjet"></span>
+                        </td>
+                    {% endfor %}
+                    <td class="text-center">
+                        <span x-text="donnees.departement.nbHeuresCoursProjet "></span>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th colspan="10"></th>
+                </tr>
+                <tr>
+                    <th>Demies journées</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center">
+                            <span x-text="donnees[{{ i }}].nbDemiJournees"></span>
+                        </td>
+                    {% endfor %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Durée hedomadaire</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center" x-html="badgeSeuil(donnees[{{ i }}].dureeHebdo, {{ constant
+                            ('NB_MAX_HEURE_SEMAINE', user_data.caracteristiques) }})">
+                        </td>
+                    {% endfor %}
+                    <td></td>
+                    <td class="text-center fw-bold">{{ constant('NB_MAX_HEURE_SEMAINE', user_data.caracteristiques) }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Durée moyenne d'une 1/2 journée</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center" x-html="badgeSeuil(donnees[{{ i }}].nbMoyenneHeuresDemiJournee, {{ constant
+                            ('NB_MAX_HEURE_DEMI_JOURNEE', user_data.caracteristiques) }})">
+
+                        </td>
+                    {% endfor %}
+                    <td></td>
+                    <td class="text-center fw-bold">{{ constant('NB_MAX_HEURE_DEMI_JOURNEE', user_data.caracteristiques) }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Nbre d'heures hebdomadaire d'enseignement</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center">
+                            <span x-text="numberFormat(donnees[{{ i }}].nbHeuresCoursHebdo)"></span>
+                        </td>
+                    {% endfor %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Nbre d'heures hebdomadaire de projet</th>
+                    {% for i in 1..6 %}
+                        <td class="text-center">
+                            <span x-text="numberFormat(donnees[{{ i }}].nbHeuresHebdoProjet)"></span>
+                        </td>
+                    {% endfor %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {# todo: permettre export Excel.. un modèle à compléter ?. #}
+{% endblock %}
+
+{% block header %}
+    Tableau d'organisation globale du B.U.T. ...
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'Tableau d\'organisation globale',
+        }
+    ]}) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      document.addEventListener('alpine:init', () => {
+        Alpine.data('update', () => ({
+          pourcent: 0,
+          donnees: {
+            1: {},
+            2: {},
+            3: {},
+            4: {},
+            5: {},
+            6: {},
+            departement: {}
+          },
+          update (e) {
+            fetch(Routing.generate('tableau_api_structure_update'), {
+              method: 'POST',
+              body: JSON.stringify({
+                semestre: e.target.dataset.semestre,
+                champ: e.target.dataset.field,
+                valeur: e.target.value
+              })
+            }).then(async r => {
+              this.donnees = await fetch(Routing.generate('tableau_api_structure')).then(r => {
+                return r.json()
+              })
+            })
+
+          },
+          numberFormat (valeur) {
+            if (typeof valeur !== 'undefined') {
+              return valeur.toFixed(2)
+            }
+          },
+          badgeSeuil (valeur, seuil) {
+            if (valeur > seuil) {
+              return '<span class="badge bg-danger text-uppercase">' + this.numberFormat(valeur) + '</span>'
+            }
+
+            return '<span class="badge bg-success text-uppercase">' + this.numberFormat(valeur) + '</span>'
+          }
+        }))
+      })
+    </script>
+{% endblock %}
+

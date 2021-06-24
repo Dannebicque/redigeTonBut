@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {#  todo: bouton : modifier, supprimer, dupliquer par fiche. Bouton export ? #}
+
+    <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
+        {% for semestre in annee.semestres %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" href="#semestre_{{ semestre.id }}" role="tab"
+                   aria-selected="true">{{ semestre.libelle }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content">
+        {% for semestre in annee.semestres %}
+            <div class="tab-pane {% if loop.first %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
+                <div class="row g-4 mb-4">
+                {% for ressource in ressources[semestre.id] %}
+                    {{ include('but/_cardRessource.html.twig') }}
+                {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block header %}
+Ressources du B.U.T. {{ annee.ordre }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'B.U.T. ' ~annee.ordre,
+        },
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+<a href="{{ path('formation_apc_ressource_new') }}" class="btn btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto"
+   id="dashboardTourButton">
+    <i data-cs-icon="plus"></i>
+    <span>Ajouter une ressource</span>
+</a>
+{% endblock %}

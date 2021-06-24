@@ -1,0 +1,64 @@
+<div class="col-md-4 col-sm-12">
+    <div class="card">
+
+        <div class="card-body">
+            <h4 class="card-title">{{ sae.display }}
+                <span class="badge badge-primary">{{ sae
+                    .semestre.libelle }}</span></h4>
+            <p>{{ sae.description|markdown_to_html }}</p>
+            <p>
+                {% for competence in sae.apcSaeCompetences %}
+                    <span class="badge badge-{{ competence.competence.couleur }}">
+                        {{ competence.competence.nomCourt }}</span>
+                {% endfor %}
+            </p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>CM/TD</th>
+                    <th>TP</th>
+                    <th>Projet</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ sae.cmPpn + sae.tdPpn }} heure(s)</td>
+                    <td>{{ sae.tpPpn }} heure(s)</td>
+                    <td>{{ sae.projetPpn }} heure(s)</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="col-12 d-flex align-items-center justify-content-md-end mb-2">
+                <a href="{{ path('but_fiche_sae',
+                    {'apcSae': sae.id, }) }}"
+                   class="btn btn-block btn-sm btn-icon btn-icon-start btn-outline-primary ms-1"
+                   target="_blank"
+                >
+                    <i class="bi-info-circle"></i>
+                    <span class="d-none d-xxl-inline-block">Voir la fiche SAÉ</span>
+                </a>
+            </div>
+            <div class="col-12 d-flex align-items-center justify-content-md-end">
+                <a href="{{ path('formation_apc_sae_duplicate',
+                    {'id': sae.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info ms-1"
+                   type="button">
+                    <i class="bi-files"></i>
+                    <span class="d-none d-xxl-inline-block">Dupliquer</span>
+                </a>
+                <a href="{{ path('formation_apc_sae_edit',
+                    {'id': sae.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
+                    <i class="bi-pencil-square"></i>
+                    <span class="d-none d-xxl-inline-block">Modifier</span>
+                </a>
+                <a href="{{ path('formation_apc_sae_delete',
+                    {'id': sae.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-danger ms-1"
+                   type="button">
+                    <i class="bi-trash"></i>
+                    <span class="d-none d-xxl-inline-block">Supprimer</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

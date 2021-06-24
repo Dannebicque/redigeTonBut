@@ -1,0 +1,74 @@
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <th style="width: 25%">Nom de la SAÉ</th>
+        <td>{{ apc_sae.libelle }}</td>
+        <th style="width: 25%">Code de la SAÉ</th>
+        <td>{{ apc_sae.codeMatiere }}</td>
+    </tr>
+
+    <tr>
+        <th>Description des objectifs de la SAÉ et de la problèmatique professionnelle associée</th>
+        <td colspan="3">{{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}</td>
+    </tr>
+    <tr>
+        <th>Compétence(s) ciblée(s)</th>
+        <td colspan="3">
+            {% for competence in apc_sae.apcSaeCompetences %}
+                <span class="badge badge-lg badge-{{ competence.competence.couleur }}"
+                      data-provide="tooltip"
+                      title="{{ competence.competence.libelle }}">
+                    {{ competence.competence.nomCourt }}
+                </span>
+            {% endfor %}
+        </td>
+    </tr>
+
+    <tr>
+        <th>Apprentissage(s) critique(s) courvert(s)</th>
+        <td colspan="3">
+
+            {% for ac in apc_sae.apcSaeApprentissageCritiques %}
+                <span class="badge badge-{{ ac.apprentissageCritique.competence.couleur }}"
+                      data-provide="tooltip"
+                      title="{{ ac.apprentissageCritique.libelle }}">
+                    {{ ac.apprentissageCritique.code }}
+                </span>
+            {% endfor %}
+        </td>
+    </tr>
+
+    <tr>
+        <th rowspan="2" style="width:25%">Heures Programme National</th>
+        <th class="text-center" style="width:25%">CM/TD</th>
+        <th class="text-center" style="width:25%">TP</th>
+        <th class="text-center" style="width:25%">Projet Tutoré</th>
+    </tr>
+    <tr>
+        <td class="text-center">{{ apc_sae.cmPpn + apc_sae.tdPpn }} heure(s)</td>
+        <td class="text-center">{{ apc_sae.tpPpn }} heure(s)</td>
+        <td class="text-center">{{ apc_sae.projetPpn }} heure(s)</td>
+    </tr>
+
+    <tr>
+        <th>Liste des ressources mobilisées et combinées</th>
+        <td colspan="3">
+            {% for ressource in apc_sae.apcSaeRessources %}
+                <span class="badge badge-primary"
+                      data-provide="tooltip"
+                      title="{{ ressource.ressource.libelle }}">
+                    {{ ressource.ressource.display }}
+                    </span>
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Type de livrable ou de production</th>
+        <td colspan="3">{{ apc_sae.livrables != null ? apc_sae.livrables|markdown_to_html : '' }}</td>
+    </tr>
+    <tr>
+        <th>Exemples</th>
+        <td colspan="3">{{ apc_sae.exemples != null ? apc_sae.exemples|markdown_to_html : '' }}</td>
+    </tr>
+    </tbody>
+</table>

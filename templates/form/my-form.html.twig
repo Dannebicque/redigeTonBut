@@ -1,0 +1,33 @@
+{% use "bootstrap_5_layout.html.twig" %}
+
+{% block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        <div class="row">
+            {%- for child in form %}
+                <div class="col-sm-12 col-md-3">
+                    {{- form_widget(child, {
+                        parent_label_class: label_attr.class|default(''),
+                        translation_domain: choice_translation_domain,
+                        valid: valid,
+                    }) -}}
+                </div>
+            {% endfor -%}
+        </div>
+    </div>
+{%- endblock choice_widget_expanded %}
+
+{% block collection_widget %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype)}) %}
+        {% set attr = attr|merge({'data-prototype-name': prototype.vars.name}) %}
+    {% endif %}
+    {% set attr = attr|merge({'data-allow-add': allow_add ? 1 : 0}) %}
+    {% set attr = attr|merge({'data-allow-remove': allow_delete ? 1 : 0 }) %}
+    {% set attr = attr|merge({'data-name-prefix': full_name}) %}
+    {{ block('form_widget') }}
+{% endblock collection_widget %}
+
+{%- block form_widget_compound -%}
+    {{ parent() }}
+    <div class="invalid-feedback"></div>
+{%- endblock form_widget_compound -%}

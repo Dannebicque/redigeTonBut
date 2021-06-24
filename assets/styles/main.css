@@ -1,0 +1,5 @@
+.table thead th {
+    background-color: var(--background-navcolor-dark);
+    color: var(--light-text);
+
+}

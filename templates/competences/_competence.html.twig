@@ -1,0 +1,114 @@
+<div class="d-flex align-items-stretch mt-3">
+    <div class="col-3 competence ">
+        <div class="p-3 comp competence{{ competence.couleur }}">
+            {{ competence.nomCourt }}
+        </div>
+    </div>
+    <div class="col-3 competencelongue  ms-3">
+        <div class="p-3 competencelongue{{ competence.couleur }}">
+            {{ competence.libelle }}
+        </div>
+    </div>
+    <div class="col-6 composantesessentielles{{ competence.couleur }}">
+        <ul>
+            {% for composante in competence.apcComposanteEssentielles %}
+                <li>{{ composante.libelle }}
+                    {% if is_granted('ROLE_PERMANENT') %}
+                        <a href="{{ path('administration_apc_composante_essentielle_edit',
+                            {id:composante.id}) }}">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            {% if is_granted('ROLE_PERMANENT') %}
+                <li>
+                    <a href="{{ path('administration_apc_composante_essentielle_new', {competence:competence.id}) }}"><i class="fas fa-plus-circle"></i>
+                        Ajouter une composante essentielle</a></li>
+            {% endif %}
+        </ul>
+
+    </div>
+</div>
+
+{# Situtations professionnelles #}
+<div class="d-flex align-items-stretch mt-3">
+    <div class="col-3">
+        <div class="p-3 situationpro situation{{ competence.couleur }}">Situations professionnelles</div>
+    </div>
+    <div class="col-9 ms-3 situationliste">
+        <div class="p-3 situationliste{{ competence.couleur }}">
+            {% for situation in competence.apcSituationProfessionnelles %}
+                <p>{{ situation.libelle }} <a href="{{ path('administration_apc_situation_professionnelle_edit',
+                        {id:situation.id}) }}">
+                        <i class="fas fa-edit"></i></a></p>
+            {% endfor %}
+            {% if is_granted('ROLE_PERMANENT') %}
+                <a href="{{ path('administration_apc_situation_professionnelle_new', {competence:competence.id}) }}"><i class="fas
+            fa-plus-circle"></i>
+                    Ajouter une situation professionnelle</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{# Niveaux #}
+<div class="d-flex align-items-stretch mt-3">
+    <div class="col-3">
+        <div class="p-3 titreniveau">Niveaux</div>
+    </div>
+    <div class="col-9 ms-3">
+        <div class="p-3 titreac">Apprentissages critiques
+        </div>
+    </div>
+</div>
+
+{% for niveau in competence.apcNiveaux %}
+    <div class="d-flex align-items-stretch mt-3">
+        <div class="col-flex-3 niveau  niveau{{ niveau.ordre }}{{ competence.couleur }}">
+            <div class="p-3 niveaucourt ">
+                {% if niveau.ordre == 1 %}
+                Novice
+            {% elseif niveau.ordre == 2 %}
+                Intermédiaire
+            {% elseif niveau.ordre == 3 %}
+                Compétent
+                {% endif %}<br>
+                B.U.T. {{ niveau.ordre }}</div>
+            <div class="p-3 niveaulong">{{ niveau.libelle }}
+                {% if is_granted('ROLE_PERMANENT') %}
+                    <a href="{{ path('administration_apc_niveau_edit',
+                        {id:niveau.id}) }}">
+                        <i class="fas fa-edit"></i></a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-flex-9 ms-3" style="padding-right:15px;">
+            <div class="p-3 niveauliste niveau{{ niveau.ordre }}{{ competence.couleur }}">
+                <ul>
+                    {% for ac in niveau.apcApprentissageCritiques %}
+                        <li>{{ ac.code }} | {{ ac.libelle }}
+                            {% if is_granted('ROLE_PERMANENT') %}
+                                <a href="{{ path('administration_apc_apprentissage_critique_edit',
+                                    {id:ac.id}) }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    {% if is_granted('ROLE_PERMANENT') %}
+                        <li>
+                            <a href="{{ path('administration_apc_apprentissage_critique_new', {niveau:niveau.id}) }}"><i class="fas fa-plus-circle"></i>
+                                Ajouter un apprentissage critique</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% if is_granted('ROLE_PERMANENT') %}
+<a href="{{ path('administration_apc_niveau_new', {competence:competence.id}) }}"><i class="fas fa-plus-circle"></i>
+    Ajouter un niveau</a>
+{% endif %}

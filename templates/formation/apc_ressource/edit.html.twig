@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Modification de la ressource {{ apc_ressource.display }}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {{ form_start(form) }}
+            {% form_theme form 'form/my-form.html.twig' %}
+            {{ include('formation/apc_ressource/_form.html.twig') }}
+
+            <button class="btn btn-success">Sauvegarder</button>
+            <button class="btn btn-success" value="redirect_to_index" name="btn_update">
+                Sauvegarder et revenir aux ressources
+            </button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+      let sae = null
+      let ressource = {{ apc_ressource.id }}
+    </script>
+    {{ parent() }}
+
+{% endblock %}
+

@@ -1,0 +1,48 @@
+<div style="overflow-x: auto">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Compétences</th>
+            <th>AC</th>
+            <th>&nbsp;</th>
+            {% for sae in saes %}
+                <th>{{ sae.codeMatiere }}</th>
+            {% endfor %}
+            <th>portfolio</th>
+            <th>stage</th>{# todo: dynamique? En fonction de la grille de structure ? #}
+            <th>&nbsp;</th>
+            {% for ressource in ressources %}
+                <th>{{ ressource.codeMatiere }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for niveau in niveaux %}
+            <tr>
+                <th rowspan="{{ niveau.apcApprentissageCritiques|length + 1 }}" class="bg_{{ niveau.competence.couleur }}">{{ niveau
+                    .competence.nomCourt }}</th>
+            </tr>
+
+            {% for ac in niveau.apcApprentissageCritiques %}
+                <tr>
+                    <th class="bg_{{ niveau.competence.couleur }}">{{ ac.code }}</th>
+                    <th>&nbsp;</th>
+                    {% for sae in saes %}
+                        <td><input type="checkbox"/></td>
+                    {% endfor %}
+                    <td>P.</td>{# todo: obligatoire mais présent en SAE ? #}
+                    <td>S.</td>{# todo: dynamique? #}
+                    <th>&nbsp;</th>
+                    {% for ressource in ressources %}
+                        <td><input type="checkbox"/></td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="{{ 6 + ressources|length + saes|length }}"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
