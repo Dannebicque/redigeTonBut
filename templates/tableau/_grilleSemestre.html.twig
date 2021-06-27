@@ -8,8 +8,8 @@
             {% for sae in saes %}
                 <th>{{ sae.codeMatiere }}</th>
             {% endfor %}
-            <th>portfolio</th>
-            <th>stage</th>{# todo: dynamique? En fonction de la grille de structure ? #}
+{#            <th>portfolio</th>#}
+{#            <th>stage</th>#}{# todo: dynamique? En fonction de la grille de structure ? #}
             <th>&nbsp;</th>
             {% for ressource in ressources %}
                 <th>{{ ressource.codeMatiere }}</th>
@@ -39,8 +39,8 @@
                                 endif %} />
                         </td>
                     {% endfor %}
-                    <td>P.</td>{# todo: obligatoire mais présent en SAE ? #}
-                    <td>S.</td>{# todo: dynamique? #}
+{#                    <td>P.</td>#}{# todo: obligatoire mais présent en SAE ? #}
+{#                    <td>S.</td>#}{# todo: dynamique? #}
                     <th>&nbsp;</th>
                     {% for ressource in ressources %}
                         <td>

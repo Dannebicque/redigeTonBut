@@ -20,6 +20,12 @@ class PreconisationSemestre
             $this->tCompetences[$competence->getId()]['sae'] = 0;
             $this->tCompetences[$competence->getId()]['ressource'] = 0;
             $this->tCompetences[$competence->getId()]['rapport'] = 0;
+            $this->tCompetences[$competence->getId()]['ects'] = 0;
+        }
+
+        foreach ($semestre->getApcCompetenceSemestres() as $apc)
+        {
+            $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getECTS();
         }
 
         //coeff ressources/SAE par compétences

@@ -14,16 +14,20 @@ use App\Classes\Pdf\MyPDF;
 use App\Classes\Word\MyWord;
 use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
+use App\Entity\ApcCompetence;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
+use App\Entity\ApcRessourceCompetence;
 use App\Entity\ApcSaeRessource;
 use App\Entity\Constantes;
 use App\Form\ApcRessourceType;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceApprentissageCritiqueRepository;
+use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
+use App\Utils\Convert;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -325,6 +329,35 @@ class ApcRessourceController extends BaseController
                 $acRessource = new ApcRessourceApprentissageCritique($ressource, $ac);
                 $this->entityManager->persist($acRessource);
             }
+        }
+        $this->entityManager->flush();
+
+        return $this->json(true);
+    }
+
+    /**
+     * @Route("/{ressource}/{competence}/update_coeff_ajax", name="apc_ressource_coeff_update_ajax", methods="POST", options={"expose":true})
+     */
+    public function updateCoeff(
+        ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
+        Request $request, ApcRessource $ressource, ApcCompetence $competence) {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        //regarde si déjà existant
+        $acRessource = $apcRessourceCompetenceRepository->findOneBy(['ressource' => $ressource->getId(), 'competence' => $competence->getId()]);
+
+        if ($acRessource !== null) {
+            //on modifie
+            $acRessource->setCoefficient(Convert::convertToFloat($parametersAsArray['valeur']));
+        } else {
+            //on ajoute
+                $acRessource = new ApcRessourceCompetence($ressource, $competence);
+                $acRessource->setCoefficient($parametersAsArray['valeur']);
+                $this->entityManager->persist($acRessource);
+
         }
         $this->entityManager->flush();
 

@@ -53,16 +53,43 @@ Si croix possibilité d'indiquer un commentaire ? ECTS ? Heures préconnisés ? 
               return r.json()
             })
           },
-          update (e) {
-            fetch(Routing.generate('tableau_api_structure_update'), {
+          updateSae (e) {
+            fetch(Routing.generate('formation_apc_sae_coeff_update_ajax', {sae: e.target.dataset.sae, competence:e
+                .target.dataset.competence}), {
               method: 'POST',
               body: JSON.stringify({
-                semestre: e.target.dataset.semestre,
-                champ: e.target.dataset.field,
                 valeur: e.target.value
               })
             }).then(async r => {
-              this.donnees = await fetch(Routing.generate('tableau_api_structure')).then(r => {
+              this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
+                return r.json()
+              })
+            })
+
+          },
+          updateRessource (e) {
+            fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {ressource: e.target.dataset.ressource,
+              competence:e.target.dataset.competence}), {
+              method: 'POST',
+              body: JSON.stringify({
+                valeur: e.target.value
+              })
+            }).then(async r => {
+              this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
+                return r.json()
+              })
+            })
+
+          },
+          updateCompetence (e) {
+            fetch(Routing.generate('administration_apc_competence_update_ects', {semestre: e.target.dataset.semestre,
+              competence:e.target.dataset.competence}), {
+              method: 'POST',
+              body: JSON.stringify({
+                valeur: e.target.value
+              })
+            }).then(async r => {
+              this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
                 return r.json()
               })
             })

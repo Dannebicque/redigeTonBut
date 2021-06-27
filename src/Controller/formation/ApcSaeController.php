@@ -14,16 +14,20 @@ namespace App\Controller\formation;
 //use App\Classes\Word\MyWord;
 use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
+use App\Entity\ApcCompetence;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeApprentissageCritique;
+use App\Entity\ApcSaeCompetence;
 use App\Entity\ApcSaeRessource;
 use App\Entity\Constantes;
 use App\Form\ApcSaeType;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeApprentissageCritiqueRepository;
+use App\Repository\ApcSaeCompetenceRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
+use App\Utils\Convert;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -339,6 +343,35 @@ class ApcSaeController extends BaseController
                 $acSae = new ApcSaeApprentissageCritique($sae, $ac);
                 $this->entityManager->persist($acSae);
             }
+        }
+        $this->entityManager->flush();
+
+        return $this->json(true);
+    }
+
+    /**
+     * @Route("/{sae}/{competence}/update_coeff_ajax", name="apc_sae_coeff_update_ajax", methods="POST", options={"expose":true})
+     */
+    public function updateCoeff(
+        ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
+        Request $request, ApcSae $sae, ApcCompetence $competence) {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        //regarde si déjà existant
+        $acRessource = $apcSaeCompetenceRepository->findOneBy(['sae' => $sae->getId(), 'competence' => $competence->getId()]);
+
+        if ($acRessource !== null) {
+            //on modifie
+            $acRessource->setCoefficient(Convert::convertToFloat($parametersAsArray['valeur']));
+        } else {
+            //on ajoute
+            $acRessource = new ApcSaeCompetence($sae, $competence);
+            $acRessource->setCoefficient($parametersAsArray['valeur']);
+            $this->entityManager->persist($acRessource);
+
         }
         $this->entityManager->flush();
 

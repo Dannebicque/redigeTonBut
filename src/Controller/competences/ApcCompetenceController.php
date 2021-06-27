@@ -11,9 +11,13 @@ namespace App\Controller\competences;
 
 use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
+use App\Entity\ApcCompetenceSemestre;
 use App\Entity\Constantes;
 use App\Entity\Departement;
+use App\Entity\Semestre;
 use App\Form\ApcCompetenceType;
+use App\Repository\ApcCompetenceSemestreRepository;
+use App\Utils\Convert;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -102,5 +106,36 @@ class ApcCompetenceController extends BaseController
         $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.competence.duplicate.success.flash');
 
         return $this->redirectToRoute('administration_apc_competence_edit', ['id' => $newApcCompetence->getId()]);
+    }
+
+    /**
+     * @Route("/{semestre}/{competence}/update_ects_ajax", name="administration_apc_competence_update_ects", methods="POST", options={"expose":true})
+     */
+    public function updateEcts(
+        ApcCompetenceSemestreRepository $apcCompetenceSemestreRepository,
+        Request $request, Semestre $semestre, ApcCompetence $competence) {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        //regarde si déjà existant
+        $apcCompSemetre = $apcCompetenceSemestreRepository->findOneBy(['semestre' => $semestre->getId(), 'competence' => $competence->getId()]);
+
+        if ($apcCompSemetre !== null) {
+            //on modifie
+            $apcCompSemetre->setECTS(Convert::convertToFloat($parametersAsArray['valeur']));
+        } else {
+            //on ajoute
+            $apcCompSemetre = new ApcCompetenceSemestre();
+            $apcCompSemetre->setSemestre($semestre);
+            $apcCompSemetre->setCompetence($competence);
+            $apcCompSemetre->setECTS($parametersAsArray['valeur']);
+            $this->entityManager->persist($apcCompSemetre);
+
+        }
+        $this->entityManager->flush();
+
+        return $this->json(true);
     }
 }

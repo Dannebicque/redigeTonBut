@@ -8,8 +8,8 @@
             {% for sae in saes %}
                 <th>{{ sae.codeMatiere }}</th>{# todo: ouvrir en modal ? #}
             {% endfor %}
-            <th>portfolio</th>
-            <th>stage</th>{# todo: dynamique? En fonction de la grille de structure ? #}
+{#            <th>portfolio</th>#}
+{#            <th>stage</th>#}{# todo: dynamique? En fonction de la grille de structure ? #}
             <th>&nbsp;</th>
             {% for ressource in ressources %}
                 <th>{{ ressource.codeMatiere }}</th>
@@ -34,21 +34,39 @@
 
                 {% for sae in saes %}
                     <td>
-                        <input type="text" class="form-control" x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.id }}].saes, {{ sae.id }}, {{ niveau.competence.id }})">
+                        <input type="text" class="form-control"
+                               @keyup="updateSae"
+                               data-sae="{{ sae.id }}"
+                               data-competence="{{ niveau.competence.id }}"
+                               x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.id }}].saes, {{ sae.id }}, {{ niveau.competence.id }})">
                     </td>
                 {% endfor %}
-                <td><input type="text" class="form-control"></td>{# todo: obligatoire mais présent en SAE ? #}
-                <td><input type="text" class="form-control"></td>{# todo: dynamique? #}
+{#                <td><input type="text" class="form-control"></td>#}{# todo: obligatoire mais présent en SAE ? #}
+{#                <td><input type="text" class="form-control"></td>#}{# todo: dynamique? #}
                 <th>&nbsp;</th>
                 {% for ressource in ressources %}
                     <td>
-                        <input type="text" class="form-control" x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.id }}].ressources, {{ ressource.id }}, {{ niveau.competence.id }})">
+                        <input type="text" class="form-control"
+                               @keyup="updateRessource"
+                               style="min-width: 50px"
+                               data-ressource="{{ ressource.id }}"
+                               data-competence="{{ niveau.competence.id }}"
+                               x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.id }}].ressources, {{ ressource.id }}, {{ niveau.competence.id }})">
                     </td>
                 {% endfor %}
                 <td></td>
-                <td></td>
-                <td x-text="afficheValeurTotal(donnees[{{ semestre.id }}].competences, {{ niveau.competence.id }})"></td>
-                <td x-text="afficheValeurTotal(donnees[{{ semestre.id }}].competences, {{ niveau.competence.id }},
+                <td><input type="text" class="form-control"
+                           @keyup="updateCompetence"
+                           style="min-width: 50px"
+                           data-competence="{{ niveau.competence.id }}"
+                           data-semestre="{{ semestre.id }}"
+                           x-bind:value="afficheValeurTotal(donnees[{{ semestre.id }}].competences, {{ niveau.competence.id }},
+                'ects')"></td>
+                <td x-text="afficheValeurTotal(donnees[{{ semestre.id }}].competences, {{ niveau.competence.id }})"
+                    class="text-center"
+                ></td>
+                <td class="text-center"
+                    x-text="afficheValeurTotal(donnees[{{ semestre.id }}].competences, {{ niveau.competence.id }},
                 'rapport')
 "></td>
             </tr>
@@ -58,14 +76,16 @@
             <th colspan="2">Poids de chaque SAÉ ou ressource</th>
             <th>&nbsp;</th>
             {% for sae in saes %}
-                <td x-text="afficheValeurTotal(donnees[{{ semestre.id }}].saes, {{ sae.id }})">Tot
+                <td class="text-center"
+                    x-text="afficheValeurTotal(donnees[{{ semestre.id }}].saes, {{ sae.id }})">Tot
                 </td>
             {% endfor %}
-            <td>Tot</td>{# todo: obligatoire mais présent en SAE ? #}
-            <td>Tot</td>{# todo: dynamique? #}
+{#            <td>Tot</td>#}{# todo: obligatoire mais présent en SAE ? #}
+{#            <td>Tot</td>#}{# todo: dynamique? #}
             <th>&nbsp;</th>
             {% for ressource in ressources %}
-                <td x-text="afficheValeurTotal(donnees[{{ semestre.id }}].ressources, {{ ressource.id }})">Tot
+                <td class="text-center"
+                    x-text="afficheValeurTotal(donnees[{{ semestre.id }}].ressources, {{ ressource.id }})">Tot
                 </td>
             {% endfor %}
             <td></td>
