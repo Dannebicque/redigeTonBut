@@ -83,6 +83,16 @@ class Departement extends BaseEntity
      */
     private $sigle;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="departementsCpn")
+     */
+    private $cpn;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $numeroAnnexe;
+
     public function __construct()
     {
         $this->personnelDepartements = new ArrayCollection();
@@ -298,6 +308,30 @@ class Departement extends BaseEntity
     public function setSigle(string $sigle): self
     {
         $this->sigle = $sigle;
+
+        return $this;
+    }
+
+    public function getCpn(): ?User
+    {
+        return $this->cpn;
+    }
+
+    public function setCpn(?User $cpn): self
+    {
+        $this->cpn = $cpn;
+
+        return $this;
+    }
+
+    public function getNumeroAnnexe(): ?int
+    {
+        return $this->numeroAnnexe;
+    }
+
+    public function setNumeroAnnexe(int $numeroAnnexe): self
+    {
+        $this->numeroAnnexe = $numeroAnnexe;
 
         return $this;
     }

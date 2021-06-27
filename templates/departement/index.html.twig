@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Departement index{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Sigle</th>
+                <th>Libelle</th>
+                <th>TypeDepartement</th>
+                <th>PACD</th>
+                <th>CPN</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for departement in departements %}
+            <tr>
+                <td>{{ departement.id }}</td>
+                <td>{{ departement.sigle }}</td>
+                <td>{{ departement.libelle }}</td>
+                <td>{{ departement.typeDepartement }}</td>
+                <td><select data-departement="{{ departement.id }}" class="pacd form-control">
+                        <option value="">Choisir</option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if departement.pacd != null and departement.pacd.id == user
+                                .id %}selected{% endif %}>{{ user.display }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select data-departement="{{ departement.id }}" class="cpn form-control">
+                        <option value="">Choisir</option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if departement.cpn != null and departement.cpn.id == user
+                            .id %}selected{% endif %}>{{ user.display }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <a href="{{ path('administration_departement_show', {id:departement.id}) }}" class="btn
+                    btn-outline-info
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                        <i class="bi-info-circle"></i>
+                        <span>Détails</span>
+                    </a>
+                    <a href="{{ path('administration_departement_edit', {id:departement.id}) }}" class="btn btn-outline-warning
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+                       id="dashboardTourButton">
+                        <i class="bi-pencil-square"></i>
+                        <span>Modifier</span>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+
+        document.querySelectorAll('.cpn').forEach((elem) => {
+          elem.addEventListener('change', miseAjourCpn)
+        })
+
+        document.querySelectorAll('.pacd').forEach((elem) => {
+          elem.addEventListener('change', miseAjourPacd)
+        })
+
+        function miseAjourCpn (e) {
+          update('cpn', e.target.value, e.target.dataset.departement)
+        }
+
+        function miseAjourPacd (e) {
+          update('pacd', e.target.value, e.target.dataset.departement)
+        }
+
+        function update (field, value, departement) {
+          fetch(Routing.generate('administration_departement_update_ajax', {departement: departement}), {
+            method: 'POST',
+            body: JSON.stringify({
+              field: field,
+              value: value
+            })
+          })
+        }
+      })
+    </script>
+
+{% endblock %}

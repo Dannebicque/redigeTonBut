@@ -69,10 +69,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private bool $isVerified = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Departement::class, mappedBy="cpn")
+     */
+    private $departementsCpn;
+
     public function __construct()
     {
         $this->departements = new ArrayCollection();
         $this->personnelDepartements = new ArrayCollection();
+        $this->departementsCpn = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -272,5 +278,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function display()
     {
         return ucfirst($this->prenom).' '.mb_strtoupper($this->nom);
+    }
+
+    /**
+     * @return Collection|Departement[]
+     */
+    public function getDepartementsCpn(): Collection
+    {
+        return $this->departementsCpn;
+    }
+
+    public function addDepartementsCpn(Departement $departementsCpn): self
+    {
+        if (!$this->departementsCpn->contains($departementsCpn)) {
+            $this->departementsCpn[] = $departementsCpn;
+            $departementsCpn->setCpn($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepartementsCpn(Departement $departementsCpn): self
+    {
+        if ($this->departementsCpn->removeElement($departementsCpn)) {
+            // set the owning side to null (unless already changed)
+            if ($departementsCpn->getCpn() === $this) {
+                $departementsCpn->setCpn(null);
+            }
+        }
+
+        return $this;
     }
 }

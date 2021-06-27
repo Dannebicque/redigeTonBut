@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Departement{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ departement.id }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ departement.libelle }}</td>
+            </tr>
+            <tr>
+                <th>TypeDepartement</th>
+                <td>{{ departement.typeDepartement }}</td>
+            </tr>
+            <tr>
+                <th>Sigle</th>
+                <td>{{ departement.sigle }}</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <a href="{{ path('administration_departement_index') }}">back to list</a>
+
+    <a href="{{ path('administration_departement_edit', {'id': departement.id}) }}">edit</a>
+{% endblock %}
