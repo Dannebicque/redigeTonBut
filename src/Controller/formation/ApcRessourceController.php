@@ -13,6 +13,7 @@ use App\Classes\Matieres\RessourceManager;
 use App\Classes\Pdf\MyPDF;
 use App\Classes\Word\MyWord;
 use App\Controller\BaseController;
+use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
 use App\Entity\ApcSaeRessource;
@@ -297,5 +298,36 @@ class ApcRessourceController extends BaseController
         $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.ressource.duplicate.success.flash');
 
         return $this->redirectToRoute('administration_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
+    }
+
+    /**
+     * @Route("/{ressource}/{ac}/update_ajax", name="apc_ressource_ac_update_ajax", methods="POST", options={"expose":true})
+     */
+    public function updateAc(
+        ApcRessourceApprentissageCritiqueRepository $apcRessourceApprentissageCritiqueRepository,
+        Request $request, ApcRessource $ressource, ApcApprentissageCritique $ac) {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        //regarde si déjà existant
+        $acRessource = $apcRessourceApprentissageCritiqueRepository->findOneBy(['ressource' => $ressource->getId(), 'apprentissageCritique' => $ac->getId()]);
+
+        if ($acRessource !== null) {
+            //selon la valeur, on supprime
+            if ((bool)$parametersAsArray['value'] === false) {
+                $this->entityManager->remove($acRessource);
+            }
+        } else {
+            //selon la valeur, on ajoute
+            if ((bool)$parametersAsArray['value'] === true) {
+                $acRessource = new ApcRessourceApprentissageCritique($ressource, $ac);
+                $this->entityManager->persist($acRessource);
+            }
+        }
+        $this->entityManager->flush();
+
+        return $this->json(true);
     }
 }

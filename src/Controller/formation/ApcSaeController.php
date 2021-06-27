@@ -13,6 +13,7 @@ namespace App\Controller\formation;
 //use App\Classes\Pdf\MyPDF;
 //use App\Classes\Word\MyWord;
 use App\Controller\BaseController;
+use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeApprentissageCritique;
 use App\Entity\ApcSaeRessource;
@@ -311,5 +312,36 @@ class ApcSaeController extends BaseController
         $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.sae.duplicate.success.flash');
 
         return $this->redirectToRoute('formation_apc_sae_edit', ['id' => $newApcSae->getId()]);
+    }
+
+    /**
+     * @Route("/{sae}/{ac}/update_ajax", name="apc_sae_ac_update_ajax", methods="POST", options={"expose":true})
+     */
+    public function updateAc(
+        ApcSaeApprentissageCritiqueRepository $apcSaeApprentissageCritiqueRepository,
+        Request $request, ApcSae $sae, ApcApprentissageCritique $ac) {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        //regarde si déjà existant
+        $acSae = $apcSaeApprentissageCritiqueRepository->findOneBy(['sae' => $sae->getId(), 'apprentissageCritique' => $ac->getId()]);
+
+        if ($acSae !== null) {
+            //selon la valeur, on supprime
+            if ((bool)$parametersAsArray['value'] === false) {
+                $this->entityManager->remove($acSae);
+            }
+        } else {
+            //selon la valeur, on ajoute
+            if ((bool)$parametersAsArray['value'] === true) {
+                $acSae = new ApcSaeApprentissageCritique($sae, $ac);
+                $this->entityManager->persist($acSae);
+            }
+        }
+        $this->entityManager->flush();
+
+        return $this->json(true);
     }
 }

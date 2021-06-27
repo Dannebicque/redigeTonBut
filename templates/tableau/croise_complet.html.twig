@@ -33,3 +33,45 @@
 {#  todo: bouton export, refresh du tableau, possibilité ed masquer des données (menu en modal?), affichage code
 et/ou libellé. Bouton pour ajouter ressource ou SAE rapidement ?
 Si croix possibilité d'indiquer un commentaire ? ECTS ? Heures préconnisés ? #}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+
+        document.querySelectorAll('.changeAcSae').forEach((elem) => {
+          elem.addEventListener('change', changeAcSae)
+        })
+
+        document.querySelectorAll('.changeAcRessource').forEach((elem) => {
+          elem.addEventListener('change', changeAcRessource)
+        })
+
+        function changeAcSae (e) {
+          updateSae( e.target.checked, e.target.dataset.sae, e.target.dataset.ac)
+        }
+
+        function changeAcRessource (e) {
+          updateRessource( e.target.checked, e.target.dataset.ressource, e.target.dataset.ac)
+        }
+
+        function updateSae (value, sae, ac) {
+          fetch(Routing.generate('formation_apc_sae_ac_update_ajax', {sae: sae, ac: ac}), {
+            method: 'POST',
+            body: JSON.stringify({
+              value: value
+            })
+          })
+        }
+
+        function updateRessource (value, ressource, ac) {
+          fetch(Routing.generate('formation_apc_ressource_ac_update_ajax', {ressource: ressource, ac: ac}), {
+            method: 'POST',
+            body: JSON.stringify({
+              value: value
+            })
+          })
+        }
+      })
+    </script>
+
+{% endblock %}
