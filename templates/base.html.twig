@@ -97,7 +97,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="{{ path('app_logout') }}">
                                         <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i>
                                         <span class="align-middle">Logout</span>
                                     </a>
@@ -166,6 +166,7 @@
             <!-- Menu Start -->
             <div class="menu-container flex-grow-1">
                 <ul id="menu" class="menu">
+                    {% if user_data.departement != null %}
                     <li>
                         <a href="#ref_competences" data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
                             <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
@@ -243,6 +244,7 @@
                             </li>
                         </ul>
                     </li>
+                    {% endif %}
                     <li>
                         <a href="#ref_formation" data-href="Dashboards.html">
                             <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
@@ -278,7 +280,7 @@
                                 {% for specialite in user_data.specialites %}
                                     {# todo: en big menu #}
                                     <li>
-                                        <a href="{{ path('administration_apc_referentiel_import') }}">
+                                        <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
                                             <span class="label">{{ specialite.sigle }}</span>
                                         </a>
                                     </li>
