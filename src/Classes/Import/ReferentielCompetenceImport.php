@@ -56,6 +56,7 @@ class ReferentielCompetenceImport
         foreach ($xml->competences->competence as $competence) {
             $comp = new ApcCompetence($this->departement);
             $comp->setCouleur($competence['couleur']);
+            $comp->setNumero(substr($competence['couleur'],1,1));
             $comp->setLibelle($competence['libelle_long']);
             $comp->setNomCourt($competence['name']);
             $tCompetences[$comp->getNomCourt()] = [];
