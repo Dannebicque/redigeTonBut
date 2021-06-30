@@ -6,15 +6,15 @@ use App\Entity\Departement;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SpecialiteFixtures extends Fixture
 {
-    private PasswordHasherInterface $hasher;
+    private UserPasswordHasherInterface $encoder;
 
-    public function __construct(PasswordHasherInterface $hasher)
+    public function __construct(UserPasswordHasherInterface $encoder)
     {
-        $this->hasher = $hasher;
+        $this->encoder = $encoder;
     }
 
 
@@ -167,7 +167,7 @@ class SpecialiteFixtures extends Fixture
         $pacd->setNom('Annebicque');
         $pacd->setPrenom('David');
         $pacd->setIsVerified(true);
-        $pacd->setPassword($this->hasher->hash('test'));
+        $pacd->setPassword($this->encoder->hashPassword($pacd, 'test'));
         $pacd->setRoles(['ROLE_PACD']);
         $manager->persist($pacd);
 
@@ -177,7 +177,7 @@ class SpecialiteFixtures extends Fixture
         $gt->setNom('GT');
         $gt->setPrenom('David');
         $gt->setIsVerified(true);
-        $gt->setPassword($this->hasher->hash('test'));
+        $pacd->setPassword($this->encoder->hashPassword($gt, 'test'));
         $gt->setRoles(['ROLE_GT']);
         $manager->persist($gt);
 
