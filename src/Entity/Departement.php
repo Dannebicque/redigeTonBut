@@ -10,7 +10,6 @@
 namespace App\Entity;
 
 use App\Entity\Traits\LifeCycleTrait;
-use App\Entity\Traits\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,7 +25,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class Departement extends BaseEntity
 {
-    use UuidTrait;
     use LifeCycleTrait;
 
     public const TERTIAIRE = 'tertiaire';
