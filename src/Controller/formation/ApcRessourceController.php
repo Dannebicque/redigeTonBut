@@ -61,22 +61,6 @@ class ApcRessourceController extends BaseController
 //        );
 //    }
 
-    /**
-     * @Route("/ajax-edit/{id}", name="apc_ressources_ajax_edit", methods={"POST"}, options={"expose":true})
-     */
-    public function ajaxEdit(
-        RessourceManager $ressourceManager,
-        Request $request,
-        ApcRessource $apcRessource
-    ): Response {
-        $name = $request->request->get('field');
-        $value = $request->request->get('value');
-
-        $update = $ressourceManager->update($name, $value, $apcRessource);
-
-        return $update ? new JsonResponse('', Response::HTTP_OK) : new JsonResponse('erreur',
-            Response::HTTP_INTERNAL_SERVER_ERROR);
-    }
 
     /**
      * @Route("/ajax-ac", name="apc_ressources_ajax_ac", methods={"POST"}, options={"expose":true})
@@ -258,7 +242,7 @@ class ApcRessourceController extends BaseController
 
             }
 
-            return $this->redirectToRoute('administration_apc_ressource_edit',
+            return $this->redirectToRoute('formation_apc_ressource_edit',
                 ['id' => $apcRessource->getId()]);
         }
 
@@ -301,7 +285,7 @@ class ApcRessourceController extends BaseController
         $this->entityManager->flush();
         $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.ressource.duplicate.success.flash');
 
-        return $this->redirectToRoute('administration_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
+        return $this->redirectToRoute('formation_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
     }
 
     /**
@@ -358,6 +342,30 @@ class ApcRessourceController extends BaseController
                 $acRessource->setCoefficient($parametersAsArray['valeur']);
                 $this->entityManager->persist($acRessource);
 
+        }
+        $this->entityManager->flush();
+
+        return $this->json(true);
+    }
+
+    /**
+     * @Route("/{ressource}/{type}/update_heures_ajax", name="apc_ressource_heure_update_ajax", methods="POST", options={"expose":true})
+     */
+    public function updateHeures(
+        Request $request, ApcRessource $ressource, string $type) {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        switch ($type)
+        {
+            case 'heures_totales':
+                $ressource->setHeuresTotales($parametersAsArray['valeur']);
+                break;
+            case 'heures_tp':
+                $ressource->setTpPpn($parametersAsArray['valeur']);
+                break;
         }
         $this->entityManager->flush();
 

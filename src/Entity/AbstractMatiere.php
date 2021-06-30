@@ -47,6 +47,12 @@ abstract class AbstractMatiere extends BaseEntity
      * @ORM\Column(type="float")
      * @Groups({"matiere_administration"})
      */
+    private float $heuresTotales = 0;
+
+    /**
+     * @ORM\Column(type="float")
+     * @Groups({"matiere_administration"})
+     */
     private float $tpPpn = 0;
 
     /**
@@ -73,6 +79,16 @@ abstract class AbstractMatiere extends BaseEntity
     public function setCmPpn(mixed $cmPpn): void
     {
         $this->cmPpn = Convert::convertToFloat($cmPpn);
+    }
+
+    public function getHeuresTotales(): float
+    {
+        return $this->heuresTotales;
+    }
+
+    public function setHeuresTotales(mixed $heuresTotales): void
+    {
+        $this->heuresTotales = Convert::convertToFloat($heuresTotales);
     }
 
     public function getTdPpn(): float

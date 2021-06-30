@@ -42,8 +42,10 @@ class ApcSaeType extends AbstractType
                     'required' => false,
                     'help' => 'Il est possible d\'utiliser la syntaxe Markdown dans ce bloc de texte',
                 ])
-            ->add('tdPpn', TextType::class, ['label' => 'Heures CM/TD'])
-            ->add('tpPpn', TextType::class, ['label' => 'Heures TP'])
+            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.', 'attr' => ['x-model' => 'tdPpn']])
+            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.', 'attr' => ['x-model' => 'cmPpn']])
+            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales (hors projet)', 'attr' => ['x-model' => 'heuresTotales']])
+            ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP', 'attr' => ['x-model' => 'tpPpn']])
             ->add('projetPpn', TextType::class, ['label' => 'Heures "projet tutoré"'])
             ->add('livrables', TextareaType::class,
                 [

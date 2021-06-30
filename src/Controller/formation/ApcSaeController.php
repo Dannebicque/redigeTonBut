@@ -377,4 +377,31 @@ class ApcSaeController extends BaseController
 
         return $this->json(true);
     }
+
+    /**
+     * @Route("/{sae}/{type}/update_heures_ajax", name="apc_sae_heure_update_ajax", methods="POST", options={"expose":true})
+     */
+    public function updateHeures(
+        Request $request, ApcSae $sae, string $type) {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        switch ($type)
+        {
+            case 'heures_totales':
+                $sae->setHeuresTotales($parametersAsArray['valeur']);
+                break;
+            case 'heures_tp':
+                $sae->setTpPpn($parametersAsArray['valeur']);
+                break;
+            case 'heures_projet':
+                $sae->setProjetPpn($parametersAsArray['valeur']);
+                break;
+        }
+        $this->entityManager->flush();
+
+        return $this->json(true);
+    }
 }

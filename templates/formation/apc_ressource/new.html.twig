@@ -17,11 +17,21 @@
     </div>
 {% endblock %}
 
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'B.U.T. ' ~apc_ressource.semestre.annee.ordre,
+        },
+        {
+            href: path('but_ressources_annee', {annee: apc_ressource.semestre.annee.id, semestre: apc_ressource
+        .semestre.id}),
+            title: 'Les ressources',
+        },
+    ]}) }}
+{% endblock %}
+
 
 {% block javascripts %}
-    <script>
-      let sae = null
-      let ressource = null
-    </script>
     {{ parent() }}
 {% endblock %}

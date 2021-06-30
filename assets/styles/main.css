@@ -1,5 +1,10 @@
 .table thead th {
     background-color: var(--background-navcolor-dark);
     color: var(--light-text);
+}
 
+tfoot>td>.titretableau {
+    background-color: #7030a0;
+    color: var(--light-text);
+    font-weight: bold;
 }

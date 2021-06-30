@@ -8,8 +8,7 @@
             {% for sae in saes %}
                 <th>{{ sae.codeMatiere }}</th>{# todo: ouvrir en modal ? #}
             {% endfor %}
-{#            <th>portfolio</th>#}
-{#            <th>stage</th>#}{# todo: dynamique? En fonction de la grille de structure ? #}
+
             <th>&nbsp;</th>
             {% for ressource in ressources %}
                 <th>{{ ressource.codeMatiere }}</th>
@@ -41,8 +40,7 @@
                                x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.id }}].saes, {{ sae.id }}, {{ niveau.competence.id }})">
                     </td>
                 {% endfor %}
-{#                <td><input type="text" class="form-control"></td>#}{# todo: obligatoire mais présent en SAE ? #}
-{#                <td><input type="text" class="form-control"></td>#}{# todo: dynamique? #}
+
                 <th>&nbsp;</th>
                 {% for ressource in ressources %}
                     <td>
@@ -71,7 +69,7 @@
 "></td>
             </tr>
         {% endfor %}
-        </tbody>
+
         <tr>
             <th colspan="2">Poids de chaque SAÉ ou ressource</th>
             <th>&nbsp;</th>
@@ -80,8 +78,7 @@
                     x-text="afficheValeurTotal(donnees[{{ semestre.id }}].saes, {{ sae.id }})">Tot
                 </td>
             {% endfor %}
-{#            <td>Tot</td>#}{# todo: obligatoire mais présent en SAE ? #}
-{#            <td>Tot</td>#}{# todo: dynamique? #}
+
             <th>&nbsp;</th>
             {% for ressource in ressources %}
                 <td class="text-center"
@@ -89,12 +86,111 @@
                 </td>
             {% endfor %}
             <td></td>
-            <td></td>
+            <td class="text-center" x-html="badgeEgalite(afficheTotalEcts(donnees[{{ semestre.id }}].semestre,
+            'nb_ects'), 30)
+"></td>
             <td></td>
             <td></td>
         </tr>
+        </tbody>
         <tfoot>
+        <tr>
+            <th colspan="{{ saes|length + ressources|length + 7 }}"></th>
+        </tr>
+        <tr>
+            <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Volume horaire hors projets</td>
+            <th>&nbsp;</th>
+            {% for sae in saes %}
+                <td class="text-center">
+                    <input type="text" class="form-control"
+                           @keyup="updateHeuresSae"
+                           style="min-width: 50px"
+                           data-sae="{{ sae.id }}"
+                           data-type="heures_totales"
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].saes, {{ sae.id
+                           }}, 'heures_totales')">
+                </td>
+            {% endfor %}
 
+            <th>&nbsp;</th>
+            {% for ressource in ressources %}
+                <td class="text-center">
+                    <input type="text" class="form-control"
+                           @keyup="updateHeuresRessource"
+                           style="min-width: 50px"
+                           data-ressource="{{ ressource.id }}"
+                           data-type="heures_totales"
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].ressources, {{ ressource.id
+                           }}, 'heures_totales')">
+                </td>
+            {% endfor %}
+            <td></td>
+            <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">
+                Total Volume horaire hors projets</td>
+            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'total_hors_projet')">...</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">dont hTP</td>
+            <th>&nbsp;</th>
+            {% for sae in saes %}
+                <td class="text-center">
+                    <input type="text" class="form-control"
+                           @keyup="updateHeuresSae"
+                           style="min-width: 50px"
+                           data-sae="{{ sae.id }}"
+                           data-type="heures_tp"
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].saes, {{ sae.id
+                           }}, 'heures_tp')">
+                </td>
+            {% endfor %}
+
+            <th>&nbsp;</th>
+            {% for ressource in ressources %}
+                <td class="text-center">
+                    <input type="text" class="form-control"
+                           @keyup="updateHeuresRessource"
+                           style="min-width: 50px"
+                           data-ressource="{{ ressource.id }}"
+                           data-type="heures_tp"
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].ressources, {{ ressource.id
+                           }}, 'heures_tp')">
+                </td>
+            {% endfor %}
+            <td></td>
+            <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">dont hTP</td>
+            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'dont_tp')">...</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Heures projets</td>
+            <th>&nbsp;</th>
+            {% for sae in saes %}
+                <td class="text-center">
+                    <input type="text" class="form-control"
+                           @keyup="updateHeuresSae"
+                           style="min-width: 50px"
+                           data-sae="{{ sae.id }}"
+                           data-type="heures_projet"
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].saes, {{ sae.id
+                           }}, 'heures_projet')">
+                </td>
+            {% endfor %}
+
+            <th>&nbsp;</th>
+            <td colspan="{{ ressources|length + 1 }}"></td>
+            <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Total h projet</td>
+            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'total_h_projet')">...</td>
+        </tr>
+        <tr>
+            <th colspan="{{ saes|length + ressources|length + 5 }}"></th>
+            <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Total volume horaire dont projets</td>
+            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'total_vol_dont_prj')">...</td>
+        </tr>
+        <tr>
+            <th colspan="{{ saes|length + ressources|length + 5 }}"></th>
+            <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Rapport (hTP+heures projets+SAE)/total</td>
+            <td x-text="numberFormat(afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'rapport'))">..
+                                                                                                                 .</td>
+        </tr>
         </tfoot>
     </table>
 </div>

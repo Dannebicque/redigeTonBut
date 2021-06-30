@@ -9,7 +9,7 @@
         {{ form_row(form.libelleCourt) }}
     </div>
     <div class="col-sm-4">
-        {{ form_row(form.tdPpn) }}
+        {{ form_row(form.heuresTotales) }}
     </div>
     <div class="col-sm-4">
         {{ form_row(form.tpPpn) }}
@@ -18,6 +18,17 @@
         {{ form_row(form.projetPpn) }}
     </div>
 
+    <div class="alert alert-light">
+        <div class="row">
+            <div class="col-sm-6">
+                {{ form_row(form.cmPpn) }}
+            </div>
+            <div class="col-sm-6">
+                {{ form_row(form.tdPpn) }}
+            </div>
+        </div>
+    </div>
+    {# todo: alpine ajouter vérification égalité heures totales - tp #}
     <div class="col-sm-12">
         {{ form_row(form.description) }}
     </div>

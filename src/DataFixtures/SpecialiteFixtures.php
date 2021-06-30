@@ -3,11 +3,21 @@
 namespace App\DataFixtures;
 
 use App\Entity\Departement;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class SpecialiteFixtures extends Fixture
 {
+    private PasswordHasherInterface $hasher;
+
+    public function __construct(PasswordHasherInterface $hasher)
+    {
+        $this->hasher = $hasher;
+    }
+
+
     public function load(ObjectManager $manager)
     {
         $specialites = [
@@ -114,12 +124,6 @@ class SpecialiteFixtures extends Fixture
                 'n_annexe' => 18,
             ],
             [
-                'sigle' => 'MMI',
-                'libelle' => 'Métiers du Multimédia et de l\'Internet',
-                'type' => 'secondaire',
-                'n_annexe' => 19,
-            ],
-            [
                 'sigle' => 'PEC',
                 'libelle' => 'Packaging, Emballage et conditionnement',
                 'type' => 'secondaire',
@@ -157,13 +161,42 @@ class SpecialiteFixtures extends Fixture
             ]
         ];
 
+        $pacd = new User();
+        $pacd->setCivilite('M.');
+        $pacd->setEmail('david.annebicque@univ-reims.fr');
+        $pacd->setNom('Annebicque');
+        $pacd->setPrenom('David');
+        $pacd->setIsVerified(true);
+        $pacd->setPassword($this->hasher->hash('test'));
+        $pacd->setRoles(['ROLE_PACD']);
+        $manager->persist($pacd);
+
+        $gt = new User();
+        $gt->setCivilite('M.');
+        $gt->setEmail('david.annebicque@gmail.com');
+        $gt->setNom('GT');
+        $gt->setPrenom('David');
+        $gt->setIsVerified(true);
+        $gt->setPassword($this->hasher->hash('test'));
+        $gt->setRoles(['ROLE_GT']);
+        $manager->persist($gt);
+
         foreach ($specialites as $specialite) {
             $departement = new Departement();
             $departement->setSigle($specialite['sigle']);
             $departement->setLibelle($specialite['libelle']);
             $departement->setTypeDepartement($specialite['type']);
+            $departement->setNumeroAnnexe($specialite['n_annexe']);
             $manager->persist($departement);
         }
+
+        $departement = new Departement();
+        $departement->setSigle('MMI');
+        $departement->setLibelle('Métiers du Multimédia et de l\'Internet');
+        $departement->setTypeDepartement('secondaire');
+        $departement->setNumeroAnnexe(19);
+        $departement->setPacd($pacd);
+        $manager->persist($departement);
 
         $manager->flush();
     }

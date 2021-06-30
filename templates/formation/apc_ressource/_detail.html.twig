@@ -65,12 +65,24 @@
     </tr>
     <tr>
         <th rowspan="2">Heures Programme National</th>
-        <th class="text-center" colspan="2">Heures CM/TD**</th>
-        <th class="text-center">Heures TP</th>
+        <th class="text-center" colspan="2">NB heures totales</th>
+        <th class="text-center" colspan="2">Dont Heures TP</th>
+    </tr>
+    <tr>
+        <th class="text-center" colspan="2">{{ apc_ressource.heuresTotales }}</th>
+        <th class="text-center" colspan="2">{{ apc_ressource.tpPpn }}</th>
+    </tr>
+
+    <tr>
+        <th rowspan="2">Préconisation ACD</th>
+        <th class="text-center">CM</th>
+        <th class="text-center">TD</th>
+        <th class="text-center">TP</th>
         <th class="text-center">Total</th>
     </tr>
     <tr>
-        <th class="text-center" colspan="2">{{ apc_ressource.cmPpn + apc_ressource.tdPpn }}</th>
+        <th class="text-center">{{ apc_ressource.cmPpn }}</th>
+        <th class="text-center">{{ apc_ressource.tdPpn }}</th>
         <th class="text-center">{{ apc_ressource.tpPpn }}</th>
         <th class="text-center">{{ apc_ressource.cmPpn + apc_ressource.tdPpn + apc_ressource.tpPpn }}</th>
     </tr>

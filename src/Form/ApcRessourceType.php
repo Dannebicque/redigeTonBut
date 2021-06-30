@@ -50,8 +50,10 @@ class ApcRessourceType extends AbstractType
                     'help' => 'Utilisez le "," pour séparer les mots clés.',
                     'required' => false,
                 ])
-            ->add('tdPpn', TextType::class, ['label' => 'Heures CM/TD'])
-            ->add('tpPpn', TextType::class, ['label' => 'Heures TP'])
+            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales', 'attr' => ['x-model' => 'heuresTotales']])
+            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.', 'attr' => ['x-model' => 'tdPpn']])
+            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.', 'attr' => ['x-model' => 'cmPpn']])
+            ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP', 'attr' => ['x-model' => 'tpPpn']])
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
                 'required' => true,

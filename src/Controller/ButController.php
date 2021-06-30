@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Annee;
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
+use App\Entity\Semestre;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,25 +25,27 @@ class ButController extends AbstractController
         ]);
     }
 
-    #[Route('/ressources/{annee}', name: 'ressources_annee', requirements: ['annee' => '\d+'])]
-    public function ressources(ApcRessourceRepository $apcRessourceRepository, Annee $annee): Response
+    #[Route('/ressources/{annee}/{semestre}', name: 'ressources_annee', requirements: ['annee' => '\d+'])]
+    public function ressources(ApcRessourceRepository $apcRessourceRepository, Annee $annee, Semestre $semestre = null): Response
     {
         $ressources = $apcRessourceRepository->findByAnneeArray($annee);
 
         return $this->render('but/ressources.html.twig', [
             'ressources' => $ressources,
             'annee' => $annee,
+            'selectSemestre' => $semestre
         ]);
     }
 
-    #[Route('/sae/{annee}', name: 'sae_annee', requirements: ['annee' => '\d+'])]
-    public function saes(ApcSaeRepository $apcSaeRepository, Annee $annee): Response
+    #[Route('/sae/{annee}/{semestre}', name: 'sae_annee', requirements: ['annee' => '\d+'])]
+    public function saes(ApcSaeRepository $apcSaeRepository, Annee $annee, Semestre $semestre = null): Response
     {
         $saes = $apcSaeRepository->findByAnneeArray($annee);
 
         return $this->render('but/saes.html.twig', [
             'annee' => $annee,
-            'saes' => $saes
+            'saes' => $saes,
+            'selectSemestre' => $semestre
         ]);
     }
 

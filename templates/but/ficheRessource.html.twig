@@ -17,8 +17,9 @@
             title: 'B.U.T. ' ~apc_ressource.semestre.annee.ordre,
         },
         {
-            href:'',
-            title: 'Les ressoruces',
+            href: path('but_ressources_annee', {annee: apc_ressource.semestre.annee.id, semestre: apc_ressource
+            .semestre.id}),
+            title: 'Les ressources',
         },
     ]}) }}
 {% endblock %}
