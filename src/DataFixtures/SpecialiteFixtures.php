@@ -179,7 +179,7 @@ class SpecialiteFixtures extends Fixture
         $gt->setPrenom('David');
         $gt->setIsVerified(true);
         $pass =$this->encoder->hashPassword($gt, 'test');
-        $pacd->setPassword($pass);
+        $gt->setPassword($pass);
         $gt->setRoles(['ROLE_GT']);
         $manager->persist($gt);
 
