@@ -167,7 +167,8 @@ class SpecialiteFixtures extends Fixture
         $pacd->setNom('Annebicque');
         $pacd->setPrenom('David');
         $pacd->setIsVerified(true);
-        $pacd->setPassword($this->encoder->hashPassword($pacd, 'test'));
+        $pass =$this->encoder->hashPassword($pacd, 'test');
+        $pacd->setPassword($pass);
         $pacd->setRoles(['ROLE_PACD']);
         $manager->persist($pacd);
 
@@ -177,7 +178,8 @@ class SpecialiteFixtures extends Fixture
         $gt->setNom('GT');
         $gt->setPrenom('David');
         $gt->setIsVerified(true);
-        $pacd->setPassword($this->encoder->hashPassword($gt, 'test'));
+        $pass =$this->encoder->hashPassword($gt, 'test');
+        $pacd->setPassword($pass);
         $gt->setRoles(['ROLE_GT']);
         $manager->persist($gt);
 
