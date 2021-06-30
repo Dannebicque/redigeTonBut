@@ -56,6 +56,7 @@ class ApcRessourceType extends AbstractType
                 'class' => Semestre::class,
                 'required' => true,
                 'choice_label' => 'display',
+                'attr' => ['x-model'=> 'semestre', '@click' => 'changeSemestre'],
                 'query_builder' => function(SemestreRepository $semestreRepository) {
                     return $semestreRepository->findByDepartementBuilder($this->departement);
                 },

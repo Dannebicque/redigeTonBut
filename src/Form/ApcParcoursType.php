@@ -21,10 +21,7 @@ class ApcParcoursType extends AbstractType
     {
         $builder
             ->add('libelle', TextType::class, ['label' => 'libelle'])
-            ->add('code', TextType::class, ['label' => 'code'])
-            ->add('codeDiplome', TextType::class, ['label' => 'code_diplome', 'required' => false])
-            ->add('codeVersion', TextType::class, ['label' => 'code_version', 'required' => false])
-            ->add('codeDepartement', TextType::class, ['label' => 'code_departement', 'required' => false]);
+            ->add('code', TextType::class, ['label' => 'code']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
