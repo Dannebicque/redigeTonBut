@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Annee;
 use App\Entity\Departement;
+use App\Entity\Semestre;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -190,6 +192,27 @@ class SpecialiteFixtures extends Fixture
             $departement->setTypeDepartement($specialite['type']);
             $departement->setNumeroAnnexe($specialite['n_annexe']);
             $manager->persist($departement);
+            $orLmd = 1;
+            for($i = 1; $i <= 3; $i++) {
+
+                $annee = new Annee();
+                $annee->setDepartement($departement);
+                $annee->setLibelle('BUT'.$i);
+                $annee->setOrdre($i);
+                $annee->setLibelleLong('B.U.T. '.$departement->getSigle().' '.$i);
+                $annee->setCodeEtape('BUT-'.$departement->getId().'-'.$i);
+                $manager->persist($annee);
+                for($s = 1; $s <= 2; $s++) {
+                    $semestre = new Semestre();
+                    $semestre->setLibelle('S'.$orLmd);
+                    $semestre->setAnnee($annee);
+                    $semestre->setOrdreLmd($orLmd);
+                    $semestre->setOrdreAnnee($i);
+                    $manager->persist($semestre);
+                    $orLmd++;
+                }
+            }
+
         }
 
         $departement = new Departement();

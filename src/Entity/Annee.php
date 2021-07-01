@@ -24,7 +24,7 @@ class Annee extends BaseEntity
     use LifeCycleTrait;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private ?string $codeEtape;
 
