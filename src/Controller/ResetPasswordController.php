@@ -30,21 +30,17 @@ class ResetPasswordController extends AbstractController
         $this->resetPasswordHelper = $resetPasswordHelper;
     }
 
-    #[Route('', name: 'app_forgot_password_request')]
+    #[Route('/', name: 'app_forgot_password_request')]
     public function request(Request $request, MailerInterface $mailer): Response
     {
-        $form = $this->createForm(ResetPasswordRequestFormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->isMethod('POST')) {
             return $this->processSendingPasswordResetEmail(
-                $form->get('email')->getData(),
+                $request->request->get('email'),
                 $mailer
             );
         }
 
         return $this->render('reset_password/request.html.twig', [
-            'requestForm' => $form->createView(),
         ]);
     }
 

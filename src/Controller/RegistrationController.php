@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\PersonnelDepartement;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\DepartementRepository;
 use App\Security\EmailVerifier;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +26,9 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/inscription', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
+    public function register(
+        DepartementRepository $departementRepository,
+        Request $request, UserPasswordHasherInterface $passwordEncoder): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -38,8 +42,16 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-
             $entityManager = $this->getDoctrine()->getManager();
+            $departement = $departementRepository->find($request->request->get('specialite'));
+            if ($departement !== null) {
+                $dp = new PersonnelDepartement();
+                $dp->setDepartement($departement);
+                $dp->setUser($user);
+                $entityManager->persist($dp);
+            }
+
+
             $entityManager->persist($user);
             $entityManager->flush();
 
