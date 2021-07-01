@@ -79,23 +79,6 @@ class ApcSaeController extends BaseController
 //    }
 
     /**
-     * @Route("/ajax-edit/{id}", name="apc_sae_ajax_edit", methods={"POST"}, options={"expose":true})
-     */
-    public function ajaxEdit(
-        SaeManager $saeManager,
-        Request $request,
-        ApcSae $acpSae
-    ): Response {
-        $name = $request->request->get('field');
-        $value = $request->request->get('value');
-
-        $update = $saeManager->update($name, $value, $acpSae);
-
-        return $update ? new JsonResponse('', Response::HTTP_OK) : new JsonResponse('erreur',
-            Response::HTTP_INTERNAL_SERVER_ERROR);
-    }
-
-    /**
      * @Route("/ajax-ac", name="apc_sae_ajax_ac", methods={"POST"}, options={"expose":true})
      */
     public function ajaxAc(
@@ -104,11 +87,17 @@ class ApcSaeController extends BaseController
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
         Request $request
     ): Response {
-        $semestre = $semestreRepository->find($request->request->get('semestre'));
-        $competences = $request->request->get('competences');
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+
+        $semestre = $semestreRepository->find($parametersAsArray['semestre']);
+        $competences = $parametersAsArray['competences'];
         if (null !== $semestre && count($competences) > 0) {
-            if (null !== $request->request->get('sae')) {
-                $tabAcSae = $apcSaeApprentissageCritiqueRepository->findArrayIdAc($request->request->get('sae'));
+            if (null !== $parametersAsArray['sae']) {
+                $tabAcSae = $apcSaeApprentissageCritiqueRepository->findArrayIdAc($parametersAsArray['sae']);
             } else {
                 $tabAcSae = [];
             }
@@ -123,12 +112,12 @@ class ApcSaeController extends BaseController
                 $b['id'] = $d->getId();
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCode();
-                $b['checked'] = true === in_array($d->getId(), $tabAcSae) ? 'checked="checked"' : '';
-                if (null !== $d->getNiveau() && null !== $d->getNiveau()->getCompetence() && !array_key_exists($d->getNiveau()->getCompetence()->getNomCourt(),
+                $b['checked'] = true === in_array($d->getId(), $tabAcSae);
+                if (null !== $d->getNiveau() && null !== $d->getNiveau()->getCompetence() && !array_key_exists($d->getNiveau()->getCompetence()->getId(),
                         $t)) {
-                    $t[$d->getNiveau()->getCompetence()->getNomCourt()] = [];
+                    $t[$d->getNiveau()->getCompetence()->getId()] = [];
                 }
-                $t[$d->getNiveau()->getCompetence()->getNomCourt()][] = $b;
+                $t[$d->getNiveau()->getCompetence()->getId()][] = $b;
             }
 
             return $this->json($t);
@@ -146,10 +135,15 @@ class ApcSaeController extends BaseController
         ApcRessourceRepository $apcRessourceRepository,
         Request $request
     ): Response {
-        $semestre = $semestreRepository->find($request->request->get('semestre'));
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        $semestre = $semestreRepository->find($parametersAsArray['semestre']);
         if (null !== $semestre) {
-            if (null !== $request->request->get('sae')) {
-                $tabAcSae = $apcSaeRessourceRepository->findArrayIdRessources($request->request->get('sae'));
+            if (null !== $parametersAsArray['sae']) {
+                $tabAcSae = $apcSaeRessourceRepository->findArrayIdRessources($parametersAsArray['sae']);
             } else {
                 $tabAcSae = [];
             }
@@ -163,7 +157,7 @@ class ApcSaeController extends BaseController
                 $b['id'] = $d->getId();
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCodeMatiere();
-                $b['checked'] = true === in_array($d->getId(), $tabAcSae) ? 'checked="checked"' : '';
+                $b['checked'] = true === in_array($d->getId(), $tabAcSae);
                 $t[] = $b;
             }
 

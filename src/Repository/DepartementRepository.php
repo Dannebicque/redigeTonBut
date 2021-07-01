@@ -23,7 +23,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method Departement|null find($id, $lockMode = null, $lockVersion = null)
  * @method Departement|null findOneBy(array $criteria, array $orderBy = null)
- * @method Departement[]    findAll()
  * @method Departement[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DepartementRepository extends ServiceEntityRepository
@@ -36,50 +35,8 @@ class DepartementRepository extends ServiceEntityRepository
         parent::__construct($registry, Departement::class);
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function findDepartementEtudiant(Etudiant $etudiant)
+    public function findAll()
     {
-        return $this->createQueryBuilder('f')
-            ->innerJoin(Diplome::class, 'd', 'WITH', 'd.departement = f.id')
-            ->innerJoin(Annee::class, 'a', 'WITH', 'a.diplome = d.id')
-            ->innerJoin(Semestre::class, 's', 'WITH', 's.annee = a.id')
-            ->innerJoin(Etudiant::class, 'e', 'WITH', 'e.semestre = s.id')
-            ->where('e.id = :etudiant')
-            ->setParameter('etudiant', $etudiant->getId())
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-    public function findDepartementPersonnelDefaut(Personnel $personnel)
-    {
-        return $this->createQueryBuilder('f')
-            ->innerJoin(PersonnelDepartement::class, 'p', 'WITH', 'p.departement = f.id')
-            ->where('p.personnel = :personnel')
-            ->andWhere('p.defaut = :defaut')
-            ->setParameter('personnel', $personnel->getId())
-            ->setParameter('defaut', true)
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findDepartementPersonnel(Personnel $personnel)
-    {
-        return $this->createQueryBuilder('f')
-            ->innerJoin(PersonnelDepartement::class, 'p', 'WITH', 'p.departement = f.id')
-            ->where('p.personnel = :personnel')
-            ->setParameter('personnel', $personnel->getId())
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findActifs()
-    {
-        return $this->createQueryBuilder('d')
-            ->where('d.actif = 1')
-            ->orderBy('d.libelle')
-            ->getQuery()
-            ->getResult();
+        return $this->findBy([], ['sigle' => 'ASC']);
     }
 }

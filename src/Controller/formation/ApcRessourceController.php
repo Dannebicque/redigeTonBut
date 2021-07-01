@@ -71,11 +71,16 @@ class ApcRessourceController extends BaseController
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
         Request $request
     ): Response {
-        $semestre = $semestreRepository->find($request->request->get('semestre'));
-        $competences = $request->request->get('competences');
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        $semestre = $semestreRepository->find($parametersAsArray['semestre']);
+        $competences = $parametersAsArray['competences'];
         if (null !== $semestre && count($competences) > 0) {
-            if (null !== $request->request->get('ressource')) {
-                $tabAcSae = $apcRessourceApprentissageCritiqueRepository->findArrayIdAc($request->request->get('ressource'));
+            if (null !== $parametersAsArray['ressource']) {
+                $tabAcSae = $apcRessourceApprentissageCritiqueRepository->findArrayIdAc($parametersAsArray['ressource']);
             } else {
                 $tabAcSae = [];
             }
@@ -90,12 +95,12 @@ class ApcRessourceController extends BaseController
                 $b['id'] = $d->getId();
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCode();
-                $b['checked'] = true === in_array($d->getId(), $tabAcSae) ? 'checked="checked"' : '';
-                if (null !== $d->getNiveau() && null !== $d->getNiveau()->getCompetence() && !array_key_exists($d->getNiveau()->getCompetence()->getNomCourt(),
+                $b['checked'] = true === in_array($d->getId(), $tabAcSae);
+                if (null !== $d->getNiveau() && null !== $d->getNiveau()->getCompetence() && !array_key_exists($d->getNiveau()->getCompetence()->getId(),
                         $t)) {
-                    $t[$d->getNiveau()->getCompetence()->getNomCourt()] = [];
+                    $t[$d->getNiveau()->getCompetence()->getId()] = [];
                 }
-                $t[$d->getNiveau()->getCompetence()->getNomCourt()][] = $b;
+                $t[$d->getNiveau()->getCompetence()->getId()][] = $b;
             }
 
             return $this->json($t);
@@ -113,10 +118,15 @@ class ApcRessourceController extends BaseController
         ApcSaeRepository $apcSaeRepository,
         Request $request
     ): Response {
-        $semestre = $semestreRepository->find($request->request->get('semestre'));
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        $semestre = $semestreRepository->find($parametersAsArray['semestre']);
         if (null !== $semestre) {
-            if (null !== $request->request->get('ressource')) {
-                $tabAcSae = $apcSaeRessourceRepository->findArrayIdSae($request->request->get('ressource'));
+            if (null !== $parametersAsArray['ressource']) {
+                $tabAcSae = $apcSaeRessourceRepository->findArrayIdSae($parametersAsArray['ressource']);
             } else {
                 $tabAcSae = [];
             }
@@ -130,7 +140,7 @@ class ApcRessourceController extends BaseController
                 $b['id'] = $d->getId();
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCodeMatiere();
-                $b['checked'] = true === in_array($d->getId(), $tabAcSae) ? 'checked="checked"' : '';
+                $b['checked'] = true === in_array($d->getId(), $tabAcSae);
                 $t[] = $b;
             }
 

@@ -1,4 +1,4 @@
-<div class="row" x-data="">
+<div class="row">
     <div class="col-sm-2">
         {{ form_row(form.codeMatiere) }}
     </div>
@@ -25,9 +25,9 @@
                 {{ form_row(form.tdPpn) }}
             </div>
         </div>
-{#        <div class="alert alert-danger" x-if="cmPpn + tdPpn != heuresTotales - tpPpn">#}
-{#            Erreur dans la répartition de préconisation CM/TD#}
-{#        </div>#}
+        {# <div class="alert alert-danger" x-if="cmPpn + tdPpn != heuresTotales - tpPpn"> #}
+        {# Erreur dans la répartition de préconisation CM/TD #}
+        {# </div> #}
     </div>
 
     <div class="col-sm-12">
@@ -41,13 +41,29 @@
     </div>
     <div class="col-sm-12">
         {{ form_row(form.semestre) }}
+        {# todo: les compétences dépendent du semestre...#}
         {{ form_row(form.competences) }}
         <fieldset class="form-group">
             <legend class="col-form-label required">
                 Apprentissage(s) critique(s) couvert(s)
             </legend>
             <div id="acRessources">
-                <div class="alert alert-warning">Indiquer un semestre et au moins une compétence</div>
+                <div class="alert alert-warning">
+                    Indiquer un semestre et au moins une compétence</div>
+                <template x-for="competence in competences">
+                    <div>
+                        <br>
+                        <h4 x-text="competence.libelle"></h4>
+                        <div class="row">
+                            <template x-for="ac in getAcs(competence.id)">
+                                <div class="col-6">
+                                    <input type="checkbox" name="ac" :value="ac.id" :checked="ac.checked" >&nbsp;
+                                    <span x-text="ac.code + ` | ` + ac.libelle"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
             </div>
             <small id="apc_sae_competences_help" class="form-text text-muted">Ajoutez les compétences couvertes par
                                                                               la ressources.</small>
@@ -59,6 +75,14 @@
             </legend>
             <div id="saeRessource">
                 <div class="alert alert-warning">Indiquer un semestre</div>
+                <div class="row">
+                    <template x-for="sae in saes">
+                        <div class="col-6">
+                            <input type="checkbox" name="saes" :value="sae.id" :checked="sae.checked">&nbsp;
+                            <span x-text="sae.code + ` | ` + sae.libelle"></span>
+                        </div>
+                    </template>
+                </div>
             </div>
             <small id="apc_sae_ressource_help" class="form-text text-muted">Ajoutez les SAÉ concernées par la ressource
                                                                             .</small>

@@ -34,7 +34,7 @@ class BaseController extends AbstractController
     protected EntityManagerInterface $entityManager;
     protected TranslatorInterface $translator;
     protected FlashBagInterface $flashBag;
-    private Departement $departement;
+    private ?Departement $departement;
 
     /**
      * @required

@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="card">
-        <div class="card-body" x-data="update">
+        <div class="card-body" x-data="getUpdateRessource()">
             {{ form_start(form) }}
             {% form_theme form 'form/my-form.html.twig' %}
             {{ include('formation/apc_ressource/_form.html.twig') }}
@@ -37,29 +37,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-      document.addEventListener('alpine:init', () => {
-        Alpine.data('update', () => ({
-          acs: null,
-          saes: null,
-          semestre: {},
-          init () {
-            this.semestre = this.displayRadioValue()
-            console.log(this.semestre)
-          },
-          displayRadioValue () {
-            //init le select du semestre
-            var ele = document.getElementsByName('apc_ressource[semestre]')
-
-            for (i = 0; i < ele.length; i++) {
-              if (ele[i].checked)
-                return ele[i].value
-            }
-          },
-          changeSemestre () {
-            console.log(this.semestre)
-          }
-        }))
-      })
+      const ressource = {{ apc_ressource.id }}
     </script>
 {% endblock %}
 

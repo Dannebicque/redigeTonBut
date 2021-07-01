@@ -188,11 +188,11 @@
                                 <span class="label">BUT{{ annee.ordre }}</span>
                             </a>
                             <ul id="ref_formation">
-                                <li>
-                                    <a href="{{ path('but_annee', {annee: annee.id}) }}">
-                                        <span class="label">Consulter</span>
-                                    </a>
-                                </li>
+{#                                <li>#}
+{#                                    <a href="{{ path('but_annee', {annee: annee.id}) }}">#}
+{#                                        <span class="label">Consulter</span>#}
+{#                                    </a>#}
+{#                                </li>#}
                                 <li>
                                     <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
                                         <span class="label">Ressources</span>
@@ -271,20 +271,44 @@
                         </ul>
                     </li>
                     {% if is_granted('ROLE_GT') %}
-                        <li>
+                        <li class="mega dropdown">
                             <a href="#ref_formation" data-href="Dashboards.html">
                                 <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
                                 <span class="label">B.U.T.</span>
                             </a>
-                            <ul id="ref_formation">
-                                {% for specialite in user_data.specialites %}
-                                    {# todo: en big menu #}
-                                    <li>
-                                        <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
-                                            <span class="label">{{ specialite.sigle }}</span>
-                                        </a>
-                                    </li>
-                                {% endfor %}
+                            <ul id="interface" class="row align-items-start row-cols-2 dropdown-menu"
+                               data-popper-placement="bottom-start">
+                                <li class="dropdown col d-flex flex-column">
+                                    <a href="#tertiaires" data-href="Interface.Components.html" class="dropdown-toggle
+                                    active">
+                                        <span class="label">Tertiaires</span>
+                                    </a>
+                                    <ul id="tertiaires">
+                                        {% for specialite in user_data.specialites|filter(specialite => specialite
+                                        .typeDepartement == 'tertiaire') %}
+                                        <li class="col d-flex flex-column">
+                                            <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
+                                                <span class="label">{{ specialite.sigle }}</span>
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                <li class="dropdown col d-flex flex-column">
+                                    <a href="#Secondaires" class="dropdown-toggle">
+                                        <span class="label">Secondaires</span>
+                                    </a>
+                                    <ul id="Secondaires">
+                                        {% for specialite in user_data.specialites|filter(specialite => specialite
+                                        .typeDepartement == 'secondaire') %}
+                                        <li class="col d-flex flex-column">
+                                            <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
+                                                <span class="label">{{ specialite.sigle }}</span>
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
                     {% endif %}

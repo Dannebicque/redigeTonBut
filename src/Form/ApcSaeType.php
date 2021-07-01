@@ -42,10 +42,10 @@ class ApcSaeType extends AbstractType
                     'required' => false,
                     'help' => 'Il est possible d\'utiliser la syntaxe Markdown dans ce bloc de texte',
                 ])
-            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.', 'attr' => ['x-model' => 'tdPpn']])
-            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.', 'attr' => ['x-model' => 'cmPpn']])
-            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales (hors projet)', 'attr' => ['x-model' => 'heuresTotales']])
-            ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP', 'attr' => ['x-model' => 'tpPpn']])
+            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.']) //, 'attr' => ['x-model' => 'tdPpn']
+            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'cmPpn']
+            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales (hors projet)'])//, 'attr' => ['x-model' => 'heuresTotales']
+            ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP'])//, 'attr' => ['x-model' => 'tpPpn']
             ->add('projetPpn', TextType::class, ['label' => 'Heures "projet tutoré"'])
             ->add('livrables', TextareaType::class,
                 [
@@ -56,9 +56,9 @@ class ApcSaeType extends AbstractType
                 ])
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
-                'attr' => ['class' => 'semestreSae'],
                 'required' => true,
                 'choice_label' => 'display',
+                'attr' => ['x-model'=> 'semestre', '@change' => 'changeSemestre'],
                 'query_builder' => function(SemestreRepository $semestreRepository) {
                     return $semestreRepository->findByDepartementBuilder($this->departement);
                 },
@@ -69,7 +69,7 @@ class ApcSaeType extends AbstractType
                 'class' => ApcCompetence::class,
                 'choice_label' => 'nomCourt',
                 'label' => 'Nom court de la compétence',
-                'attr' => ['class' => 'competencesSae'],
+                'attr' => ['@change' => 'changeCompetence'],
                 'expanded' => true,
                 'multiple' => true,
                 'query_builder' => function(ApcComptenceRepository $apcComptenceRepository) {

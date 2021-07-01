@@ -58,7 +58,7 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
 
         $ors = [];
         foreach ($idCompetences as $comp) {
-            $ors[] = $query->expr()->orx('n.competence = ' . $query->expr()->literal($comp));
+            $ors[] = $query->expr()->orx('n.competence = ' . $query->expr()->literal($comp['id']));
         }
 
         return $query->andWhere(implode(' OR ', $ors))

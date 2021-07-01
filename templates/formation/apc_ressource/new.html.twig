@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" x-data="getUpdateRessource()">
             {{ form_start(form) }}
             {% form_theme form 'form/my-form.html.twig' %}
             {{ include('formation/apc_ressource/_form.html.twig') }}
@@ -18,20 +18,23 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    {{ include('composants/breadcrumb.html.twig', {liens:[
-        {
-            href:'',
-            title: 'B.U.T. ' ~apc_ressource.semestre.annee.ordre,
-        },
-        {
-            href: path('but_ressources_annee', {annee: apc_ressource.semestre.annee.id, semestre: apc_ressource
-        .semestre.id}),
-            title: 'Les ressources',
-        },
-    ]}) }}
+{#    {{ include('composants/breadcrumb.html.twig', {liens:[#}
+{#        {#}
+{#            href:'',#}
+{#            title: 'B.U.T. ' ~apc_ressource.semestre.annee.ordre,#}
+{#        },#}
+{#        {#}
+{#            href: path('but_ressources_annee', {annee: apc_ressource.semestre.annee.id, semestre: apc_ressource#}
+{#        .semestre.id}),#}
+{#            title: 'Les ressources',#}
+{#        },#}
+{#    ]}) }}#}
 {% endblock %}
 
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+      const ressource = null
+    </script>
 {% endblock %}

@@ -22,11 +22,15 @@ import './js/common'
 import './js/scripts'
 import './js/base/loader'
 
+
+
 /* AlpineJs */
 import Alpine from 'alpinejs'
 window.Alpine = Alpine
 Alpine.start()
 
-//import './js/pages/tableauStructure'
+import './js/alpinejs/getUpdateRessource'
+import './js/alpinejs/getUpdateSae'
+
 
 
