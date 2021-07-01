@@ -10,6 +10,7 @@ import {Variables} from './globals'
 import Globals from './globals'
 import Settings from './settings'
 import Nav from './nav'
+import Search from './search'
 
 (function () {
   window.addEventListener('DOMContentLoaded', () => {

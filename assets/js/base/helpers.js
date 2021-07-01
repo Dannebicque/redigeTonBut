@@ -5,7 +5,7 @@
  *
  */
 
-class Helpers {
+export default class Helpers {
   // A basic debounce function for events like resize, keydown and etc.
   static Debounce(func, wait, immediate) {
     var timeout;

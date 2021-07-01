@@ -11,16 +11,18 @@
  * @param {string} jsonPath Path to json data
  *
  */
+import Helpers from './helpers'
 
-class Search {
+
+export default class Search {
   get options() {
     return {
       searchModalId: 'searchPagesModal',
       searchInputId: 'searchPagesInput',
       searchResultsId: 'searchPagesResults',
-      placeholder: 'Search',
-      loading: 'Loading',
-      jsonPath: Helpers.UrlFix('json/search.json'),
+      placeholder: 'Rechercher',
+      loading: 'Chargement...',
+      jsonPath: Helpers.UrlFix(Routing.generate('search')),
     };
   }
 
