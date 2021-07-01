@@ -2,10 +2,11 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
 
-<button class="btn btn-success">{{ button_label|default('label.save'|trans) }}</button>
+<button class="btn btn-success">{{ button_label|default('Sauvegarder') }}</button>
 
-{% if button_label is defined and button_label == 'update'|trans %}
-    <button class="btn btn-success" value="redirect_to_index" name="btn_update">{{ 'button_update_index'|trans
-        }}</button>
+{% if button_label is defined and button_label == 'Modifier' %}
+    <button class="btn btn-success" value="redirect_to_index" name="btn_update">Sauvegarder et revenir à la
+                                                                                page précédente
+    </button>
 {% endif %}
 {{ form_end(form) }}
