@@ -87,6 +87,28 @@
             <small id="apc_sae_ressource_help" class="form-text text-muted">Ajoutez les SAÉ concernées par la ressource
                                                                             .</small>
         </fieldset>
+
+        <fieldset class="form-group mb-5">
+            <legend class="col-form-label required">
+                Parcours de la spécialité
+            </legend>
+            <div id="ressourcesSae">
+                <div class="alert alert-warning">Indiquer un semestre.</div>
+                <div class="row">
+                    <template x-for="parcour in parcours">
+                        <div class="col-6">
+                            <input type="checkbox" name="parcours" :value="parcour.id" :checked="parcour.checked">&nbsp;
+                            <span x-text="parcour.code + ` | ` + parcour.libelle"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <small id="apc_sae_ressource_help" class="form-text text-muted">
+                Si le semestre est composé de Parcours, il sera possible d'y associer une ressource commune (contenu
+                strictement identique) à plusieurs parcours. Si le contenu diffère, même légèrement, il est
+                préférable de dupliquer la SAÉ pour l'éditer librement selon le parcours.
+            </small>
+        </fieldset>
     </div>
 </div>
 

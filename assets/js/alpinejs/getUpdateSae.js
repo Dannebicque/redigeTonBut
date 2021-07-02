@@ -3,6 +3,7 @@ function getUpdateSae() {
     acs: [],
     competences: [],
     ressources: [],
+    parcours: [],
     semestre: null,
     init () {
       this.semestre = this.displayRadioValue()
@@ -52,6 +53,16 @@ function getUpdateSae() {
       })
 
       this.ressources = await fetch(Routing.generate('formation_apc_ressources_ajax'), {
+        method: 'POST',
+        body: JSON.stringify({
+          semestre: this.semestre,
+          sae: sae
+        })
+      }).then(r => {
+        return r.json()
+      })
+
+      this.parcours = await fetch(Routing.generate('formation_apc_sae_parcours_ajax'), {
         method: 'POST',
         body: JSON.stringify({
           semestre: this.semestre,

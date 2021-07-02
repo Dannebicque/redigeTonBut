@@ -60,11 +60,17 @@ class ApcSae extends AbstractMatiere
      */
     private ?string $exemples;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="sae")
+     */
+    private $apcSaeParcours;
+
     public function __construct()
     {
         $this->apcSaeCompetences = new ArrayCollection();
         $this->apcSaeRessources = new ArrayCollection();
         $this->apcSaeApprentissageCritiques = new ArrayCollection();
+        $this->apcSaeParcours = new ArrayCollection();
     }
 
     public function getSemestre(): ?Semestre
@@ -240,6 +246,36 @@ class ApcSae extends AbstractMatiere
     public function setProjetPpn(float $projetPpn): self
     {
         $this->projetPpn = $projetPpn;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ApcSaeParcours[]
+     */
+    public function getApcSaeParcours(): Collection
+    {
+        return $this->apcSaeParcours;
+    }
+
+    public function addApcSaeParcour(ApcSaeParcours $apcSaeParcour): self
+    {
+        if (!$this->apcSaeParcours->contains($apcSaeParcour)) {
+            $this->apcSaeParcours[] = $apcSaeParcour;
+            $apcSaeParcour->setSae($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApcSaeParcour(ApcSaeParcours $apcSaeParcour): self
+    {
+        if ($this->apcSaeParcours->removeElement($apcSaeParcour)) {
+            // set the owning side to null (unless already changed)
+            if ($apcSaeParcour->getSae() === $this) {
+                $apcSaeParcour->setSae(null);
+            }
+        }
 
         return $this;
     }

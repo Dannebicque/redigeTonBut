@@ -55,11 +55,17 @@ class ApcRessource extends AbstractMatiere
      */
     private Collection $apcSaeRessources;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="ressource")
+     */
+    private $apcRessourceParcours;
+
     public function __construct()
     {
         $this->apcRessourceCompetences = new ArrayCollection();
         $this->apcRessourceApprentissageCritiques = new ArrayCollection();
         $this->apcSaeRessources = new ArrayCollection();
+        $this->apcRessourceParcours = new ArrayCollection();
     }
 
     public function getSemestre(): ?Semestre
@@ -238,5 +244,35 @@ class ApcRessource extends AbstractMatiere
         }
 
         return null;
+    }
+
+    /**
+     * @return Collection|ApcRessourceParcours[]
+     */
+    public function getApcRessourceParcours(): Collection
+    {
+        return $this->apcRessourceParcours;
+    }
+
+    public function addApcRessourceParcour(ApcRessourceParcours $apcRessourceParcour): self
+    {
+        if (!$this->apcRessourceParcours->contains($apcRessourceParcour)) {
+            $this->apcRessourceParcours[] = $apcRessourceParcour;
+            $apcRessourceParcour->setRessource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApcRessourceParcour(ApcRessourceParcours $apcRessourceParcour): self
+    {
+        if ($this->apcRessourceParcours->removeElement($apcRessourceParcour)) {
+            // set the owning side to null (unless already changed)
+            if ($apcRessourceParcour->getRessource() === $this) {
+                $apcRessourceParcour->setRessource(null);
+            }
+        }
+
+        return $this;
     }
 }

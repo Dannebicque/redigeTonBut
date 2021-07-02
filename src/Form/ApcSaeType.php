@@ -10,6 +10,7 @@
 namespace App\Form;
 
 use App\Entity\ApcCompetence;
+use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
 use App\Entity\Departement;
 use App\Entity\Semestre;
@@ -25,13 +26,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ApcSaeType extends AbstractType
 {
     protected ?Departement $departement;
+    private bool $editable;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->departement = $options['departement'];
+        $this->editable = $options['editable'];
 
         $builder
-            ->add('codeMatiere', TextType::class, ['label' => 'Code SAÉ'])
+            ->add('codeMatiere', TextType::class, ['label' => 'Code SAÉ',  'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
             ->add('libelle', TextType::class, ['label' => 'Libellé'])
             ->add('libelleCourt', TextType::class,
                 ['label' => 'Libellé court', 'required' => false, 'attr' => ['maxlength' => 25], 'help' => '25 caractères maximum'])
@@ -44,9 +47,9 @@ class ApcSaeType extends AbstractType
                 ])
             ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.']) //, 'attr' => ['x-model' => 'tdPpn']
             ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'cmPpn']
-            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales (hors projet)'])//, 'attr' => ['x-model' => 'heuresTotales']
-            ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP'])//, 'attr' => ['x-model' => 'tpPpn']
-            ->add('projetPpn', TextType::class, ['label' => 'Heures "projet tutoré"'])
+           // ->add('heuresTotales', TextType::class, ['label' => 'Heures totales (hors projet)'])//, 'attr' => ['x-model' => 'heuresTotales']
+            ->add('tpPpn', TextType::class, ['label' => 'Préconisation  TP','help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'tpPpn']
+            ->add('projetPpn', TextType::class, ['label' => 'Préconisation "projet tutoré"','help' => 'A titre indicatif pour les départements.'])
             ->add('livrables', TextareaType::class,
                 [
                     'label' => 'Livrables',
@@ -92,6 +95,7 @@ class ApcSaeType extends AbstractType
         $resolver->setDefaults([
             'data_class' => ApcSae::class,
             'departement' => null,
+            'editable' => null,
         ]);
     }
 }

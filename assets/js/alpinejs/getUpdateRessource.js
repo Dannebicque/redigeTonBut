@@ -3,6 +3,7 @@ function getUpdateRessource() {
     acs: [],
     competences: [],
     saes: [],
+    parcours: [],
     semestre: null,
     init () {
       this.semestre = this.displayRadioValue()
@@ -52,6 +53,16 @@ function getUpdateRessource() {
       })
 
       this.saes = await fetch(Routing.generate('formation_apc_sae_ajax'), {
+        method: 'POST',
+        body: JSON.stringify({
+          semestre: this.semestre,
+          ressource: ressource
+        })
+      }).then(r => {
+        return r.json()
+      })
+
+      this.parcours = await fetch(Routing.generate('formation_apc_ressouce_parcours_ajax'), {
         method: 'POST',
         body: JSON.stringify({
           semestre: this.semestre,

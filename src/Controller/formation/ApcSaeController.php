@@ -20,11 +20,13 @@ use App\Entity\ApcSaeApprentissageCritique;
 use App\Entity\ApcSaeCompetence;
 use App\Entity\ApcSaeRessource;
 use App\Entity\Constantes;
+use App\Entity\Departement;
 use App\Form\ApcSaeType;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeApprentissageCritiqueRepository;
 use App\Repository\ApcSaeCompetenceRepository;
+use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
 use App\Utils\Convert;
@@ -168,6 +170,46 @@ class ApcSaeController extends BaseController
     }
 
     /**
+     * @Route("/ajax-parcours", name="apc_sae_parcours_ajax", methods={"POST"}, options={"expose":true})
+     */
+    public function ajaxParcours(
+        SemestreRepository $semestreRepository,
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
+        Request $request
+    ): Response {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        $semestre = $semestreRepository->find($parametersAsArray['semestre']);
+        if (null !== $semestre && (($semestre->getOrdreLmd() > 2 && $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) || $this->getDepartement()->getTypeStructure() === Departement::TYPE3)) {
+            $datas = $this->getDepartement()->getApcParcours();
+            if (count($datas) > 0) {
+                if (null !== $parametersAsArray['sae']) {
+                    $tabSaeParcours = $apcSaeParcoursRepository->findArrayIdSae($parametersAsArray['sae']);
+                } else {
+                    $tabSaeParcours = [];
+                }
+
+                $t = [];
+                foreach ($datas as $d) {
+                    $b = [];
+                    $b['id'] = $d->getId();
+                    $b['libelle'] = $d->getLibelle();
+                    $b['code'] = $d->getCode();
+                    $b['checked'] = true === in_array($d->getId(), $tabSaeParcours);
+                    $t[] = $b;
+                }
+
+                return $this->json($t);
+            }
+        }
+
+        return $this->json(false);
+    }
+
+    /**
      * @Route("/new", name="apc_sae_new", methods={"GET","POST"})
      */
     public function new(
@@ -176,7 +218,10 @@ class ApcSaeController extends BaseController
         Request $request
     ): Response {
         $apcSae = new ApcSae();
-        $form = $this->createForm(ApcSaeType::class, $apcSae, ['departement' => $this->getDepartement()]);
+        $form = $this->createForm(ApcSaeType::class, $apcSae, [
+            'departement' => $this->getDepartement(),
+            'editable' => $this->isGranted('ROLE_GT')
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -224,7 +269,10 @@ class ApcSaeController extends BaseController
         Request $request,
         ApcSae $apcSae
     ): Response {
-        $form = $this->createForm(ApcSaeType::class, $apcSae, ['departement' => $this->getDepartement()]);
+        $form = $this->createForm(ApcSaeType::class, $apcSae, [
+            'departement' => $this->getDepartement(),
+            'editable' => $this->isGranted('ROLE_GT')
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

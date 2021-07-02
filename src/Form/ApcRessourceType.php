@@ -25,13 +25,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ApcRessourceType extends AbstractType
 {
     protected ?Departement $departement;
+    protected bool $editable;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->departement = $options['departement'];
+        $this->editable = $options['editable'];
 
         $builder
-            ->add('codeMatiere', TextType::class, ['label' => 'Code Ressource'])
+            ->add('codeMatiere', TextType::class, ['label' => 'Code Ressource', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
             ->add('libelle', TextType::class, ['label' => 'Libellé'])
             ->add('libelleCourt', TextType::class, ['label' => 'Libellé court', 'attr' => ['maxlength' => 25], 'required' => false,
                 'help' => '25 caractères maximum'])
@@ -85,6 +87,7 @@ class ApcRessourceType extends AbstractType
         $resolver->setDefaults([
             'data_class' => ApcRessource::class,
             'departement' => null,
+            'editable' => null,
         ]);
     }
 }

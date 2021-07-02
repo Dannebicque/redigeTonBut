@@ -43,10 +43,22 @@ class ApcParcours extends BaseEntity
      */
     private ?Departement $departement;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="parcours")
+     */
+    private $apcSaeParcours;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="parcours")
+     */
+    private $apcRessourceParcours;
+
     public function __construct(Departement $departement)
     {
         $this->setDepartement($departement);
         $this->apcParcoursNiveaux = new ArrayCollection();
+        $this->apcSaeParcours = new ArrayCollection();
+        $this->apcRessourceParcours = new ArrayCollection();
     }
 
     public function getLibelle(): ?string
@@ -111,6 +123,66 @@ class ApcParcours extends BaseEntity
     public function setDepartement(?Departement $departement): self
     {
         $this->departement = $departement;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ApcSaeParcours[]
+     */
+    public function getApcSaeParcours(): Collection
+    {
+        return $this->apcSaeParcours;
+    }
+
+    public function addApcSaeParcour(ApcSaeParcours $apcSaeParcour): self
+    {
+        if (!$this->apcSaeParcours->contains($apcSaeParcour)) {
+            $this->apcSaeParcours[] = $apcSaeParcour;
+            $apcSaeParcour->setParcours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApcSaeParcour(ApcSaeParcours $apcSaeParcour): self
+    {
+        if ($this->apcSaeParcours->removeElement($apcSaeParcour)) {
+            // set the owning side to null (unless already changed)
+            if ($apcSaeParcour->getParcours() === $this) {
+                $apcSaeParcour->setParcours(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ApcRessourceParcours[]
+     */
+    public function getApcRessourceParcours(): Collection
+    {
+        return $this->apcRessourceParcours;
+    }
+
+    public function addApcRessourceParcour(ApcRessourceParcours $apcRessourceParcour): self
+    {
+        if (!$this->apcRessourceParcours->contains($apcRessourceParcour)) {
+            $this->apcRessourceParcours[] = $apcRessourceParcour;
+            $apcRessourceParcour->setParcours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApcRessourceParcour(ApcRessourceParcours $apcRessourceParcour): self
+    {
+        if ($this->apcRessourceParcours->removeElement($apcRessourceParcour)) {
+            // set the owning side to null (unless already changed)
+            if ($apcRessourceParcour->getParcours() === $this) {
+                $apcRessourceParcour->setParcours(null);
+            }
+        }
 
         return $this;
     }

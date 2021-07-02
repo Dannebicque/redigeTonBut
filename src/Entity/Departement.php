@@ -29,6 +29,9 @@ class Departement extends BaseEntity
 
     public const TERTIAIRE = 'tertiaire';
     public const SECONDAIRE = 'secondaire';
+public const TYPE1 = 'type1';
+public const TYPE2 = 'type2';
+public const TYPE3 = 'type3';
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -90,6 +93,11 @@ class Departement extends BaseEntity
      * @ORM\Column(type="integer")
      */
     private $numeroAnnexe;
+
+    /**
+     * @ORM\Column(type="string", length=5)
+     */
+    private $typeStructure;
 
     public function __construct()
     {
@@ -330,6 +338,18 @@ class Departement extends BaseEntity
     public function setNumeroAnnexe(int $numeroAnnexe): self
     {
         $this->numeroAnnexe = $numeroAnnexe;
+
+        return $this;
+    }
+
+    public function getTypeStructure(): ?string
+    {
+        return $this->typeStructure;
+    }
+
+    public function setTypeStructure(string $typeStructure): self
+    {
+        $this->typeStructure = $typeStructure;
 
         return $this;
     }

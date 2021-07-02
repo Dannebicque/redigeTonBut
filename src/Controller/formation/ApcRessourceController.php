@@ -20,19 +20,20 @@ use App\Entity\ApcRessourceApprentissageCritique;
 use App\Entity\ApcRessourceCompetence;
 use App\Entity\ApcSaeRessource;
 use App\Entity\Constantes;
+use App\Entity\Departement;
 use App\Form\ApcRessourceType;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
+use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
+use App\Utils\Codification;
 use App\Utils\Convert;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -151,6 +152,46 @@ class ApcRessourceController extends BaseController
     }
 
     /**
+     * @Route("/ajax-parcours", name="apc_ressouce_parcours_ajax", methods={"POST"}, options={"expose":true})
+     */
+    public function ajaxParcours(
+        SemestreRepository $semestreRepository,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
+        Request $request
+    ): Response {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        $semestre = $semestreRepository->find($parametersAsArray['semestre']);
+        if (null !== $semestre && (($semestre->getOrdreLmd() > 2 && $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) || $this->getDepartement()->getTypeStructure() === Departement::TYPE3)) {
+            $datas = $this->getDepartement()->getApcParcours();
+            if (count($datas) > 0) {
+                if (null !== $parametersAsArray['ressource']) {
+                    $tabRessourceParcours = $apcRessourceParcoursRepository->findArrayIdRessource($parametersAsArray['ressource']);
+                } else {
+                    $tabRessourceParcours = [];
+                }
+
+                $t = [];
+                foreach ($datas as $d) {
+                    $b = [];
+                    $b['id'] = $d->getId();
+                    $b['libelle'] = $d->getLibelle();
+                    $b['code'] = $d->getCode();
+                    $b['checked'] = true === in_array($d->getId(), $tabRessourceParcours);
+                    $t[] = $b;
+                }
+
+                return $this->json($t);
+            }
+        }
+
+        return $this->json(false);
+    }
+
+    /**
      * @Route("/new/", name="apc_ressource_new", methods={"GET","POST"})
      */
     public function new(
@@ -161,10 +202,12 @@ class ApcRessourceController extends BaseController
         $apcRessource = new ApcRessource();
         $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
             'departement' => $this->getDepartement(),
+            'editable' => $this->isGranted('ROLE_GT')
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
             $this->entityManager->persist($apcRessource);
 
             $acs = $request->request->get('ac');
@@ -191,7 +234,8 @@ class ApcRessourceController extends BaseController
                 'apc.ressource.new.success.flash'
             );
 
-            return $this->redirectToRoute('but_ressources_annee', ['annee' => $apcRessource->getSemestre()->getAnnee()->getId()]);
+            return $this->redirectToRoute('but_ressources_annee',
+                ['annee' => $apcRessource->getSemestre()->getAnnee()->getId()]);
         }
 
         return $this->render('formation/apc_ressource/new.html.twig', [
@@ -211,10 +255,13 @@ class ApcRessourceController extends BaseController
     ): Response {
         $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
             'departement' => $this->getDepartement(),
+            'editable' => $this->isGranted('ROLE_GT')
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
+
             foreach ($apcRessource->getApcRessourceApprentissageCritiques() as $ac) {
                 $this->entityManager->remove($ac);
             }
@@ -248,7 +295,8 @@ class ApcRessourceController extends BaseController
             );
 
             if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
-                return $this->redirectToRoute('but_ressources_annee', ['annee' => $apcRessource->getSemestre()->getAnnee()->getId()]);
+                return $this->redirectToRoute('but_ressources_annee',
+                    ['annee' => $apcRessource->getSemestre()->getAnnee()->getId()]);
 
             }
 
@@ -299,18 +347,25 @@ class ApcRessourceController extends BaseController
     }
 
     /**
-     * @Route("/{ressource}/{ac}/update_ajax", name="apc_ressource_ac_update_ajax", methods="POST", options={"expose":true})
+     * @Route("/{ressource}/{ac}/update_ajax", name="apc_ressource_ac_update_ajax", methods="POST",
+     *                                         options={"expose":true})
      */
     public function updateAc(
         ApcRessourceApprentissageCritiqueRepository $apcRessourceApprentissageCritiqueRepository,
-        Request $request, ApcRessource $ressource, ApcApprentissageCritique $ac) {
+        Request $request,
+        ApcRessource $ressource,
+        ApcApprentissageCritique $ac
+    ) {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
         }
 
         //regarde si déjà existant
-        $acRessource = $apcRessourceApprentissageCritiqueRepository->findOneBy(['ressource' => $ressource->getId(), 'apprentissageCritique' => $ac->getId()]);
+        $acRessource = $apcRessourceApprentissageCritiqueRepository->findOneBy([
+            'ressource' => $ressource->getId(),
+            'apprentissageCritique' => $ac->getId()
+        ]);
 
         if ($acRessource !== null) {
             //selon la valeur, on supprime
@@ -330,27 +385,34 @@ class ApcRessourceController extends BaseController
     }
 
     /**
-     * @Route("/{ressource}/{competence}/update_coeff_ajax", name="apc_ressource_coeff_update_ajax", methods="POST", options={"expose":true})
+     * @Route("/{ressource}/{competence}/update_coeff_ajax", name="apc_ressource_coeff_update_ajax", methods="POST",
+     *                                                       options={"expose":true})
      */
     public function updateCoeff(
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
-        Request $request, ApcRessource $ressource, ApcCompetence $competence) {
+        Request $request,
+        ApcRessource $ressource,
+        ApcCompetence $competence
+    ) {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
         }
 
         //regarde si déjà existant
-        $acRessource = $apcRessourceCompetenceRepository->findOneBy(['ressource' => $ressource->getId(), 'competence' => $competence->getId()]);
+        $acRessource = $apcRessourceCompetenceRepository->findOneBy([
+            'ressource' => $ressource->getId(),
+            'competence' => $competence->getId()
+        ]);
 
         if ($acRessource !== null) {
             //on modifie
             $acRessource->setCoefficient(Convert::convertToFloat($parametersAsArray['valeur']));
         } else {
             //on ajoute
-                $acRessource = new ApcRessourceCompetence($ressource, $competence);
-                $acRessource->setCoefficient($parametersAsArray['valeur']);
-                $this->entityManager->persist($acRessource);
+            $acRessource = new ApcRessourceCompetence($ressource, $competence);
+            $acRessource->setCoefficient($parametersAsArray['valeur']);
+            $this->entityManager->persist($acRessource);
 
         }
         $this->entityManager->flush();
@@ -359,17 +421,20 @@ class ApcRessourceController extends BaseController
     }
 
     /**
-     * @Route("/{ressource}/{type}/update_heures_ajax", name="apc_ressource_heure_update_ajax", methods="POST", options={"expose":true})
+     * @Route("/{ressource}/{type}/update_heures_ajax", name="apc_ressource_heure_update_ajax", methods="POST",
+     *                                                  options={"expose":true})
      */
     public function updateHeures(
-        Request $request, ApcRessource $ressource, string $type) {
+        Request $request,
+        ApcRessource $ressource,
+        string $type
+    ) {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
         }
 
-        switch ($type)
-        {
+        switch ($type) {
             case 'heures_totales':
                 $ressource->setHeuresTotales($parametersAsArray['valeur']);
                 break;
