@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Tableau Validation SAE/AC pour le B.U.T. {{ annee.ordre }}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {{ render(controller(
+                'App\\Controller\\TableauController::tableauValidationAnneeSae',
+                { 'annee': annee.id }
+            )) }}
+        </div>
+    </div>
+{% endblock %}
+
+{# todo: bouton export, refresh du tableau, possibilité ed masquer des données (menu en modal?), affichage code
+et/ou libellé. Bouton pour ajouter ressource ou SAE rapidement ?
+Si croix possibilité d'indiquer un commentaire ? ECTS ? Heures préconisés ? #}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+
+        document.querySelectorAll('.changeAcSae').forEach((elem) => {
+          elem.addEventListener('change', changeAcSae)
+        })
+
+        function changeAcSae (e) {
+          updateSae(e.target.checked, e.target.dataset.sae, e.target.dataset.ac)
+        }
+
+
+
+        function updateSae (value, sae, ac) {
+          fetch(Routing.generate('formation_apc_sae_ac_update_ajax', {sae: sae, ac: ac}), {
+            method: 'POST',
+            body: JSON.stringify({
+              value: value
+            })
+          })
+        }
+      })
+    </script>
+{% endblock %}

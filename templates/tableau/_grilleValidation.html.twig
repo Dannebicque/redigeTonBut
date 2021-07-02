@@ -1,0 +1,67 @@
+<div style="overflow-x: auto">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="3">&nbsp;</th>
+            {% for semestre in annee.semestres %}
+                <th colspan="{{ semestre.apcSaes|length }}">Semestre {{ semestre.ordreLmd }}</th>
+                <th>&nbsp;</th>
+            {% endfor %}
+            <th>&nbsp;</th>
+        </tr>
+        <tr>
+            <th colspan="">Compétences</th>
+            <th>AC</th>
+            <th>&nbsp;</th>
+            {% for semestre in annee.semestres %}
+                {% for sae in semestre.apcSaes %}
+                    <th><abbr title="{{ sae.libelle }}">{{ sae.codeMatiere }}</abbr></th>
+                {% endfor %}
+                <th>&nbsp;</th>
+            {% endfor %}
+            <th>Validation</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for niveau in niveaux %}
+            <tr>
+                <th rowspan="{{ niveau.apcApprentissageCritiques|length + 1 }}" class="bg_{{ niveau.competence
+                .couleur }}">
+                    {{ niveau.competence.nomCourt }}
+                </th>
+            </tr>
+
+            {% for ac in niveau.apcApprentissageCritiques %}
+                <tr>
+                    <th class="bg_{{ niveau.competence.couleur }}"><abbr title="{{ ac.libelle }}">{{ ac.code }}</abbr>
+                    </th>
+                    <th>&nbsp;</th>
+                    {% for semestre in annee.semestres %}
+                        {% for sae in semestre.apcSaes %}
+                            <td>
+                                <input type="checkbox"
+                                       data-sae="{{ sae.id }}"
+                                       data-ac="{{ ac.id }}"
+                                       class="changeAcSae"
+                                       {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}checked{% endif %} />
+                            </td>
+                        {% endfor %}
+                        <th>&nbsp;</th>
+                    {% endfor %}
+                    <th>
+                        {% if tab.acs[ac.id] is defined %}
+                            <span class="badge bg-success">OK</span>
+                        {% else %}
+                            <span class="badge bg-danger">NON OK</span>
+                        {% endif %}
+                    </th>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="{{ 6 + saes|length }}"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -94,16 +94,8 @@ class ApcRessourceRepository extends ServiceEntityRepository
 
     public function findByAnneeArray(Annee $annee)
     {
-        $query = $this->createQueryBuilder('r')
-            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
-            ->where('s.annee = :annee')
-            //->andWhere('s.ppn_actif = m.ppn')
-            ->setParameter('annee', $annee->getId())
-            ->orderBy('r.semestre', 'ASC')
-            ->addOrderBy('r.codeMatiere', 'ASC')
-            ->addOrderBy('r.libelle', 'ASC')
-            ->getQuery()
-            ->getResult();
+        $query = $this->findByAnnee($annee);
+
         $t = [];
         foreach ($annee->getSemestres() as $semestre)
         {
@@ -116,5 +108,18 @@ class ApcRessourceRepository extends ServiceEntityRepository
         }
 
         return $t;
+    }
+
+    public function findByAnnee(Annee $annee)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
+            ->where('s.annee = :annee')
+            ->setParameter('annee', $annee->getId())
+            ->orderBy('r.semestre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

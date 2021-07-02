@@ -25,14 +25,7 @@ class TableauController extends BaseController
     #[Route('/structure', name: 'structure')]
     public function structure(): Response
     {
-//
-//        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
-//        $dataSemestres = $structure->setSemestres($semestres)->getDataTableau();
-//        $json = $structure->setSemestres($semestres)->getDataJson();
-
         return $this->render('tableau/structure.html.twig', [
-//            'semestres' => $dataSemestres,
-//            'json' => json_encode($json)
         ]);
     }
 
@@ -126,6 +119,16 @@ class TableauController extends BaseController
         ]);
     }
 
+    #[Route('/validation/{annee}', name: 'validation_sae_ac_annee', requirements: ['annee' => '\d+'])]
+    public function validationSaeAc(
+        Annee $annee
+    ): Response {
+        return $this->render('tableau/validation_sae_ac.html.twig', [
+            'annee' => $annee,
+            'semestres' => $annee->getSemestres()
+        ]);
+    }
+
     #[Route('/preconisations/{annee}', name: 'preconisations_annee', requirements: ['annee' => '\d+'])]
     public function tableauPreconisations(
         Annee $annee
@@ -205,6 +208,33 @@ class TableauController extends BaseController
                 'ressources' => $ressources,
                 'tab' => $tab,
                 'coefficients' => $coefficients
+            ]);
+    }
+
+    public function tableauValidationAnneeSae(
+        ApcSaeRepository $apcSaeRepository,
+        Annee $annee
+    ) {
+        $saes = $apcSaeRepository->findByAnnee($annee);
+
+        $tab = [];
+        $tab['saes'] = [];
+        $tab['acs'] = [];
+
+        foreach ($saes as $sae) {
+            $tab['saes'][$sae->getId()] = [];
+            foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
+                $tab['saes'][$sae->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
+                $tab['acs'][$ac->getApprentissageCritique()->getId()] = 'ok';
+            }
+        }
+
+        return $this->render('tableau/_grilleValidation.html.twig',
+            [
+                'annee' => $annee,
+                'niveaux' => $annee->getApcNiveaux(),
+                'saes' => $saes,
+                'tab' => $tab,
             ]);
     }
 

@@ -185,11 +185,6 @@
                                 <span class="label">BUT{{ annee.ordre }}</span>
                             </a>
                             <ul id="ref_formation">
-{#                                <li>#}
-{#                                    <a href="{{ path('but_annee', {annee: annee.id}) }}">#}
-{#                                        <span class="label">Consulter</span>#}
-{#                                    </a>#}
-{#                                </li>#}
                                 <li>
                                     <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
                                         <span class="label">Ressources</span>
@@ -213,6 +208,11 @@
                                 <li>
                                     <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
                                         <span class="label">Tableau par parcours</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
+                                        <span class="label">Validation des AC</span>
                                     </a>
                                 </li>
                             </ul>
