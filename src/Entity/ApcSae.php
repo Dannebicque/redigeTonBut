@@ -65,6 +65,11 @@ class ApcSae extends AbstractMatiere
      */
     private $apcSaeParcours;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $ordre;
+
     public function __construct()
     {
         $this->apcSaeCompetences = new ArrayCollection();
@@ -276,6 +281,18 @@ class ApcSae extends AbstractMatiere
                 $apcSaeParcour->setSae(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(int $ordre): self
+    {
+        $this->ordre = $ordre;
 
         return $this;
     }

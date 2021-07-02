@@ -2,15 +2,15 @@
 ![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
 
 
-# Rédige Ton B.U.T.
+# ORéBUT
 
 Un outil pour accompagner les ACD dans la rédaction des programmes nationaux de B.U.T.
 
 ## Badges
 
-Add badges from somewhere like: [shields.io](https://shields.io/)
-
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+
+[![wakatime](https://wakatime.com/badge/github/Dannebicque/redigeTonBut.svg)](https://wakatime.com/badge/github/Dannebicque/redigeTonBut)
 
 ## Documentation
 
@@ -19,29 +19,22 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 ## Features
 
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
-
-
-## Demo
-
-Insert gif or link to demo
+- Gestion des tableaux avec vérifications et recalcul en temps réel
+- Gestion des fiches SAÉ et Ressources
+- Toutes les données sont évidemments liées pour éviter les erreurs de mise à jour ou de recopie.
+- Différents niveaux d'accès
+ - GT : Toutes les spécialités
+ - PACD / CPN : Tous les accès sur sa spécialité
+ - Auteurs : Gestion des fiches SAÉ/Ressources
+ - Lecteur : Consultation uniquement
 
 
 ## Contributing
 
 Contributions are always welcome!
 
-See `contributing.md` for ways to get started.
-
-Please adhere to this project's `code of conduct`.
-
 
 ## Installation
-
-Install my-project with npm
 
 ```bash 
 git clone
@@ -63,9 +56,8 @@ bin/console d:f:l
 
 ## Roadmap
 
-- Additional browser support
-
-- Add more integrations
+- Gestion des parcours
+- Export des documents
 
 
 ## Authors

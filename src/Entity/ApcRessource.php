@@ -60,6 +60,11 @@ class ApcRessource extends AbstractMatiere
      */
     private $apcRessourceParcours;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $ordre;
+
     public function __construct()
     {
         $this->apcRessourceCompetences = new ArrayCollection();
@@ -272,6 +277,18 @@ class ApcRessource extends AbstractMatiere
                 $apcRessourceParcour->setRessource(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(int $ordre): self
+    {
+        $this->ordre = $ordre;
 
         return $this;
     }

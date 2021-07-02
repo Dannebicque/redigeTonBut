@@ -49,6 +49,11 @@ class ApcApprentissageCritique extends BaseEntity
     private Collection $apcSaeApprentissageCritiques;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $ordre;
+
+    /**
      * ApcApprentissageCritique constructor.
      *
      * @param $niveau
@@ -165,5 +170,17 @@ class ApcApprentissageCritique extends BaseEntity
         }
 
         return null;
+    }
+
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(int $ordre): self
+    {
+        $this->ordre = $ordre;
+
+        return $this;
     }
 }
