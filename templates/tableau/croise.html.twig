@@ -45,12 +45,28 @@ Si croix possibilité d'indiquer un commentaire ? ECTS ? Heures préconisés ? #
           elem.addEventListener('change', changeAcRessource)
         })
 
+        document.querySelectorAll('.changeCoeffSae').forEach((elem) => {
+          elem.addEventListener('keyup', changeCoeffSae)
+        })
+
+        document.querySelectorAll('.changeCoeffRessource').forEach((elem) => {
+          elem.addEventListener('keyup', changeCoeffRessource)
+        })
+
         function changeAcSae (e) {
           updateSae( e.target.checked, e.target.dataset.sae, e.target.dataset.ac)
         }
 
         function changeAcRessource (e) {
           updateRessource( e.target.checked, e.target.dataset.ressource, e.target.dataset.ac)
+        }
+
+        function changeCoeffSae (e) {
+          updateCoeffSae( e.target.value, e.target.dataset.sae, e.target.dataset.competence)
+        }
+
+        function changeCoeffRessource (e) {
+          updateCoeffRessource( e.target.value, e.target.dataset.ressource, e.target.dataset.competence)
         }
 
         function updateSae (value, sae, ac) {
@@ -67,6 +83,24 @@ Si croix possibilité d'indiquer un commentaire ? ECTS ? Heures préconisés ? #
             method: 'POST',
             body: JSON.stringify({
               value: value
+            })
+          })
+        }
+
+        function updateCoeffSae (value, sae, competence) {
+          fetch(Routing.generate('formation_apc_sae_coeff_update_ajax', {sae: sae, competence: competence}), {
+            method: 'POST',
+            body: JSON.stringify({
+              valeur: value
+            })
+          })
+        }
+
+        function updateCoeffRessource (value, ressource, competence) {
+          fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {ressource: ressource, competence: competence}), {
+            method: 'POST',
+            body: JSON.stringify({
+              valeur: value
             })
           })
         }

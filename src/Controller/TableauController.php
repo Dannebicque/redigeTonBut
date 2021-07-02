@@ -6,9 +6,12 @@ use App\Classes\Tableau\Preconisation;
 use App\Classes\Tableau\Structure;
 use App\Entity\Annee;
 use App\Entity\Semestre;
+use App\Repository\ApcCompetenceSemestreRepository;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcNiveauRepository;
+use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceRepository;
+use App\Repository\ApcSaeCompetenceRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\SemestreRepository;
 use App\Utils\Convert;
@@ -145,6 +148,8 @@ class TableauController extends BaseController
     }
 
     public function tableauSemestre(
+        ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
+        ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         ApcNiveauRepository $apcNiveauRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcRessourceRepository $apcRessourceRepository,
@@ -152,7 +157,12 @@ class TableauController extends BaseController
     ) {
         $saes = $apcSaeRepository->findBySemestre($semestre);
         $ressources = $apcRessourceRepository->findBySemestre($semestre);
+
+        $compSae = $apcSaeCompetenceRepository->findBySemestre($semestre);
+        $compRessources = $apcRessourceCompetenceRepository->findBySemestre($semestre);
+
         $tab = [];
+        $coefficients = [];
         $tab['saes'] = [];
         $tab['ressources'] = [];
 
@@ -170,13 +180,31 @@ class TableauController extends BaseController
             }
         }
 
+        foreach ($compSae as $comp) {
+           if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
+               $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
+               $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
+           }
+            $coefficients[$comp->getCompetence()->getId()]['saes'][$comp->getSae()->getId()] = $comp->getCoefficient();
+        }
+
+        foreach ($compRessources as $comp) {
+            if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
+                $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
+                $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
+            }
+            $coefficients[$comp->getCompetence()->getId()]['ressources'][$comp->getRessource()->getId()] = $comp->getCoefficient();
+        }
+
+
         return $this->render('tableau/_grilleSemestre.html.twig',
             [
                 'semestre' => $semestre,
                 'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
                 'saes' => $saes,
                 'ressources' => $ressources,
-                'tab' => $tab
+                'tab' => $tab,
+                'coefficients' => $coefficients
             ]);
     }
 

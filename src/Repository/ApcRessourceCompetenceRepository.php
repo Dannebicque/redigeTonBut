@@ -9,7 +9,9 @@
 
 namespace App\Repository;
 
+use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceCompetence;
+use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,32 +28,14 @@ class ApcRessourceCompetenceRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcRessourceCompetence::class);
     }
 
-    // /**
-    //  * @return ApcRessourceCompetence[] Returns an array of ApcRessourceCompetence objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findBySemestre(Semestre $semestre)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('c')
+            ->innerJoin(ApcRessource::class, 's', 'WITH', 'c.ressource = s.id')
+            ->where('s.semestre = :semestre')
+            ->setParameter('semestre', $semestre->getId())
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?ApcRessourceCompetence
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

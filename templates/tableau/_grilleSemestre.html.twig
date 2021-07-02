@@ -6,13 +6,11 @@
             <th>AC</th>
             <th>&nbsp;</th>
             {% for sae in saes %}
-                <th>{{ sae.codeMatiere }}</th>
+                <th><abbr title="{{ sae.libelle }}">{{ sae.codeMatiere }}</abbr></th>
             {% endfor %}
-{#            <th>portfolio</th>#}
-{#            <th>stage</th>#}{# todo: dynamique? En fonction de la grille de structure ? #}
             <th>&nbsp;</th>
             {% for ressource in ressources %}
-                <th>{{ ressource.codeMatiere }}</th>
+                <th><abbr title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</abbr></th>
             {% endfor %}
         </tr>
         </thead>
@@ -20,14 +18,15 @@
 
         {% for niveau in niveaux %}
             <tr>
-                <th rowspan="{{ niveau.apcApprentissageCritiques|length + 1 }}" class="bg_{{ niveau.competence.couleur }}">
+                <th rowspan="{{ niveau.apcApprentissageCritiques|length + 2 }}" class="bg_{{ niveau.competence
+                .couleur }}">
                     {{ niveau.competence.nomCourt }}
                 </th>
             </tr>
 
             {% for ac in niveau.apcApprentissageCritiques %}
                 <tr>
-                    <th class="bg_{{ niveau.competence.couleur }}">{{ ac.code }}</th>
+                    <th class="bg_{{ niveau.competence.couleur }}"><abbr title="{{ ac.libelle }}">{{ ac.code }}</abbr></th>
                     <th>&nbsp;</th>
                     {% for sae in saes %}
                         <td>
@@ -39,8 +38,6 @@
                                 endif %} />
                         </td>
                     {% endfor %}
-{#                    <td>P.</td>#}{# todo: obligatoire mais présent en SAE ? #}
-{#                    <td>S.</td>#}{# todo: dynamique? #}
                     <th>&nbsp;</th>
                     {% for ressource in ressources %}
                         <td>
@@ -54,6 +51,38 @@
                     {% endfor %}
                 </tr>
             {% endfor %}
+            <tr>
+                <th>Ceoff.</th>
+                <th>&nbsp;</th>
+                {% for sae in saes %}
+                    <td>
+                        <input type="text" class="form-control changeCoeffSae"
+                               style="min-width: 50px"
+                               data-sae="{{ sae.id }}"
+                               data-competence="{{ niveau.competence.id }}"
+                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
+                                .id].saes[sae.id] is defined %}
+                                    value="{{  coefficients[niveau.competence.id].saes[sae.id] }}"
+                                {% endif %}
+                        />
+                    </td>
+                {% endfor %}
+                <th>&nbsp;</th>
+                {% for ressource in ressources %}
+                    <td>
+                        <input type="text"
+                               style="min-width: 50px"
+                               data-ressource="{{ ressource.id }}"
+                               data-competence="{{ niveau.competence.id }}"
+                               class="form-control changeCoeffRessource"
+                               {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
+                               .id].ressources[ressource.id] is defined %}
+                                value="{{  coefficients[niveau.competence.id].ressources[ressource.id] }}"
+                               {% endif %}
+                                />
+                    </td>
+                {% endfor %}
+            </tr>
             <tr>
                 <td colspan="{{ 6 + ressources|length + saes|length }}"></td>
             </tr>

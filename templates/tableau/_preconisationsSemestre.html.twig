@@ -6,12 +6,12 @@
             <th>AC</th>
             <th>&nbsp;</th>
             {% for sae in saes %}
-                <th>{{ sae.codeMatiere }}</th>{# todo: ouvrir en modal ? #}
+                <th><abbr title="{{ sae.libelle }}">{{ sae.codeMatiere }}</abbr></th>
             {% endfor %}
 
             <th>&nbsp;</th>
             {% for ressource in ressources %}
-                <th>{{ ressource.codeMatiere }}</th>
+                <th><abbr title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</abbr></th>
             {% endfor %}
             <th>&nbsp;</th>
             <th>ECTS</th>
