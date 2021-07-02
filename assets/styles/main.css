@@ -8,3 +8,13 @@ tfoot>td>.titretableau {
     color: var(--light-text);
     font-weight: bold;
 }
+
+.logo-but {
+    font-size: 20px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+html[data-navcolor='dark'] .logo-but {
+    color: var(--light-text)
+}
+
