@@ -1,8 +1,10 @@
 <?php
 namespace App\Classes\Tableau;
 
+use App\Classes\Excel\ExcelWriter;
 use App\DTO\StructureDepartement;
 use App\DTO\StructureSemestre;
+use App\Entity\Departement;
 
 class Structure
 {
@@ -56,5 +58,16 @@ class Structure
         $json['departement'] = $this->donneesDepartement->getJson();
 
         return $json;
+    }
+
+    public function genereFichierExcel(
+        ExcelWriter $excelWriter,
+        Departement $departement
+    ) {
+        $excelWriter->nouveauFichier('vol_global'); //todo: pourrait se baser sur un modèle ?
+        //todo: si plusieurs parcours, plusieurs fichiers ?
+
+        return $excelWriter->genereFichier('structure_'.$departement->getSigle());
+
     }
 }
