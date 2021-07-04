@@ -16,7 +16,8 @@
                     <th class="text-center">ECARTS</th>
                 </tr>
                 </thead>
-                <tbody x-data="update" x-init="donnees = await (await fetch(Routing.generate('tableau_api_structure')))
+                <tbody x-data="getUpdateStructure()" x-init="donnees = await (await fetch(Routing.generate
+                ('tableau_api_structure')))
                 .json()">
                 <tr>
                     <th>Nbre d'heures d'enseignement (ressources + SAé)</th>
@@ -32,8 +33,11 @@
                         ('NB_HEURES_TOTAL', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center fw-bold">{{ constant('NB_HEURES_TOTAL', user_data.caracteristiques) }}</td>
-                    <td class="text-center">{{ (constant('NB_HEURES_TOTAL', user_data.caracteristiques) - semestres
-                        .dataDepartement.nbHeuresRessourcesSae)|badgeEgalite(0) }}</td>
+                    <td class="text-center">
+                        -c-
+{#                        {{ (constant('NB_HEURES_TOTAL', user_data.caracteristiques) - semestres#}
+{#                        .dataDepartement.nbHeuresRessourcesSae)|badgeEgalite(0) }}#}
+                    </td>
 
                 </tr>
                 <tr>
@@ -76,8 +80,9 @@
                         {{ user_data.caracteristiques.heuresAdaptationLocale }}
                     </td>
                     <td class="text-center">
-                        {{ (user_data.caracteristiques.heuresAdaptationLocale - semestres.dataDepartement
-                        .nbHeuresAdaptationLocale)|badgeEgalite(0) }}
+                        -c-
+{#                        {{ (user_data.caracteristiques.heuresAdaptationLocale - semestres.dataDepartement#}
+{#                        .nbHeuresAdaptationLocale)|badgeEgalite(0) }}#}
                     </td>
                 </tr>
                 <tr>
@@ -222,8 +227,9 @@
                         {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }}
                     </td>
                     <td class="text-center">
-                        {{ (constant('NB_HEURES_PROJET', user_data.caracteristiques) - semestres
-                        .dataDepartement.nbHeuresProjet)|badgeEgalite(0) }}
+                        -c-
+{#                        {{ (constant('NB_HEURES_PROJET', user_data.caracteristiques) - semestres#}
+{#                        .dataDepartement.nbHeuresProjet)|badgeEgalite(0) }}#}
                     </td>
                 </tr>
                 <tr>
@@ -250,8 +256,11 @@
                     .caracteristiques.totalHeuresAvecProjet }})">
                        </td>
                     <td class="text-center fw-bold">{{ user_data.caracteristiques.totalHeuresAvecProjet }}</td>
-                    <td class="text-center">{{ (semestres.dataDepartement.nbHeuresCoursProjet - user_data
-                        .caracteristiques.totalHeuresAvecProjet)|badgeEgalite(0) }}</td>
+                    <td class="text-center">
+                        -c-
+{#                        {{ (semestres.dataDepartement.nbHeuresCoursProjet - user_data#}
+{#                        .caracteristiques.totalHeuresAvecProjet)|badgeEgalite(0) }}#}
+                    </td>
                 </tr>
                 <tr>
                     <th>Nbre d'heures d'enseignement /année</th>
@@ -362,48 +371,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-      document.addEventListener('alpine:init', () => {
-        Alpine.data('update', () => ({
-          pourcent: 0,
-          donnees: {
-            1: {},
-            2: {},
-            3: {},
-            4: {},
-            5: {},
-            6: {},
-            departement: {}
-          },
-          update (e) {
-            fetch(Routing.generate('tableau_api_structure_update'), {
-              method: 'POST',
-              body: JSON.stringify({
-                semestre: e.target.dataset.semestre,
-                champ: e.target.dataset.field,
-                valeur: e.target.value
-              })
-            }).then(async r => {
-              this.donnees = await fetch(Routing.generate('tableau_api_structure')).then(r => {
-                return r.json()
-              })
-            })
 
-          },
-          numberFormat (valeur) {
-            if (typeof valeur !== 'undefined') {
-              return valeur.toFixed(2)
-            }
-          },
-          badgeSeuil (valeur, seuil) {
-            if (valeur > seuil) {
-              return '<span class="badge bg-danger text-uppercase">' + this.numberFormat(valeur) + '</span>'
-            }
-
-            return '<span class="badge bg-success text-uppercase">' + this.numberFormat(valeur) + '</span>'
-          }
-        }))
-      })
-    </script>
 {% endblock %}
 

@@ -1,16 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    {{ 'adm.referentiel.de.competence.heading'|trans({ '%departement%': departement.libelle}) }}
-{% endblock %}
-
-{% block breadcrumb %}
-    {{ include('composants/breadcrumb.html.twig', {liens:[
-        {
-            href:'',
-            title: 'aide'|trans,
-        }
-    ]}) }}
+    Référentiel de compétences de : {{ departement.sigle }}
 {% endblock %}
 
 {% block content %}
@@ -29,40 +20,12 @@
             <a class="nav-link" data-bs-toggle="tab" href="#annee" role="tab" aria-selected="false">Référentiel par
                                                                                                     année</a>
         </li>
-        <!-- An empty list to put overflowed links -->
-        {# <li class="nav-item dropdown ms-auto pe-0 d-none responsive-tab-dropdown"> #}
-        {# <a #}
-        {# class="btn btn-icon btn-icon-only btn-background pt-0 bg-transparent pe-0" #}
-        {# href="#" #}
-        {# data-bs-toggle="dropdown" #}
-        {# aria-haspopup="true" #}
-        {# aria-expanded="false" #}
-        {# > #}
-        {# <i data-cs-icon="more-horizontal"></i> #}
-        {# </a> #}
-        {# <ul class="dropdown-menu mt-2 dropdown-menu-end"></ul> #}
-        {# </li> #}
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="complet" role="tabpanel">
             <div class="card">
                 <header class="card-header">
                     <h4 class="card-title">Référentiel de compétences de la spécialité {{ departement.sigle }}</h4>
-                    <div class="card-header-actions" style="">
-                <span>
-                    <a href="{{ path('administration_apc_niveau_annee_synchro', {departement:departement.id}) }}"
-                       class="btn
-                    btn-sm btn btn-info"
-                       data-provide="tooltip"
-                       data-placement="bottom" title="Synchroniser les niveaux et les années"><i
-                                class="fas fa-sync"></i></a>
-                    <a href="{{ path('administration_apc_competence_new', {departement:departement.id}) }}" class="btn
-                    btn-sm btn btn-info"
-                       data-provide="tooltip"
-                       data-placement="bottom" title="Ajouter une compétences"><i
-                                class="fas fa-plus"></i></a>
-                </span>
-                    </div>
                 </header>
                 <div class="card-body">
                     <ul class="nav nav-pills responsive-tabs nav-justified" role="tablist">
@@ -90,24 +53,10 @@
         <div class="tab-pane" id="parcours" role="tabpanel">
             <div class="card">
                 <header class="card-header">
-                    <h4 class="card-title">{{ 'adm.apc.parcours.heading'|trans({ '%departement%': departement.libelle}) }}</h4>
-                    <div class="card-header-actions" style="">
-                <span>
-                    <a href="{{ path('administration_apc_parcours_new', {departement:departement.id}) }}" class="btn
-                    btn-sm btn btn-info"
-                       data-provide="tooltip"
-                       data-placement="bottom" title="Ajouter un parcours"><i
-                                class="fas fa-plus"></i></a>
-                </span>
-                    </div>
+                    <h4 class="card-title">
+                        Parcours de la spécialité : {{ departement.sigle }}
+                    </h4>
                 </header>
-
-                {# <nav class="nav nav-pills nav-justified"> #}
-                {# <a class="nav-item nav-link active" href="#">Active</a> #}
-                {# <a class="nav-item nav-link" href="#">Much longer nav link</a> #}
-                {# <a class="nav-item nav-link" href="#">Link</a> #}
-                {# <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> #}
-                {# </nav> #}
 
                 <div class="card-body">
                     <ul class="nav nav-pills responsive-tabs nav-justified" role="tablist">
@@ -132,23 +81,17 @@
         <div class="tab-pane " id="annee" role="tabpanel">
             <div class="card">
                 <header class="card-header">
-                    <h4 class="card-title">{{ 'adm.apc.annee.heading'|trans({ '%departement%': departement.libelle}) }}</h4>
-                    <div class="card-header-actions">
-                <span>
-                    <a href="{{ path('administration_apc_parcours_new', {departement:departement.id}) }}" class="btn
-                    btn-sm btn btn-info"
-                       data-provide="tooltip"
-                       data-placement="bottom" title="Ajouter un compétences"><i
-                                class="fas fa-plus"></i></a>
-                </span>
-                    </div>
+                    <h4 class="card-title">
+                        Référentiel par année pour la spécialité {{ departement.sigle }}
+                    </h4>
                 </header>
 
                 <div class="card-body">
                     <ul class="nav nav-pills responsive-tabs nav-justified" role="tablist">
                         {% for annee in 1..3 %}
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#annee_{{ annee }}" role="tab" aria-selected="false" type="button">Année {{ annee }}</button>
+                                <button class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#annee_{{ annee }}" role="tab" aria-selected="false" type="button">
+                                    Année {{ annee }}</button>
                             </li>
                         {% endfor %}
                     </ul>
@@ -164,9 +107,5 @@
             </div>
         </div>
     </div>
-
-
-
-
 {% endblock %}
 

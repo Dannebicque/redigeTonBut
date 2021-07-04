@@ -23,7 +23,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class TableauController extends BaseController
 {
     #[Route('/structure', name: 'structure')]
-    public function structure(): Response
+    public function structure(
+    ): Response
     {
         return $this->render('tableau/structure.html.twig', [
         ]);

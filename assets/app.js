@@ -30,6 +30,8 @@ Alpine.start()
 
 import './js/alpinejs/getUpdateRessource'
 import './js/alpinejs/getUpdateSae'
+import './js/alpinejs/getUpdatePreconisation'
+import './js/alpinejs/getUpdateStructure'
 
 
 

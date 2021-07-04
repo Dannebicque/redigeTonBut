@@ -26,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BaseController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
-    protected DepartementRepository $departementRepository;
+    protected DepartementRepository $dptRepository;
     protected TranslatorInterface $translator;
     protected FlashBagInterface $flashBag;
     protected SessionInterface $session;
@@ -43,9 +43,9 @@ class BaseController extends AbstractController
     /**
      * @required
      */
-    public function setDepartementRepository(DepartementRepository $departementRepository): void
+    public function setDepartementRepository(DepartementRepository $dptRepository): void
     {
-        $this->departementRepository = $departementRepository;
+        $this->dptRepository = $dptRepository;
     }
 
     /**
@@ -87,7 +87,7 @@ class BaseController extends AbstractController
     {
         if ($this->isGranted('ROLE_GT')) {
             if ($this->session->get('departement') !== null) {
-                $this->departement = $this->departementRespository->find($this->session->get('departement'));
+                $this->departement = $this->dptRepository->find($this->session->get('departement'));
             } else {
                 $this->departement = null;
             }
