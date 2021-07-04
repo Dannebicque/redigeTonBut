@@ -153,6 +153,7 @@ class ReferentielCompetenceImport
                 foreach ($sem->ressources->ressource as $ressource) {
                     $ar = new ApcRessource();
                     $ar->setSemestre($semestre);
+                    $ar->setOrdre(substr($ressource['code'], 2, 2));
                     $ar->setLibelle($ressource->titre);
                     $ar->setCodeMatiere((string)$ressource['code']);
                     $ar->setTdPpn((float)$ressource['heuresCMTD']);
@@ -180,6 +181,7 @@ class ReferentielCompetenceImport
                     $ar = new ApcSae();
                     $ar->setSemestre($semestre);
                     $ar->setLibelle($sae->titre);
+                    $ar->setOrdre(substr($sae['code'], 4, 2));
                     $ar->setCodeMatiere((string)$sae['code']);
                     $ar->setTdPpn((float)$sae['heuresCMTD']);
                     $ar->setTpPpn((float)$sae['heuresTP']);
