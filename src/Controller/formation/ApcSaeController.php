@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApcSaeController extends BaseController
 {
     /**
-     * @Route("/new", name="apc_sae_new", methods={"GET","POST"})
+     * @Route("/new/{semestre}", name="apc_sae_new", methods={"GET","POST"})
      */
     public function new(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
