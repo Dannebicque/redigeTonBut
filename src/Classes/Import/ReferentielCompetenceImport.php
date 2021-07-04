@@ -4,6 +4,7 @@
 namespace App\Classes\Import;
 
 
+use App\Entity\Annee;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcComposanteEssentielle;
@@ -51,6 +52,12 @@ class ReferentielCompetenceImport
 
     private function importCompetence()
     {
+        $annees = $this->entityManager->getRepository(Annee::class)->findByDepartement($this->departement);
+        $tAnnees = [];
+        foreach ($annees as $annee) {
+            $tAnnees['BUT'.$annee->getOrdre()] = $annee;
+        }
+
         $xml = $this->openXmlFile();
         $tCompetences = [];
         foreach ($xml->competences->competence as $competence) {
@@ -79,7 +86,14 @@ class ReferentielCompetenceImport
 
             foreach ($competence->niveaux->niveau as $niveau) {
                 $niv = new ApcNiveau();
-                //todo: ajouter l'année
+                if (array_key_exists('annee', $niveau) && array_key_exists($niveau['annee'], $tAnnees)) {
+                    $niv->setAnnee($tAnnees[$niveau['annee']]);
+                } else {
+                    $cle = 'BUT'.$niveau['ordre'];
+                    if (array_key_exists($cle, $tAnnees)) {
+                        $niv->setAnnee($tAnnees[$cle]);
+                    }
+                }
                 $niv->setLibelle($niveau['libelle']);
                 $niv->setOrdre((int)$niveau['ordre']);
                 $niv->setCompetence($comp);

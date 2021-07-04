@@ -282,4 +282,21 @@ class Departement extends BaseEntity
 
         return $this;
     }
+
+    public function display()
+    {
+        return $this->getSigle().' | '.$this->getLibelle();
+    }
+
+    public function getSemestres()
+    {
+        $semestres = [];
+        foreach ($this->getAnnees() as $annee) {
+            foreach ($annee->getSemestres() as $semestre) {
+                $semestres[] = $semestre;
+            }
+        }
+
+        return $semestres;
+    }
 }
