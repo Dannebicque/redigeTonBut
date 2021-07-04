@@ -206,6 +206,7 @@ class SpecialiteFixtures extends Fixture
             $departement->setTypeStructure($specialite['typeStructure']);
             $departement->setNumeroAnnexe($specialite['n_annexe']);
             $manager->persist($departement);
+            $manager->flush();
             $orLmd = 1;
             for ($i = 1; $i <= 3; $i++) {
 
@@ -216,6 +217,7 @@ class SpecialiteFixtures extends Fixture
                 $annee->setLibelleLong('B.U.T. ' . $departement->getSigle() . ' ' . $i);
                 $annee->setCodeEtape('BUT-' . $departement->getId() . '-' . $i);
                 $manager->persist($annee);
+                $manager->flush();
                 for ($s = 1; $s <= 2; $s++) {
                     $semestre = new Semestre();
                     $semestre->setLibelle('S' . $orLmd);
@@ -225,6 +227,7 @@ class SpecialiteFixtures extends Fixture
                     $manager->persist($semestre);
                     $orLmd++;
                 }
+                $manager->flush();
             }
 
         }
