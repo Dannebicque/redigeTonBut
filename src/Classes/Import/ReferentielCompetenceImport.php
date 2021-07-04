@@ -106,6 +106,7 @@ class ReferentielCompetenceImport
                     $app = new ApcApprentissageCritique();
                     $app->setLibelle($ac[0]);
                     $app->setCode($ac['code']);
+                    $app->setOrdre(substr($ac['code'], 4, 2));
                     $app->setNiveau($niv);
                     $this->entityManager->persist($app);
                 }
