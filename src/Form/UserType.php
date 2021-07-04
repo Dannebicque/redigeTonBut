@@ -47,7 +47,13 @@ class UserType extends AbstractType
                 ['label' => 'Spécialité',
                     'required' => false,
                     'class' => Departement::class,
-                    'choice_label' => 'sigle']);
+                    'choice_label' => 'sigle'])
+            ->add('actif', ChoiceType::class, [
+                'choices' => ['Activé' => true, 'Désactivé'=>false],
+                'expanded' => true,
+                'label' => 'Etat du compte'
+            ])
+        ;
 
         // Data transformer
         $builder->get('roles')

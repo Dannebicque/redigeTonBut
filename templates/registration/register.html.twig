@@ -1,6 +1,6 @@
 {% extends 'base-speciale.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block header %}Demande d'accès{% endblock %}
 
 {% block content %}
     <div class="mb-5">
@@ -15,30 +15,41 @@
     <div class="mb-3 filled form-group tooltip-end-top form-floating">
         {{ form_widget(registrationForm.civilite) }}
         {{ form_label(registrationForm.civilite) }}
+        {{ form_errors(registrationForm.civilite) }}
     </div>
     <div class="mb-3 filled form-group tooltip-end-top form-floating">
         {{ form_widget(registrationForm.prenom) }}
         {{ form_label(registrationForm.prenom) }}
+        {{ form_errors(registrationForm.prenom) }}
+
     </div>
     <div class="mb-3 filled form-group tooltip-end-top form-floating">
         {{ form_widget(registrationForm.nom) }}
         {{ form_label(registrationForm.nom) }}
+        {{ form_errors(registrationForm.nom) }}
+
     </div>
 
     <div class="mb-3 filled form-group tooltip-end-top form-floating">
         {{ form_widget(registrationForm.email) }}
         {{ form_label(registrationForm.email) }}
+        {{ form_errors(registrationForm.email) }}
+
     </div>
     <div class="mb-3 filled form-group tooltip-end-top form-floating">
-        {{ form_widget(registrationForm.specialite) }}
-        {{ form_label(registrationForm.specialite) }}
+        {{ form_widget(registrationForm.departement) }}
+        {{ form_label(registrationForm.departement) }}
+        {{ form_errors(registrationForm.departement) }}
+
     </div>
     <div class="mb-3 filled form-group tooltip-end-top form-floating">
         {{ form_widget(registrationForm.plainPassword) }}
         {{ form_label(registrationForm.plainPassword) }}
+        {{ form_errors(registrationForm.plainPassword) }}
+
     </div>
 
-    <button class="btn btn-lg btn-primary" type="submit">Valider votre demande</button> <a href="{{ path('app_login')
-}}"> Se connecter</a>
+    <button class="btn btn-lg btn-primary" type="submit">Valider votre demande</button>
+    <a href="{{ path('app_login') }}"> Se connecter</a>
     {{ form_end(registrationForm) }}
 {% endblock %}

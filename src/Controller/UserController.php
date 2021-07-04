@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Security\EmailActivation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,21 +15,24 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class UserController extends BaseController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
-    {
+    public function index(
+        UserRepository $userRepository
+    ): Response {
         if ($this->isGranted('ROLE_GT')) {
-           $users = $userRepository->findAll();
+            $users = $userRepository->findAll();
         } else {
             $users = $userRepository->findByDepartement($this->getDepartement());
         }
+
         return $this->render('user/index.html.twig', [
             'users' => $users,
         ]);
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
-    {
+    public function new(
+        Request $request
+    ): Response {
         $user = new User();
         $form = $this->createForm(UserType::class, $user, ['droit_gt' => $this->isGranted('ROLE_GT')]);
         $form->handleRequest($request);
@@ -48,20 +52,23 @@ class UserController extends BaseController
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(User $user): Response
-    {
-        if (!($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_PACD') || $this->isGranted('ROLE_CPN')))
-        {
+    public function show(
+        User $user
+    ): Response {
+        if (!($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_PACD') || $this->isGranted('ROLE_CPN'))) {
             throw new AccessDeniedException('Vous ne disposez pas des droits suffisants');
         }
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user): Response
-    {
+    public function edit(
+        Request $request,
+        User $user
+    ): Response {
         $form = $this->createForm(UserType::class, $user, ['droit_gt' => $this->isGranted('ROLE_GT')]);
         $form->handleRequest($request);
 
@@ -77,10 +84,24 @@ class UserController extends BaseController
         ]);
     }
 
+    #[Route('/{id}/activation', name: 'active', methods: ['GET'])]
+    public function active(
+        EmailActivation $emailActivation,
+        User $user
+    ): Response {
+        $user->setActif(true);
+        $emailActivation->sendEmailConfirmation($user);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('administration_utilisateur_index');
+    }
+
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
-    public function delete(Request $request, User $user): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+    public function delete(
+        Request $request,
+        User $user
+    ): Response {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($user);
             $entityManager->flush();

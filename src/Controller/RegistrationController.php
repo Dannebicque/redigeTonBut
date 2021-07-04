@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\PersonnelDepartement;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\DepartementRepository;
@@ -16,6 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
+#[Route('/inscription')]
 class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
@@ -25,11 +25,12 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/inscription', name: 'app_register')]
+    #[Route('/', name: 'app_register')]
     public function register(
         DepartementRepository $departementRepository,
-        Request $request, UserPasswordHasherInterface $passwordEncoder): Response
-    {
+        Request $request,
+        UserPasswordHasherInterface $passwordEncoder
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -43,26 +44,19 @@ class RegistrationController extends AbstractController
                 )
             );
             $entityManager = $this->getDoctrine()->getManager();
-            $departement = $departementRepository->find($request->request->get('specialite'));
-            if ($departement !== null) {
-                $dp = new PersonnelDepartement();
-                $dp->setDepartement($departement);
-                $dp->setUser($user);
-                $entityManager->persist($dp);
-            }
-
-
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('contact@iut.fr', 'Application IUT'))
+                    ->from(new Address('contact@iut.fr', 'Application ORéBUT'))
                     ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('[ORéBUT] Merci de confirmer votre email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->context(['user' => $user])
             );
+
             // do anything else you need here, like send an email
 
             return $this->redirectToRoute('app_register_wait');
@@ -81,8 +75,9 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request): Response
-    {
+    public function verifyUserEmail(
+        Request $request
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists

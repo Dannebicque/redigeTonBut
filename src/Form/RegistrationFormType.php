@@ -27,9 +27,8 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Civilité'])
             ->add('nom', TextType::class, ['attr' => ['class' => 'form-control']])
             ->add('prenom', TextType::class, ['attr' => ['class' => 'form-control']])
-            ->add('specialite', EntityType::class, ['class'=> Departement::class,
+            ->add('departement', EntityType::class, ['class'=> Departement::class,
                 'choice_label' => 'sigle',
-                'mapped' => false,
                 'label' => 'Spécialité', 'attr' => ['class' => 'form-control']])
             ->add('email',EmailType::class, ['attr' => ['class' => 'form-control']])
             ->add('plainPassword', PasswordType::class, [

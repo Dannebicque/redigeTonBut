@@ -3,56 +3,117 @@
 {% block header %}Gestion des utilisateurs{% endblock %}
 
 {% block content %}
-    <div class="card">
-        <div class="card-body">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Email</th>
-                    <th>Spécialité</th>
-                    <th>Autorisation</th>
-                    <th>actions</th>
-                </tr>
-                </thead>
-                <tbody>
+    <section class="scroll-section" id="buttonTags">
+        <h2 class="small-title">En attente de confirmation</h2>
+        <div class="card mb-5">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Email</th>
+                        <th>Spécialité</th>
+                        <th>Autorisation</th>
+                        <th>Activer</th>
+                        <th>actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.nom }}</td>
-                        <td>{{ user.prenom }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.departement != null ? user.departement.sigle : '' }}</td>
-                        <td>
-                            {% for role in user.roles %}
-                                <span class="badge bg-info">{{ role }}</span>
-                            {% endfor %}
-                        </td>
-                        <td>
-                            <a href="{{ path('administration_utilisateur_show',
-                                {id: user.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info
+                    {% for user in users|filter(user => not user.isActif) %}
+                        <tr>
+                            <td>{{ user.nom }}</td>
+                            <td>{{ user.prenom }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.departement != null ? user.departement.sigle : '' }}</td>
+                            <td>
+                                {% for role in user.roles %}
+                                    <span class="badge bg-info">{{ role }}</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{{ path('administration_utilisateur_active', {id:user.id}) }}">Activer</a>
+                            </td>
+                            <td>
+                                <a href="{{ path('administration_utilisateur_show',
+                                    {id: user.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info
                                 ms-1"
-                               type="button">
-                                <i class="bi-info-circle"></i>
-                                <span class="d-none d-xxl-inline-block">Voir</span>
-                            </a>
-                            <a href="{{ path('administration_utilisateur_edit',
-                                {id: user.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
-                                <i class="bi-pencil-square"></i>
-                                <span class="d-none d-xxl-inline-block">Modifier</span>
-                            </a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="5">no records found</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                                   type="button">
+                                    <i class="bi-info-circle"></i>
+                                    <span class="d-none d-xxl-inline-block">Voir</span>
+                                </a>
+                                <a href="{{ path('administration_utilisateur_edit',
+                                    {id: user.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
+                                    <i class="bi-pencil-square"></i>
+                                    <span class="d-none d-xxl-inline-block">Modifier</span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">Aucune demande en attente</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <section class="scroll-section" id="buttonTags">
+        <h2 class="small-title">Comptes activés</h2>
+        <div class="card mb-5">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Email</th>
+                        <th>Spécialité</th>
+                        <th>Autorisation</th>
+                        <th>actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for user in users|filter(user => user.isActif) %}
+                        <tr>
+                            <td>{{ user.nom }}</td>
+                            <td>{{ user.prenom }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.departement != null ? user.departement.sigle : '' }}</td>
+                            <td>
+                                {% for role in user.roles %}
+                                    <span class="badge bg-info">{{ role }}</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{{ path('administration_utilisateur_show',
+                                    {id: user.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info
+                                ms-1"
+                                   type="button">
+                                    <i class="bi-info-circle"></i>
+                                    <span class="d-none d-xxl-inline-block">Voir</span>
+                                </a>
+                                <a href="{{ path('administration_utilisateur_edit',
+                                    {id: user.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
+                                    <i class="bi-pencil-square"></i>
+                                    <span class="d-none d-xxl-inline-block">Modifier</span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block bouton_header %}

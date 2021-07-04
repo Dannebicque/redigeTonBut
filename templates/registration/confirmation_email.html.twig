@@ -1,11 +1,13 @@
-<h1>Hi! Please confirm your email!</h1>
+<h1>Bonjour {{ user.display }}</h1>
 
 <p>
-    Please confirm your email address by clicking the following link: <br><br>
+    Merci de confirmer votre adresse email en suivant le lien ci-dessous : <br><br>
     <a href="{{ signedUrl }}">Confirm my Email</a>.
-    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+   Ce lien expire dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
 </p>
 
 <p>
-    Cheers!
+Cordialement,
 </p>
+
+<p><i>Email envoyé automatiquement par l'application ORéBUT. Contacter votre PACD en cas de problème.</i></p>
