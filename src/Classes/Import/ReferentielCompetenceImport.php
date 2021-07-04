@@ -86,7 +86,8 @@ class ReferentielCompetenceImport
 
             foreach ($competence->niveaux->niveau as $niveau) {
                 $niv = new ApcNiveau();
-                if (array_key_exists('annee', $niveau) && array_key_exists($niveau['annee'], $tAnnees)) {
+
+                if (array_key_exists('annee', (array)$niveau->attributes()) && array_key_exists($niveau['annee'], $tAnnees)) {
                     $niv->setAnnee($tAnnees[$niveau['annee']]);
                 } else {
                     $cle = 'BUT'.$niveau['ordre'];
