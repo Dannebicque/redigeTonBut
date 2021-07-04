@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Exports{% endblock %}
+
+{% block content %}
+<section class="scroll-section" id="buttonTags">
+    <h2 class="small-title">Export complet</h2>
+    <div class="card mb-5">
+        <div class="card-body">
+            <form method="post">
+                <div class="form-group">
+                    <label for="departement">Spécialité</label>
+                    <select class="form-control" name="departement" id="departement">
+                        <option value="">Choisir</option>
+                        {% for departement in departements %}
+                            <option value="{{ departement.id }}">{{ departement.display }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fichier">Type de fichier</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="typeFichier" id="typeFichier1"
+                               value="competences">
+                        <label class="form-check-label" for="typeFichier1">Référentiel de compétences</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="typeFichier" id="typeFichier2"
+                               value="formation">
+                        <label class="form-check-label" for="typeFichier2">Référentiel de formation (PN)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fichier">Type d'export</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="typeExport" id="typeExport1"
+                               value="competences">
+                        <label class="form-check-label" for="typeExport1">Sauvegarde (xml)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="typeExport" id="typeExport2"
+                               value="formation">
+                        <label class="form-check-label" for="typeExport2">PDF</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Exporter</button>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+    <section class="scroll-section" id="buttonTags">
+        <h2 class="small-title">Export tableaux référentiels de formation</h2>
+        <div class="card mb-5">
+            <div class="card-body">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="departement">Spécialité</label>
+                        <select class="form-control" name="departement" id="departement">
+                            <option value="">Choisir</option>
+                            {% for departement in departements %}
+                                <option value="{{ departement.id }}">{{ departement.display }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fichier">Type de fichier</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="typeFichierPartiel" id="typeFichierb1"
+                                   value="competences">
+                            <label class="form-check-label" for="typeFichierb1">Structure de la spécialité</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="typeFichierPartiel" id="typeFichierb2"
+                                   value="formation">
+                            <label class="form-check-label" for="typeFichierb2">APC/SAE/Ressources</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="typeFichierPartiel" id="typeFichierb2"
+                                   value="formation">
+                            <label class="form-check-label" for="typeFichierb2">Préconisations</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fichier">Type d'export</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" checked name="typeExportPartiel"
+                                   id="typeExportPartiel1"
+                                   value="formation">
+                            <label class="form-check-label" for="typeExportPartiel1">Xlsx</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Exporter</button>
+                </form>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

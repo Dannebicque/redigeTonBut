@@ -256,13 +256,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ path('administration_apc_referentiel_competence_export') }}">
-                                        <span class="label">Exporter le référentiel de compétences</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('administration_apc_referentiel_formation_export') }}">
-                                        <span class="label">Exporter le référentiel de formation</span>
+                                    <a href="{{ path('administration_apc_referentiel_export') }}">
+                                        <span class="label">Exporter</span>
                                     </a>
                                 </li>
                                 <li>
@@ -274,6 +269,24 @@
                             <li>
                                 <a href="{{ path('administration_utilisateur_index') }}">
                                     <span class="label">Gérer les accès</span>
+                                </a>
+                            </li>
+                            {% if not is_granted('ROLE_GT') %}
+                            <li>
+                                <a href="{{ path('administration_apc_referentiel_competence_export') }}">
+                                    <span class="label">Sauvegarder le référentiel de compétences</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('administration_apc_referentiel_formation_export') }}">
+                                    <span class="label">Sauvegarder le référentiel de formation</span>
+                                </a>
+                            </li>
+                                {#  todo: possibilité d'export d'autres format ? mais pas en sauvegarde #}
+                            {% endif %}
+                            <li>
+                                <a href="#">
+                                    <span class="label">Importer une sauvegarde du référentiel</span>
                                 </a>
                             </li>
                         </ul>

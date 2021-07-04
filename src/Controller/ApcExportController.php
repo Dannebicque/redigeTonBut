@@ -10,8 +10,10 @@
 namespace App\Controller;
 
 use App\Classes\Export\DepartementExport;
+use App\Repository\DepartementRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route("/apc/export/referentiel", name:"administration_apc_referentiel_")]
 class ApcExportController extends BaseController
@@ -28,5 +30,20 @@ class ApcExportController extends BaseController
         DepartementExport $departementExport
     ): Response {
         return $departementExport->exportProgramme($this->getDepartement());
+    }
+
+    #[Route('/', name: 'export')]
+    public function export(
+        DepartementRepository $departementRepository
+    ): Response {
+        if (! $this->isGranted('ROLE_GT')) {
+            throw new AccessDeniedException();
+        }
+
+        return $this->render(
+            'apc_export/index.html.twig', [
+                'departements' => $departementRepository->findAll()
+            ]
+        );
     }
 }
