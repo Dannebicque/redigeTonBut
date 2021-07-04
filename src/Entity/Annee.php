@@ -59,7 +59,7 @@ class Annee extends BaseEntity
     /**
      * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="annees")
      */
-    private $departement;
+    private ?Departement $departement;
 
     public function __construct()
     {

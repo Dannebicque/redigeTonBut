@@ -192,6 +192,7 @@ class SpecialiteFixtures extends Fixture
         $gt->setNom('GT');
         $gt->setPrenom('David');
         $gt->setIsVerified(true);
+        $gt->setActif(true);
         $pass = $this->encoder->hashPassword($gt, 'test');
         $gt->setPassword($pass);
         $gt->setRoles(['ROLE_GT']);
@@ -235,12 +236,14 @@ class SpecialiteFixtures extends Fixture
         $departement->setTypeStructure(Departement::TYPE2);
         $departement->setNumeroAnnexe(19);
         $manager->persist($departement);
+        $manager->flush();
 
         $pacd = new User();
         $pacd->setCivilite('M.');
         $pacd->setEmail('david.annebicque@univ-reims.fr');
         $pacd->setNom('Annebicque');
         $pacd->setPrenom('David');
+        $pacd->setActif(true);
         $pacd->setIsVerified(true);
         $pass = $this->encoder->hashPassword($pacd, 'test');
         $pacd->setPassword($pass);

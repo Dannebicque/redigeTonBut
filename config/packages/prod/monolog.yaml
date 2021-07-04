@@ -2,7 +2,6 @@ monolog:
     handlers:
         main:
             type:           rotating_file
-            excluded_http_codes: [404, 405]
             max_files:      365
             path:           "%kernel.logs_dir%/%kernel.environment%.all.log"
             level:          info

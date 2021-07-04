@@ -13,8 +13,6 @@ use App\Entity\Traits\LifeCycleTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -27,9 +25,9 @@ class Departement extends BaseEntity
 
     public const TERTIAIRE = 'tertiaire';
     public const SECONDAIRE = 'secondaire';
-public const TYPE1 = 'type1';
-public const TYPE2 = 'type2';
-public const TYPE3 = 'type3';
+    public const TYPE1 = 'type1';
+    public const TYPE2 = 'type2';
+    public const TYPE3 = 'type3';
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -55,22 +53,22 @@ public const TYPE3 = 'type3';
     /**
      * @ORM\Column(type="string", length=20)
      */
-    private $typeDepartement;
+    private ?string $typeDepartement;
 
     /**
      * @ORM\Column(type="string", length=20)
      */
-    private $sigle;
+    private ?string $sigle;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $numeroAnnexe;
+    private ?int $numeroAnnexe;
 
     /**
      * @ORM\Column(type="string", length=5)
      */
-    private $typeStructure;
+    private ?string $typeStructure;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="departement")
@@ -85,11 +83,6 @@ public const TYPE3 = 'type3';
         $this->users = new ArrayCollection();
     }
 
-
-
-    /**
-     * @return string
-     */
     public function getLibelle(): ?string
     {
         return $this->libelle;
