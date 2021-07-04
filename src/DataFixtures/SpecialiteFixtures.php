@@ -240,6 +240,27 @@ class SpecialiteFixtures extends Fixture
         $departement->setNumeroAnnexe(19);
         $manager->persist($departement);
         $manager->flush();
+        for ($i = 1; $i <= 3; $i++) {
+
+            $annee = new Annee();
+            $annee->setDepartement($departement);
+            $annee->setLibelle('BUT' . $i);
+            $annee->setOrdre($i);
+            $annee->setLibelleLong('B.U.T. ' . $departement->getSigle() . ' ' . $i);
+            $annee->setCodeEtape('BUT-' . $departement->getId() . '-' . $i);
+            $manager->persist($annee);
+            $manager->flush();
+            for ($s = 1; $s <= 2; $s++) {
+                $semestre = new Semestre();
+                $semestre->setLibelle('S' . $orLmd);
+                $semestre->setAnnee($annee);
+                $semestre->setOrdreLmd($orLmd);
+                $semestre->setOrdreAnnee($i);
+                $manager->persist($semestre);
+                $orLmd++;
+            }
+            $manager->flush();
+        }
 
         $pacd = new User();
         $pacd->setCivilite('M.');
