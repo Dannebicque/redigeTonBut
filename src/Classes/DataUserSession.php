@@ -29,18 +29,14 @@ class DataUserSession
 
         if ($tokenStorage->getToken() !== null) {
             $this->user = $tokenStorage->getToken()->getUser();
-            if (count($this->user->getDepartements()) === 1) {
-                $this->departement  = $this->user->getDepartements()[0];
-            } else {
-                if (count($this->user->getPersonnelDepartements()) > 0) {
-                    $this->departement = $this->user->getPersonnelDepartements()[0];
+            if (in_array('ROLE_GT', $tokenStorage->getToken()->getRoleNames())) {
+                if ($session->get('departement') !== null) {
+                    $this->departement = $departementRepository->find($session->get('departement'));
                 } else {
-                    if ($session->get('departement') !== null) {
-                        $this->departement = $departementRepository->find($session->get('departement'));
-                    } else {
-                        $this->departement = null;
-                    }
+                    $this->departement = null;
                 }
+            } else {
+                $this->departement = $this->user->getDepartement();
             }
         }
     }

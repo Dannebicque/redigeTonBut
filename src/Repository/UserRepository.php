@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Departement;
+use App\Entity\PersonnelDepartement;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,5 +36,35 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function findPacd(Departement $departement)
+    {
+        return $this->findOneByDepartementAndRole($departement, 'ROLE_PACD');
+    }
+
+    public function findCpn(Departement $departement)
+    {
+        return $this->findOneByDepartementAndRole($departement, 'ROLE_CPN');
+    }
+
+    private function findOneByDepartementAndRole(Departement $departement, string $role)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.departement = :departement')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('departement', $departement->getId())
+            ->setParameter('role', $role)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findByDepartement(Departement $departement)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.departement = :departement')
+            ->setParameter('departement', $departement->getId())
+            ->getQuery()
+            ->getResult();
     }
 }

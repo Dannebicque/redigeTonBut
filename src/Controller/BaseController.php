@@ -9,22 +9,16 @@
 
 namespace App\Controller;
 
-use App\Classes\DataUserSession;
 use App\DTO\Secondaire;
 use App\DTO\Tertiaire;
-use App\Entity\Constantes;
 use App\Entity\Departement;
-use App\Entity\Etudiant;
-use App\Entity\Personnel;
+use App\Repository\DepartementRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Umbrella\CoreBundle\Component\DataTable\DataTableFactory;
-use Umbrella\CoreBundle\Component\DataTable\DTO\DataTable;
-use Umbrella\CoreBundle\Component\Toast\Toast;
+
 
 /**
  * Class BaseController.
@@ -32,8 +26,10 @@ use Umbrella\CoreBundle\Component\Toast\Toast;
 class BaseController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
+    protected DepartementRepository $departementRepository;
     protected TranslatorInterface $translator;
     protected FlashBagInterface $flashBag;
+    protected SessionInterface $session;
     private ?Departement $departement;
 
     /**
@@ -42,6 +38,22 @@ class BaseController extends AbstractController
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @required
+     */
+    public function setDepartementRepository(DepartementRepository $departementRepository): void
+    {
+        $this->departementRepository = $departementRepository;
+    }
+
+    /**
+     * @required
+     */
+    public function setSession(SessionInterface $session): void
+    {
+        $this->session = $session;
     }
 
     /**
@@ -73,11 +85,17 @@ class BaseController extends AbstractController
 
     public function getDepartement() : Departement
     {
-        if ($this->getUser() !== null) {
-            if (count($this->getUser()->getDepartements()) === 1) {
-                $this->departement  = $this->getUser()->getDepartements()[0];
+        if ($this->isGranted('ROLE_GT')) {
+            if ($this->session->get('departement') !== null) {
+                $this->departement = $this->departementRespository->find($this->session->get('departement'));
             } else {
-                $this->departement = $this->getUser()->getPersonnelDepartements()[0];
+                $this->departement = null;
+            }
+        } else {
+            if ($this->getUser() !== null and $this->getUser()->getDepartement()!== null) {
+                $this->departement = $this->getUser()->getDepartement();
+            } else {
+                return $this->redirectToRoute('app_login');//pas de département??
             }
         }
 

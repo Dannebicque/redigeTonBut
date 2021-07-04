@@ -40,16 +40,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Departement::class, mappedBy="pacd")
-     */
-    private $departements;
-
-    /**
-     * @ORM\OneToMany(targetEntity=PersonnelDepartement::class, mappedBy="user")
-     */
-    private $personnelDepartements;
-
-    /**
      * @ORM\Column(type="string", length=50)
      */
     private ?string $nom;
@@ -70,15 +60,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     /**
-     * @ORM\OneToMany(targetEntity=Departement::class, mappedBy="cpn")
+     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="users")
      */
-    private $departementsCpn;
+    private $departement;
 
     public function __construct()
     {
-        $this->departements = new ArrayCollection();
-        $this->personnelDepartements = new ArrayCollection();
-        $this->departementsCpn = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,7 +102,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        if (count($roles) == 0) {
+            $roles[] = 'ROLE_LECTEUR';
+        }
 
         return array_unique($roles);
     }
@@ -165,66 +154,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUsername()
     {
         return $this->getEmail();
-    }
-
-    /**
-     * @return Collection|Departement[]
-     */
-    public function getDepartements(): Collection
-    {
-        return $this->departements;
-    }
-
-    public function addDepartement(Departement $departement): self
-    {
-        if (!$this->departements->contains($departement)) {
-            $this->departements[] = $departement;
-            $departement->setPacd($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDepartement(Departement $departement): self
-    {
-        if ($this->departements->removeElement($departement)) {
-            // set the owning side to null (unless already changed)
-            if ($departement->getPacd() === $this) {
-                $departement->setPacd(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|PersonnelDepartement[]
-     */
-    public function getPersonnelDepartements(): Collection
-    {
-        return $this->personnelDepartements;
-    }
-
-    public function addPersonnelDepartement(PersonnelDepartement $personnelDepartement): self
-    {
-        if (!$this->personnelDepartements->contains($personnelDepartement)) {
-            $this->personnelDepartements[] = $personnelDepartement;
-            $personnelDepartement->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePersonnelDepartement(PersonnelDepartement $personnelDepartement): self
-    {
-        if ($this->personnelDepartements->removeElement($personnelDepartement)) {
-            // set the owning side to null (unless already changed)
-            if ($personnelDepartement->getUser() === $this) {
-                $personnelDepartement->setUser(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getNom(): ?string
@@ -280,32 +209,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return ucfirst($this->prenom).' '.mb_strtoupper($this->nom);
     }
 
-    /**
-     * @return Collection|Departement[]
-     */
-    public function getDepartementsCpn(): Collection
+    public function getDepartement(): ?Departement
     {
-        return $this->departementsCpn;
+        return $this->departement;
     }
 
-    public function addDepartementsCpn(Departement $departementsCpn): self
+    public function setDepartement(?Departement $departement): self
     {
-        if (!$this->departementsCpn->contains($departementsCpn)) {
-            $this->departementsCpn[] = $departementsCpn;
-            $departementsCpn->setCpn($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDepartementsCpn(Departement $departementsCpn): self
-    {
-        if ($this->departementsCpn->removeElement($departementsCpn)) {
-            // set the owning side to null (unless already changed)
-            if ($departementsCpn->getCpn() === $this) {
-                $departementsCpn->setCpn(null);
-            }
-        }
+        $this->departement = $departement;
 
         return $this;
     }

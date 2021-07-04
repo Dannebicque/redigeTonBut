@@ -1,40 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block header %}User{% endblock %}
+{% block header %}Détails de l'utilisateur {{ user.display }}{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('administration_utilisateur_edit', {id:user.id}) }}" class="btn btn-outline-primary btn-icon
+    btn-icon-end
+    w-100 w-sm-auto"
+       id="dashboardTourButton">
+        <i data-cs-icon="pencil"></i>
+        <span>Modifier l'utilisateur</span>
+    </a>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href: path('administration_utilisateur_index'),
+            title: 'Gestion des utilisateurs',
+        },
+    ]}) }}
+{% endblock %}
 
 {% block content %}
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Civilite</th>
-                <td>{{ user.civilite }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ user.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ user.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Oui' : 'Non' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    //todo: changement de mot de passe
-
-    <a href="{{ path('administration_utilisateur_index') }}">back to list</a>
-
-    <a href="{{ path('administration_utilisateur_edit', {'id': user.id}) }}">edit</a>
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Civilite</th>
+                    <td>{{ user.civilite }}</td>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ user.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Prenom</th>
+                    <td>{{ user.prenom }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>Roles</th>
+                    <td>
+                    {% for role in user.roles %}
+                        <span class="badge bg-info">{{ role }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Spécialité(s)</th>
+                    <td>
+                        {% if user.departementsCpn|length > 0 %}
+                            <p>Secrétaire de CPN pour :
+                                <span class="badge bg-info">
+                                    {{ user.departementsCpn[0].sigle }}
+                                </span>
+                            </p>
+                        {% endif %}
+                        {% if user.departements|length > 0 %}
+                            <p>PACD de :
+                                    <span class="badge bg-info">
+                                         {{ user.departements[0].sigle }}
+                                    </span>
+                            </p>
+                        {% endif %}
+                        {% for dep in  user.personnelDepartements %}
+                            <span class="badge bg-info">{{ dep.departement.sigle }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Email vérifié ?</th>
+                    <td>{{ user.isVerified ? 'Oui' : '<span class="badge bg-danger">Non</span>' }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <a href="" class="btn btn-danger">Initiliaser le mot de passe ?</a>
+        </div>
+    </div>
 {% endblock %}

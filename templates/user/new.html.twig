@@ -1,11 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New User{% endblock %}
+{% block title %}Ajout d'un utilisateur{% endblock %}
 
 {% block body %}
     <h1>Create new User</h1>
 
-    {{ include('user/_form.html.twig') }}
+    {{ include('composants/adm-form.html.twig') }}
 
-    <a href="{{ path('user_index') }}">back to list</a>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href: path('administration_utilisateur_index'),
+            title: 'Gestion des utilisateurs',
+        },
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('administration_utilisateur_index') }}" class="btn btn-outline-primary btn-icon btn-icon-end w-100
+    w-sm-auto"
+       id="dashboardTourButton">
+        <i data-cs-icon="arrow-left-circle"></i>
+        <span>Retour à la liste</span>
+    </a>
 {% endblock %}

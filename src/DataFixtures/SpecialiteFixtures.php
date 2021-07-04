@@ -186,17 +186,6 @@ class SpecialiteFixtures extends Fixture
             ]
         ];
 
-        $pacd = new User();
-        $pacd->setCivilite('M.');
-        $pacd->setEmail('david.annebicque@univ-reims.fr');
-        $pacd->setNom('Annebicque');
-        $pacd->setPrenom('David');
-        $pacd->setIsVerified(true);
-        $pass = $this->encoder->hashPassword($pacd, 'test');
-        $pacd->setPassword($pass);
-        $pacd->setRoles(['ROLE_PACD']);
-        $manager->persist($pacd);
-
         $gt = new User();
         $gt->setCivilite('M.');
         $gt->setEmail('david.annebicque@gmail.com');
@@ -245,8 +234,19 @@ class SpecialiteFixtures extends Fixture
         $departement->setTypeDepartement('secondaire');
         $departement->setTypeStructure(Departement::TYPE2);
         $departement->setNumeroAnnexe(19);
-        $departement->setPacd($pacd);
         $manager->persist($departement);
+
+        $pacd = new User();
+        $pacd->setCivilite('M.');
+        $pacd->setEmail('david.annebicque@univ-reims.fr');
+        $pacd->setNom('Annebicque');
+        $pacd->setPrenom('David');
+        $pacd->setIsVerified(true);
+        $pass = $this->encoder->hashPassword($pacd, 'test');
+        $pacd->setPassword($pass);
+        $pacd->setDepartement($departement);
+        $pacd->setRoles(['ROLE_PACD']);
+        $manager->persist($pacd);
 
         $manager->flush();
     }

@@ -16,12 +16,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DepartementRepository")
  * @ORM\HasLifecycleCallbacks()
- * @Vich\Uploadable
  */
 class Departement extends BaseEntity
 {
@@ -38,26 +36,6 @@ public const TYPE3 = 'type3';
      * @Groups({"actualite_administration"})
      */
     private ?string $libelle;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private ?string $logoName = '';
-
-    /**
-     * @Vich\UploadableField(mapping="logo", fileNameProperty="logoName")
-     */
-    private $logoFile;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="departements")
-     */
-    private $pacd;
-
-    /**
-     * @ORM\OneToMany(targetEntity=PersonnelDepartement::class, mappedBy="Departement")
-     */
-    private $personnelDepartements;
 
     /**
      * @ORM\OneToMany(targetEntity=Annee::class, mappedBy="departement")
@@ -85,11 +63,6 @@ public const TYPE3 = 'type3';
     private $sigle;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="departementsCpn")
-     */
-    private $cpn;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $numeroAnnexe;
@@ -99,12 +72,17 @@ public const TYPE3 = 'type3';
      */
     private $typeStructure;
 
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="departement")
+     */
+    private $users;
+
     public function __construct()
     {
-        $this->personnelDepartements = new ArrayCollection();
         $this->annees = new ArrayCollection();
         $this->apcCompetences = new ArrayCollection();
         $this->apcParcours = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
 
@@ -120,78 +98,6 @@ public const TYPE3 = 'type3';
     public function setLibelle($libelle): void
     {
         $this->libelle = $libelle;
-    }
-
-
-    public function getLogoFile(): ?File
-    {
-        return $this->logoFile;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function setLogoFile(?File $logo = null): void
-    {
-        $this->logoFile = $logo;
-
-        if (null !== $logo) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->setUpdatedValue();
-        }
-    }
-
-    public function getLogoName(): ?string
-    {
-        return $this->logoName;
-    }
-
-    public function setLogoName(string $logoName): void
-    {
-        $this->logoName = $logoName;
-    }
-
-    public function getPacd(): ?User
-    {
-        return $this->pacd;
-    }
-
-    public function setPacd(?User $pacd): self
-    {
-        $this->pacd = $pacd;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|PersonnelDepartement[]
-     */
-    public function getPersonnelDepartements(): Collection
-    {
-        return $this->personnelDepartements;
-    }
-
-    public function addPersonnelDepartement(PersonnelDepartement $personnelDepartement): self
-    {
-        if (!$this->personnelDepartements->contains($personnelDepartement)) {
-            $this->personnelDepartements[] = $personnelDepartement;
-            $personnelDepartement->setDepartement($this);
-        }
-
-        return $this;
-    }
-
-    public function removePersonnelDepartement(PersonnelDepartement $personnelDepartement): self
-    {
-        if ($this->personnelDepartements->removeElement($personnelDepartement)) {
-            // set the owning side to null (unless already changed)
-            if ($personnelDepartement->getDepartement() === $this) {
-                $personnelDepartement->setDepartement(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -350,6 +256,36 @@ public const TYPE3 = 'type3';
     public function setTypeStructure(string $typeStructure): self
     {
         $this->typeStructure = $typeStructure;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setDepartement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getDepartement() === $this) {
+                $user->setDepartement(null);
+            }
+        }
 
         return $this;
     }

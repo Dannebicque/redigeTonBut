@@ -1,4 +1,9 @@
 security:
+    role_hierarchy:
+        ROLE_GT: ROLE_CPN
+        ROLE_CPN: ROLE_PACD
+        ROLE_PACD: ROLE_EDITEUR
+        ROLE_EDITEUR: ROLE_LECTEUR
     encoders:
         App\Entity\User:
             algorithm: auto
@@ -36,6 +41,7 @@ security:
     access_control:
         - { path: ^/inscription, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/administration, roles: ROLE_USER }
-        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/administration, roles: [ROLE_GT, ROLE_PACD, ROLE_CPN] }
+        - { path: ^/, roles: ROLE_LECTEUR }

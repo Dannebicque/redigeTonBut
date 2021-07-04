@@ -6,21 +6,21 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\PersonnelDepartementRepository;
 use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/administration/utilisateur', name: 'administration_utilisateur_')]
 class UserController extends BaseController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(PersonnelDepartementRepository $personnelDepartementRepository): Response
+    public function index(UserRepository $userRepository): Response
     {
         if ($this->isGranted('ROLE_GT')) {
-           $users = $personnelDepartementRepository->findAll();
+           $users = $userRepository->findAll();
         } else {
-            $users = $personnelDepartementRepository->findByDepartement($this->getDepartement());
+            $users = $userRepository->findByDepartement($this->getDepartement());
         }
         return $this->render('user/index.html.twig', [
             'users' => $users,
@@ -31,7 +31,7 @@ class UserController extends BaseController
     public function new(Request $request): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, ['droit_gt' => $this->isGranted('ROLE_GT')]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -51,6 +51,10 @@ class UserController extends BaseController
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(User $user): Response
     {
+        if (!($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_PACD') || $this->isGranted('ROLE_CPN')))
+        {
+            throw new AccessDeniedException('Vous ne disposez pas des droits suffisants');
+        }
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
@@ -59,7 +63,7 @@ class UserController extends BaseController
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, ['droit_gt' => $this->isGranted('ROLE_GT')]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
