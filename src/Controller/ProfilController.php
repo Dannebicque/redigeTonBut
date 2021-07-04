@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Constantes;
+use App\Form\ProfilType;
 use App\Form\UserType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -19,7 +20,7 @@ class ProfilController extends BaseController
     public function profil(
         Request $request
     ): Response {
-        $form = $this->createForm(UserType::class, $this->getUser());
+        $form = $this->createForm(ProfilType::class, $this->getUser());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
