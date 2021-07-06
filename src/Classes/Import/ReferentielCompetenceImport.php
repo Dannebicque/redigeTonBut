@@ -115,11 +115,13 @@ class ReferentielCompetenceImport
                 }
             }
         }
-
+        $i = 1;
         foreach ($xml->parcours->parcour as $parcour) {
             $parc = new ApcParcours($this->departement);
             $parc->setCode($parcour['code']);
             $parc->setLibelle($parcour['libelle']);
+            $parc->setCouleur('p'.$i);
+            $i++;
             $this->entityManager->persist($parc);
             foreach ($parcour->annee as $annee) {
                 foreach ($annee->competence as $parcNiveau) {

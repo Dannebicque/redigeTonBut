@@ -1,10 +1,10 @@
 <table class="table table-bordered">
     <tbody>
     <tr>
-        <th style="width: 25%">Nom de la SAÉ</th>
-        <td colspan="2">{{ apc_sae.libelle }}</td>
-        <th style="width: 25%">Code de la SAÉ</th>
-        <td>{{ apc_sae.codeMatiere }}</td>
+        <th style="width: 20%">Nom de la SAÉ</th>
+        <td colspan="2" style="width: 40%">{{ apc_sae.libelle }}</td>
+        <th style="width: 20%">Code de la SAÉ</th>
+        <td style="width: 20%">{{ apc_sae.codeMatiere }}</td>
     </tr>
 
     <tr>
@@ -23,7 +23,22 @@
             {% endfor %}
         </td>
     </tr>
+    <tr>
+        <th>
+            Parcours concerné(s)
+        </th>
+        <td colspan="4">
 
+            {% for parcours in apc_sae.apcSaeParcours %}
+                <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
+                        {{ parcours.parcours.libelle }}</span>
+            {% else %}
+                <span class="badge bg-success">
+                        Tous les parcours</span>
+            {% endfor %}
+
+        </td>
+    </tr>
     <tr>
         <th>Apprentissage(s) critique(s) courvert(s)</th>
         <td colspan="4">

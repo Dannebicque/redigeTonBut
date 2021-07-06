@@ -58,6 +58,11 @@ class ApcParcours extends BaseEntity
      */
     private $textePresentation;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $couleur;
+
     public function __construct(Departement $departement)
     {
         $this->setDepartement($departement);
@@ -200,6 +205,18 @@ class ApcParcours extends BaseEntity
     public function setTextePresentation(string $textePresentation): self
     {
         $this->textePresentation = $textePresentation;
+
+        return $this;
+    }
+
+    public function getCouleur(): ?string
+    {
+        return $this->couleur;
+    }
+
+    public function setCouleur(string $couleur): self
+    {
+        $this->couleur = $couleur;
 
         return $this;
     }

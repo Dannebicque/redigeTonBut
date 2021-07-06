@@ -12,13 +12,16 @@ namespace App\Controller\formation;
 
 use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
+use App\Entity\ApcRessourceParcours;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeApprentissageCritique;
+use App\Entity\ApcSaeParcours;
 use App\Entity\ApcSaeRessource;
 use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Form\ApcSaeType;
 use App\Repository\ApcApprentissageCritiqueRepository;
+use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +38,7 @@ class ApcSaeController extends BaseController
      */
     public function new(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
+        ApcParcoursRepository $apcParcoursRepository,
         ApcRessourceRepository $apcRessourceRepository,
         Request $request,
         Semestre $semestre = null
@@ -59,6 +63,15 @@ class ApcSaeController extends BaseController
                 foreach ($acs as $idAc) {
                     $ac = $apcApprentissageCritiqueRepository->find($idAc);
                     $saeAc = new ApcSaeApprentissageCritique($apcSae, $ac);
+                    $this->entityManager->persist($saeAc);
+                }
+            }
+
+            $parcours = $request->request->get('parcours');
+            if (is_array($parcours)) {
+                foreach ($parcours as $idParcours) {
+                    $parc = $apcParcoursRepository->find($idParcours);
+                    $saeAc = new ApcSaeParcours($apcSae, $parc);
                     $this->entityManager->persist($saeAc);
                 }
             }
@@ -93,6 +106,7 @@ class ApcSaeController extends BaseController
      */
     public function edit(
         ApcRessourceRepository $apcRessourceRepository,
+        ApcParcoursRepository $apcParcoursRepository,
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
         Request $request,
         ApcSae $apcSae
@@ -113,8 +127,21 @@ class ApcSaeController extends BaseController
             $acs = $request->request->get('ac');
             if (is_array($acs)) {
                 foreach ($acs as $idAc) {
-                    $ac = $apcApprentissageCritiqueRepository->find($idAc);
+                    $ac = $apcApprentissageCritiqueRepository->find($idAc);//todo: tableau pour éviter les nombreuses requetes ???
                     $saeAc = new ApcSaeApprentissageCritique($apcSae, $ac);
+                    $this->entityManager->persist($saeAc);
+                }
+            }
+
+            foreach ($apcSae->getApcSaeParcours() as $ac) {
+                $this->entityManager->remove($ac);
+            }
+
+            $parcours = $request->request->get('parcours');
+            if (is_array($parcours)) {
+                foreach ($parcours as $idParcours) {
+                    $parc = $apcParcoursRepository->find($idParcours);
+                    $saeAc = new ApcSaeParcours($apcSae, $parc);
                     $this->entityManager->persist($saeAc);
                 }
             }

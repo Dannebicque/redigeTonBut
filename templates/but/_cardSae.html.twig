@@ -28,6 +28,15 @@
                 </tr>
                 </tbody>
             </table>
+            <p>
+                {% for parcours in sae.apcSaeParcours %}
+                    <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
+                        {{ parcours.parcours.libelle }}</span>
+                {% else %}
+                    <span class="badge bg-success">
+                        Tous les parcours</span>
+                {% endfor %}
+            </p>
         </div>
         <div class="card-footer">
             <div class="col-12 d-flex align-items-center justify-content-md-end mb-2">

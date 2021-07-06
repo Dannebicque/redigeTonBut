@@ -27,6 +27,19 @@ class ApcRessourceParcours
      */
     private $parcours;
 
+    /**
+     * ApcRessourceParcours constructor.
+     *
+     * @param $ressource
+     * @param $parcours
+     */
+    public function __construct($ressource, $parcours)
+    {
+        $this->ressource = $ressource;
+        $this->parcours = $parcours;
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;

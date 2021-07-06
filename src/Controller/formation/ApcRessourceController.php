@@ -15,11 +15,14 @@ use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
+use App\Entity\ApcRessourceParcours;
 use App\Entity\ApcSaeRessource;
 use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Form\ApcRessourceType;
 use App\Repository\ApcApprentissageCritiqueRepository;
+use App\Repository\ApcParcoursRepository;
+use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
 use App\Utils\Codification;
@@ -37,6 +40,7 @@ class ApcRessourceController extends BaseController
      */
     public function new(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
+        ApcParcoursRepository $apcParcoursRepository,
         ApcRessourceRepository $apcRessourceRepository,
         ApcSaeRepository $apcSaeRepository,
         Request $request,
@@ -76,6 +80,15 @@ class ApcRessourceController extends BaseController
                 }
             }
 
+            $parcours = $request->request->get('parcours');
+            if (is_array($parcours)) {
+                foreach ($parcours as $idParcours) {
+                    $parc = $apcParcoursRepository->find($idParcours);
+                    $saeAc = new ApcRessourceParcours($apcRessource, $parc);
+                    $this->entityManager->persist($saeAc);
+                }
+            }
+
             $tprerequis = $request->request->get('tprerequis');
             if (is_array($tprerequis)) {
                 foreach ($tprerequis as $idAc) {
@@ -105,6 +118,7 @@ class ApcRessourceController extends BaseController
      */
     public function edit(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
+        ApcParcoursRepository $apcParcoursRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcRessourceRepository $apcRessourceRepository,
         Request $request,
@@ -128,6 +142,19 @@ class ApcRessourceController extends BaseController
                 foreach ($acs as $idAc) {
                     $ac = $apcApprentissageCritiqueRepository->find($idAc);
                     $saeAc = new ApcRessourceApprentissageCritique($apcRessource, $ac);
+                    $this->entityManager->persist($saeAc);
+                }
+            }
+
+            foreach ($apcRessource->getApcRessourceParcours() as $ac) {
+                $this->entityManager->remove($ac);
+            }
+
+            $parcours = $request->request->get('parcours');
+            if (is_array($parcours)) {
+                foreach ($parcours as $idParcours) {
+                    $parc = $apcParcoursRepository->find($idParcours);
+                    $saeAc = new ApcRessourceParcours($apcRessource, $parc);
                     $this->entityManager->persist($saeAc);
                 }
             }

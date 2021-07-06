@@ -26,6 +26,22 @@
     </tr>
     <tr>
         <th>
+            Parcours concerné(s)
+        </th>
+        <td colspan="4">
+
+            {% for parcours in apc_ressource.apcRessourceParcours %}
+                <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
+                        {{ parcours.parcours.libelle }}</span>
+            {% else %}
+                <span class="badge bg-success">
+                        Tous les parcours</span>
+            {% endfor %}
+
+        </td>
+    </tr>
+    <tr>
+        <th>
             Apprentissages critiques
         </th>
         <td colspan="4">

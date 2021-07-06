@@ -20,12 +20,19 @@ class ApcSaeParcours
     /**
      * @ORM\ManyToOne(targetEntity=ApcSae::class, inversedBy="apcSaeParcours")
      */
-    private $sae;
+    private ApcSae $sae;
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="apcSaeParcours")
      */
-    private $parcours;
+    private ApcParcours $parcours;
+
+    public function __construct(ApcSae $sae, ApcParcours $parcours)
+    {
+        $this->sae = $sae;
+        $this->parcours = $parcours;
+    }
+
 
     public function getId(): ?int
     {
