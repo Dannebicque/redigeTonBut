@@ -18,6 +18,7 @@ use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Form\ApcRessourceType;
 use App\Repository\ApcApprentissageCritiqueRepository;
+use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
 use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +35,7 @@ class ApcRessourceController extends BaseController
      */
     public function new(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
+        ApcRessourceRepository $apcRessourceRepository,
         ApcSaeRepository $apcSaeRepository,
         Request $request,
         Semestre $semestre = null
@@ -72,6 +74,14 @@ class ApcRessourceController extends BaseController
                 }
             }
 
+            $tprerequis = $request->request->get('tprerequis');
+            if (is_array($tprerequis)) {
+                foreach ($tprerequis as $idAc) {
+                    $res = $apcRessourceRepository->find($idAc);
+                    $apcRessource->addRessourcesPreRequise($res);
+                }
+            }
+
             $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
@@ -94,6 +104,7 @@ class ApcRessourceController extends BaseController
     public function edit(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
         ApcSaeRepository $apcSaeRepository,
+        ApcRessourceRepository $apcRessourceRepository,
         Request $request,
         ApcRessource $apcRessource
     ): Response {
@@ -104,11 +115,11 @@ class ApcRessourceController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
-
             foreach ($apcRessource->getApcRessourceApprentissageCritiques() as $ac) {
                 $this->entityManager->remove($ac);
             }
+
+
 
             $acs = $request->request->get('ac');
             if (is_array($acs)) {
@@ -116,6 +127,19 @@ class ApcRessourceController extends BaseController
                     $ac = $apcApprentissageCritiqueRepository->find($idAc);
                     $saeAc = new ApcRessourceApprentissageCritique($apcRessource, $ac);
                     $this->entityManager->persist($saeAc);
+                }
+            }
+
+            foreach ($apcRessource->getRessourcesPreRequises() as $ac) {
+                $apcRessource->removeRessourcesPreRequise($ac);
+                $ac->removeApcRessource($apcRessource);
+            }
+
+            $tprerequis = $request->request->get('tprerequis');
+            if (is_array($tprerequis)) {
+                foreach ($tprerequis as $idAc) {
+                    $res = $apcRessourceRepository->find($idAc);
+                    $apcRessource->addRessourcesPreRequise($res);
                 }
             }
 
@@ -130,7 +154,7 @@ class ApcRessourceController extends BaseController
                     $this->entityManager->persist($saeRes);
                 }
             }
-
+            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
             $this->entityManager->flush();
 
             $this->addFlashBag(

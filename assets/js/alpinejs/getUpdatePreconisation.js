@@ -22,7 +22,7 @@ function getUpdatePreconisation () {
         body: JSON.stringify({
           valeur: e.target.value
         })
-      }).then(async r => {
+      }).then(async () => {
         this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
           return r.json()
         })
@@ -38,7 +38,7 @@ function getUpdatePreconisation () {
         body: JSON.stringify({
           valeur: e.target.value
         })
-      }).then(async r => {
+      }).then(async () => {
         this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
           return r.json()
         })
@@ -54,7 +54,7 @@ function getUpdatePreconisation () {
         body: JSON.stringify({
           valeur: e.target.value
         })
-      }).then(async r => {
+      }).then(async () => {
         this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
           return r.json()
         })
@@ -70,7 +70,7 @@ function getUpdatePreconisation () {
         body: JSON.stringify({
           valeur: e.target.value
         })
-      }).then(async r => {
+      }).then(async () => {
         this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
           return r.json()
         })
@@ -86,7 +86,7 @@ function getUpdatePreconisation () {
         body: JSON.stringify({
           valeur: e.target.value
         })
-      }).then(async r => {
+      }).then(async () => {
         this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
           return r.json()
         })
@@ -135,7 +135,7 @@ function getUpdatePreconisation () {
       }
     },
     badgeEgalite (valeur, seuil) {
-      if (valeur == seuil) {
+      if (valeur === seuil) {
         return '<span class="badge bg-success text-uppercase">' + this.numberFormat(valeur) + '</span>'
       }
 

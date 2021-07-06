@@ -1,13 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit ApcSituationProfessionnelle{% endblock %}
-
-{% block body %}
-    <h1>Edit ApcSituationProfessionnelle</h1>
-
-    {{ include('apc_situation_professionnelle/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('apc_situation_professionnelle_index') }}">back to list</a>
-
-    {{ include('apc_situation_professionnelle/_delete_form.html.twig') }}
+{% block header %}
+    {{ 'adm.apc_situation_professionnelle.edit.heading'|trans({'%competence%': competence.nomCourt}) }}
 {% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h4 class="card-title">{{ 'adm.apc_situation_professionnelle.edit.heading'|trans({'%competence%': competence
+            .nomCourt}) }}</h4>
+        <div class="card-body">
+            {{ include('composants/adm-form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}
+

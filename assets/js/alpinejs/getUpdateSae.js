@@ -5,17 +5,17 @@ function getUpdateSae() {
     ressources: [],
     parcours: [],
     semestre: null,
-    init () {
+    async init () {
       this.semestre = this.displayRadioValue()
       if (this.semestre !== null) {
-        this.updateSemestre()
+        await this.updateSemestre()
       }
     },
     displayRadioValue () {
       //init le select du semestre
-      var ele = document.getElementsByName('apc_sae[semestre]')
+      const ele = document.getElementsByName('apc_sae[semestre]')
 
-      for (i = 0; i < ele.length; i++) {
+      for (let i = 0; i < ele.length; i++) {
         if (ele[i].checked)
           return ele[i].value
       }
@@ -24,7 +24,7 @@ function getUpdateSae() {
     getCompetences () {
       //init le select du semestre
       this.competences = []
-      var ele = document.getElementsByName('apc_sae[competences][]')
+      const ele = document.getElementsByName('apc_sae[competences][]')
       for (let i = 0; i < ele.length; i++) {
         if (ele[i].checked)
           this.competences.push({
@@ -39,8 +39,7 @@ function getUpdateSae() {
       }
       return {}
     },
-    async updateSemestre () {
-      this.getCompetences()
+    async getApiAcs() {
       this.acs = await fetch(Routing.generate('formation_apc_sae_ajax_ac'), {
         method: 'POST',
         body: JSON.stringify({
@@ -51,6 +50,10 @@ function getUpdateSae() {
       }).then(r => {
         return r.json()
       })
+    },
+    async updateSemestre () {
+      this.getCompetences()
+      await this.getApiAcs()
 
       this.ressources = await fetch(Routing.generate('formation_apc_ressources_ajax'), {
         method: 'POST',
@@ -79,7 +82,8 @@ function getUpdateSae() {
     },
     async changeCompetence (e) {
       e.stopPropagation()
-      await this.updateSemestre()
+      this.getCompetences()
+      await this.getApiAcs()
     }
   }
 }

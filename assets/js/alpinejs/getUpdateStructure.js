@@ -18,7 +18,7 @@ function getUpdateStructure () {
           champ: e.target.dataset.field,
           valeur: e.target.value
         })
-      }).then(async r => {
+      }).then(async () => {
         this.donnees = await fetch(Routing.generate('tableau_api_structure')).then(r => {
           return r.json()
         })

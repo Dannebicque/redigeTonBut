@@ -33,11 +33,6 @@ class ApcRessource extends AbstractMatiere
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private ?string $preRequis;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
     private ?string $motsCles;
 
     /**
@@ -58,12 +53,22 @@ class ApcRessource extends AbstractMatiere
     /**
      * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="ressource")
      */
-    private $apcRessourceParcours;
+    private Collection $apcRessourceParcours;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $ordre;
+    private ?int $ordre = 1;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=ApcRessource::class, inversedBy="apcRessources")
+     */
+    private Collection $ressourcesPreRequises;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=ApcRessource::class, mappedBy="ressourcesPreRequises")
+     */
+    private Collection $apcRessources;
 
     public function __construct()
     {
@@ -71,6 +76,8 @@ class ApcRessource extends AbstractMatiere
         $this->apcRessourceApprentissageCritiques = new ArrayCollection();
         $this->apcSaeRessources = new ArrayCollection();
         $this->apcRessourceParcours = new ArrayCollection();
+        $this->ressourcesPreRequises = new ArrayCollection();
+        $this->apcRessources = new ArrayCollection();
     }
 
     public function getSemestre(): ?Semestre
@@ -81,18 +88,6 @@ class ApcRessource extends AbstractMatiere
     public function setSemestre(?Semestre $semestre): self
     {
         $this->semestre = $semestre;
-
-        return $this;
-    }
-
-    public function getPreRequis(): ?string
-    {
-        return $this->preRequis;
-    }
-
-    public function setPreRequis(?string $preRequis): self
-    {
-        $this->preRequis = $preRequis;
 
         return $this;
     }
@@ -289,6 +284,57 @@ class ApcRessource extends AbstractMatiere
     public function setOrdre(int $ordre): self
     {
         $this->ordre = $ordre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getRessourcesPreRequises(): Collection
+    {
+        return $this->ressourcesPreRequises;
+    }
+
+    public function addRessourcesPreRequise(self $ressourcesPreRequise): self
+    {
+        if (!$this->ressourcesPreRequises->contains($ressourcesPreRequise)) {
+            $this->ressourcesPreRequises[] = $ressourcesPreRequise;
+        }
+
+        return $this;
+    }
+
+    public function removeRessourcesPreRequise(self $ressourcesPreRequise): self
+    {
+        $this->ressourcesPreRequises->removeElement($ressourcesPreRequise);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getApcRessources(): Collection
+    {
+        return $this->apcRessources;
+    }
+
+    public function addApcRessource(self $apcRessource): self
+    {
+        if (!$this->apcRessources->contains($apcRessource)) {
+            $this->apcRessources[] = $apcRessource;
+            $apcRessource->addRessourcesPreRequise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApcRessource(self $apcRessource): self
+    {
+        if ($this->apcRessources->removeElement($apcRessource)) {
+            $apcRessource->removeRessourcesPreRequise($this);
+        }
 
         return $this;
     }

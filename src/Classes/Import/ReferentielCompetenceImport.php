@@ -21,6 +21,7 @@ use App\Entity\ApcSaeRessource;
 use App\Entity\ApcSituationProfessionnelle;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Utils\Codification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
@@ -76,12 +77,14 @@ class ReferentielCompetenceImport
                 $sit->setCompetence($comp);
                 $this->entityManager->persist($sit);
             }
-
+            $or = 1;
             foreach ($competence->composantes_essentielles->composante as $composante) {
                 $compos = new ApcComposanteEssentielle();
                 $compos->setLibelle($composante);
                 $compos->setCompetence($comp);
+                $compos->setOrdre($or);
                 $this->entityManager->persist($compos);
+                $or++;
             }
 
             foreach ($competence->niveaux->niveau as $niveau) {
@@ -105,9 +108,9 @@ class ReferentielCompetenceImport
                 foreach ($niveau->acs->ac as $ac) {
                     $app = new ApcApprentissageCritique();
                     $app->setLibelle($ac[0]);
-                    $app->setCode($ac['code']);
                     $app->setOrdre(substr($ac['code'], 4, 2));
                     $app->setNiveau($niv);
+                    $app->setCode(Codification::codeApprentissageCritique($app));
                     $this->entityManager->persist($app);
                 }
             }
@@ -155,11 +158,11 @@ class ReferentielCompetenceImport
                     $ar->setSemestre($semestre);
                     $ar->setOrdre((int)substr($ressource['code'], 2, 2));
                     $ar->setLibelle($ressource->titre);
-                    $ar->setCodeMatiere((string)$ressource['code']);
-                    $ar->setTdPpn((float)$ressource['heuresCMTD']);
-                    $ar->setTpPpn((float)$ressource['heuresTP']);
+                    $ar->setTdPpn($ressource['heuresCMTD']);
+                    $ar->setTpPpn($ressource['heuresTP']);
                     $ar->setDescription((string)$ressource->description);
                     $ar->setMotsCles((string)$ressource->motsCles);
+                    $ar->setCodeMatiere(Codification::codeRessource($ar));
                     $this->entityManager->persist($ar);
                     $tRessources[$ar->getCodeMatiere()] = $ar;
 
@@ -182,13 +185,14 @@ class ReferentielCompetenceImport
                     $ar->setSemestre($semestre);
                     $ar->setLibelle($sae->titre);
                     $ar->setOrdre((int)substr($sae['code'], 4, 2));
-                    $ar->setCodeMatiere((string)$sae['code']);
                     $ar->setTdPpn((float)$sae['heuresCMTD']);
                     $ar->setTpPpn((float)$sae['heuresTP']);
                     $ar->setProjetPpn((float)$sae['heuresProjet']);
                     $ar->setDescription((string)$sae->description);
                     $ar->setExemples((string)$sae->exemples);
                     $ar->setLivrables((string)$sae->livrables);
+                    $ar->setCodeMatiere(Codification::codeSae($ar));
+
                     $this->entityManager->persist($ar);
 
                     //acs

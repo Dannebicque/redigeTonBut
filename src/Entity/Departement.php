@@ -75,6 +75,11 @@ class Departement extends BaseEntity
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $textePresentation;
+
     public function __construct()
     {
         $this->annees = new ArrayCollection();
@@ -298,5 +303,17 @@ class Departement extends BaseEntity
         }
 
         return $semestres;
+    }
+
+    public function getTextePresentation(): ?string
+    {
+        return $this->textePresentation;
+    }
+
+    public function setTextePresentation(string $textePresentation): self
+    {
+        $this->textePresentation = $textePresentation;
+
+        return $this;
     }
 }

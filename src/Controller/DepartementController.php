@@ -40,7 +40,8 @@ class DepartementController extends AbstractController
         Request $request,
         Departement $departement
     ): Response {
-        $form = $this->createForm(DepartementType::class, $departement);
+        $form = $this->createForm(DepartementType::class, $departement,
+        ['droit' => $this->isGranted('ROLE_GT')]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

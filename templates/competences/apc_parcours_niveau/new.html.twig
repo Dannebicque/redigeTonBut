@@ -1,33 +1,7 @@
-{% extends is_granted('ROLE_SUPER_ADMIN') ? 'base-super_admin.html.twig' : 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block header %}
     {{ 'adm.apc_parcours_niveau.heading'|trans({'%parcours%': parcours.libelle}) }}
-{% endblock %}
-
-{% block headeractions %}
-    <div class="header-action">
-        <div class="buttons">
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
-                <a href="{{ path('super_admin_homepage') }}" class="btn btn-primary btn-float" data-provide="tooltip"
-                   data-placement="bottom" title="{{ 'atitle.retour_super_administration'|trans }}">
-                    <i class="{{ iconDashboard }}"><span class="sr-only">dashboard</span></i>
-                </a>
-            {% else %}
-                <a href="{{ path('administration_apc_parcours_edit', {id: parcours.id}) }}"
-                   class="btn btn-warning btn-sm btn-float"
-                   title="{{ 'atitle.modifier'|trans }}"
-                   data-provide="tooltip"
-                   data-placement="bottom">
-                    <i class="{{ iconEdit }}"></i>
-                    <span class="sr-only">{{ 'atitle.modifier'|trans }}</span>
-                </a>
-                <a href="{{ path('administration_apc_referentiel_index', {diplome:parcours.diplome.id}) }}" class="btn
-                btn-primary btn-float"
-                   data-provide="tooltip"
-                   data-placement="bottom" title="{{ 'atitle.retour_referentiel'|trans }}"><i class="fas fa-arrow-left"><span class="sr-only">Retour au référentiel de compétences</span></i></a>
-            {% endif %}
-        </div>
-    </div>
 {% endblock %}
 
 {% block content %}

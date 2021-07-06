@@ -1,0 +1,73 @@
+\documentclass[10pt]{/Users/davidannebicque/htdocs/redigeTonBut/public/latex/class/pnclasse}
+
+\begin{document}
+    "Ce document pr\'esente le programme national du B.U.T {{ departement.sigle }} et compl\`ete l'annexe 1 de
+    l'arr\^ete\' relatif aux programmes nationaux de la licence professionnelle-bachelor universitaire de technologie"
+
+    \tableofcontents
+
+    {{ departement.textePresentation }}
+
+
+    \section{Référentiel d’évaluation}
+    Texte pr\'e-rempli
+
+
+    \section{Référentiel de formation}
+    Cadre g\'en\'eral :
+    \begin{itemize}
+        \item L'alternance
+        \item Les situations d'apprentissage et d'\'evaluation
+        \item La d\'emarche portfolio
+        \item Le PPP
+    \end{itemize}
+    Texte pr\'e-rempli
+    {% for parcours in departement.apcParcours %}
+
+    \subsection{ {{ parcours.libelle }} }
+
+    \subsubsection{Présentation du parcours}
+    \begin{itemize}
+        \item Objectifs du parcours, m\'etiers et secteurs d'activit\'es vis\'ees, compe\'etences vise\'ees.
+        \item Dispositions particuli\`eres professions r\`eglement\'ees, certifications spe\'eciales,
+        \item TP s\'ecurit\'e
+    \item \end{itemize}
+    {{ parcours.textePresentation }}
+
+    \subsubsection{Référentiel de compétences et d’activités}
+    -- Tableau de comp\'etence du parcours...
+
+    \subsubsection{Référentiel de formation}
+
+    \paragraph{Tableau de volume}
+    Tableau des volumes horaires sur les 6 semestres : contient \% d'adaptation locale
+
+    \paragraph{Adaptation locale}
+    L'adaptation locale : explications et/ou possibilit\'es d'\'ecriture par les d\'epartements(r\'epartition ou rajout de
+    ressources et SA\'E) validation CFVU
+    -- pr\'e-rempli --
+
+    \paragraph{Tableau croisant les compétences, les SAE, les ressources}
+
+    \paragraph{Fiches SAE et Ressources}
+
+    //sommaire \newline
+    {% for semestre in departement.semestres %}
+
+    \subparagraph{Semestre {{ semestre.ordreLmd }} }
+
+    Fiches SA\'E semestre 1+ fiche portfolio Fiches ressources semestre 1 + fiche PPP+ fiche portfolio.
+    Dans chaque fiche, les comp\'etences le niveau de la comp\'etence et les apprentissages critiques sont \'ecrits en entier
+    Fiches SAE\'E semestre 2+ fiche portfolio Fiches ressources semestre+ fiche PPP (m\^eme si identique \`a celle du S1)
+    {% for sae in semestre.apcSaes %}
+        {{ include('latex/sae.tex.twig') }}
+    \newpage
+    {% endfor %}
+    {% for ressource in semestre.apcRessources %}
+        {{ include('latex/ressource.tex.twig') }}
+    \newpage
+    {% endfor %}
+
+{% endfor %}
+{% endfor %}
+\end{document}

@@ -19,6 +19,7 @@ use App\Entity\Semestre;
 use App\Form\ApcSaeType;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceRepository;
+use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,6 +70,7 @@ class ApcSaeController extends BaseController
                     $this->entityManager->persist($saeRes);
                 }
             }
+            $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
 
             $this->entityManager->flush();
             $this->addFlashBag(
@@ -128,7 +130,7 @@ class ApcSaeController extends BaseController
                     $this->entityManager->persist($saeRes);
                 }
             }
-
+            $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
             $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,

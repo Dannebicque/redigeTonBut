@@ -30,28 +30,14 @@ class ApcSaeRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcSae::class);
     }
 
-//    public function findByDiplome(Diplome $diplome)
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
-//            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-//            ->where('a.diplome = :diplome')
-//            //->andWhere('s.ppn_actif = m.ppn')
-//            ->setParameter('diplome', $diplome->getId())
-//            ->orderBy('s.ordreLmd', 'ASC')
-//            ->addOrderBy('r.codeMatiere', 'ASC')
-//            ->addOrderBy('r.libelle', 'ASC')
-//            ->getQuery()
-//            ->getResult();
-//    }
-
     public function findBySemestre(Semestre $semestre)
     {
         return $this->createQueryBuilder('r')
             ->where('r.semestre = :semestre')
             //->andWhere('s.ppn_actif = m.ppn')
             ->setParameter('semestre', $semestre->getId())
-            ->orderBy('r.codeMatiere', 'ASC')
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
             ->getQuery()
             ->getResult();
@@ -75,9 +61,9 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
             ->where('a.departement = :departement')
-            //->andWhere('s.ppn_actif = m.ppn')
             ->setParameter('departement', $departement->getId())
-            ->orderBy('r.codeMatiere', 'ASC')
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
             ->getQuery()
             ->getResult();
@@ -118,6 +104,7 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->where('s.annee = :annee')
             ->setParameter('annee', $annee->getId())
             ->orderBy('r.semestre', 'ASC')
+            ->addOrderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
             ->getQuery()

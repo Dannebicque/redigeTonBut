@@ -25,7 +25,7 @@ class GenereFile
     public function genereFile()
     {
 
-        $content = $this->twig->render('latex/modele.tex.twig', [
+        $content = $this->twig->render('latex/annexe_specialite.tex.twig', [
             'departement' => $this->departement
         ]);
         $cle = new DateTime('now');

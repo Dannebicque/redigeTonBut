@@ -30,27 +30,14 @@ class ApcRessourceRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcRessource::class);
     }
 
-//    public function findByDiplome(Diplome $diplome)
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
-//            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-//            ->where('a.diplome = :diplome')
-//            //->andWhere('s.ppn_actif = m.ppn')
-//            ->setParameter('diplome', $diplome->getId())
-//            ->orderBy('r.codeMatiere', 'ASC')
-//            ->addOrderBy('r.libelle', 'ASC')
-//            ->getQuery()
-//            ->getResult();
-//    }
-
     public function findBySemestre(Semestre $semestre)
     {
         return $this->createQueryBuilder('r')
             ->where('r.semestre = :semestre')
             //->andWhere('s.ppn_actif = m.ppn')
             ->setParameter('semestre', $semestre->getId())
-            ->orderBy('r.codeMatiere', 'ASC')
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
             ->getQuery()
             ->getResult();
@@ -74,23 +61,13 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
             ->where('a.departement = :departement')
-            //->andWhere('s.ppn_actif = m.ppn')
             ->setParameter('departement', $departement->getId())
-            ->orderBy('r.codeMatiere', 'ASC')
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
             ->getQuery()
             ->getResult();
     }
-
-//    public function findByDiplomeToSemestreArray(Diplome $diplome)
-//    {
-//        $tab = [];
-//        foreach ($diplome->getSemestres() as $semestre) {
-//            $tab[$semestre->getId()] = $this->findBySemestre($semestre);
-//        }
-//
-//        return $tab;
-//    }
 
     public function findByAnneeArray(Annee $annee)
     {
@@ -117,9 +94,24 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->where('s.annee = :annee')
             ->setParameter('annee', $annee->getId())
             ->orderBy('r.semestre', 'ASC')
+            ->addOrderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
             ->getQuery()
+            ->getResult();
+    }
+
+    public function findBySemestreEtPrecendent(Semestre $semestre)
+    {
+        $query = $this->createQueryBuilder('r')
+            ->innerJoin(Semestre::class, 's', 'WITH', 'r.semestre = s.id')
+            ->where('s.ordreLmd <= :semestre')
+            ->setParameter('semestre', $semestre->getOrdreLmd())
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC');
+
+       return $query->getQuery()
             ->getResult();
     }
 }

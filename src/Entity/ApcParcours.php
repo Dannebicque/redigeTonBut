@@ -53,6 +53,11 @@ class ApcParcours extends BaseEntity
      */
     private $apcRessourceParcours;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $textePresentation;
+
     public function __construct(Departement $departement)
     {
         $this->setDepartement($departement);
@@ -183,6 +188,18 @@ class ApcParcours extends BaseEntity
                 $apcRessourceParcour->setParcours(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTextePresentation(): ?string
+    {
+        return $this->textePresentation;
+    }
+
+    public function setTextePresentation(string $textePresentation): self
+    {
+        $this->textePresentation = $textePresentation;
 
         return $this;
     }

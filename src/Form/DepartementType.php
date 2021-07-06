@@ -8,27 +8,37 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DepartementType extends AbstractType
 {
+    private bool $droit;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->droit =  $options['droit'];
         $builder
             ->add('sigle')
             ->add('libelle')
-            ->add('numeroAnnexe', IntegerType::class)
+            ->add('numeroAnnexe', IntegerType::class, ['disabled' => $this->droit])
             ->add('typeDepartement', ChoiceType::class,
-                ['choices' => ['secondaire' => 'secondaire', 'tertiaire' => 'tertiaire']])
-            ->add('pacd', EntityType::class, ['class' => User::class, 'choice_label' => 'display'])
-            ->add('cpn', EntityType::class, ['class' => User::class, 'choice_label' => 'display']);
+                ['choices' => ['Secondaire' => 'secondaire', 'Tertiaire' => 'tertiaire'], 'disabled' => $this->droit])
+            ->add('typeStructure', ChoiceType::class,
+                ['choices' => ['Type 1' => Departement::TYPE1, 'Type 2' => Departement::TYPE2, 'Type 3' => Departement::TYPE3], 'disabled' => $this->droit])
+            ->add('textePresentation', TextareaType::class,
+                ['label' => 'Texte descriptif figurant dans l\'annexe',
+                    'help' => 'Objectifs du diplôme, intitulé des parcours, métiers et secteurs d’activités visés, compétences visées.',
+                    'attr' => ['rows' => 50]])
+           ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Departement::class,
+            'droit' => null
         ]);
     }
 }

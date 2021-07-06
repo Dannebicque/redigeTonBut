@@ -176,6 +176,19 @@
                                         <span class="label">Consulter</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ path('administration_departement_edit', {id: user_data.departement
+                                    .id}) }}">
+                                        <span class="label">Texte descriptif de la spécialité</span>
+                                    </a>
+                                </li>
+                                {% for parcours in user_data.departement.apcParcours %}
+                                    <li>
+                                        <a href="{{ path('administration_apc_parcours_edit', {id:parcours.id}) }}">
+                                            <span class="label">texte du parcours : {{ parcours.libelle }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </li>
                         <li>
@@ -228,11 +241,23 @@
                                             <span class="label">Préconisations Coefficients/heures</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
-                                            <span class="label">Tableau par parcours</span>
-                                        </a>
-                                    </li>
+                                    {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+                                        <li>
+                                            <a href="#miscellaneous">
+                                                <span class="label">Tableau par parcours</span>
+                                            </a>
+                                            <ul id="miscellaneous">
+                                                {% for parcours in user_data.departement.apcParcours %}
+                                                    <li>
+                                                        <a href="">
+                                                            <span class="label">{{ parcours.libelle }}</span>
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endif %}
+
                                     <li>
                                         <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
                                             <span class="label">Validation des AC par les SAÉ</span>
@@ -241,7 +266,6 @@
                                 </ul>
                             </li>
                         {% endfor %}
-
                     {% endif %}
                     <li>
                         <a href="#ref_formation" data-href="Dashboards.html">
@@ -272,17 +296,17 @@
                                 </a>
                             </li>
                             {% if not is_granted('ROLE_GT') %}
-                            <li>
-                                <a href="{{ path('administration_apc_referentiel_competence_export') }}">
-                                    <span class="label">Sauvegarder le référentiel de compétences</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ path('administration_apc_referentiel_formation_export') }}">
-                                    <span class="label">Sauvegarder le référentiel de formation</span>
-                                </a>
-                            </li>
-                                {#  todo: possibilité d'export d'autres format ? mais pas en sauvegarde #}
+                                <li>
+                                    <a href="{{ path('administration_apc_referentiel_competence_export') }}">
+                                        <span class="label">Sauvegarder le référentiel de compétences</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('administration_apc_referentiel_formation_export') }}">
+                                        <span class="label">Sauvegarder le référentiel de formation</span>
+                                    </a>
+                                </li>
+                                {# todo: possibilité d'export d'autres format ? mais pas en sauvegarde #}
                             {% endif %}
                             <li>
                                 <a href="#">

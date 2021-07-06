@@ -2,10 +2,13 @@
     <div class="col-sm-2">
         {{ form_row(form.codeMatiere) }}
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-2">
+        {{ form_row(form.ordre) }}
+    </div>
+    <div class="col-sm-5">
         {{ form_row(form.libelle) }}
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         {{ form_row(form.libelleCourt) }}
     </div>
 
@@ -33,9 +36,7 @@
     <div class="col-sm-12">
         {{ form_row(form.description) }}
     </div>
-    <div class="col-sm-12">
-        {{ form_row(form.preRequis) }}
-    </div>
+
     <div class="col-sm-12">
         {{ form_row(form.motsCles) }}
     </div>
@@ -57,7 +58,7 @@
                         <div class="row">
                             <template x-for="ac in getAcs(competence.id)">
                                 <div class="col-6">
-                                    <input type="checkbox" name="ac" :value="ac.id" :checked="ac.checked" >&nbsp;
+                                    <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked" >&nbsp;
                                     <span x-text="ac.code + ` | ` + ac.libelle"></span>
                                 </div>
                             </template>
@@ -71,6 +72,27 @@
 
         <fieldset class="form-group">
             <legend class="col-form-label required">
+                Prérequis (ressource du semestre ou des semestres précédents)
+            </legend>
+            <div id="preRequisRessources">
+                <div class="alert alert-warning">Indiquer un semestre</div>
+                <div class="row">
+                    <template x-for="prerequi in prerequis">
+                        <div class="col-6">
+                            <input type="checkbox" name="tprerequis[]" :value="prerequi.id" :checked="prerequi
+                            .checked">&nbsp;
+                            <span x-text="prerequi.code + ` | ` + prerequi.libelle"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <small id="apc_sae_ressource_help" class="form-text text-muted">Ajoutez les éventuelles ressources
+                                                                            pré-requises pour
+                                                                            .</small>
+        </fieldset>
+
+        <fieldset class="form-group">
+            <legend class="col-form-label required">
                 SAE concernée(s)
             </legend>
             <div id="saeRessource">
@@ -78,7 +100,7 @@
                 <div class="row">
                     <template x-for="sae in saes">
                         <div class="col-6">
-                            <input type="checkbox" name="saes" :value="sae.id" :checked="sae.checked">&nbsp;
+                            <input type="checkbox" name="saes[]" :value="sae.id" :checked="sae.checked">&nbsp;
                             <span x-text="sae.code + ` | ` + sae.libelle"></span>
                         </div>
                     </template>
@@ -97,7 +119,7 @@
                 <div class="row">
                     <template x-for="parcour in parcours">
                         <div class="col-6">
-                            <input type="checkbox" name="parcours" :value="parcour.id" :checked="parcour.checked">&nbsp;
+                            <input type="checkbox" name="parcours[]" :value="parcour.id" :checked="parcour.checked">&nbsp;
                             <span x-text="parcour.code + ` | ` + parcour.libelle"></span>
                         </div>
                     </template>

@@ -1,14 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block header %}Edit Departement{% endblock %}
+{% block header %}Modification de la spécialité{% endblock %}
 
 {% block content %}
     <div class="card">
         <div class="card-body">
             {{ include('composants/adm-form.html.twig') }}
-
-            <a href="{{ path('administration_departement_index') }}">back to list</a>
         </div>
     </div>
-
 {% endblock %}

@@ -2,10 +2,13 @@
     <div class="col-sm-2">
         {{ form_row(form.codeMatiere) }}
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-2">
+        {{ form_row(form.ordre) }}
+    </div>
+    <div class="col-sm-5">
         {{ form_row(form.libelle) }}
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         {{ form_row(form.libelleCourt) }}
     </div>
 {#    <div class="col-sm-4">#}
@@ -55,7 +58,7 @@
                             <div class="row">
                                 <template x-for="ac in getAcs(competence.id)">
                                     <div class="col-6">
-                                        <input type="checkbox" name="ac" :value="ac.id" :checked="ac.checked">&nbsp;
+                                        <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked">&nbsp;
                                         <span x-text="ac.code + ` | ` + ac.libelle"></span>
                                     </div>
                                 </template>
@@ -77,7 +80,7 @@
                 <div class="row">
                     <template x-for="ressource in ressources">
                         <div class="col-6">
-                            <input type="checkbox" name="saes" :value="ressource.id" :checked="ressource.checked">&nbsp;
+                            <input type="checkbox" name="saes[]" :value="ressource.id" :checked="ressource.checked">&nbsp;
                             <span x-text="ressource.code + ` | ` + ressource.libelle"></span>
                         </div>
                     </template>
@@ -96,7 +99,7 @@
                 <div class="row">
                     <template x-for="parcour in parcours">
                         <div class="col-6">
-                            <input type="checkbox" name="parcours" :value="parcour.id" :checked="parcour.checked">&nbsp;
+                            <input type="checkbox" name="parcours[]" :value="parcour.id" :checked="parcour.checked">&nbsp;
                             <span x-text="parcour.code + ` | ` + parcour.libelle"></span>
                         </div>
                     </template>

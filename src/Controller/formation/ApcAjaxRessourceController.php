@@ -18,18 +18,15 @@ use App\Entity\ApcCompetence;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
 use App\Entity\ApcRessourceCompetence;
-use App\Entity\ApcSaeRessource;
-use App\Entity\Constantes;
 use App\Entity\Departement;
-use App\Form\ApcRessourceType;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceParcoursRepository;
+use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
-use App\Utils\Codification;
 use App\Utils\Convert;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -130,9 +127,58 @@ class ApcAjaxRessourceController extends BaseController
     }
 
     /**
+     * @Route("/ajax-prerequis", name="apc_prerequis_ajax", methods={"POST"}, options={"expose":true})
+     */
+    public function ajaxPrerequis(
+        SemestreRepository $semestreRepository,
+        ApcRessourceRepository $apcRessourceRepository,
+        Request $request
+    ): Response {
+        $parametersAsArray = [];
+        if ($content = $request->getContent()) {
+            $parametersAsArray = json_decode($content, true);
+        }
+
+        $semestre = $semestreRepository->find($parametersAsArray['semestre']);
+        $tabPrerequis = [];
+        $ressource = null;
+
+        if (null !== $semestre) {
+            if (null !== $parametersAsArray['ressource']) {
+                $ressource = $apcRessourceRepository->find($parametersAsArray['ressource']);
+                foreach ($ressource->getRessourcesPreRequises() as $rs) {
+                    $tabPrerequis[] = $rs->getId();
+                }
+            }
+
+
+            $datas = $apcRessourceRepository->findBySemestreEtPrecendent($semestre);
+
+            $t = [];
+            foreach ($datas as $d) {
+                if ($ressource === null || $d->getId() !== $ressource->getId()) {
+                    $b = [];
+
+
+                    $b['id'] = $d->getId();
+                    $b['libelle'] = $d->getLibelle();
+                    $b['code'] = $d->getCodeMatiere();
+                    $b['checked'] = true === in_array($d->getId(), $tabPrerequis);
+                    $t[] = $b;
+                }
+            }
+
+            return $this->json($t);
+        }
+
+        return $this->json(false);
+    }
+
+    /**
      * @Route("/ajax-parcours", name="apc_ressouce_parcours_ajax", methods={"POST"}, options={"expose":true})
      */
-    public function ajaxParcours(
+    public
+    function ajaxParcours(
         SemestreRepository $semestreRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         Request $request
@@ -173,7 +219,8 @@ class ApcAjaxRessourceController extends BaseController
      * @Route("/{ressource}/{ac}/update_ajax", name="apc_ressource_ac_update_ajax", methods="POST",
      *                                         options={"expose":true})
      */
-    public function updateAc(
+    public
+    function updateAc(
         ApcRessourceApprentissageCritiqueRepository $apcRessourceApprentissageCritiqueRepository,
         Request $request,
         ApcRessource $ressource,
@@ -211,7 +258,8 @@ class ApcAjaxRessourceController extends BaseController
      * @Route("/{ressource}/{competence}/update_coeff_ajax", name="apc_ressource_coeff_update_ajax", methods="POST",
      *                                                       options={"expose":true})
      */
-    public function updateCoeff(
+    public
+    function updateCoeff(
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         Request $request,
         ApcRessource $ressource,
@@ -247,7 +295,8 @@ class ApcAjaxRessourceController extends BaseController
      * @Route("/{ressource}/{type}/update_heures_ajax", name="apc_ressource_heure_update_ajax", methods="POST",
      *                                                  options={"expose":true})
      */
-    public function updateHeures(
+    public
+    function updateHeures(
         Request $request,
         ApcRessource $ressource,
         string $type

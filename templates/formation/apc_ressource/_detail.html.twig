@@ -1,13 +1,13 @@
 <table class="table table-bordered">
     <tr>
-        <th style="width: 25%">Nom de la ressource</th>
-        <td style="width: 25%" colspan="2">{{ apc_ressource.libelle }}</td>
-        <th style="width: 25%">Code</th>
-        <td style="width: 25%">{{ apc_ressource.codeMatiere }}</td>
+        <th style="width: 20%">Nom de la ressource</th>
+        <td style="width: 40%" colspan="2">{{ apc_ressource.libelle }}</td>
+        <th style="width: 20%">Code</th>
+        <td style="width: 20%">{{ apc_ressource.codeMatiere }}</td>
     </tr>
     <tr>
         <th>Semestre</th>
-        <td colspan="4">{{ apc_ressource.semestre != null ? apc_ressource.semestre.display : 'non.defini'|trans }}</td>
+        <td colspan="4">{{ apc_ressource.semestre != null ? apc_ressource.semestre.display : 'Non défini' }}</td>
     </tr>
     <tr>
         <th>
@@ -44,7 +44,7 @@
         <td colspan="4">
             {% for sae in apc_ressource.apcSaeRessources|filter(sae => sae.sae !=
                 null) %}
-                <span class="badge badge-lg badge-primary"
+                <span class="badge bg-primary"
                       data-provide="tooltip"
                       title="{{ sae.sae.libelle }}"
                 >{{ sae.sae.codeMatiere }}</span>
@@ -53,7 +53,14 @@
     </tr>
     <tr>
         <th>Prérequis</th>
-        <td colspan="4">{{ apc_ressource.preRequis|nl2br }}</td>
+        <td colspan="4">
+            {% for prerequis in apc_ressource.ressourcesPreRequises %}
+                <span class="badge bg-primary"
+                      data-provide="tooltip"
+                      title="{{ prerequis.libelle }}"
+                >{{ prerequis.codeMatiere }}</span>
+            {% endfor %}
+        </td>
     </tr>
     <tr>
         <th>Description</th>

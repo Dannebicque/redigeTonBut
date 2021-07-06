@@ -31,6 +31,11 @@ class ApcComposanteEssentielle extends BaseEntity
      */
     private ?ApcCompetence $competence;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $ordre;
+
     public function __construct(?ApcCompetence $competence = null)
     {
         $this->competence = $competence;
@@ -56,6 +61,18 @@ class ApcComposanteEssentielle extends BaseEntity
     public function setCompetence(?ApcCompetence $competence): self
     {
         $this->competence = $competence;
+
+        return $this;
+    }
+
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(int $ordre): self
+    {
+        $this->ordre = $ordre;
 
         return $this;
     }

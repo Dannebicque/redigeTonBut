@@ -17,6 +17,7 @@ use App\Repository\ApcComptenceRepository;
 use App\Repository\SemestreRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,10 +36,11 @@ class ApcRessourceType extends AbstractType
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code Ressource', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
             ->add('libelle', TextType::class, ['label' => 'Libellé'])
+            ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre'])
             ->add('libelleCourt', TextType::class, ['label' => 'Libellé court', 'attr' => ['maxlength' => 25], 'required' => false,
                 'help' => '25 caractères maximum'])
-            ->add('preRequis', TextareaType::class,
-                ['label' => 'Pré-requis', 'attr' => ['rows' => 5], 'required' => false])
+//            ->add('preRequis', TextareaType::class,
+//                ['label' => 'Pré-requis', 'attr' => ['rows' => 5], 'required' => false])
             ->add('description', TextareaType::class,
                 [
                     'attr' => ['rows' => 20],
