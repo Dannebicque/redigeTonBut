@@ -110,4 +110,14 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findOrdreMax(Semestre $semestre)
+    {
+        return $this->createQueryBuilder('r')
+            ->select('MAX(r.ordre) as ordreMax')
+            ->where('r.semestre = :semestre')
+            ->setParameter('semestre', $semestre->getId())
+            ->getQuery()
+            ->getScalarResult();
+    }
 }
