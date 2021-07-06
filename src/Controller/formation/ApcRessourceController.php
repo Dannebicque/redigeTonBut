@@ -10,6 +10,8 @@
 namespace App\Controller\formation;
 
 
+use App\Classes\Apc\ApcRessourceOrdre;
+use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
@@ -217,8 +219,14 @@ class ApcRessourceController extends BaseController
     /**
      * @Route("/{id}/deplace/{position}", name="apc_ressource_deplace", methods="GET")
      */
-    public function deplace(Request $request, ApcRessource $apcRessource, int $position): Response
+    public function deplace(
+        Request $request,
+        ApcRessourceOrdre $apcRessourceOrdre,
+        ApcRessource $apcRessource, int $position): Response
     {
+        $apcRessourceOrdre->deplaceRessource($apcRessource, $position);
+
+        return $this->redirect($request->headers->get('referer'));
 
     }
 }

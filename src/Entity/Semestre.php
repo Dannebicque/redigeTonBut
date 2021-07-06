@@ -59,6 +59,7 @@ class Semestre extends BaseEntity
 
     /**
      * @ORM\OneToMany(targetEntity=ApcRessource::class, mappedBy="semestre")
+     * @ORM\OrderBy({"ordre":"ASC"})
      */
     private Collection $apcRessources;
 

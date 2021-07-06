@@ -10,6 +10,7 @@
 namespace App\Controller\formation;
 
 
+use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeApprentissageCritique;
@@ -190,8 +191,14 @@ class ApcSaeController extends BaseController
     /**
      * @Route("/{id}/deplace/{position}", name="apc_sae_deplace", methods="GET")
      */
-    public function deplace(Request $request, ApcSae $apcSae, int $position): Response
+    public function deplace(
+        Request $request,
+        ApcSaeOrdre $apcSaeOrdre,
+        ApcSae $apcSae, int $position): Response
     {
+        $apcSaeOrdre->deplaceSae($apcSae, $position);
+
+        return $this->redirect($request->headers->get('referer'));
 
     }
 }
