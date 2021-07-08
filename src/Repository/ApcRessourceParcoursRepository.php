@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\ApcParcours;
+use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceParcours;
+use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -35,5 +38,27 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
 
         return $t;
 
+    }
+
+    public function findBySemestre(Semestre $semestre, ApcParcours $parcours)
+    {
+        $req = $this->createQueryBuilder('p')
+            ->innerJoin(ApcRessource::class, 's', 'WITH', 'p.ressource = s.id')
+            ->where('p.parcours = :parcours')
+            ->andWhere('s.semestre = :semestre')
+            ->setParameter('parcours', $parcours->getId())
+            ->setParameter('semestre', $semestre->getId())
+            ->orderBy('s.ordre', 'ASC')
+            ->addOrderBy('s.codeMatiere', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $t = [];
+
+        foreach ($req as $r) {
+            $t[] = $r->getRessource();
+        }
+
+        return $t;
     }
 }

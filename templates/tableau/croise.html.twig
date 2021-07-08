@@ -20,7 +20,7 @@
                 <div class="card-body">
                     {{ render(controller(
                         'App\\Controller\\TableauController::tableauSemestre',
-                        { 'semestre': semestre.id }
+                        { 'semestre': semestre.id, parcours: parcours != null ? parcours.id : null }
                     )) }}
                 </div>
             </div>
@@ -30,8 +30,7 @@
 {% endblock %}
 
 {# todo: bouton export, refresh du tableau, possibilité ed masquer des données (menu en modal?), affichage code
-et/ou libellé. Bouton pour ajouter ressource ou SAE rapidement ?
-Si croix possibilité d'indiquer un commentaire ? ECTS ? Heures préconisés ? #}
+et/ou libellé. #}
 {% block javascripts %}
     {{ parent() }}
     <script>

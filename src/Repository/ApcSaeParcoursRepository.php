@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\ApcParcours;
+use App\Entity\ApcSae;
 use App\Entity\ApcSaeParcours;
+use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -30,6 +33,28 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
         $t = [];
         foreach ($query as $q) {
             $t[] = $q->getSae()->getId();
+        }
+
+        return $t;
+    }
+
+    public function findBySemestre(Semestre $semestre, ApcParcours $parcours)
+    {
+        $req = $this->createQueryBuilder('p')
+            ->innerJoin(ApcSae::class, 's', 'WITH', 'p.sae = s.id')
+            ->where('p.parcours = :parcours')
+            ->andWhere('s.semestre = :semestre')
+            ->setParameter('parcours', $parcours->getId())
+            ->setParameter('semestre', $semestre->getId())
+            ->orderBy('s.ordre', 'ASC')
+            ->addOrderBy('s.codeMatiere', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $t = [];
+
+        foreach ($req as $r) {
+            $t[] = $r->getSae();
         }
 
         return $t;

@@ -5,13 +5,16 @@ namespace App\Controller;
 use App\Classes\Tableau\Preconisation;
 use App\Classes\Tableau\Structure;
 use App\Entity\Annee;
+use App\Entity\ApcParcours;
 use App\Entity\Semestre;
 use App\Repository\ApcCompetenceSemestreRepository;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
+use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeCompetenceRepository;
+use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\SemestreRepository;
 use App\Utils\Convert;
@@ -99,11 +102,14 @@ class TableauController extends BaseController
         return $this->json(false);
     }
 
-    #[Route('/croise/{annee}', name: 'croise_annee', requirements: ['annee' => '\d+'])]
+    #[Route('/croise/{annee}/{parcours}', name: 'croise_annee', requirements: ['annee' => '\d+'])]
     public function tableau(
-        Annee $annee
+        Annee $annee,
+        ApcParcours $parcours = null
     ): Response {
+
         return $this->render('tableau/croise.html.twig', [
+            'parcours' => $parcours,
             'annee' => $annee,
             'semestres' => $annee->getSemestres()
         ]);
@@ -152,15 +158,24 @@ class TableauController extends BaseController
     }
 
     public function tableauSemestre(
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         ApcNiveauRepository $apcNiveauRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcRessourceRepository $apcRessourceRepository,
-        Semestre $semestre
+        Semestre $semestre,
+        ?ApcParcours $parcours = null
     ) {
-        $saes = $apcSaeRepository->findBySemestre($semestre);
-        $ressources = $apcRessourceRepository->findBySemestre($semestre);
+        if ($parcours === null) {
+            $saes = $apcSaeRepository->findBySemestre($semestre);
+            $ressources = $apcRessourceRepository->findBySemestre($semestre);
+        } else {
+            $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+            $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+        }
+
 
         $compSae = $apcSaeCompetenceRepository->findBySemestre($semestre);
         $compRessources = $apcRessourceCompetenceRepository->findBySemestre($semestre);

@@ -10,6 +10,7 @@
 namespace App\Repository;
 
 use App\Entity\Annee;
+use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
 use App\Entity\Departement;
 use App\Entity\Diplome;
@@ -34,7 +35,6 @@ class ApcSaeRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('r')
             ->where('r.semestre = :semestre')
-            //->andWhere('s.ppn_actif = m.ppn')
             ->setParameter('semestre', $semestre->getId())
             ->orderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')

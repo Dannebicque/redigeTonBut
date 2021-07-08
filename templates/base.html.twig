@@ -202,16 +202,16 @@
                                     <span class="label">Structure des 3 années</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ path('tableau_croise_complet') }}">
-                                    <span class="label">Tableaux croisés des 3 années</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ path('tableau_preconisations_complet') }}">
-                                    <span class="label">Préconisations des 3 années</span>
-                                </a>
-                            </li>
+{#                            <li>#}
+{#                                <a href="{{ path('tableau_croise_complet') }}">#}
+{#                                    <span class="label">Tableaux croisés des 3 années</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                            <li>#}
+{#                                <a href="{{ path('tableau_preconisations_complet') }}">#}
+{#                                    <span class="label">Préconisations des 3 années</span>#}
+{#                                </a>#}
+{#                            </li>#}
                         </ul>
                     </li>
                     {% for annee in user_data.annees %}
@@ -239,6 +239,16 @@
                                         <span class="label">{{ parcours.libelle }}</span>
                                     </a>
                                     <ul id="parcours{{ parcours.id }}">
+                                        <li>
+                                            <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                <span class="label">Ressources du parcours</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                <span class="label">SAÉ du parcours</span>
+                                            </a>
+                                        </li>
 
                                         <li>
                                             <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
