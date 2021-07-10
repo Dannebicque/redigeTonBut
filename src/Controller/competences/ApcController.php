@@ -13,6 +13,7 @@ use App\Classes\Apc\ApcStructure;
 use App\Classes\Import\MyUpload;
 use App\Classes\Import\ReferentielCompetenceImport;
 use App\Controller\BaseController;
+use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Repository\DepartementRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,10 +56,10 @@ class ApcController extends BaseController
         if ($request->isMethod('POST')) {
             $departement = $departementRepository->find($request->request->get('departement'));
             if (null !== $departement) {
-                $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xml']);
+                $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xml', 'xlsx']);
                 $diplomeImport->import($departement, $fichier, $request->request->get('typeFichier'));
                 unlink($fichier);
-                //  $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Maquette importée avec succès');
+                $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Maquette importée avec succès');
             }
 
         }

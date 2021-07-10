@@ -10,6 +10,7 @@
 namespace App\Controller\formation;
 
 
+use App\Classes\Apc\ApcSaeAddEdit;
 use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcRessourceParcours;
@@ -37,9 +38,8 @@ class ApcSaeController extends BaseController
      * @Route("/new/{semestre}", name="apc_sae_new", methods={"GET","POST"})
      */
     public function new(
-        ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
-        ApcParcoursRepository $apcParcoursRepository,
-        ApcRessourceRepository $apcRessourceRepository,
+        ApcSaeOrdre $apcSaeOrdre,
+        ApcSaeAddEdit $apcSaeAddEdit,
         Request $request,
         Semestre $semestre = null
     ): Response {
@@ -47,6 +47,7 @@ class ApcSaeController extends BaseController
 
         if ($semestre !== null) {
             $apcSae->setSemestre($semestre);
+            $apcSae->setOrdre($apcSaeOrdre->getOrdreSuivant($semestre));
         }
 
         $form = $this->createForm(ApcSaeType::class, $apcSae, [
@@ -56,37 +57,8 @@ class ApcSaeController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($apcSae);
-            //sauvegarde des AC
-            $acs = $request->request->get('ac');
-            if (is_array($acs)) {
-                foreach ($acs as $idAc) {
-                    $ac = $apcApprentissageCritiqueRepository->find($idAc);
-                    $saeAc = new ApcSaeApprentissageCritique($apcSae, $ac);
-                    $this->entityManager->persist($saeAc);
-                }
-            }
+            $apcSaeAddEdit->addOrEdit($apcSae, $request);
 
-            $parcours = $request->request->get('parcours');
-            if (is_array($parcours)) {
-                foreach ($parcours as $idParcours) {
-                    $parc = $apcParcoursRepository->find($idParcours);
-                    $saeAc = new ApcSaeParcours($apcSae, $parc);
-                    $this->entityManager->persist($saeAc);
-                }
-            }
-
-            $acs = $request->request->get('ressources');
-            if (is_array($acs)) {
-                foreach ($acs as $idAc) {
-                    $res = $apcRessourceRepository->find($idAc);
-                    $saeRes = new ApcSaeRessource($apcSae, $res);
-                    $this->entityManager->persist($saeRes);
-                }
-            }
-            $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
-
-            $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'apc.sae.new.success.flash'
@@ -105,6 +77,7 @@ class ApcSaeController extends BaseController
      * @Route("/{id}/edit", name="apc_sae_edit", methods={"GET","POST"})
      */
     public function edit(
+        ApcSaeAddEdit $apcSaeAddEdit,
         ApcRessourceRepository $apcRessourceRepository,
         ApcParcoursRepository $apcParcoursRepository,
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
@@ -118,48 +91,9 @@ class ApcSaeController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //on supprimer ceux présent
-            foreach ($apcSae->getApcSaeApprentissageCritiques() as $ac) {
-                $this->entityManager->remove($ac);
-            }
 
-            //sauvegarde des AC
-            $acs = $request->request->get('ac');
-            if (is_array($acs)) {
-                foreach ($acs as $idAc) {
-                    $ac = $apcApprentissageCritiqueRepository->find($idAc);//todo: tableau pour éviter les nombreuses requetes ???
-                    $saeAc = new ApcSaeApprentissageCritique($apcSae, $ac);
-                    $this->entityManager->persist($saeAc);
-                }
-            }
-
-            foreach ($apcSae->getApcSaeParcours() as $ac) {
-                $this->entityManager->remove($ac);
-            }
-
-            $parcours = $request->request->get('parcours');
-            if (is_array($parcours)) {
-                foreach ($parcours as $idParcours) {
-                    $parc = $apcParcoursRepository->find($idParcours);
-                    $saeAc = new ApcSaeParcours($apcSae, $parc);
-                    $this->entityManager->persist($saeAc);
-                }
-            }
-
-            foreach ($apcSae->getApcSaeRessources() as $ac) {
-                $this->entityManager->remove($ac);
-            }
-
-            $acs = $request->request->get('ressources');
-            if (is_array($acs)) {
-                foreach ($acs as $idAc) {
-                    $res = $apcRessourceRepository->find($idAc);
-                    $saeRes = new ApcSaeRessource($apcSae, $res);
-                    $this->entityManager->persist($saeRes);
-                }
-            }
-            $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
-            $this->entityManager->flush();
+            $apcSaeAddEdit->removeLiens($apcSae);
+            $apcSaeAddEdit->addOrEdit($apcSae, $request);
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'apc.sae.edit.success.flash'

@@ -12,7 +12,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 // start the Stimulus application
 import './bootstrap'
-import 'bootstrap/dist/js/bootstrap.bundle.min'
+window.bootstrap = require('bootstrap/dist/js/bootstrap.bundle.min')
+
 import './js/vendor/OverlayScrollbars.min'
 import './js/vendor/clamp.min'
 
@@ -21,7 +22,10 @@ import './js/common'
 import './js/scripts'
 import './js/base/loader'
 
-
+var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+var toastList = toastElList.map(function (toastEl) {
+  return new bootstrap.Toast(toastEl)
+})
 
 /* AlpineJs */
 import Alpine from 'alpinejs'
@@ -32,6 +36,20 @@ import './js/alpinejs/getUpdateRessource'
 import './js/alpinejs/getUpdateSae'
 import './js/alpinejs/getUpdatePreconisation'
 import './js/alpinejs/getUpdateStructure'
+
+// Without jQuery
+// Define a convenience method and use it
+const ready = (callback) => {
+  if (document.readyState != "loading") callback();
+  else document.addEventListener("DOMContentLoaded", callback);
+}
+
+ready(() => {
+  /* Do things after DOM has fully loaded */
+  toastList.forEach((toast) => {
+    toast.show()
+  })
+});
 
 
 

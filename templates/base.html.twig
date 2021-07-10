@@ -164,121 +164,121 @@
             <div class="menu-container flex-grow-1">
                 <ul id="menu" class="menu">
                     {% if user_data.departement != null %}
-                    <li>
-                        <a href="#ref_competences" data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
-                            <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
-                            <span class="label">Ref. Compétences</span>
-                        </a>
-                        <ul id="ref_competences">
-                            <li>
-                                <a href="{{ path('administration_apc_referentiel_index', {departement: user_data
-                                .departement.id}) }}">
-                                    <span class="label">Consulter</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ path('administration_departement_edit', {id: user_data.departement
-                                .id}) }}">
-                                    <span class="label">Texte descriptif de la spécialité</span>
-                                </a>
-                            </li>
-                            {% for parcours in user_data.departement.apcParcours %}
+                        <li>
+                            <a href="#ref_competences" data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
+                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <span class="label">Ref. Compétences</span>
+                            </a>
+                            <ul id="ref_competences">
                                 <li>
-                                    <a href="{{ path('administration_apc_parcours_edit', {id:parcours.id}) }}">
-                                        <span class="label">texte du parcours : {{ parcours.libelle }}</span>
+                                    <a href="{{ path('administration_apc_referentiel_index', {departement: user_data
+                                    .departement.id}) }}">
+                                        <span class="label">Consulter</span>
                                     </a>
                                 </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#ref_formation" data-href="Dashboards.html">
-                            <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
-                            <span class="label">Tableaux</span>
-                        </a>
-                        <ul id="ref_formation">
-                            <li>
-                                <a href="{{ path('tableau_structure') }}">
-                                    <span class="label">Structure des 3 années</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% for annee in user_data.annees %}
-                    <li>
-                        <a href="#ref_formation" data-href="{{ path('but_annee', {annee: annee.id}) }}">
-                            <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
-                            <span class="label">BUT{{ annee.ordre }}</span>
-                        </a>
-                        <ul id="ref_formation">
-                            <li>
-                                <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
-                                    <span class="label">Ressources</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
-                                    <span class="label">SAÉ</span>
-                                </a>
-                            </li>
-
-                            {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
-                                {% for parcours in user_data.departement.apcParcours %}
                                 <li>
-                                    <a href="#parcours{{ parcours.id }}">
-                                        <span class="label">{{ parcours.libelle }}</span>
+                                    <a href="{{ path('administration_departement_edit', {id: user_data.departement
+                                    .id}) }}">
+                                        <span class="label">Texte descriptif de la spécialité</span>
                                     </a>
-                                    <ul id="parcours{{ parcours.id }}">
-                                        <li>
-                                            <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                <span class="label">Ressources du parcours</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                <span class="label">SAÉ du parcours</span>
-                                            </a>
-                                        </li>
+                                </li>
+                                {% for parcours in user_data.departement.apcParcours %}
+                                    <li>
+                                        <a href="{{ path('administration_apc_parcours_edit', {id:parcours.id}) }}">
+                                            <span class="label">texte du parcours : {{ parcours.libelle }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#ref_formation" data-href="Dashboards.html">
+                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <span class="label">Tableaux</span>
+                            </a>
+                            <ul id="ref_formation">
+                                <li>
+                                    <a href="{{ path('tableau_structure') }}">
+                                        <span class="label">Structure des 3 années</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% for annee in user_data.annees %}
+                            <li>
+                                <a href="#ref_formation" data-href="{{ path('but_annee', {annee: annee.id}) }}">
+                                    <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                    <span class="label">BUT{{ annee.ordre }}</span>
+                                </a>
+                                <ul id="ref_formation">
+                                    <li>
+                                        <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
+                                            <span class="label">Ressources</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
+                                            <span class="label">SAÉ</span>
+                                        </a>
+                                    </li>
 
+                                    {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+                                        {% for parcours in user_data.departement.apcParcours %}
+                                            <li>
+                                                <a href="#parcours{{ parcours.id }}">
+                                                    <span class="label">{{ parcours.libelle }}</span>
+                                                </a>
+                                                <ul id="parcours{{ parcours.id }}">
+                                                    <li>
+                                                        <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                            <span class="label">Ressources du parcours</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                            <span class="label">SAÉ du parcours</span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                            <span class="label">Tableaux croisés AC/SAÉ/Ressources</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                            <span class="label">Préconisations Coefficients/heures</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id,
+                                                            parcours: parcours.id}) }}">
+                                                            <span class="label">Validation des AC par les SAÉ</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        {% endfor %}
+                                    {% else %}
                                         <li>
-                                            <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                            <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
                                                 <span class="label">Tableaux croisés AC/SAÉ/Ressources</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                            <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
                                                 <span class="label">Préconisations Coefficients/heures</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id,
-                                                parcours: parcours.id}) }}">
+                                            <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
                                                 <span class="label">Validation des AC par les SAÉ</span>
                                             </a>
                                         </li>
-                                    </ul>
-                                </li>
-                                {% endfor %}
-                            {% else %}
-                                <li>
-                                    <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
-                                        <span class="label">Tableaux croisés AC/SAÉ/Ressources</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
-                                        <span class="label">Préconisations Coefficients/heures</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
-                                        <span class="label">Validation des AC par les SAÉ</span>
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                    {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endfor %}
                     {% endif %}
                     <li>
                         <a href="#ref_formation" data-href="Dashboards.html">
@@ -400,6 +400,23 @@
 
     <!-- Main Content Start -->
     <main>
+        <!-- messages flash -->
+        {# read and display all flash messages #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="toast position-fixed align-items-center top-0 end-0 m-3 bg-{{ label }} border-0" style="z-index:
+                2000">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <p class="text-white"> {{ message }}</p>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- fin messages flash -->
         <div class="container">
             <!-- Title and Top Buttons Start -->
             <div class="page-title-container">

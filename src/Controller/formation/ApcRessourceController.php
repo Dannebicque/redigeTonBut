@@ -10,6 +10,7 @@
 namespace App\Controller\formation;
 
 
+use App\Classes\Apc\ApcRessourceAddEdit;
 use App\Classes\Apc\ApcRessourceOrdre;
 use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
@@ -39,10 +40,8 @@ class ApcRessourceController extends BaseController
      * @Route("/new/{semestre}", name="apc_ressource_new", methods={"GET","POST"})
      */
     public function new(
-        ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
-        ApcParcoursRepository $apcParcoursRepository,
-        ApcRessourceRepository $apcRessourceRepository,
-        ApcSaeRepository $apcSaeRepository,
+        ApcRessourceOrdre $apcRessourceOrdre,
+        ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
         Semestre $semestre = null
     ): Response {
@@ -50,6 +49,7 @@ class ApcRessourceController extends BaseController
 
         if ($semestre !== null) {
             $apcRessource->setSemestre($semestre);
+            $apcRessource->setOrdre($apcRessourceOrdre->getOrdreSuivant($semestre));
         }
 
         $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
@@ -59,45 +59,7 @@ class ApcRessourceController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
-            $this->entityManager->persist($apcRessource);
-
-            $acs = $request->request->get('ac');
-            if (is_array($acs)) {
-                foreach ($acs as $idAc) {
-                    $ac = $apcApprentissageCritiqueRepository->find($idAc);
-                    $saeAc = new ApcRessourceApprentissageCritique($apcRessource, $ac);
-                    $this->entityManager->persist($saeAc);
-                }
-            }
-
-            $saes = $request->request->get('saes');
-            if (is_array($saes)) {
-                foreach ($saes as $idAc) {
-                    $apcSae = $apcSaeRepository->find($idAc);
-                    $saeRes = new ApcSaeRessource($apcSae, $apcRessource);
-                    $this->entityManager->persist($saeRes);
-                }
-            }
-
-            $parcours = $request->request->get('parcours');
-            if (is_array($parcours)) {
-                foreach ($parcours as $idParcours) {
-                    $parc = $apcParcoursRepository->find($idParcours);
-                    $saeAc = new ApcRessourceParcours($apcRessource, $parc);
-                    $this->entityManager->persist($saeAc);
-                }
-            }
-
-            $tprerequis = $request->request->get('tprerequis');
-            if (is_array($tprerequis)) {
-                foreach ($tprerequis as $idAc) {
-                    $res = $apcRessourceRepository->find($idAc);
-                    $apcRessource->addRessourcesPreRequise($res);
-                }
-            }
-
-            $this->entityManager->flush();
+            $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'apc.ressource.new.success.flash'
@@ -117,10 +79,7 @@ class ApcRessourceController extends BaseController
      * @Route("/{id}/edit", name="apc_ressource_edit", methods={"GET","POST"})
      */
     public function edit(
-        ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
-        ApcParcoursRepository $apcParcoursRepository,
-        ApcSaeRepository $apcSaeRepository,
-        ApcRessourceRepository $apcRessourceRepository,
+        ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
         ApcRessource $apcRessource
     ): Response {
@@ -131,60 +90,9 @@ class ApcRessourceController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($apcRessource->getApcRessourceApprentissageCritiques() as $ac) {
-                $this->entityManager->remove($ac);
-            }
 
-
-
-            $acs = $request->request->get('ac');
-            if (is_array($acs)) {
-                foreach ($acs as $idAc) {
-                    $ac = $apcApprentissageCritiqueRepository->find($idAc);
-                    $saeAc = new ApcRessourceApprentissageCritique($apcRessource, $ac);
-                    $this->entityManager->persist($saeAc);
-                }
-            }
-
-            foreach ($apcRessource->getApcRessourceParcours() as $ac) {
-                $this->entityManager->remove($ac);
-            }
-
-            $parcours = $request->request->get('parcours');
-            if (is_array($parcours)) {
-                foreach ($parcours as $idParcours) {
-                    $parc = $apcParcoursRepository->find($idParcours);
-                    $saeAc = new ApcRessourceParcours($apcRessource, $parc);
-                    $this->entityManager->persist($saeAc);
-                }
-            }
-
-            foreach ($apcRessource->getRessourcesPreRequises() as $ac) {
-                $apcRessource->removeRessourcesPreRequise($ac);
-                $ac->removeApcRessource($apcRessource);
-            }
-
-            $tprerequis = $request->request->get('tprerequis');
-            if (is_array($tprerequis)) {
-                foreach ($tprerequis as $idAc) {
-                    $res = $apcRessourceRepository->find($idAc);
-                    $apcRessource->addRessourcesPreRequise($res);
-                }
-            }
-
-            foreach ($apcRessource->getApcSaeRessources() as $ac) {
-                $this->entityManager->remove($ac);
-            }
-            $saes = $request->request->get('saes');
-            if (is_array($saes)) {
-                foreach ($saes as $idAc) {
-                    $apcSae = $apcSaeRepository->find($idAc);
-                    $saeRes = new ApcSaeRessource($apcSae, $apcRessource);
-                    $this->entityManager->persist($saeRes);
-                }
-            }
-            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
-            $this->entityManager->flush();
+            $apcRessourceAddEdit->removeLiens($apcRessource);
+            $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
 
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,

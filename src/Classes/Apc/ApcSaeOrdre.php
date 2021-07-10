@@ -26,7 +26,7 @@ class ApcSaeOrdre
         $ordreMax = $this->apcSaeRepository->findOrdreMax($semestre);
 
         //retourne +1
-        return $ordreMax++;
+        return $ordreMax[0]['ordreMax'] === null ? 1 : $ordreMax[0]['ordreMax']++;
     }
 
     public function deplaceSae(ApcSae $apcSae, int $position)
