@@ -28,8 +28,7 @@ function getUpdateSae() {
       for (let i = 0; i < ele.length; i++) {
         if (ele[i].checked)
           this.competences.push({
-            id: ele[i].value,
-            libelle: 'Compétence ' + ele[i].value
+            id: ele[i].value
           })
       }
     },
@@ -38,6 +37,12 @@ function getUpdateSae() {
         return this.acs[id]
       }
       return {}
+    },
+    getLibelleCompetence (id) {
+      if (this.acs !== false && id in this.acs.competences) {
+        return '# Coméptence : ' + this.acs.competences[id]
+      }
+      return '-erreur-'
     },
     async getApiAcs() {
       this.acs = await fetch(Routing.generate('formation_apc_sae_ajax_ac'), {

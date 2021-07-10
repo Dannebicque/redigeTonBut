@@ -65,6 +65,7 @@ class ApcAjaxRessourceController extends BaseController
                 $competences);
 
             $t = [];
+            $t['competences'] = [];
             foreach ($datas as $d) {
                 $b = [];
 
@@ -77,6 +78,7 @@ class ApcAjaxRessourceController extends BaseController
                     $t[$d->getNiveau()->getCompetence()->getId()] = [];
                 }
                 $t[$d->getNiveau()->getCompetence()->getId()][] = $b;
+                $t['competences'][$d->getNiveau()->getCompetence()->getId()] = $d->getNiveau()->getCompetence()->getNomCourt();
             }
 
             return $this->json($t);

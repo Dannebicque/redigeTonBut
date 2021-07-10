@@ -11,9 +11,6 @@
     <div class="col-sm-3">
         {{ form_row(form.libelleCourt) }}
     </div>
-{#    <div class="col-sm-4">#}
-{#        {{ form_row(form.heuresTotales) }}#}
-{#    </div>#}
 
     <div class="alert alert-light">
         <div class="row">
@@ -49,12 +46,16 @@
                 Apprentissage(s) critique(s) couvert(s)
             </legend>
             <div id="acSae">
-                <div class="alert alert-warning">Indiquer un semestre et au moins une compétence</div>
+                <template x-if="semestre == null || acs.length == 0 || acs === false">
+                    <div class="alert alert-warning">
+                        Veuillez choisir  un semestre et au moins une compétence
+                    </div>
+                </template>
                 <div class="row">
                     <template x-for="competence in competences">
                         <div>
                             <br>
-                            <h4 x-text="competence.libelle"></h4>
+                            <strong x-text="getLibelleCompetence(competence.id)"></strong>
                             <div class="row">
                                 <template x-for="ac in getAcs(competence.id)">
                                     <div class="col-6">
@@ -76,8 +77,22 @@
                 Ressources combinées
             </legend>
             <div id="ressourcesSae">
-                <div class="alert alert-warning">Indiquer un semestre</div>
+                <template x-if="semestre == null">
+                    <div class="alert alert-warning">
+                        Veuillez choisir un semestre pour récupérer les ressources
+                    </div>
+                </template>
+
                 <div class="row">
+                    <template x-if="ressources === false || ressources.length === 0">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                Pas de ressources dans ce semestre. Les SAÉ pourront
+                                être associées depuis les ressources ou plus tard en modifiant la
+                                fiche.
+                            </div>
+                        </div>
+                    </template>
                     <template x-for="ressource in ressources">
                         <div class="col-6">
                             <input type="checkbox" name="saes[]" :value="ressource.id" :checked="ressource.checked">&nbsp;
@@ -86,8 +101,9 @@
                     </template>
                 </div>
             </div>
-            <small id="apc_sae_ressource_help" class="form-text text-muted">Ajoutez les ressources couvertes par la SAÉ
-                                                                            .</small>
+            <small id="apc_sae_ressource_help" class="form-text text-muted">
+                Ajoutez les ressources couvertes par la SAÉ.
+            </small>
         </fieldset>
 
         <fieldset class="form-group mb-5">
@@ -95,7 +111,11 @@
                 Parcours de la spécialité
             </legend>
             <div id="ressourcesSae">
-                <div class="alert alert-warning">Indiquer un semestre.</div>
+                <template x-if="semestre == null">
+                    <div class="alert alert-warning">
+                        Veuillez choisir un semestre.
+                    </div>
+                </template>
                 <div class="row">
                     <template x-for="parcour in parcours">
                         <div class="col-6">

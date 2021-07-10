@@ -49,12 +49,16 @@
                 Apprentissage(s) critique(s) couvert(s)
             </legend>
             <div id="acRessources">
-                <div class="alert alert-warning">
-                    Indiquer un semestre et au moins une compétence</div>
+                <template x-if="semestre == null || acs.length == 0 || acs === false">
+                    <div class="alert alert-warning">
+                        Veuillez choisir  un semestre et au moins une compétence
+                    </div>
+                </template>
+
                 <template x-for="competence in competences">
                     <div>
                         <br>
-                        <h4 x-text="competence.libelle"></h4>
+                        <strong x-text="getLibelleCompetence(competence.id)"></strong>
                         <div class="row">
                             <template x-for="ac in getAcs(competence.id)">
                                 <div class="col-6">
@@ -75,7 +79,12 @@
                 Prérequis (ressource du semestre ou des semestres précédents)
             </legend>
             <div id="preRequisRessources">
-                <div class="alert alert-warning">Indiquer un semestre</div>
+                <template x-if="semestre == null">
+                    <div class="alert alert-warning">
+                        Veuillez choisir un semestre pour récupérer les SAÉ
+                    </div>
+                </template>
+
                 <div class="row">
                     <template x-for="prerequi in prerequis">
                         <div class="col-6">
@@ -86,9 +95,9 @@
                     </template>
                 </div>
             </div>
-            <small id="apc_sae_ressource_help" class="form-text text-muted">Ajoutez les éventuelles ressources
-                                                                            pré-requises pour
-                                                                            .</small>
+            <small id="apc_sae_ressource_help" class="form-text text-muted">
+                Ajoutez les éventuelles ressources pré-requises.
+            </small>
         </fieldset>
 
         <fieldset class="form-group">
@@ -96,8 +105,21 @@
                 SAÉ concernée(s)
             </legend>
             <div id="saeRessource">
-                <div class="alert alert-warning">Indiquer un semestre</div>
+                <template x-if="semestre == null">
+                    <div class="alert alert-warning">
+                        Veuillez choisir un semestre pour récupérer les SAÉ
+                    </div>
+                </template>
                 <div class="row">
+                    <template x-if="saes === false || saes.length === 0">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                Pas de SAÉ dans ce semestre. Les ressources pourront
+                                                          être associées depuis les SAÉ ou plus tard en modifiant la
+                                                          fiche.
+                            </div>
+                        </div>
+                    </template>
                     <template x-for="sae in saes">
                         <div class="col-6">
                             <input type="checkbox" name="saes[]" :value="sae.id" :checked="sae.checked">&nbsp;
@@ -115,7 +137,11 @@
                 Parcours de la spécialité
             </legend>
             <div id="ressourcesSae">
-                <div class="alert alert-warning">Indiquer un semestre.</div>
+                <template x-if="semestre == null">
+                    <div class="alert alert-warning">
+                        Veuillez choisir un semestre pour récupérer les parcours.
+                    </div>
+                </template>
                 <div class="row">
                     <template x-for="parcour in parcours">
                         <div class="col-6">
