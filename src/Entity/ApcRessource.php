@@ -338,4 +338,9 @@ class ApcRessource extends AbstractMatiere
 
         return $this;
     }
+
+    public function getDepartement():?Departement
+    {
+        return $this->getSemestre()?->getAnnee()?->getDepartement();
+    }
 }

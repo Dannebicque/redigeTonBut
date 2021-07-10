@@ -49,6 +49,7 @@
                     <span class="d-none d-xxl-inline-block">Voir la fiche SAÉ</span>
                 </a>
             </div>
+            {% if not is_granted('ROLE_LECTEUR') %}
             <div class="col-12 d-flex align-items-center justify-content-md-end">
                 <a href="{{ path('formation_apc_sae_duplicate',
                     {'id': sae.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info ms-1"
@@ -61,13 +62,16 @@
                     <i class="bi-pencil-square"></i>
                     <span class="d-none d-xxl-inline-block">Modifier</span>
                 </a>
+                {% if not is_granted('ROLE_EDITEUR') %}
                 <a href="{{ path('formation_apc_sae_delete',
                     {'id': sae.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-danger ms-1"
                    type="button">
                     <i class="bi-trash"></i>
                     <span class="d-none d-xxl-inline-block">Supprimer</span>
                 </a>
+                {% endif %}
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

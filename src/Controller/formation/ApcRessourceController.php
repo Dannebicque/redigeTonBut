@@ -45,6 +45,7 @@ class ApcRessourceController extends BaseController
         Request $request,
         Semestre $semestre = null
     ): Response {
+        $this->denyAccessUnlessGranted('new', $semestre);
         $apcRessource = new ApcRessource();
 
         if ($semestre !== null) {
@@ -83,6 +84,7 @@ class ApcRessourceController extends BaseController
         Request $request,
         ApcRessource $apcRessource
     ): Response {
+        $this->denyAccessUnlessGranted('edit', $apcRessource);
         $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
             'departement' => $this->getDepartement(),
             'editable' => $this->isGranted('ROLE_GT')
@@ -120,6 +122,7 @@ class ApcRessourceController extends BaseController
      */
     public function delete(Request $request, ApcRessource $apcRessource): Response
     {
+        $this->denyAccessUnlessGranted('delete', $apcRessource);
         $id = $apcRessource->getId();
         if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
             $this->entityManager->remove($apcRessource);
@@ -142,6 +145,7 @@ class ApcRessourceController extends BaseController
      */
     public function duplicate(ApcRessource $apcRessource): Response
     {
+        $this->denyAccessUnlessGranted('duplicate', $apcRessource);
         $newApcRessource = clone $apcRessource;
 
         $this->entityManager->persist($newApcRessource);
@@ -159,6 +163,7 @@ class ApcRessourceController extends BaseController
         ApcRessourceOrdre $apcRessourceOrdre,
         ApcRessource $apcRessource, int $position): Response
     {
+        $this->denyAccessUnlessGranted('edit', $apcRessource);
         $apcRessourceOrdre->deplaceRessource($apcRessource, $position);
 
         return $this->redirect($request->headers->get('referer'));

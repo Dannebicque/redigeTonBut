@@ -43,6 +43,7 @@ class ApcSaeController extends BaseController
         Request $request,
         Semestre $semestre = null
     ): Response {
+        $this->denyAccessUnlessGranted('new', $semestre);
         $apcSae = new ApcSae();
 
         if ($semestre !== null) {
@@ -78,12 +79,10 @@ class ApcSaeController extends BaseController
      */
     public function edit(
         ApcSaeAddEdit $apcSaeAddEdit,
-        ApcRessourceRepository $apcRessourceRepository,
-        ApcParcoursRepository $apcParcoursRepository,
-        ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
         Request $request,
         ApcSae $apcSae
     ): Response {
+        $this->denyAccessUnlessGranted('edit', $apcSae);
         $form = $this->createForm(ApcSaeType::class, $apcSae, [
             'departement' => $this->getDepartement(),
             'editable' => $this->isGranted('ROLE_GT')
@@ -118,6 +117,7 @@ class ApcSaeController extends BaseController
      */
     public function delete(Request $request, ApcSae $apcSae): Response
     {
+        $this->denyAccessUnlessGranted('delete', $apcSae);
         $id = $apcSae->getId();
         if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
             $this->entityManager->remove($apcSae);
@@ -140,6 +140,7 @@ class ApcSaeController extends BaseController
      */
     public function duplicate(ApcSae $apcSae): Response
     {
+        $this->denyAccessUnlessGranted('edit', $apcSae);
         $newApcSae = clone $apcSae;
 
         $this->entityManager->persist($newApcSae);

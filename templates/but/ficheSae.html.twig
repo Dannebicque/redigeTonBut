@@ -25,17 +25,21 @@
 {% endblock %}
 
 {% block bouton_header %}
-    <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-warning
-    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-       id="dashboardTourButton">
-        <i class="bi-pencil-square"></i>
-        <span>Modifier</span>
-    </a>
-    <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-danger
-    btn-icon btn-icon-end
-    w-100 w-sm-auto"
-       id="dashboardTourButton">
-        <i class="bi-trash"></i>
-        <span>Supprimer</span>
-    </a>
+    {% if not is_granted('ROLE_LECTEUR') %}
+        <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-warning
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+           id="dashboardTourButton">
+            <i class="bi-pencil-square"></i>
+            <span>Modifier</span>
+        </a>
+        {% if not is_granted('ROLE_EDITEUR') %}
+            <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-danger
+            btn-icon btn-icon-end
+            w-100 w-sm-auto"
+               id="dashboardTourButton">
+                <i class="bi-trash"></i>
+                <span>Supprimer</span>
+            </a>
+        {% endif %}
+    {% endif %}
 {% endblock %}
