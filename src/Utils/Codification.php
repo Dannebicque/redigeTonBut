@@ -24,7 +24,7 @@ class Codification
 
     public static function codeApprentissageCritique(ApcApprentissageCritique $apcApprentissageCritique) : string
     {
-        return $apcApprentissageCritique->getCompetence()?->getNumero().$apcApprentissageCritique->getCompetence()?->getNumero().'.'.self::codeSurDeuxChiffres($apcApprentissageCritique->getOrdre());
+        return $apcApprentissageCritique->getNiveau()?->getAnnee()?->getOrdre().$apcApprentissageCritique->getCompetence()?->getNumero().'.'.self::codeSurDeuxChiffres($apcApprentissageCritique->getOrdre());
     }
 
     public static function codeUe(ApcCompetence $apcCompetence, Semestre $semestre) : string

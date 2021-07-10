@@ -4,4 +4,79 @@
 
 {% block content %}
 Bienvenue sur ORéBUT, Outil de Rédaction des B.U.T.
+
+    {% for annee in user_data.annees %}
+<section class="scroll-section" id="buttonTags">
+    <h2 class="small-title">B.U.T. {{ annee.ordre }}</h2>
+    <div class="card mb-5">
+        <div class="card-body">
+            <li>
+                <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
+                    <span class="label">Ressources</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
+                    <span class="label">SAÉ</span>
+                </a>
+            </li>
+
+            {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+                {% for parcours in user_data.departement.apcParcours %}
+                    <li>
+                        <a href="#parcours{{ parcours.id }}">
+                            <span class="label">{{ parcours.libelle }}</span>
+                        </a>
+                        <ul id="parcours{{ parcours.id }}">
+                            <li>
+                                <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                    <span class="label">Ressources du parcours</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                    <span class="label">SAÉ du parcours</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                    <span class="label">Tableaux croisés AC/SAÉ/Ressources</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                    <span class="label">Préconisations Coefficients/heures</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id,
+                                    parcours: parcours.id}) }}">
+                                    <span class="label">Validation des AC par les SAÉ</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>
+                    <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
+                        <span class="label">Tableaux croisés AC/SAÉ/Ressources</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
+                        <span class="label">Préconisations Coefficients/heures</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
+                        <span class="label">Validation des AC par les SAÉ</span>
+                    </a>
+                </li>
+            {% endif %}
+        </div>
+    </div>
+</section>
+    {% endfor %}
 {% endblock %}
