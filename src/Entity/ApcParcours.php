@@ -46,17 +46,17 @@ class ApcParcours extends BaseEntity
     /**
      * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="parcours")
      */
-    private $apcSaeParcours;
+    private Collection $apcSaeParcours;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="parcours")
      */
-    private $apcRessourceParcours;
+    private Collection $apcRessourceParcours;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $textePresentation;
+    private ?string $textePresentation;
 
     /**
      * @ORM\Column(type="string", length=20)

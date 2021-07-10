@@ -38,17 +38,17 @@ class Departement extends BaseEntity
     /**
      * @ORM\OneToMany(targetEntity=Annee::class, mappedBy="departement")
      */
-    private $annees;
+    private Collection $annees;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcCompetence::class, mappedBy="departement")
      */
-    private $apcCompetences;
+    private Collection $apcCompetences;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcParcours::class, mappedBy="departement")
      */
-    private $apcParcours;
+    private Collection $apcParcours;
 
     /**
      * @ORM\Column(type="string", length=20)
@@ -73,12 +73,12 @@ class Departement extends BaseEntity
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="departement")
      */
-    private $users;
+    private Collection $users;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $textePresentation;
+    private ?string $textePresentation;
 
     public function __construct()
     {
