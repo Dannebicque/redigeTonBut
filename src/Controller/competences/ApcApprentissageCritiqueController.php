@@ -33,7 +33,7 @@ class ApcApprentissageCritiqueController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($apcApprentissageCritique);
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.apprentissageCritique.create.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique ajouté avec succès.');
 
             return $this->redirectToRoute('administration_apc_competence_show',
                 ['id' => $niveau->getCompetence()->getId()]);
@@ -55,7 +55,7 @@ class ApcApprentissageCritiqueController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.apprentissageCritique.edit.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique modifié avec succès.');
 
             return $this->redirectToRoute('administration_apc_apprentissage_critique_index');
         }
@@ -72,9 +72,9 @@ class ApcApprentissageCritiqueController extends BaseController
         if ($this->isCsrfTokenValid('delete' . $apcApprentissageCritique->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($apcApprentissageCritique);
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.apprentissageCritique.delete.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique supprimé avec succès.');
         }
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'apc.apprentissageCritique.delete.error.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de l\'apprentissage critique.');
 
         return $this->redirectToRoute('administration_apc_apprentissage_critique_index');
     }

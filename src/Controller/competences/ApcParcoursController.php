@@ -31,7 +31,7 @@ class ApcParcoursController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apcParcours.edit.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Parcours de spécialité modifié avec succès.');
         }
 
         return $this->render('competences/apc_parcours/edit.html.twig', [

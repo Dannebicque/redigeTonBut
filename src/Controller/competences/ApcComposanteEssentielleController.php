@@ -35,7 +35,7 @@ class ApcComposanteEssentielleController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($apcComposanteEssentielle);
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.composanteEssentielle.create.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Composante essentielle ajoutée avec succès.');
 
             return $this->redirectToRoute('administration_apc_competence_show', ['id' => $competence->getId()]);
         }
@@ -57,7 +57,7 @@ class ApcComposanteEssentielleController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.composanteEssentielle.edit.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Composante essentielle modifiée avec succès.');
 
             return $this->redirectToRoute('administration_apc_composante_essentielle_index');
         }
@@ -76,9 +76,9 @@ class ApcComposanteEssentielleController extends BaseController
         if ($this->isCsrfTokenValid('delete' . $apcComposanteEssentielle->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($apcComposanteEssentielle);
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.composanteEssentielle.delete.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Composante essentielle supprimée avec succès.');
         }
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'apc.composanteEssentielle.delete.error.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la composante essentielle.');
 
         return $this->redirectToRoute('administration_apc_composante_essentielle_index');
     }

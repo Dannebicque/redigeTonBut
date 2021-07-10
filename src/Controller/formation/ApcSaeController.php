@@ -61,7 +61,7 @@ class ApcSaeController extends BaseController
 
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
-                'apc.sae.new.success.flash'
+                'SAÉ ajoutée avec succès.'
             );
 
             return $this->redirectToRoute('but_sae_annee', ['annee' => $apcSae->getSemestre()->getAnnee()->getId()]);
@@ -96,7 +96,7 @@ class ApcSaeController extends BaseController
             $apcSaeAddEdit->addOrEdit($apcSae, $request);
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
-                'apc.sae.edit.success.flash'
+                'SAÉ modifiée avec succès.'
             );
 
             if (null !== $request->request->get('btn_update') && null !== $apcSae->getSemestre() && null !== $apcSae->getSemestre()->getAnnee()) {
@@ -124,13 +124,13 @@ class ApcSaeController extends BaseController
             $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
-                'apc.sae.delete.success.flash'
+                'SAÉ supprimée avec succès.'
             );
 
             return $this->json($id, Response::HTTP_OK);
         }
 
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'apc.sae.delete.error.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression d ela SAÉ');
 
         return $this->json(false, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
@@ -144,7 +144,7 @@ class ApcSaeController extends BaseController
 
         $this->entityManager->persist($newApcSae);
         $this->entityManager->flush();
-        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.sae.duplicate.success.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'SAÉ dupliquée avec succès.');
 
         return $this->redirectToRoute('formation_apc_sae_edit', ['id' => $newApcSae->getId()]);
     }

@@ -37,7 +37,7 @@ class ApcCompetenceController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($apcComptence);
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.competence.create.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence ajoutée avec succès.');
 
             return $this->redirectToRoute('administration_apc_referentiel_index', ['diplome' => $departement->getId()]);
         }
@@ -65,7 +65,7 @@ class ApcCompetenceController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.competence.edit.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence modifiée avec succès.');
 
             return $this->redirectToRoute('administration_apc_competence_index',
                 ['departement' => $apcCompetence->getDepartement()->getId()]);
@@ -85,10 +85,10 @@ class ApcCompetenceController extends BaseController
         if ($this->isCsrfTokenValid('delete' . $apcCompetence->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($apcCompetence);
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.competence.delete.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence supprimée avec succès.');
         }
 
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'apc.competence.delete.error.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la compétence.');
 
         return $this->redirectToRoute('administration_apc_referentiel_index',
             [
@@ -103,7 +103,7 @@ class ApcCompetenceController extends BaseController
 
         $this->entityManager->persist($newApcCompetence);
         $this->entityManager->flush();
-        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.competence.duplicate.success.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence dupliquée avec succès.');
 
         return $this->redirectToRoute('administration_apc_competence_edit', ['id' => $newApcCompetence->getId()]);
     }

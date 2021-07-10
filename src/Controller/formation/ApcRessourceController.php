@@ -62,7 +62,7 @@ class ApcRessourceController extends BaseController
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
-                'apc.ressource.new.success.flash'
+                'Ressource ajoutée avec succès.'
             );
 
             return $this->redirectToRoute('but_ressources_annee',
@@ -96,7 +96,7 @@ class ApcRessourceController extends BaseController
 
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
-                'apc.ressource.edit.success.flash'
+                'Ressource modifiée avec succès.'
             );
 
             if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
@@ -126,13 +126,13 @@ class ApcRessourceController extends BaseController
             $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
-                'apc.ressource.delete.success.flash'
+                'Ressource supprimée avec succès.'
             );
 
             return $this->json($id, Response::HTTP_OK);
         }
 
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'apc.ressource.delete.error.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la ressource.');
 
         return $this->json(false, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
@@ -146,7 +146,7 @@ class ApcRessourceController extends BaseController
 
         $this->entityManager->persist($newApcRessource);
         $this->entityManager->flush();
-        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.ressource.duplicate.success.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Ressource dupliquée avec succès.');
 
         return $this->redirectToRoute('formation_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
     }

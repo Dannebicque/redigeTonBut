@@ -65,7 +65,7 @@ class ApcNiveauController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($apcNiveau);
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.niveau.create.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Niveau de compétence ajouté avec succès.');
 
             return $this->redirectToRoute('administration_apc_competence_show', ['id' => $competence->getId()]);
         }
@@ -87,7 +87,7 @@ class ApcNiveauController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.niveau.edit.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Niveau de compétence modifié avec succès.');
 
             return $this->redirectToRoute('administration_apc_competence_show',
                 ['id' => $apcNiveau->getCompetence()->getId()]);
@@ -109,9 +109,9 @@ class ApcNiveauController extends BaseController
         if ($this->isCsrfTokenValid('delete' . $apcNiveau->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($apcNiveau);
             $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'apc.niveau.delete.success.flash');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Niveau de compétence supprimé avec succès.');
         }
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'apc.niveau.delete.error.flash');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression du niveau de compétence.');
 
         return $this->redirectToRoute('administration_apc_competence_show', ['id' => $competence->getId()]);
     }
