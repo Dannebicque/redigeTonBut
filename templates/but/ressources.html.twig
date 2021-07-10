@@ -42,7 +42,7 @@ Ressources du B.U.T. {{ annee.ordre }}
 {% endblock %}
 
 {% block bouton_header %}
-    {% if not is_granted('ROLE_LECTEUR') %}
+    {% if  is_granted('ROLE_EDITEUR') %}
         <a href="{{ path('formation_apc_ressource_new') }}" class="btn btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto"
            id="dashboardTourButton">
             <i data-cs-icon="plus"></i>

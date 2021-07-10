@@ -106,7 +106,7 @@ class Semestre extends BaseEntity
     /**
      * @ORM\OneToMany(targetEntity=ApcCompetenceSemestre::class, mappedBy="semestre")
      */
-    private $apcCompetenceSemestres;
+    private Collection $apcCompetenceSemestres;
 
     public function __construct()
     {
@@ -353,5 +353,10 @@ class Semestre extends BaseEntity
         }
 
         return $this;
+    }
+
+    public function getDepartement(): ?Departement
+    {
+        return $this->getAnnee()?->getDepartement();
     }
 }

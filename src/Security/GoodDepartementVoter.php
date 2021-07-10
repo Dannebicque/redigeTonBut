@@ -3,19 +3,19 @@
 
 namespace App\Security;
 
-use App\Entity\ApcRessource;
-use App\Entity\ApcSae;
+use App\Entity\Annee;
+use App\Entity\Departement;
+use App\Entity\Semestre;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 
-class ReferentielVoter extends Voter
+class GoodDepartementVoter extends Voter
 {
     // these strings are just invented: you can use anything
-    public const VIEW = 'view';
-    public const EDIT = 'edit';
-    public const DELETE = 'delete';
+    public const NEW = 'new';
+    public const CONSULTE = 'consulte';
 
     private Security $security;
 
@@ -27,12 +27,12 @@ class ReferentielVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE])) {
+        if (!in_array($attribute, [self::NEW, self::CONSULTE])) {
             return false;
         }
 
         // only vote on `ApcRessource` or ApcRessource objects
-        if (!($subject instanceof ApcRessource || $subject instanceof ApcSae)) {
+        if (!($subject instanceof Semestre || $subject instanceof Annee || $subject instanceof Departement)) {
             return false;
         }
 
@@ -57,21 +57,19 @@ class ReferentielVoter extends Voter
         $post = $subject;
 
         switch ($attribute) {
-            case self::VIEW:
-                return $this->canView($post, $user);
-            case self::EDIT:
-                return $this->canEdit($post, $user);
-            case self::DELETE:
-                return $this->canDelete($post, $user);
+            case self::NEW:
+                return $this->canAdd($post, $user);
+            case self::CONSULTE:
+                return $this->canConsulte($post, $user);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(ApcSae|ApcRessource $post, User $user): bool
+    private function canConsulte(Semestre|Annee|Departement $post, User $user): bool
     {
         // if they can edit, they can view
-        if ($this->canEdit($post, $user)) {
+        if ($this->canAdd($post, $user)) {
             return true;
         }
 
@@ -80,28 +78,19 @@ class ReferentielVoter extends Voter
         return true;
     }
 
-    private function canEdit(ApcSae|ApcRessource $post, User $user): bool
+    private function canAdd(Semestre|Annee|Departement $post, User $user): bool
     {
         if ($this->security->isGranted('ROLE_LECTEUR')) {
             return false;
         }
-
-        if ($user->getDepartement() === null || $post->getDepartement() === null) {
-            return false;
-        }
-        // this assumes that the Post object has a `getOwner()` method
-        return $user->getDepartement()->getId() === $post->getDepartement()->getId();
-    }
-
-    private function canDelete(ApcSae|ApcRessource $post, User $user): bool
-    {
-        if (!($this->security->isGranted('ROLE_PACD') || $this->security->isGranted('ROLE_CPN'))) {
-            return false;
+        if ($post instanceof Departement) {
+            return $user->getDepartement()->getId() === $post->getId();
         }
 
         if ($user->getDepartement() === null || $post->getDepartement() === null) {
             return false;
         }
+
         // this assumes that the Post object has a `getOwner()` method
         return $user->getDepartement()->getId() === $post->getDepartement()->getId();
     }

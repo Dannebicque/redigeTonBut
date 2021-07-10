@@ -49,7 +49,7 @@
                     <span class="d-none d-xxl-inline-block">Voir la fiche SAÉ</span>
                 </a>
             </div>
-            {% if not is_granted('ROLE_LECTEUR') %}
+            {% if  is_granted('ROLE_EDITEUR') %}
             <div class="col-12 d-flex align-items-center justify-content-md-end">
                 <a href="{{ path('formation_apc_sae_duplicate',
                     {'id': sae.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info ms-1"
@@ -62,7 +62,7 @@
                     <i class="bi-pencil-square"></i>
                     <span class="d-none d-xxl-inline-block">Modifier</span>
                 </a>
-                {% if not is_granted('ROLE_EDITEUR') %}
+                {% if  is_granted('ROLE_PACD') %}
                 <a href="{{ path('formation_apc_sae_delete',
                     {'id': sae.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-danger ms-1"
                    type="button">

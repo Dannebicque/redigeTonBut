@@ -27,13 +27,21 @@
                 </tbody>
             </table>
             <p>
-                {% for parcours in ressource.apcRessourceParcours %}
-                    <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
-                        {{ parcours.parcours.libelle }}</span>
+                {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+                    {% for parcours in ressource.apcRessourceParcours %}
+                        <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
+                            {{ parcours.parcours.libelle }}
+                        </span>
                     {% else %}
-                        <span class="badge bg-success">
-                        Tous les parcours</span>
-                {% endfor %}
+                        <span class="badge bg-warning">
+                            Pas de parcours associé
+                    </span>
+                    {% endfor %}
+                {% else %}
+                    <span class="badge bg-success">
+                            Tous les parcours
+                    </span>
+                {% endif %}
             </p>
         </div>
         <div class="card-footer">
@@ -47,7 +55,7 @@
                     <span class="d-none d-xxl-inline-block">Voir la fiche ressource</span>
                 </a>
             </div>
-            {% if not is_granted('ROLE_LECTEUR') %}
+            {% if is_granted('ROLE_EDITEUR')  %}
             <div class="col-12 d-flex align-items-center justify-content-md-end">
                 <a href="{{ path('formation_apc_ressource_duplicate',
                 {'id': ressource.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info ms-1"
@@ -60,7 +68,7 @@
                     <i class="bi-pencil-square"></i>
                     <span class="d-none d-xxl-inline-block">Modifier</span>
                 </a>
-                {% if not is_granted('ROLE_EDITEUR') %}
+                {% if is_granted('ROLE_PACD') %}
                 <a href="{{ path('formation_apc_ressource_delete',
                 {'id': ressource.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-danger ms-1"
                    type="button">

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceParcours;
@@ -57,6 +58,48 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
 
         foreach ($req as $r) {
             $t[] = $r->getRessource();
+        }
+
+        return $t;
+    }
+
+    public function findByAnnee(Annee $annee, ApcParcours $parcours)
+    {
+        $req = $this->createQueryBuilder('p')
+            ->innerJoin(ApcRessource::class, 'a', 'WITH', 'p.ressource = a.id')
+            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = a.semestre')
+            ->where('p.parcours = :parcours')
+            ->andWhere('s.annee = :annee')
+            ->setParameter('parcours', $parcours->getId())
+            ->setParameter('annee', $annee->getId())
+            ->orderBy('a.ordre', 'ASC')
+            ->addOrderBy('a.codeMatiere', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $t = [];
+
+        foreach ($req as $r) {
+            $t[] = $r->getRessource();
+        }
+
+        return $t;
+    }
+
+    public function findByAnneeArray(Annee $annee, ApcParcours $parcours)
+    {
+
+        $query = $this->findByAnnee($annee, $parcours);
+
+        $t = [];
+        foreach ($annee->getSemestres() as $semestre)
+        {
+            $t[$semestre->getId()] = [];
+        }
+
+        foreach ($query as $res)
+        {
+            $t[$res->getSemestre()->getId()][] = $res;
         }
 
         return $t;

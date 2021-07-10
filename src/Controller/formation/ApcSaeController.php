@@ -13,18 +13,10 @@ namespace App\Controller\formation;
 use App\Classes\Apc\ApcSaeAddEdit;
 use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
-use App\Entity\ApcRessourceParcours;
 use App\Entity\ApcSae;
-use App\Entity\ApcSaeApprentissageCritique;
-use App\Entity\ApcSaeParcours;
-use App\Entity\ApcSaeRessource;
 use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Form\ApcSaeType;
-use App\Repository\ApcApprentissageCritiqueRepository;
-use App\Repository\ApcParcoursRepository;
-use App\Repository\ApcRessourceRepository;
-use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,7 +35,7 @@ class ApcSaeController extends BaseController
         Request $request,
         Semestre $semestre = null
     ): Response {
-        $this->denyAccessUnlessGranted('new', $semestre);
+        $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
         $apcSae = new ApcSae();
 
         if ($semestre !== null) {

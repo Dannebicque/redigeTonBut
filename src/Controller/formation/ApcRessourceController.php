@@ -45,7 +45,7 @@ class ApcRessourceController extends BaseController
         Request $request,
         Semestre $semestre = null
     ): Response {
-        $this->denyAccessUnlessGranted('new', $semestre);
+        $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
         $apcRessource = new ApcRessource();
 
         if ($semestre !== null) {
