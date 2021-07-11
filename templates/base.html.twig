@@ -9,7 +9,6 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-    <script src="{{ asset('csicons.min.js') }}"></script>
     <script src="{{ asset('autoComplete.min.js') }}"></script>
     <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
@@ -26,13 +25,12 @@
         <div class="nav-content d-flex">
             <!-- Logo Start -->
             <div class="logo position-relative">
-                <a href="/">
-                    <!-- Logo can be added directly -->
-                    <!-- <img src="img/logo/logo-white.svg" alt="logo" /> -->
-
-                    <!-- Or added via css to provide different ones for different color themes -->
-                    <div class="logo-but"><i class="bi-pencil"></i>&nbsp;ORéBUT</div>
+                <a href="{{ path('homepage') }}">
+                    <div class="logo-but"><i class="bi-pencil"></i>&nbsp;ORéBUT {% if is_granted('ROLE_GT') and user_data.departement != null %}
+                           | <span>{{ user_data.departement.sigle }}</span>
+                        {% endif %}</div>
                 </a>
+
             </div>
             <!-- Logo End -->
 
@@ -44,7 +42,7 @@
                 <div class="dropdown-menu dropdown-menu-end user-menu wide">
                     <div class="row mb-3 ms-0 me-0">
                         <div class="col-12 ps-1 mb-2">
-                            <div class="text-extra-small text-primary">ACCOUNT</div>
+                            <div class="text-extra-small text-primary">COMPTE</div>
                         </div>
                         <div class="col-12 ps-1 pe-1">
                             <ul class="list-unstyled">
@@ -81,43 +79,6 @@
                             </ul>
                         </div>
                     </div>
-                    {# <div class="row mb-1 ms-0 me-0"> #}
-                    {# <div class="col-12 p-1 mb-3 pt-3"> #}
-                    {# <div class="separator-light"></div> #}
-                    {# </div> #}
-                    {# <div class="col-6 ps-1 pe-1"> #}
-                    {# <ul class="list-unstyled"> #}
-                    {# <li> #}
-                    {# <a href="#"> #}
-                    {# <i data-cs-icon="help" class="me-2" data-cs-size="17"></i> #}
-                    {# <span class="align-middle">Help</span> #}
-                    {# </a> #}
-                    {# </li> #}
-                    {# <li> #}
-                    {# <a href="#"> #}
-                    {# <i data-cs-icon="document-full" class="me-2" data-cs-size="17"></i> #}
-                    {# <span class="align-middle">Docs</span> #}
-                    {# </a> #}
-                    {# </li> #}
-                    {# </ul> #}
-                    {# </div> #}
-                    {# <div class="col-6 pe-1 ps-1"> #}
-                    {# <ul class="list-unstyled"> #}
-                    {# <li> #}
-                    {# <a href="#"> #}
-                    {# <i data-cs-icon="gear" class="me-2" data-cs-size="17"></i> #}
-                    {# <span class="align-middle">Settings</span> #}
-                    {# </a> #}
-                    {# </li> #}
-                    {# <li> #}
-                    {# <a href="{{ path('app_logout') }}"> #}
-                    {# <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i> #}
-                    {# <span class="align-middle">Logout</span> #}
-                    {# </a> #}
-                    {# </li> #}
-                    {# </ul> #}
-                    {# </div> #}
-                    {# </div> #}
                 </div>
             </div>
             <!-- User Menu End -->
@@ -126,13 +87,13 @@
             <ul class="list-unstyled list-inline text-center menu-icons">
                 <li class="list-inline-item">
                     <a href="#" data-bs-toggle="modal" data-bs-target="#searchPagesModal">
-                        <i data-cs-icon="search" data-cs-size="18"></i>
+                        <i class="bi bi-search"></i>
                     </a>
                 </li>
                 <li class="list-inline-item">
                     <a href="#" id="colorButton">
-                        <i data-cs-icon="light-on" class="light" data-cs-size="18"></i>
-                        <i data-cs-icon="light-off" class="dark" data-cs-size="18"></i>
+                        <i class="bi bi-moon light"></i>
+                        <i class="bi bi-sun dark"></i>
                     </a>
                 </li>
                 {# <li class="list-inline-item"> #}
@@ -166,7 +127,7 @@
                     {% if user_data.departement != null %}
                         <li>
                             <a href="#ref_competences" data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
-                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <i class="bi bi-wallet2 icon"></i>
                                 <span class="label">Ref. Compétences</span>
                             </a>
                             <ul id="ref_competences">
@@ -192,11 +153,11 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#ref_formation" data-href="Dashboards.html">
-                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                            <a href="#tableaux" data-href="Dashboards.html">
+                                <i class="bi bi-table icon"></i>
                                 <span class="label">Tableaux</span>
                             </a>
-                            <ul id="ref_formation">
+                            <ul id="tableaux">
                                 <li>
                                     <a href="{{ path('tableau_structure') }}">
                                         <span class="label">Structure des 3 années</span>
@@ -206,11 +167,11 @@
                         </li>
                         {% for annee in user_data.annees %}
                             <li>
-                                <a href="#ref_formation" data-href="{{ path('but_annee', {annee: annee.id}) }}">
-                                    <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <a href="#but{{ annee.ordre }}" data-href="{{ path('but_annee', {annee: annee.id}) }}">
+                                    <i class="bi bi-calendar3 icon"></i>
                                     <span class="label">BUT{{ annee.ordre }}</span>
                                 </a>
-                                <ul id="ref_formation">
+                                <ul id="but{{ annee.ordre }}">
                                     <li>
                                         <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
                                             <span class="label">Ressources</span>
@@ -281,11 +242,11 @@
                         {% endfor %}
                     {% endif %}
                     <li>
-                        <a href="#ref_formation" data-href="Dashboards.html">
-                            <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                        <a href="#admin" data-href="Dashboards.html">
+                            <i class="bi bi-gear icon"></i>
                             <span class="label">Admin.</span>
                         </a>
-                        <ul id="ref_formation">
+                        <ul id="admin">
                             {% if is_granted('ROLE_GT') %}
                                 <li>
                                     <a href="{{ path('administration_apc_referentiel_import') }}">
@@ -331,7 +292,7 @@
                     {% if is_granted('ROLE_GT') %}
                         <li class="mega dropdown">
                             <a href="#ref_formation" data-href="Dashboards.html">
-                                <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
+                                <i class="bi bi-shuffle icon"></i>
                                 <span class="label">B.U.T.</span>
                             </a>
                             <ul id="interface" class="row align-items-start row-cols-2 dropdown-menu"
@@ -378,7 +339,7 @@
             <div class="mobile-buttons-container">
                 <!-- Scrollspy Mobile Button Start -->
                 <a href="#" id="scrollSpyButton" class="spy-button" data-bs-toggle="dropdown">
-                    <i data-cs-icon="menu-dropdown"></i>
+                    <i class="bi bi-chevron-right"></i>
                 </a>
                 <!-- Scrollspy Mobile Button End -->
 
@@ -388,7 +349,7 @@
 
                 <!-- Menu Button Start -->
                 <a href="#" id="mobileMenuButton" class="menu-button">
-                    <i data-cs-icon="menu"></i>
+                    <i class="bi bi-justify"></i>
                 </a>
                 <!-- Menu Button End -->
             </div>
@@ -542,12 +503,14 @@
             </div>
             <div class="modal-footer border-top justify-content-start ps-5 pe-5 pb-3 pt-3 border-0">
             <span class="text-alternate d-inline-block m-0 me-3">
-              <i data-cs-icon="arrow-bottom" data-cs-size="15" class="text-alternate align-middle me-1"></i>
-              <span class="align-middle text-medium">Navigate</span>
+              <i class="bi bi-arrow-down text-alternate align-middle
+              me-1"></i>
+              <span class="align-middle text-medium">Naviguer</span>
             </span>
                 <span class="text-alternate d-inline-block m-0 me-3">
-              <i data-cs-icon="arrow-bottom-left" data-cs-size="15" class="text-alternate align-middle me-1"></i>
-              <span class="align-middle text-medium">Select</span>
+              <i class="bi bi-bi-arrow-90deg-left text-alternate
+              align-middle me-1"></i>
+              <span class="align-middle text-medium">Choisir</span>
             </span>
             </div>
         </div>
