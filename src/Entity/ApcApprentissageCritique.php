@@ -24,7 +24,7 @@ class ApcApprentissageCritique extends BaseEntity
     use LifeCycleTrait;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
      */
     private ?string $libelle;
 

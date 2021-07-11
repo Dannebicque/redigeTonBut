@@ -154,7 +154,7 @@ class ReferentielCompetenceImport
                 //nouveau parcours
                 $parc = new ApcParcours($this->departement);
                 $ordre = $sheet->getCellByColumnAndRow(2, $ligne)->getValue();
-                $parc->setCode('Parc' . $ordre);
+                $parc->setCode($sheet->getCellByColumnAndRow(4, $ligne)->getValue());
                 $parc->setLibelle($sheet->getCellByColumnAndRow(3, $ligne)->getValue());
                 $parc->setCouleur('p' . $ordre);
                 $this->entityManager->persist($parc);
