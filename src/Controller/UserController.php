@@ -54,7 +54,7 @@ class UserController extends BaseController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            if ($user->getDepartement() !== null && $user->isActif() === true) {
+            if ($user->isActif() === true) {
                 $email = (new TemplatedEmail())
                     ->to($user->getEmail())
                     ->subject('[ORéBUT] Un compte a été cré sur l\'application')
