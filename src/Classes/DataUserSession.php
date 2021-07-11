@@ -53,7 +53,10 @@ class DataUserSession
 
     public function getAnnees()
     {
-        return $this->anneeRepository->findByDepartement($this->departement);
+        if ($this->departement !== null) {
+            return $this->anneeRepository->findByDepartement($this->departement);
+        }
+        return null;
     }
 
     public function getCaracteristiques()
