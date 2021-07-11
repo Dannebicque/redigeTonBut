@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/administration/departement', name: 'administration_departement_')]
+#[Route('/administration/specialite', name: 'administration_departement_')]
 class DepartementController extends AbstractController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
@@ -70,22 +70,28 @@ class DepartementController extends AbstractController
 
         switch ($parametersAsArray['field']) {
             case 'cpn':
-                if ($parametersAsArray['value'] === '') {
-                    $departement->setCpn(null);
-                } else {
+                $us = $departement->getCpn();
+                if ($us !== null) {
+                    $us->setRoles(['ROLE_LECTEUR']);
+                }
+
+                if ($parametersAsArray['value'] !== '') {
                     $user = $userRepository->find($parametersAsArray['value']);
                     if ($user !== null) {
-                        $departement->setCpn($user);
+                        $user->setRoles(['ROLE_CPN']);
                     }
                 }
                 break;
             case 'pacd':
-                if ($parametersAsArray['value'] === '') {
-                    $departement->setPacd(null);
-                } else {
+                $us = $departement->getPacd();
+                if ($us !== null) {
+                    $us->setRoles(['ROLE_LECTEUR']);
+                }
+
+                if ($parametersAsArray['value'] !== '') {
                     $user = $userRepository->find($parametersAsArray['value']);
                     if ($user !== null) {
-                        $departement->setPacd($user);
+                        $user->setRoles(['ROLE_PACD']);
                     }
                 }
                 break;

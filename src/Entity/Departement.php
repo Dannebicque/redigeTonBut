@@ -315,4 +315,15 @@ class Departement extends BaseEntity
 
         return null;
     }
+
+    public function getCpn(): ?User
+    {
+        foreach ($this->getUsers() as $user) {
+            if (in_array('ROLE_CPN', $user->getRoles(), true)) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
 }

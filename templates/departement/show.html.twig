@@ -1,31 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block header %}Departement{% endblock %}
+{% block header %}Détail de la spécialité {{ departement.sigle }}{% endblock %}
 
 {% block content %}
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ departement.id }}</td>
+                <th>Numéro Annexe</th>
+                <td>{{ departement.numeroAnnexe }}</td>
             </tr>
             <tr>
                 <th>Libelle</th>
                 <td>{{ departement.libelle }}</td>
             </tr>
-            <tr>
-                <th>TypeDepartement</th>
-                <td>{{ departement.typeDepartement }}</td>
-            </tr>
+
             <tr>
                 <th>Sigle</th>
                 <td>{{ departement.sigle }}</td>
             </tr>
-
+            <tr>
+                <th>Type Spécialité</th>
+                <td>{{ departement.typeDepartement }}</td>
+            </tr>
+            <tr>
+                <th>Type APC</th>
+                <td>{{ departement.typeStructure }}</td>
+            </tr>
+            <tr>
+                <th>PACD</th>
+                <td>{{ departement.pacd != null ? departement.pacd.display : '-' }}</td>
+            </tr>
+            <tr>
+                <th>CPN</th>
+                <td>{{ departement.cpn != null ? departement.cpn.display : '-' }}</td>
+            </tr>
+        <tr>
+            <td colspan="2">
+                <div class="alert alert-info">
+                    Si le secrétaire de CPN est aussi membre du GT, il n'apparaît pas comme secrétaire CPN de la spécialité.
+                </div>
+            </td>
+        </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('administration_departement_index') }}">back to list</a>
-
-    <a href="{{ path('administration_departement_edit', {'id': departement.id}) }}">edit</a>
 {% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'Administration',
+        },
+        {
+            href: path('administration_departement_index'),
+            title: 'Liste des spécialités',
+        },
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+
+        <a href="{{ path('administration_departement_index') }}" class="btn btn-outline-primary
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+           >
+            <i class="bi bi-arrow-left-circle"></i>
+            <span>Retour</span>
+        </a>
+    {% if  is_granted('ROLE_GT') %}
+        <a href="{{ path('administration_departement_edit', {id:departement.id}) }}" class="btn btn-outline-warning
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+           >
+            <i class="bi-pencil-square"></i>
+            <span>Modifier</span>
+        </a>
+    {% endif %}
+{% endblock %}
+
