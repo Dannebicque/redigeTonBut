@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajout d'un utilisateur{% endblock %}
+{% block header %}Ajout d'un utilisateur{% endblock %}
 
-{% block body %}
-    <h1>Create new User</h1>
-
-    {{ include('composants/adm-form.html.twig') }}
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {{ include('composants/adm-form.html.twig') }}
+        </div>
+    </div>
 
 {% endblock %}
 

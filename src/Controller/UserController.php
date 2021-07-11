@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Constantes;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -40,19 +41,20 @@ class UserController extends BaseController
         Request $request
     ): Response {
         $user = new User();
+        $user->setActif(true);
         $form = $this->createForm(UserType::class, $user, ['droit_gt' => $this->isGranted('ROLE_GT')]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $password = random_bytes(10);
-            $user->setPassword($encoder->hashPassword($password));
-            $user->setActif(true);
+            $password = substr(md5(random_bytes(10)), 0, 10);
+            $user->setPassword($encoder->hashPassword($user, $password));
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
-            if ($user->getDepartement() !== null) {
+            if ($user->getDepartement() !== null && $user->isActif() === true) {
                 $email = (new TemplatedEmail())
                     ->to($user->getEmail())
                     ->subject('[ORéBUT] Un compte a été cré sur l\'application')
@@ -60,6 +62,7 @@ class UserController extends BaseController
                     ->context(['user' => $user, 'password' => $password]);
                 $mailer->send($email);
             }
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS,'Utilisateur ajouté. Email envoyé.');
 
             return $this->redirectToRoute('administration_utilisateur_index');
         }
