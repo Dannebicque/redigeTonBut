@@ -1,6 +1,6 @@
 {% extends 'base-speciale.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}Mot de passe perdu{% endblock %}
 
 {% block content %}
     <div class="mb-5">
@@ -19,12 +19,11 @@
         </div>
         <div>
             <small>
-                Enter your email address and we we will send you a
-                link to reset your password.
+                Indiquez votre adresse email, et nous vous enverrons un email pour réinitialiser votre mot de passe.
             </small>
         </div>
 
-        <button class="btn btn-primary">Send password reset email</button>
+        <button class="btn btn-primary">Envoyer la demande de réinitialisation</button>
         <a href="{{ path('app_login') }}">Me connecter</a><br>
 
     </form>
