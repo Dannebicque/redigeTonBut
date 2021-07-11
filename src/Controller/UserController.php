@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Constantes;
 use App\Entity\User;
+use App\Event\SousCommissionEvent;
+use App\Event\UserEvent;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Security\EmailActivation;
@@ -15,6 +17,7 @@ use Symfony\Component\Mime\Message;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[Route('/administration/utilisateur', name: 'administration_utilisateur_')]
 class UserController extends BaseController
@@ -36,6 +39,8 @@ class UserController extends BaseController
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(
+        EventDispatcherInterface $eventDispatcher,
+
         UserPasswordHasherInterface $encoder,
         MailerInterface $mailer,
         Request $request
@@ -49,18 +54,17 @@ class UserController extends BaseController
 
             $password = substr(md5(random_bytes(10)), 0, 10);
             $user->setPassword($encoder->hashPassword($user, $password));
-
+            $user->setIsVerified(true);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
             if ($user->isActif() === true) {
-                $email = (new TemplatedEmail())
-                    ->to($user->getEmail())
-                    ->subject('[ORéBUT] Un compte a été cré sur l\'application')
-                    ->htmlTemplate('registration/creation_compte_email.html.twig')
-                    ->context(['user' => $user, 'password' => $password]);
-                $mailer->send($email);
+                $userEvent = new UserEvent($user);
+                $userEvent->setPassword($password);
+                $eventDispatcher->dispatch($userEvent);
+
+
             }
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS,'Utilisateur ajouté. Email envoyé.');
 
