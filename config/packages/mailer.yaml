@@ -1,3 +1,8 @@
 framework:
     mailer:
         dsn: '%env(MAILER_DSN)%'
+        envelope:
+            sender: 'orebut@davidannebicque.ovh'
+        headers:
+            from: 'Application ORéBUT <orebut@davidannebicque.ovh>'
+

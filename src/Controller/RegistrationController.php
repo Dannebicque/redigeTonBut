@@ -10,7 +10,9 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Message;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -27,7 +29,7 @@ class RegistrationController extends AbstractController
 
     #[Route('/', name: 'app_register')]
     public function register(
-        DepartementRepository $departementRepository,
+        MailerInterface $mailer,
         Request $request,
         UserPasswordHasherInterface $passwordEncoder
     ): Response {
@@ -50,13 +52,19 @@ class RegistrationController extends AbstractController
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('contact@iut.fr', 'Application ORéBUT'))
                     ->to($user->getEmail())
                     ->subject('[ORéBUT] Merci de confirmer votre email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
                     ->context(['user' => $user])
             );
-
+            if ($user->getDepartement() !== null && $user->getDepartement()->getPacd() !== null) {
+                $email = (new TemplatedEmail())
+                    ->to($user->getDepartement()->getPacd()->getEmail())
+                    ->subject('[ORéBUT] Demande d\'accès à l\'application')
+                    ->htmlTemplate('registration/nouvelle_demande_email.html.twig')
+                    ->context(['user' => $user]);
+                $mailer->send($email);
+            }
             // do anything else you need here, like send an email
 
             return $this->redirectToRoute('app_register_wait');

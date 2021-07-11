@@ -13,18 +13,15 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 class EmailActivation
 {
     private MailerInterface $mailer;
-    private EntityManagerInterface $entityManager;
 
-    public function __construct(MailerInterface $mailer, EntityManagerInterface $manager)
+    public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;
-        $this->entityManager = $manager;
     }
 
     public function sendEmailConfirmation(UserInterface $user): void
     {
         $email = (new TemplatedEmail())
-            ->from(new Address('contact@iut.fr', 'Application ORéBUT'))
             ->to($user->getEmail())
             ->subject('[ORéBUT] Votre compte est activé')
             ->htmlTemplate('registration/activation_email.html.twig')

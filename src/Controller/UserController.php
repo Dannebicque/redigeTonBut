@@ -84,12 +84,16 @@ class UserController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/activation', name: 'active', methods: ['GET'])]
+    #[Route('/{id}/activation/{role}', name: 'active', methods: ['GET'])]
     public function active(
         EmailActivation $emailActivation,
-        User $user
+        User $user,
+        string $role = 'ROLE_LECTEUR'
     ): Response {
         $user->setActif(true);
+        if ($role === 'ROLE_LECTEUR' || $role === 'ROLE_EDITEUR') {
+            $user->setRoles([$role]);
+        }
         $emailActivation->sendEmailConfirmation($user);
         $this->entityManager->flush();
 

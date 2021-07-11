@@ -222,18 +222,6 @@ class Departement extends BaseEntity
         return $this;
     }
 
-    public function getCpn(): ?User
-    {
-        return $this->cpn;
-    }
-
-    public function setCpn(?User $cpn): self
-    {
-        $this->cpn = $cpn;
-
-        return $this;
-    }
-
     public function getNumeroAnnexe(): ?int
     {
         return $this->numeroAnnexe;
@@ -315,5 +303,16 @@ class Departement extends BaseEntity
         $this->textePresentation = $textePresentation;
 
         return $this;
+    }
+
+    public function getPacd(): ?User
+    {
+        foreach ($this->getUsers() as $user) {
+            if (in_array('ROLE_PACD', $user->getRoles(), true)) {
+                return $user;
+            }
+        }
+
+        return null;
     }
 }

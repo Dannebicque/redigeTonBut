@@ -1,0 +1,29 @@
+<h1>Bonjour</h1>
+
+<p>
+    Une nouvelle demande d'accès a été effectuée sur l'application ORéBUT.
+</p>
+<ul>
+    <li>{{ user.prenom }} {{ user.nom }}</li>
+    <li>{{ user.email }}</li>
+</ul>
+
+<p>
+    Vous pouvez accepter la demande en attribuant les droits en lecture unique en cliquant sur ce lien :
+    <a href="{{ url('administration_utilisateur_active', {id:user.id, role:'ROLE_LECTEUR'}) }}" target="_blank">
+        Valdier avec les droits en lecture
+    </a>
+</p>
+<p>
+    Vous pouvez accepter la demande en attribuant les droits en lecture et édition en cliquant sur ce lien :
+    <a href="{{ url('administration_utilisateur_active', {id:user.id, role:'ROLE_EDITEUR'}) }}" target="_blank">
+        Valdier avec les droits en lecture et édition
+    </a>
+</p>
+<p>Vous pouvez suivre toutes les demandes et utilisateurs autorisées depuis l'application ORéBUT :
+    <a href="{{ url('administration_utilisateur_index') }}" target="_blank">Gérer les utilisateurs et les accès</a>
+</p>
+<p>
+Cordialement,<br>
+Application ORéBUT
+</p>
