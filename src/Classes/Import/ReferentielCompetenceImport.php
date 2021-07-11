@@ -145,8 +145,7 @@ class ReferentielCompetenceImport
             $ligne++;
         }
         $sheet = $excel->getSheet(1);
-        dump($tCompetences);
-//        die();
+
         $tParcour = [];
         $ligne = 1;
         while (null !== $sheet->getCellByColumnAndRow(1, $ligne)->getValue()) {

@@ -6,8 +6,12 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Security\EmailActivation;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Message;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -31,6 +35,8 @@ class UserController extends BaseController
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(
+        UserPasswordHasherInterface $encoder,
+        MailerInterface $mailer,
         Request $request
     ): Response {
         $user = new User();
@@ -38,9 +44,22 @@ class UserController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $password = random_bytes(10);
+            $user->setPassword($encoder->hashPassword($password));
+            $user->setActif(true);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+
+            if ($user->getDepartement() !== null) {
+                $email = (new TemplatedEmail())
+                    ->to($user->getEmail())
+                    ->subject('[ORéBUT] Un compte a été cré sur l\'application')
+                    ->htmlTemplate('registration/creation_compte_email.html.twig')
+                    ->context(['user' => $user, 'password' => $password]);
+                $mailer->send($email);
+            }
 
             return $this->redirectToRoute('administration_utilisateur_index');
         }
