@@ -62,7 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="users")
      */
-    private ?Departement $departement;
+    private ?Departement $departement = null;
 
     /**
      * @ORM\Column(type="boolean")
