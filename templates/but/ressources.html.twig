@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block header %}
-Ressources du B.U.T. {{ annee.ordre }}
+Ressources du B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}
 {% endblock %}
 
 {% block breadcrumb %}

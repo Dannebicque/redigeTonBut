@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    Tableau Préconisations pour le B.U.T. {{ annee.ordre }}
+    Tableau Préconisations pour le B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}
 {% endblock %}
 
 {% block content %}

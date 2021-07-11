@@ -44,7 +44,8 @@ class ButController extends AbstractController
         return $this->render('but/ressources.html.twig', [
             'ressources' => $ressources,
             'annee' => $annee,
-            'selectSemestre' => $semestre
+            'selectSemestre' => $semestre,
+            'parcours' => $parcours
         ]);
     }
 
@@ -64,6 +65,7 @@ class ButController extends AbstractController
         return $this->render('but/saes.html.twig', [
             'annee' => $annee,
             'saes' => $saes,
+            'parcours' => $parcours,
             'selectSemestre' => $semestre
         ]);
     }

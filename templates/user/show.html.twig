@@ -3,13 +3,22 @@
 {% block header %}Détails de l'utilisateur {{ user.display }}{% endblock %}
 
 {% block bouton_header %}
-    <a href="{{ path('administration_utilisateur_edit', {id:user.id}) }}" class="btn btn-outline-primary btn-icon
+    <a href="{{ path('administration_utilisateur_index') }}" class="btn btn-outline-primary btn-icon
+    btn-icon-end
+    w-100 w-sm-auto"
+       id="dashboardTourButton">
+        <i class="bi bi-arrow-left-circle"></i>
+        <span>Retour</span>
+    </a>
+    {% if is_granted('ROLE_PACD') or is_granted('ROLE_CPN') %}
+    <a href="{{ path('administration_utilisateur_edit', {id:user.id}) }}" class="btn btn-outline-warning btn-icon
     btn-icon-end
     w-100 w-sm-auto"
        id="dashboardTourButton">
         <i class="bi bi-pencil"></i>
         <span>Modifier l'utilisateur</span>
     </a>
+    {% endif %}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -53,23 +62,20 @@
                 <tr>
                     <th>Spécialité(s)</th>
                     <td>
-                        {% if user.departementsCpn|length > 0 %}
+                        {% if user.isCpn %}
                             <p>Secrétaire de CPN pour :
                                 <span class="badge bg-info">
-                                    {{ user.departementsCpn[0].sigle }}
+                                    {{ user.departement.sigle }}
                                 </span>
                             </p>
                         {% endif %}
-                        {% if user.departements|length > 0 %}
+                        {% if user.isPacd|length > 0 %}
                             <p>PACD de :
                                     <span class="badge bg-info">
-                                         {{ user.departements[0].sigle }}
+                                         {{ user.departement.sigle }}
                                     </span>
                             </p>
                         {% endif %}
-                        {% for dep in  user.personnelDepartements %}
-                            <span class="badge bg-info">{{ dep.departement.sigle }}</span>
-                        {% endfor %}
                     </td>
                 </tr>
                 <tr>
@@ -78,7 +84,11 @@
                 </tr>
                 </tbody>
             </table>
-            <a href="" class="btn btn-danger">Initiliaser le mot de passe ?</a>
+            {% if is_granted('ROLE_PACD') or is_granted('ROLE_CPN') %}
+            <a href="{{ path('administration_utilisateur_init_password', {id:user.id}) }}" class="btn
+            btn-danger">Initiliaser le
+             mot de passe ?</a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

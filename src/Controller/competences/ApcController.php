@@ -30,16 +30,26 @@ class ApcController extends BaseController
      */
     public function referentiel(ApcStructure $apcStructure, Departement $departement = null): Response
     {
-        if ($departement === null) {
-                //département de l'utilisateur N
-        }
 
         $tParcours = $apcStructure->parcoursNiveaux($departement);
+        $competences = $departement->getApcCompetences();
+        $tComp = [];
+        foreach ($competences as $comp) {
+            $tComp[$comp->getId()] = $comp;
+        }
+        $competencesParcours = [];
+
+        foreach ($tParcours as $key => $parc) {
+            $competencesParcours[$key] = [];
+            foreach ($parc as $k => $v) {
+                $competencesParcours[$key][] = $tComp[$k];
+            }
+        }
 
         return $this->render('competences/referentiel.html.twig', [
-            'departement'         => $departement,
-            'competences'     => $departement->getApcCompetences(),
-            'parcours'        => $departement->getApcParcours(),
+            'competencesParcours' => $competencesParcours,
+            'departement' => $departement,
+            'parcours' => $departement->getApcParcours(),
             'parcoursNiveaux' => $tParcours,
         ]);
     }

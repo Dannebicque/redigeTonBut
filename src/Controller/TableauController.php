@@ -7,7 +7,6 @@ use App\Classes\Tableau\Structure;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Semestre;
-use App\Repository\ApcCompetenceSemestreRepository;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcRessourceCompetenceRepository;

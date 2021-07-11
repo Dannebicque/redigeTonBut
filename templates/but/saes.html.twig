@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block header %}
-    SAÉ du B.U.T. {{ annee.ordre }}
+    SAÉ du B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}
 {% endblock %}
 
 {% block breadcrumb %}

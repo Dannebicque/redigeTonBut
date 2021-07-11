@@ -28,24 +28,40 @@
                     <h4 class="card-title">Référentiel de compétences de la spécialité {{ departement.sigle }}</h4>
                 </header>
                 <div class="card-body">
-                    <ul class="nav nav-pills responsive-tabs nav-justified" role="tablist">
-                        {% for competence in competences %}
+                    <ul class="nav nav-pills responsive-tabs nav-justified mb-4" role="tablist">
+                        {% for parcour in parcours %}
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link {% if loop.first %}active{% endif %}"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#competence_{{ competence.id }}"
-                                        role="tab" aria-selected="false" type="button">{{ competence.nomCourt }}</button>
+                                <button class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#parcour_{{ parcour.id }}" role="tab" aria-selected="false" type="button">{{ parcour.libelle }}</button>
                             </li>
                         {% endfor %}
                     </ul>
 
                     <div class="tab-content">
-                        {% for competence in competences %}
-                            <div class="tab-pane {% if loop.first %}fade active show{% endif %}" id="competence_{{ competence.id }}">
-                                {{ include('competences/_competence.html.twig') }}
+                        {% for parcour in parcours %}
+                            <div class="tab-pane {% if loop.first %}fade active show{% endif %}" id="parcour_{{ parcour.id }}">
+                                <ul class="nav nav-pills responsive-tabs nav-justified" role="tablist">
+                                    {% for competence in competencesParcours[parcour.id] %}
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link {% if loop.first %}active{% endif %}"
+                                                    data-bs-toggle="tab"
+                                                    data-bs-target="#competence_{{ competence.id }}_{{ parcour.id }}"
+                                                    role="tab" aria-selected="false" type="button">{{ competence.nomCourt }}</button>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+
+                                <div class="tab-content">
+                                    {% for competence in competencesParcours[parcour.id] %}
+                                        <div class="tab-pane {% if loop.first %}fade active show{% endif %}" id="competence_{{ competence.id }}_{{ parcour.id }}">
+                                            {{ include('competences/_competence.html.twig') }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
+
+
                 </div>
             </div>
         </div>

@@ -237,4 +237,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function isPacd()
+    {
+        return in_array('ROLE_PACD', $this->getRoles(), true);
+    }
+
+    public function isCpn()
+    {
+        return in_array('ROLE_CPN', $this->getRoles(), true);
+    }
+
 }

@@ -67,13 +67,6 @@
     <div class="d-flex align-items-stretch mt-3">
         <div class="col-flex-3 niveau  niveau{{ niveau.ordre }}{{ competence.couleur }}">
             <div class="p-3 niveaucourt ">
-                {% if niveau.ordre == 1 %}
-                Novice
-            {% elseif niveau.ordre == 2 %}
-                Intermédiaire
-            {% elseif niveau.ordre == 3 %}
-                Compétent
-                {% endif %}<br>
                 B.U.T. {{ niveau.ordre }}</div>
             <div class="p-3 niveaulong">{{ niveau.libelle }}
                 {% if is_granted('ROLE_PERMANENT') %}

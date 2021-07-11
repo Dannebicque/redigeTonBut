@@ -4,16 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Constantes;
 use App\Entity\User;
-use App\Event\SousCommissionEvent;
 use App\Event\UserEvent;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Security\EmailActivation;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Message;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -40,9 +37,7 @@ class UserController extends BaseController
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(
         EventDispatcherInterface $eventDispatcher,
-
         UserPasswordHasherInterface $encoder,
-        MailerInterface $mailer,
         Request $request
     ): Response {
         $user = new User();
@@ -52,7 +47,7 @@ class UserController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $password = substr(md5(random_bytes(10)), 0, 10);
+            $password = mb_substr(md5(mt_rand()), 0, 10);
             $user->setPassword($encoder->hashPassword($user, $password));
             $user->setIsVerified(true);
             $entityManager = $this->getDoctrine()->getManager();
@@ -62,10 +57,9 @@ class UserController extends BaseController
             if ($user->isActif() === true) {
                 $userEvent = new UserEvent($user);
                 $userEvent->setPassword($password);
-                $eventDispatcher->dispatch($userEvent);
-
-
+                $eventDispatcher->dispatch($userEvent, UserEvent::CREATION_COMPTE);
             }
+
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS,'Utilisateur ajouté. Email envoyé.');
 
             return $this->redirectToRoute('administration_utilisateur_index');
@@ -75,6 +69,29 @@ class UserController extends BaseController
             'user' => $user,
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/init-password/{id}', name: 'init_password', methods: ['GET'])]
+    public function initPassword(
+        EventDispatcherInterface $eventDispatcher,
+        UserPasswordHasherInterface $encoder,
+        User $user
+    ): Response {
+
+
+            $password = mb_substr(md5(mt_rand()), 0, 10);
+            $user->setPassword($encoder->hashPassword($user, $password));
+            $this->entityManager->flush();
+
+            if ($user->isVerified()) {
+                $userEvent = new UserEvent($user);
+                $userEvent->setPassword($password);
+                $eventDispatcher->dispatch($userEvent, UserEvent::INIT_PASSWORD);
+            }
+
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS,'Mot de passe réinitialisé et envoyé à l\'utilisateur.');
+
+            return $this->redirectToRoute('administration_utilisateur_index');
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
