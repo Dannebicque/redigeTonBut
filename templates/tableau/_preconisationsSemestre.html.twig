@@ -6,12 +6,12 @@
             <th>AC</th>
             <th>&nbsp;</th>
             {% for sae in saes %}
-                <th><abbr title="{{ sae.libelle }}">{{ sae.codeMatiere }}</abbr></th>
+                <th><p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p></th>
             {% endfor %}
 
             <th>&nbsp;</th>
             {% for ressource in ressources %}
-                <th><abbr title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</abbr></th>
+                <th><p data-bs-toggle="tooltip" title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</p></th>
             {% endfor %}
             <th>&nbsp;</th>
             <th>ECTS</th>

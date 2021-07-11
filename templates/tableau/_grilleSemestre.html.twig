@@ -6,7 +6,7 @@
             <th>AC</th>
             <th>&nbsp;</th>
             {% for sae in saes %}
-            <th><abbr title="{{ sae.libelle }}">{{ sae.codeMatiere }}</abbr><br>
+            <th><p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p><br>
                 <a type="button" class="btn btn-secondary"
                    title="Déplacer vers la gauche la SAÉ"
                    {% if sae.ordre == 1 %}disabled{% endif %}
@@ -32,7 +32,7 @@
             </th>
             {% for ressource in ressources %}
                 <th>
-                    <abbr title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</abbr><br>
+                    <p data-bs-toggle="tooltip" title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</p><br>
                     <a type="button" class="btn btn-secondary" style="padding:0 8px; font-size:0.7em"
                        {% if ressource.ordre == 1 %}disabled{% endif %}
                        title="Déplacer vers la gauche la ressource"
@@ -66,7 +66,7 @@
 
             {% for ac in niveau.apcApprentissageCritiques %}
                 <tr>
-                    <th class="bg_{{ niveau.competence.couleur }}"><abbr title="{{ ac.libelle }}">{{ ac.code }}</abbr>
+                    <th class="bg_{{ niveau.competence.couleur }}"><p data-bs-toggle="tooltip" title="{{ ac.libelle }}">{{ ac.code }}</p>
                     </th>
                     <th>&nbsp;</th>
                     {% for sae in saes %}

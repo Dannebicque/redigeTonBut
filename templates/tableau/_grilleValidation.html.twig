@@ -15,7 +15,7 @@
             <th>&nbsp;</th>
             {% for semestre in annee.semestres %}
                 {% for sae in semestre.apcSaes %}
-                    <th><abbr title="{{ sae.libelle }}">{{ sae.codeMatiere }}</abbr></th>
+                    <th><p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p></th>
                 {% endfor %}
                 <th>&nbsp;</th>
             {% endfor %}
@@ -34,7 +34,7 @@
 
             {% for ac in niveau.apcApprentissageCritiques %}
                 <tr>
-                    <th class="bg_{{ niveau.competence.couleur }}"><abbr title="{{ ac.libelle }}">{{ ac.code }}</abbr>
+                    <th class="bg_{{ niveau.competence.couleur }}"><p data-bs-toggle="tooltip" title="{{ ac.libelle }}">{{ ac.code }}</p>
                     </th>
                     <th>&nbsp;</th>
                     {% for semestre in annee.semestres %}

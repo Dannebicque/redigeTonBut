@@ -27,6 +27,11 @@ var toastList = toastElList.map(function (toastEl) {
   return new bootstrap.Toast(toastEl)
 })
 
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl, {placement: 'bottom'})
+})
+
 /* AlpineJs */
 import Alpine from 'alpinejs'
 window.Alpine = Alpine
