@@ -12,20 +12,20 @@
     <div class="col-6 composantesessentielles{{ competence.couleur }}">
         <ul>
             {% for composante in competence.apcComposanteEssentielles %}
-                <li>{{ composante.libelle }}
-                    {% if is_granted('ROLE_PERMANENT') %}
-                        <a href="{{ path('administration_apc_composante_essentielle_edit',
-                            {id:composante.id}) }}">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                    {% endif %}
+                <li>{{ composante.code }} | {{ composante.libelle }}
+{#                    {% if is_granted('ROLE_PERMANENT') %}#}
+{#                        <a href="{{ path('administration_apc_composante_essentielle_edit',#}
+{#                            {id:composante.id}) }}">#}
+{#                            <i class="fas fa-edit"></i>#}
+{#                        </a>#}
+{#                    {% endif %}#}
                 </li>
             {% endfor %}
-            {% if is_granted('ROLE_PERMANENT') %}
-                <li>
-                    <a href="{{ path('administration_apc_composante_essentielle_new', {competence:competence.id}) }}"><i class="fas fa-plus-circle"></i>
-                        Ajouter une composante essentielle</a></li>
-            {% endif %}
+{#            {% if is_granted('ROLE_PERMANENT') %}#}
+{#                <li>#}
+{#                    <a href="{{ path('administration_apc_composante_essentielle_new', {competence:competence.id}) }}"><i class="fas fa-plus-circle"></i>#}
+{#                        Ajouter une composante essentielle</a></li>#}
+{#            {% endif %}#}
         </ul>
 
     </div>
@@ -43,11 +43,11 @@
                         {id:situation.id}) }}">
                         <i class="fas fa-edit"></i></a></p>
             {% endfor %}
-            {% if is_granted('ROLE_PERMANENT') %}
-                <a href="{{ path('administration_apc_situation_professionnelle_new', {competence:competence.id}) }}"><i class="fas
-            fa-plus-circle"></i>
-                    Ajouter une situation professionnelle</a>
-            {% endif %}
+{#            {% if is_granted('ROLE_PACD') %}#}
+{#                <a href="{{ path('administration_apc_situation_professionnelle_new', {competence:competence.id}) }}"><i class="fas#}
+{#            fa-plus-circle"></i>#}
+{#                    Ajouter une situation professionnelle</a>#}
+{#            {% endif %}#}
         </div>
     </div>
 </div>

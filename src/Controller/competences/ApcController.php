@@ -34,12 +34,13 @@ class ApcController extends BaseController
         $tParcours = $apcStructure->parcoursNiveaux($departement);
         $competences = $departement->getApcCompetences();
         $tComp = [];
-        foreach ($competences as $comp) {
-            $tComp[$comp->getId()] = $comp;
-        }
+            foreach ($competences as $comp) {
+                $tComp[$comp->getId()] = $comp;
+            }
         $competencesParcours = [];
 
-        foreach ($tParcours as $key => $parc) {
+        foreach ($tParcours as $key => $parc)
+        {
             $competencesParcours[$key] = [];
             foreach ($parc as $k => $v) {
                 $competencesParcours[$key][] = $tComp[$k];
@@ -48,8 +49,9 @@ class ApcController extends BaseController
 
         return $this->render('competences/referentiel.html.twig', [
             'competencesParcours' => $competencesParcours,
-            'departement' => $departement,
-            'parcours' => $departement->getApcParcours(),
+            'departement'         => $departement,
+            'competences'     => $competences,
+            'parcours'        => $departement->getApcParcours(),
             'parcoursNiveaux' => $tParcours,
         ]);
     }
