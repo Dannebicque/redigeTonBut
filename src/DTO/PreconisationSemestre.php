@@ -84,7 +84,7 @@ class PreconisationSemestre
 
         foreach ($competences as $competence) {
 
-            if ($this->tCompetences[$competence->getId()]['total'] !== 0) {
+            if ($this->tCompetences[$competence->getId()]['total'] != 0) {
                 $this->tCompetences[$competence->getId()]['rapport'] = number_format($this->tCompetences[$competence->getId()]['sae'] / $this->tCompetences[$competence->getId()]['total'], 2);
             }
         }

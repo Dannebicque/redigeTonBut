@@ -140,6 +140,7 @@ class TableauController extends BaseController
         Annee $annee
     ): Response {
         return $this->render('tableau/preconisations.html.twig', [
+            'parcours' => null,
             'annee' => $annee,
             'semestres' => $annee->getSemestres()
         ]);

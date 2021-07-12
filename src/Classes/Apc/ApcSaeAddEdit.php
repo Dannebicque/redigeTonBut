@@ -54,8 +54,10 @@ class ApcSaeAddEdit
         if (is_array($parcours)) {
             foreach ($parcours as $idParcours) {
                 $parc = $this->apcParcoursRepository->find($idParcours);
-                $saeAc = new ApcSaeParcours($apcSae, $parc);
-                $this->entityManager->persist($saeAc);
+                if ($parc !== null) {
+                    $saeAc = new ApcSaeParcours($apcSae, $parc);
+                    $this->entityManager->persist($saeAc);
+                }
             }
         }
 

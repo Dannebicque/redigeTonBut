@@ -37,7 +37,8 @@
                                @keyup="updateSae"
                                data-sae="{{ sae.id }}"
                                data-competence="{{ niveau.competence.id }}"
-                               x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.id }}].saes, {{ sae.id }}, {{ niveau.competence.id }})">
+                               x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id
+                               }}, {{ niveau.competence.id }})">
                     </td>
                 {% endfor %}
 
@@ -49,7 +50,7 @@
                                style="min-width: 50px"
                                data-ressource="{{ ressource.id }}"
                                data-competence="{{ niveau.competence.id }}"
-                               x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.id }}].ressources, {{ ressource.id }}, {{ niveau.competence.id }})">
+                               x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id }}, {{ niveau.competence.id }})">
                     </td>
                 {% endfor %}
                 <td></td>
@@ -58,13 +59,13 @@
                            style="min-width: 50px"
                            data-competence="{{ niveau.competence.id }}"
                            data-semestre="{{ semestre.id }}"
-                           x-bind:value="afficheValeurTotal(donnees[{{ semestre.id }}].competences, {{ niveau.competence.id }},
+                           x-bind:value="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
                 'ects')"></td>
-                <td x-text="afficheValeurTotal(donnees[{{ semestre.id }}].competences, {{ niveau.competence.id }})"
+                <td x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }})"
                     class="text-center"
                 ></td>
                 <td class="text-center"
-                    x-text="afficheValeurTotal(donnees[{{ semestre.id }}].competences, {{ niveau.competence.id }},
+                    x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
                 'rapport')
 "></td>
             </tr>
@@ -75,18 +76,18 @@
             <th>&nbsp;</th>
             {% for sae in saes %}
                 <td class="text-center"
-                    x-text="afficheValeurTotal(donnees[{{ semestre.id }}].saes, {{ sae.id }})">Tot
+                    x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }})">Tot
                 </td>
             {% endfor %}
 
             <th>&nbsp;</th>
             {% for ressource in ressources %}
                 <td class="text-center"
-                    x-text="afficheValeurTotal(donnees[{{ semestre.id }}].ressources, {{ ressource.id }})">Tot
+                    x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id }})">Tot
                 </td>
             {% endfor %}
             <td></td>
-            <td class="text-center" x-html="badgeEgalite(afficheTotalEcts(donnees[{{ semestre.id }}].semestre,
+            <td class="text-center" x-html="badgeEgalite(afficheTotalEcts(donnees[{{ semestre.ordreLmd }}].semestre,
             'nb_ects'), 30)
 "></td>
             <td></td>
@@ -107,7 +108,7 @@
                            style="min-width: 50px"
                            data-sae="{{ sae.id }}"
                            data-type="heures_totales"
-                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].saes, {{ sae.id
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id
                            }}, 'heures_totales')">
                 </td>
             {% endfor %}
@@ -120,14 +121,14 @@
                            style="min-width: 50px"
                            data-ressource="{{ ressource.id }}"
                            data-type="heures_totales"
-                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].ressources, {{ ressource.id
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id
                            }}, 'heures_totales')">
                 </td>
             {% endfor %}
             <td></td>
             <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">
                 Total Volume horaire hors projets</td>
-            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'total_hors_projet')">...</td>
+            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.ordreLmd }}].semestre, 'total_hors_projet')">...</td>
         </tr>
         <tr>
             <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">dont hTP</td>
@@ -139,7 +140,7 @@
                            style="min-width: 50px"
                            data-sae="{{ sae.id }}"
                            data-type="heures_tp"
-                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].saes, {{ sae.id
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id
                            }}, 'heures_tp')">
                 </td>
             {% endfor %}
@@ -152,13 +153,13 @@
                            style="min-width: 50px"
                            data-ressource="{{ ressource.id }}"
                            data-type="heures_tp"
-                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].ressources, {{ ressource.id
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id
                            }}, 'heures_tp')">
                 </td>
             {% endfor %}
             <td></td>
             <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">dont hTP</td>
-            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'dont_tp')">...</td>
+            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.ordreLmd }}].semestre, 'dont_tp')">...</td>
         </tr>
         <tr>
             <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Heures projets</td>
@@ -170,7 +171,7 @@
                            style="min-width: 50px"
                            data-sae="{{ sae.id }}"
                            data-type="heures_projet"
-                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.id }}].saes, {{ sae.id
+                           x-bind:value="afficheVolumeHoraire(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id
                            }}, 'heures_projet')">
                 </td>
             {% endfor %}
@@ -178,17 +179,17 @@
             <th>&nbsp;</th>
             <td colspan="{{ ressources|length + 1 }}"></td>
             <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Total h projet</td>
-            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'total_h_projet')">...</td>
+            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.ordreLmd }}].semestre, 'total_h_projet')">...</td>
         </tr>
         <tr>
             <th colspan="{{ saes|length + ressources|length + 5 }}"></th>
             <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Total volume horaire dont projets</td>
-            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'total_vol_dont_prj')">...</td>
+            <td x-text="afficheVolumeHoraireTotal(donnees[{{ semestre.ordreLmd }}].semestre, 'total_vol_dont_prj')">...</td>
         </tr>
         <tr>
             <th colspan="{{ saes|length + ressources|length + 5 }}"></th>
             <td colspan="2" style="background-color: #7030a0; color: white; font-weight: bold">Rapport (hTP+heures projets+SAÉ)/total</td>
-            <td x-text="numberFormat(afficheVolumeHoraireTotal(donnees[{{ semestre.id }}].semestre, 'rapport'))">..
+            <td x-text="numberFormat(afficheVolumeHoraireTotal(donnees[{{ semestre.ordreLmd }}].semestre, 'rapport'))">..
                                                                                                                  .</td>
         </tr>
         </tfoot>
