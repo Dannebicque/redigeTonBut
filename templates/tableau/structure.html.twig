@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-<div class="alert alert-info mb-3">
-    Les lignes colorées, sont les lignes qui seront publiées.
-</div>
+    <div class="alert alert-info mb-3">
+        Les lignes colorées, sont les lignes qui seront publiées.
+    </div>
 
     <div class="card">
         <div class="card-body">
@@ -20,9 +20,8 @@
                 </tr>
                 </thead>
                 <tbody x-data="getUpdateStructure()" x-init="donnees = await (await fetch(Routing.generate
-                ('tableau_api_structure')))
-                .json()">
-                <tr  class="lignepubliee">
+                ('tableau_api_structure'))).json()">
+                <tr class="lignepubliee">
                     <th>Nbre d'heures d'enseignement (ressources + SAé)</th>
                     {% for i in 1..6 %}
                         <td><input type="text" class="heures form-control"
@@ -32,14 +31,13 @@
                                    @keyup="update"
                             /></td>
                     {% endfor %}
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresRessourcesSae, {{ constant
+                    <td class="text-center" x-html="badgeSeuilInferieur(donnees.departement.nbHeuresRessourcesSae, {{ constant
                         ('NB_HEURES_TOTAL', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center fw-bold">{{ constant('NB_HEURES_TOTAL', user_data.caracteristiques) }}</td>
-                    <td class="text-center">
-                        -c-
-{#                        {{ (constant('NB_HEURES_TOTAL', user_data.caracteristiques) - semestres#}
-{#                        .dataDepartement.nbHeuresRessourcesSae)|badgeEgalite(0) }}#}
+                    <td class="text-center" x-html="badgeSeuil(donnees.departement.ecart, 0)">
+
+
                     </td>
 
                 </tr>
@@ -64,7 +62,7 @@
                             </div>
                         </td>
                     {% endfor %}
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.moyenneAdaptationLocale, {{ constant
+                    <td class="text-center" x-html="badgeSeuilInferieur(donnees.departement.totalPourcentageAdaptationLocale, {{ constant
                         ('POURCENTAGE_ADAPTATION', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center">
@@ -73,7 +71,7 @@
                     <td></td>
                 </tr>
 
-                <tr  class="lignepubliee">
+                <tr class="lignepubliee">
                     <th>Nbre d'heures d'enseignement définies localement</th>
                     {% for i in 1..6 %}
                         <td><input type="text" class="heures form-control"
@@ -92,7 +90,7 @@
 
                     </td>
                 </tr>
-                <tr  class="lignepubliee">
+                <tr class="lignepubliee">
                     <th>Nbre heures d'enseignement SAÉ définies localement</th>
                     {% for i in 1..6 %}
                         <td><input type="text" class="heures form-control"
@@ -109,8 +107,8 @@
                     <td>
                     </td>
                 </tr>
-                <tr  class="lignepubliee">
-                    <th>Nbre heures d'enseignement des ressources  définies localement</th>
+                <tr class="lignepubliee">
+                    <th>Nbre heures d'enseignement des ressources définies localement</th>
                     {% for i in 1..6 %}
                         <td>
                             <input type="text" class="heures form-control"
@@ -125,8 +123,8 @@
                     <td></td>
                     <td></td>
                 </tr>
-                <tr  class="lignepubliee">
-                    <th>Nbre heures d'enseignement ressources définies nationalement </th>
+                <tr class="lignepubliee">
+                    <th>Nbre heures d'enseignement ressources définies nationalement</th>
                     {% for i in 1..6 %}
                         <td><input type="text" class="heures form-control"
                                    data-field="nbHeuresEnseignementRessourceNational"
@@ -142,77 +140,12 @@
                     <td>
                     </td>
                 </tr>
-{#                <tr>#}
-{#                    <th>Nbre d'heures de tp définies nationalement</th>#}
-{#                    {% for i in 1..6 %}#}
-{#                        <td><input type="text" class="heures form-control"#}
-{#                                   data-field="nbHeuresRessourcesSae"#}
-{#                                   data-semestre="{{ i }}"#}
-{#                                   x-model.number="donnees[{{ i }}].nbHeuresRessourcesSae"#}
-{#                                   @keyup="update"#}
-{#                            /></td>#}
-{#                    {% endfor %}#}
-{#                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresAdaptationLocale, {{ user_data.caracteristiques.heuresAdaptationLocale }})">#}
-{#                    </td>#}
-{#                    <td class="text-center fw-bold">#}
-{#                        {{ user_data.caracteristiques.heuresAdaptationLocale }}#}
-{#                    </td>#}
-{#                    <td class="text-center">#}
-{#                        -c-#}
-{#                        #}{#                        {{ (user_data.caracteristiques.heuresAdaptationLocale - semestres.dataDepartement#}
-{#                        #}{#                        .nbHeuresAdaptationLocale)|badgeEgalite(0) }}#}
-{#                    </td>#}
-{#                </tr>#}
-{#                <tr>#}
-{#                    <th>Nbre d'heures de tp définies localement</th>#}
-{#                    {% for i in 1..6 %}#}
-{#                        <td><input type="text" class="heures form-control"#}
-{#                                   data-field="nbHeuresRessourcesSae"#}
-{#                                   data-semestre="{{ i }}"#}
-{#                                   x-model.number="donnees[{{ i }}].nbHeuresRessourcesSae"#}
-{#                                   @keyup="update"#}
-{#                            /></td>#}
-{#                    {% endfor %}#}
-{#                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresAdaptationLocale, {{ user_data.caracteristiques.heuresAdaptationLocale }})">#}
-{#                    </td>#}
-{#                    <td class="text-center fw-bold">#}
-{#                        {{ user_data.caracteristiques.heuresAdaptationLocale }}#}
-{#                    </td>#}
-{#                    <td class="text-center">#}
-{#                        -c-#}
-{#                        #}{#                        {{ (user_data.caracteristiques.heuresAdaptationLocale - semestres.dataDepartement#}
-{#                        #}{#                        .nbHeuresAdaptationLocale)|badgeEgalite(0) }}#}
-{#                    </td>#}
-{#                </tr>#}
 
-
-
-
-
-
-{#                <tr>#}
-{#                    <th>Nbre d'heures d'adaptation locale</th>#}
-{#                    {% for i in 1..6 %}#}
-{#                        <td class="text-center">#}
-{#                            <span x-text="donnees[{{ i }}].nbHeuresAdaptationLocale"></span>#}
-{#                        </td>#}
-{#                    {% endfor %}#}
-{#                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresAdaptationLocale, {{ user_data.caracteristiques.heuresAdaptationLocale }})">#}
-{#                    </td>#}
-{#                    <td class="text-center fw-bold">#}
-{#                        {{ user_data.caracteristiques.heuresAdaptationLocale }}#}
-{#                    </td>#}
-{#                    <td class="text-center">#}
-{#                        -c-#}
-{#                        {{ (user_data.caracteristiques.heuresAdaptationLocale - semestres.dataDepartement#}
-{#                        .nbHeuresAdaptationLocale)|badgeEgalite(0) }}#}
-{#                    </td>#}
-{#                </tr>#}
                 <tr>
                     <th colspan="10"></th>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Nbre d'heures de projet (SAé)</th>
+                    <th>Nbre d'heures de projet (SAÉ)</th>
                     {% for i in 1..6 %}
                         <td>
                             <input type="text" class="heuresProjet form-control"
@@ -223,15 +156,13 @@
                             />
                         </td>
                     {% endfor %}
-                    <td class="text-center"  x-html="badgeSeuil(donnees.departement.nbHeuresProjet, {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }})">
+                    <td class="text-center"
+                        x-html="badgeSeuilInferieur(donnees.departement.nbHeuresProjet, {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center fw-bold">
                         {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }}
                     </td>
-                    <td class="text-center">
-                        -c-
-                        {#                        {{ (constant('NB_HEURES_PROJET', user_data.caracteristiques) - semestres#}
-                        {#                        .dataDepartement.nbHeuresProjet)|badgeEgalite(0) }}#}
+                    <td class="text-center" x-html="badgeSeuil(donnees.departement.ecartProjet, 0)">
                     </td>
                 </tr>
                 <tr class="lignepubliee">
@@ -251,8 +182,8 @@
                 <tr>
                     <td colspan="10"></td>
                 </tr>
-                <tr>
-                    <th rowspan="2"  class="lignepubliee">Nbre de semaines de stage (SAé)<br>
+                <tr class="lignepubliee">
+                    <th rowspan="2">Nbre de semaines de stage<br>
                         <p class="text-small"> 8 à 12 semaines BUT 1&2<br>
                                                12 à 16 semaines BUT 3</p>
                     </th>
@@ -347,14 +278,14 @@
                             <span x-text="donnees[{{ i }}].nbHeuresCoursProjet"></span>
                         </td>
                     {% endfor %}
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresCoursProjet, {{ user_data
+                    <td class="text-center"
+                        x-html="badgeSeuil(donnees.departement.nbHeuresCoursProjet, {{ user_data
                     .caracteristiques.totalHeuresAvecProjet }})">
-                       </td>
-                    <td class="text-center fw-bold">{{ user_data.caracteristiques.totalHeuresAvecProjet }}</td>
+                    </td>
+                    <td class="text-center fw-bold">
+                        {{ user_data.caracteristiques.totalHeuresAvecProjet }}
+                    </td>
                     <td class="text-center">
-                        -c-
-{#                        {{ (semestres.dataDepartement.nbHeuresCoursProjet - user_data#}
-{#                        .caracteristiques.totalHeuresAvecProjet)|badgeEgalite(0) }}#}
                     </td>
                 </tr>
                 <tr>

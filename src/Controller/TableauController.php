@@ -9,7 +9,6 @@ use App\Entity\ApcParcours;
 use App\Entity\Semestre;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcNiveauRepository;
-use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
@@ -39,7 +38,7 @@ class TableauController extends BaseController
         SemestreRepository $semestreRepository
     ): Response {
         $semestres = $semestreRepository->findByDepartement($this->getDepartement());
-        $json = $structure->setSemestres($semestres)->getDataJson();
+        $json = $structure->setSemestres($semestres)->setDepartement($this->getDepartement())->getDataJson();
 
         return $this->json($json);
     }
@@ -94,6 +93,9 @@ class TableauController extends BaseController
                     break;
                 case 'nbHeuresEnseignementRessourceLocale':
                     $semestre->setNbHeuresEnseignementRessourceLocale(Convert::convertToFloat($parametersAsArray['valeur']));
+                    break;
+                case 'nbHeuresEnseignementRessourceNational':
+                    $semestre->setNbHeuresEnseignementRessourceNational(Convert::convertToFloat($parametersAsArray['valeur']));
                     break;
             }
 

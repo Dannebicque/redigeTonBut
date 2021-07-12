@@ -10,9 +10,7 @@ class StructureSemestre
 {
     public float $nbHeuresRessourcesSae;
     public float $pourcentageAdaptationLocale;
-    public float $nbHeuresAdaptationLocale;
-//    public float $nbHeuresSae;
-//    public float $nbHeuresRessources;
+
     public int $nbSemaines;
     public int $nbSemainesConges;
     public int $nbSemainesStageMin;
@@ -29,20 +27,18 @@ class StructureSemestre
     public float $nbHeuresEnseignementLocale;
     public float $nbHeuresEnseignementSaeLocale;
     public float $nbHeuresEnseignementRessourceLocale;
-    public float $nbHeuresEnseignementRessourceNational; // a calculer
+    public float $nbHeuresEnseignementRessourceNational;
 
 
     public function __construct(Semestre $semestre)
     {
         $this->nbHeuresRessourcesSae = $semestre->getNbHeuresRessourceSae();
         $this->pourcentageAdaptationLocale = $semestre->getPourcentageAdaptationLocale();
-        $this->nbHeuresAdaptationLocale = $semestre->getNbHeuresRessourceSae() * $semestre->getPourcentageAdaptationLocale() / 100;
-//        $this->nbHeuresSae = $semestre->getNbHeuresSae();
-//        $this->nbHeuresRessources = $semestre->getNbHeuresRessources();
 
-        $this->nbHeuresEnseignementLocale = $semestre->getNbHeuresEnseignementLocale();
+        $this->nbHeuresEnseignementLocale = $semestre->getNbHeuresRessourceSae() * $semestre->getPourcentageAdaptationLocale() / 100;
         $this->nbHeuresEnseignementSaeLocale = $semestre->getNbHeuresEnseignementSaeLocale();
-        $this->nbHeuresEnseignementRessourceLocale = $semestre->getNbHeuresEnseignementRessourceLocale();
+        $this->nbHeuresEnseignementRessourceLocale = $this->nbHeuresEnseignementLocale - $this->nbHeuresEnseignementSaeLocale;
+        $this->nbHeuresEnseignementRessourceNational = $this->nbHeuresRessourcesSae-$this->nbHeuresEnseignementLocale;
 
         $this->nbSemaines = 17;
         $this->nbSemainesConges = 3;
@@ -64,10 +60,10 @@ class StructureSemestre
         return [
             'nbHeuresRessourcesSae' => $this->nbHeuresRessourcesSae,
             'pourcentageAdaptationLocale' => $this->pourcentageAdaptationLocale,
-            'nbHeuresAdaptationLocale' => $this->nbHeuresAdaptationLocale,
             'nbHeuresEnseignementLocale' => $this->nbHeuresEnseignementLocale,
             'nbHeuresEnseignementSaeLocale' => $this->nbHeuresEnseignementSaeLocale,
             'nbHeuresEnseignementRessourceLocale' => $this->nbHeuresEnseignementRessourceLocale,
+            'nbHeuresEnseignementRessourceNational' => $this->nbHeuresEnseignementRessourceNational,
             'nbSemaines' => $this->nbSemaines,
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,

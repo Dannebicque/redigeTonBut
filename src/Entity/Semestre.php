@@ -81,16 +81,6 @@ class Semestre extends BaseEntity
     /**
      * @ORM\Column(type="float")
      */
-    private float $nbHeuresSae = 0;
-
-    /**
-     * @ORM\Column(type="float")
-     */
-    private float $nbHeuresRessources = 0;
-
-    /**
-     * @ORM\Column(type="float")
-     */
     private float $nbHeuresProjet = 0;
 
     /**
@@ -122,6 +112,11 @@ class Semestre extends BaseEntity
      * @ORM\Column(type="float")
      */
     private float $nbHeuresEnseignementRessourceLocale = 0;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbHeuresEnseignementRessourceNational = 0;
 
     public function __construct()
     {
@@ -280,30 +275,6 @@ class Semestre extends BaseEntity
         return $this;
     }
 
-    public function getNbHeuresSae(): float
-    {
-        return $this->nbHeuresSae;
-    }
-
-    public function setNbHeuresSae(float $nbHeuresSae): self
-    {
-        $this->nbHeuresSae = $nbHeuresSae;
-
-        return $this;
-    }
-
-    public function getNbHeuresRessources(): float
-    {
-        return $this->nbHeuresRessources;
-    }
-
-    public function setNbHeuresRessources(float $nbHeuresRessources): self
-    {
-        $this->nbHeuresRessources = $nbHeuresRessources;
-
-        return $this;
-    }
-
     public function getNbHeuresProjet(): float
     {
         return $this->nbHeuresProjet;
@@ -407,6 +378,18 @@ class Semestre extends BaseEntity
     public function setNbHeuresEnseignementRessourceLocale(float $nbHeuresEnseignementRessourceLocale): self
     {
         $this->nbHeuresEnseignementRessourceLocale = $nbHeuresEnseignementRessourceLocale;
+
+        return $this;
+    }
+
+    public function getNbHeuresEnseignementRessourceNational(): float
+    {
+        return $this->nbHeuresEnseignementRessourceNational;
+    }
+
+    public function setNbHeuresEnseignementRessourceNational(float $nbHeuresEnseignementRessourceNational): self
+    {
+        $this->nbHeuresEnseignementRessourceNational = $nbHeuresEnseignementRessourceNational;
 
         return $this;
     }

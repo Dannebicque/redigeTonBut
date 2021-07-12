@@ -4,13 +4,16 @@
 namespace App\DTO;
 
 
+use App\Entity\Departement;
+
 class StructureDepartement
 {
+    private Departement $departement;
+
     public float $nbHeuresRessourcesSae = 0;
     public float $pourcentageAdaptationLocale = 0;
-    public float $nbHeuresAdaptationLocale = 0;
-//    public float $nbHeuresSae = 0;
-//    public float $nbHeuresRessources = 0;
+    public float $nbHeuresEnseignementLocale = 0;
+
     public int $nbSemaines = 0;
     public int $nbSemainesConges = 0;
     public int $nbSemainesStageMin = 0;
@@ -25,13 +28,17 @@ class StructureDepartement
     public float $nbHeuresHebdoProjet = 0;
     private float $totalPourcentageAdaptationLocale = 0;
 
-    public function addSemestre(StructureSemestre $semestre)
+    public function setDepartement(Departement $departement): void
+    {
+        $this->departement = $departement;
+    }
+
+    public function addSemestre(StructureSemestre $semestre): void
     {
         $this->nbHeuresRessourcesSae += $semestre->nbHeuresRessourcesSae;
         $this->totalPourcentageAdaptationLocale += $semestre->pourcentageAdaptationLocale;
-        $this->nbHeuresAdaptationLocale += $semestre->nbHeuresAdaptationLocale;
-//        $this->nbHeuresSae += $semestre->nbHeuresSae;
-//        $this->nbHeuresRessources += $semestre->nbHeuresRessources;
+        $this->nbHeuresEnseignementLocale += $semestre->nbHeuresEnseignementLocale;
+
         $this->nbSemaines += $semestre->nbSemaines;
         $this->nbSemainesConges += $semestre->nbSemainesConges;
         $this->nbSemainesStageMin += $semestre->nbSemainesStageMin;
@@ -46,19 +53,18 @@ class StructureDepartement
         $this->nbHeuresHebdoProjet += $semestre->nbHeuresHebdoProjet;
     }
 
-    public function getMoyenneAdaptationLocale()
+    public function getMoyenneAdaptationLocale(): float
     {
         return $this->totalPourcentageAdaptationLocale / 6;
     }
 
-    public function getJson()
+    public function getJson(): array
     {
         return [
             'nbHeuresRessourcesSae' => $this->nbHeuresRessourcesSae,
-            'totalPourcentageAdaptationLocale' => $this->totalPourcentageAdaptationLocale,
-            'nbHeuresAdaptationLocale' => $this->nbHeuresAdaptationLocale,
-//            'nbHeuresSae' => $this->nbHeuresSae,
-//            'nbHeuresRessources' => $this->nbHeuresRessources,
+            'totalPourcentageAdaptationLocale' => $this->getMoyenneAdaptationLocale(),
+            'nbHeuresEnseignementLocale' => $this->nbHeuresEnseignementLocale,
+
             'nbSemaines' => $this->nbSemaines,
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
@@ -71,6 +77,8 @@ class StructureDepartement
             'nbMoyenneHeuresDemiJournee' => $this->nbMoyenneHeuresDemiJournee,
             'nbHeuresCoursHebdo' => $this->nbHeuresCoursHebdo,
             'nbHeuresHebdoProjet' => $this->nbHeuresHebdoProjet,
+            'ecart' => $this->departement->getNbHeuresDiplome() - $this->nbHeuresRessourcesSae,
+            'ecartProjet' => Caracteristique::NB_HEURES_PROJET - $this->nbHeuresProjet,
         ];
     }
 }

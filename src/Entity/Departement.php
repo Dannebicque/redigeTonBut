@@ -277,12 +277,12 @@ class Departement extends BaseEntity
         return $this;
     }
 
-    public function display()
+    public function display(): string
     {
         return $this->getSigle().' | '.$this->getLibelle();
     }
 
-    public function getSemestres()
+    public function getSemestres(): array
     {
         $semestres = [];
         foreach ($this->getAnnees() as $annee) {
@@ -326,5 +326,10 @@ class Departement extends BaseEntity
         }
 
         return null;
+    }
+
+    public function getNbHeuresDiplome(): int
+    {
+        return $this->isSecondaire() ? 2000 : 1800;
     }
 }

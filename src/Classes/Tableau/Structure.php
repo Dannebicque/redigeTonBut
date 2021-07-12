@@ -5,24 +5,33 @@ use App\Classes\Excel\ExcelWriter;
 use App\DTO\StructureDepartement;
 use App\DTO\StructureSemestre;
 use App\Entity\Departement;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Structure
 {
-
     private array $semestres;
     private array $donneesSemestres;
     private StructureDepartement $donneesDepartement;
+    private Departement $departement;
 
-    public function setSemestres(array $semestres)
+    public function setDepartement(Departement $departement): Structure
+    {
+        $this->departement = $departement;
+        return $this;
+    }
+
+    public function setSemestres(array $semestres): Structure
     {
         $this->semestres = $semestres;
         return $this;
     }
 
-    public function getDataTableau()
+    public function getDataTableau(): Structure
     {
         $this->donneesSemestres = [];
         $this->donneesDepartement = new StructureDepartement();
+        $this->donneesDepartement->setDepartement($this->departement);
+
         foreach ($this->semestres as $semestre)
         {
             $this->donneesSemestres[$semestre->getOrdreLmd()] = new StructureSemestre($semestre);
@@ -40,15 +49,16 @@ class Structure
         return null;
     }
 
-    public function getDataDepartement()
+    public function getDataDepartement(): StructureDepartement
     {
         return $this->donneesDepartement;
     }
 
-    public function getDataJson()
+    public function getDataJson(): array
     {
         $json = [];
         $this->donneesDepartement = new StructureDepartement();
+        $this->donneesDepartement->setDepartement($this->departement);
         foreach ($this->semestres as $semestre)
         {
             $sem = new StructureSemestre($semestre);
@@ -63,7 +73,7 @@ class Structure
     public function genereFichierExcel(
         ExcelWriter $excelWriter,
         Departement $departement
-    ) {
+    ): StreamedResponse {
         $excelWriter->nouveauFichier('vol_global'); //todo: pourrait se baser sur un modèle ?
         //todo: si plusieurs parcours, plusieurs fichiers ?
 
