@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
+        {% for annee in user_data.departement.annees %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" href="#annee_{{ annee.id }}" role="tab"
+                   aria-selected="true">B.U.T. {{ annee.ordre }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="tab-content">
+        {% for annee in user_data.departement.annees %}
+            <div class="tab-pane {% if loop.first %}active{% endif %}" id="annee_{{ annee.id }}" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Code AC</th>
+                                <th>Libellé</th>
+                                <th>Compétence</th>
+                                <th>Parcours</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for ac in acs|filter(ac => ac.niveau.annee.id == annee.id) %}
+                                    <tr>
+                                        <td>{{ ac.code }}</td>
+                                        <td>{{ac.libelle}}</td>
+                                        <td><span class="badge badge-{{ ac.competence.couleur }}">{{ ac.competence
+                                                .nomCourt}}</span></td>
+                                        <td>
+                                            {% for parc in ac.niveau.apcParcoursNiveaux %}
+                                                <span class="badge badge-parcours-{{ parc.parcours.couleur }}">
+                                                    {{ parc.parcours.libelle }}
+                                                </span>
+                                            {% endfor %}
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block header %}
+    Liste des apprentissages critiques de {{ user_data.departement.sigle }}
+{% endblock %}
+

@@ -13,7 +13,9 @@ use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcNiveau;
 use App\Entity\Constantes;
+use App\Entity\Departement;
 use App\Form\ApcApprentissageCritiqueType;
+use App\Repository\ApcApprentissageCritiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +25,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApcApprentissageCritiqueController extends BaseController
 {
+    #[Route('/{departement}', name: 'administration_apc_apprentissage_critique_index', methods: ['GET'], requirements: ['departement' => '\d+'])]
+    public function index(
+        ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
+        Departement $departement
+    ): Response {
+        $acs = $apcApprentissageCritiqueRepository->findByDepartement($departement);
+
+        return $this->render('competences/apc_apprentissage_critique/index.html.twig', [
+            'acs' => $acs,
+
+        ]);
+    }
+
+
     #[Route("/new/{niveau}", name:"administration_apc_apprentissage_critique_new", methods:["GET","POST"])]
     public function new(Request $request, ApcNiveau $niveau): Response
     {
