@@ -19,19 +19,6 @@
         {{ form_row(form.tpPpn) }}
     </div>
 
-    <div class="alert alert-light">
-        <div class="row">
-            <div class="col-sm-6">
-                {{ form_row(form.cmPpn) }}
-            </div>
-            <div class="col-sm-6">
-                {{ form_row(form.tdPpn) }}
-            </div>
-        </div>
-        {# <div class="alert alert-danger" x-if="cmPpn + tdPpn != heuresTotales - tpPpn"> #}
-        {# Erreur dans la répartition de préconisation CM/TD #}
-        {# </div> #}
-    </div>
 
     <div class="col-sm-12">
         {{ form_row(form.description) }}
@@ -58,7 +45,7 @@
                 <template x-for="competence in competences">
                     <div>
                         <br>
-                        <strong x-text="getLibelleCompetence(competence.id)"></strong>
+                        <strong x-html="getLibelleCompetence(competence.id)"></strong>
                         <div class="row">
                             <template x-for="ac in getAcs(competence.id)">
                                 <div class="col-6">

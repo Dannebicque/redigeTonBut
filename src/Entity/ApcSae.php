@@ -36,11 +36,6 @@ class ApcSae extends AbstractMatiere
     private float $projetPpn = 0;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private ?string $livrables;
-
-    /**
      * @ORM\OneToMany(targetEntity=ApcSaeCompetence::class, mappedBy="sae", cascade={"persist","remove"})
      */
     private Collection $apcSaeCompetences;
@@ -56,19 +51,19 @@ class ApcSae extends AbstractMatiere
     private Collection $apcSaeApprentissageCritiques;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private ?string $exemples;
-
-    /**
      * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="sae")
      */
-    private $apcSaeParcours;
+    private Collection $apcSaeParcours;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $ordre;
+    private ?int $ordre;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $objectifs;
 
     public function __construct()
     {
@@ -86,18 +81,6 @@ class ApcSae extends AbstractMatiere
     public function setSemestre(?Semestre $semestre): self
     {
         $this->semestre = $semestre;
-
-        return $this;
-    }
-
-    public function getLivrables(): ?string
-    {
-        return $this->livrables;
-    }
-
-    public function setLivrables(?string $livrables): self
-    {
-        $this->livrables = $livrables;
 
         return $this;
     }
@@ -231,18 +214,6 @@ class ApcSae extends AbstractMatiere
         return $this;
     }
 
-    public function getExemples(): ?string
-    {
-        return $this->exemples;
-    }
-
-    public function setExemples(?string $exemples): self
-    {
-        $this->exemples = $exemples;
-
-        return $this;
-    }
-
     public function getProjetPpn(): ?float
     {
         return $this->projetPpn;
@@ -300,5 +271,17 @@ class ApcSae extends AbstractMatiere
     public function getDepartement():?Departement
     {
         return $this->getSemestre()?->getAnnee()?->getDepartement();
+    }
+
+    public function getObjectifs(): ?string
+    {
+        return $this->objectifs;
+    }
+
+    public function setObjectifs(string $objectifs): self
+    {
+        $this->objectifs = $objectifs;
+
+        return $this;
     }
 }

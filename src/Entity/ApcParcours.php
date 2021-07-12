@@ -63,6 +63,11 @@ class ApcParcours extends BaseEntity
      */
     private $couleur;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $ordre;
+
     public function __construct(Departement $departement)
     {
         $this->setDepartement($departement);
@@ -217,6 +222,18 @@ class ApcParcours extends BaseEntity
     public function setCouleur(string $couleur): self
     {
         $this->couleur = $couleur;
+
+        return $this;
+    }
+
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(int $ordre): self
+    {
+        $this->ordre = $ordre;
 
         return $this;
     }

@@ -47,6 +47,7 @@ class Departement extends BaseEntity
 
     /**
      * @ORM\OneToMany(targetEntity=ApcParcours::class, mappedBy="departement")
+     * @ORM\OrderBy({"ordre":"ASC"})
      */
     private Collection $apcParcours;
 

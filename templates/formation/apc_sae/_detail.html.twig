@@ -1,34 +1,10 @@
 <table class="table table-bordered">
-    <tbody>
     <tr>
-        <th style="width: 20%">Nom de la SAÉ</th>
-        <td colspan="2" style="width: 40%">{{ apc_sae.libelle }}</td>
-        <th style="width: 20%">Code de la SAÉ</th>
-        <td style="width: 20%">{{ apc_sae.codeMatiere }}</td>
-    </tr>
-
-    <tr>
-        <th>Description des objectifs de la SAÉ et de la problèmatique professionnelle associée</th>
-        <td colspan="4">{{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}</td>
+        <th>Parcours</th>
+        <th>Semestre</th>
     </tr>
     <tr>
-        <th>Compétence(s) ciblée(s)</th>
-        <td colspan="4">
-            {% for competence in apc_sae.apcSaeCompetences %}
-                <span class="badge badge-lg badge-{{ competence.competence.couleur }}"
-                      data-provide="tooltip"
-                      title="{{ competence.competence.libelle }}">
-                    {{ competence.competence.nomCourt }}
-                </span>
-            {% endfor %}
-        </td>
-    </tr>
-    <tr>
-        <th>
-            Parcours concerné(s)
-        </th>
-        <td colspan="4">
-
+        <td>
             {% for parcours in apc_sae.apcSaeParcours %}
                 <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
                         {{ parcours.parcours.libelle }}</span>
@@ -36,68 +12,58 @@
                 <span class="badge bg-success">
                         Tous les parcours</span>
             {% endfor %}
-
         </td>
+        <td>{{ apc_sae.semestre != null ? apc_sae.semestre.libelle : '-' }}</td>
     </tr>
     <tr>
-        <th>Apprentissage(s) critique(s) courvert(s)</th>
-        <td colspan="4">
+        <th>Code et Nom</th>
+        <th>Volume horaire</th>
+    </tr>
+    <tr>
+        <td>{{ apc_sae.codeMatiere }} | {{ apc_sae.libelle }}</td>
+        <td>Défini localement.</td>
+    </tr>
+</table>
 
-            {% for ac in apc_sae.apcSaeApprentissageCritiques %}
-                <span class="badge badge-{{ ac.apprentissageCritique.competence.couleur }}"
-                      data-provide="tooltip"
-                      title="{{ ac.apprentissageCritique.libelle }}">
-                    {{ ac.apprentissageCritique.code }}
+<h3>Compétences ciblées</h3>
+<p>
+    {% for competence in apc_sae.apcSaeCompetences %}
+        <span class="badge badge-lg badge-{{ competence.competence.couleur }}">
+                    {{ competence.competence.libelle }}
                 </span>
-            {% endfor %}
-        </td>
-    </tr>
+    {% endfor %}
+</p>
 
-    <tr>
-        <th rowspan="2" style="width:20%">Heures Programme National</th>
-        <th class="text-center" style="width:40%" colspan="2">NB heures totales</th>
-        <th class="text-center" style="width:20%">Dont TP</th>
-        <th class="text-center" style="width:20%">Projet Tutoré</th>
-    </tr>
-    <tr>
-        <td class="text-center" colspan="2">{{ apc_sae.heuresTotales }} heure(s)</td>
-        <td class="text-center">{{ apc_sae.tpPpn }} heure(s)</td>
-        <td class="text-center">{{ apc_sae.projetPpn }} heure(s)</td>
-    </tr>
+<h3>Objectifs et probématique professionnelle</h3>
+<p>
+    {{ apc_sae.objectifs|raw }}
+</p>
+<tr>
+    <th>Description des objectifs de la SAÉ et de la problèmatique professionnelle associée</th>
+    <td colspan="4">{{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}</td>
+</tr>
 
-    <tr>
-        <th rowspan="2">Préconisation ACD</th>
-        <th class="text-center">CM</th>
-        <th class="text-center">TD</th>
-        <th class="text-center">TP</th>
-        <th class="text-center">Projet Tutoré</th>
-    </tr>
-    <tr>
-        <th class="text-center">{{ apc_sae.cmPpn }} heure(s)</th>
-        <th class="text-center">{{ apc_sae.tdPpn }} heure(s)</th>
-        <th class="text-center">{{ apc_sae.tpPpn }} heure(s)</th>
-        <th class="text-center">{{ apc_sae.projetPpn }} heure(s)</th>
-    </tr>
+<h3>Apprentissages critiques</h3>
+<p>
+    {% for ac in apc_sae.apcSaeApprentissageCritiques %}
+        <span class="badge badge-{{ ac.apprentissageCritique.competence.couleur }}">
+                    {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle }}
+                </span>
+    {% endfor %}
+</p>
 
-    <tr>
-        <th>Liste des ressources mobilisées et combinées</th>
-        <td colspan="4">
-            {% for ressource in apc_sae.apcSaeRessources %}
-                <span class="badge badge-primary"
-                      data-provide="tooltip"
-                      title="{{ ressource.ressource.libelle }}">
+<h3>Ressources mobilisées</h3>
+<p>
+    {% for ressource in apc_sae.apcSaeRessources %}
+        <span class="badge badge-primary">
                     {{ ressource.ressource.display }}
                     </span>
-            {% endfor %}
-        </td>
-    </tr>
-    <tr>
-        <th>Type de livrable ou de production</th>
-        <td colspan="4">{{ apc_sae.livrables != null ? apc_sae.livrables|markdown_to_html : '' }}</td>
-    </tr>
-    <tr>
-        <th>Exemples</th>
-        <td colspan="4">{{ apc_sae.exemples != null ? apc_sae.exemples|markdown_to_html : '' }}</td>
-    </tr>
-    </tbody>
-</table>
+    {% endfor %}
+</p>
+
+
+<h3>Descriptif générique</h3>
+<p>
+    {{ apc_sae.objectifs|raw }}
+</p>
+

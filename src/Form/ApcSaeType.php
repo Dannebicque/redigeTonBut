@@ -36,28 +36,29 @@ class ApcSaeType extends AbstractType
 
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code SAÉ',  'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
-            ->add('libelle', TextType::class, ['label' => 'Libellé'])
+            ->add('libelle', TextType::class, ['label' => 'Nom de la SAÉ'])
             ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre'])
             ->add('libelleCourt', TextType::class,
-                ['label' => 'Libellé court', 'required' => false, 'attr' => ['maxlength' => 25], 'help' => '25 caractères maximum'])
+                ['label' => 'Libellé court', 'required' => false, 'attr' => ['maxlength' => 25], 'help' => '25 caractères maximum, peut être utile pour Apogée'])
             ->add('description', TextareaType::class,
                 [
                     'attr' => ['rows' => 20],
-                    'label' => 'Description',
+                    'label' => 'Descriptif générique',
                     'required' => false,
                     'help' => 'Il est possible d\'utiliser la syntaxe Markdown dans ce bloc de texte',
                 ])
-            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.']) //, 'attr' => ['x-model' => 'tdPpn']
-            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'cmPpn']
-            ->add('tpPpn', TextType::class, ['label' => 'Préconisation  TP','help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'tpPpn']
-            ->add('projetPpn', TextType::class, ['label' => 'Préconisation "projet tutoré"','help' => 'A titre indicatif pour les départements.'])
-            ->add('livrables', TextareaType::class,
+            ->add('objectifs', TextareaType::class,
                 [
-                    'label' => 'Livrables',
                     'attr' => ['rows' => 20],
+                    'label' => 'Objectifs et problématique professionnelle',
                     'required' => false,
                     'help' => 'Il est possible d\'utiliser la syntaxe Markdown dans ce bloc de texte',
                 ])
+//            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.']) //, 'attr' => ['x-model' => 'tdPpn']
+//            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'cmPpn']
+//            ->add('tpPpn', TextType::class, ['label' => 'Préconisation  TP','help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'tpPpn']
+//            ->add('projetPpn', TextType::class, ['label' => 'Préconisation "projet tutoré"','help' => 'A titre indicatif pour les départements.'])
+
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
                 'required' => true,
@@ -81,13 +82,6 @@ class ApcSaeType extends AbstractType
                 },
                 'help' => 'Ajoutez les compétences couvertes par la SAÉ.',
             ])
-            ->add('exemples', TextareaType::class,
-                [
-                    'label' => 'exemples',
-                    'attr' => ['rows' => 20],
-                    'required' => false,
-                    'help' => 'Il est possible d\'utiliser la syntaxe Markdown dans ce bloc de texte',
-                ])
         ;
     }
 

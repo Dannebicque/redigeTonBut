@@ -25,10 +25,17 @@
 {% endblock %}
 
 {% block bouton_header %}
+    <a href="{{ path('but_sae_annee', {annee: apc_sae.semestre.annee.id, semestre: apc_sae
+    .semestre.id}) }}" class="btn btn-outline-info
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+       >
+        <i class="bi-arrow-left-circle"></i>
+        <span>Retour</span>
+    </a>
     {% if  is_granted('ROLE_EDITEUR') %}
         <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-warning
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-           id="dashboardTourButton">
+           >
             <i class="bi-pencil-square"></i>
             <span>Modifier</span>
         </a>
@@ -36,7 +43,7 @@
             <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-danger
             btn-icon btn-icon-end
             w-100 w-sm-auto"
-               id="dashboardTourButton">
+               >
                 <i class="bi-trash"></i>
                 <span>Supprimer</span>
             </a>

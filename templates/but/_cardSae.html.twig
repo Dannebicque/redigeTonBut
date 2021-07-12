@@ -12,22 +12,22 @@
                         {{ competence.competence.nomCourt }}</span>
                 {% endfor %}
             </p>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Heures totales</th>
-                    <th>Dont TP</th>
-                    <th>Projet</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{ sae.heuresTotales }} heure(s)</td>
-                    <td>{{ sae.tpPpn }} heure(s)</td>
-                    <td>{{ sae.projetPpn }} heure(s)</td>
-                </tr>
-                </tbody>
-            </table>
+{#            <table class="table">#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th>Heures totales</th>#}
+{#                    <th>Dont TP</th>#}
+{#                    <th>Projet</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                <tr>#}
+{#                    <td>{{ sae.heuresTotales }} heure(s)</td>#}
+{#                    <td>{{ sae.tpPpn }} heure(s)</td>#}
+{#                    <td>{{ sae.projetPpn }} heure(s)</td>#}
+{#                </tr>#}
+{#                </tbody>#}
+{#            </table>#}
             <p>
                 {% for parcours in sae.apcSaeParcours %}
                     <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">

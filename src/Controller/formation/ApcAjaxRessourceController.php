@@ -73,12 +73,17 @@ class ApcAjaxRessourceController extends BaseController
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCode();
                 $b['checked'] = true === in_array($d->getId(), $tabAcSae);
-                if (null !== $d->getNiveau() && null !== $d->getNiveau()->getCompetence() && !array_key_exists($d->getNiveau()->getCompetence()->getId(),
-                        $t)) {
-                    $t[$d->getNiveau()->getCompetence()->getId()] = [];
+
+                if (null !== $d->getNiveau()) {
+                    $key = $d->getNiveau()->getCompetence();
+                    if ( null !== $key && !array_key_exists($key->getId(),
+                            $t)) {
+                        $t[$key->getId()] = [];
+                    }
+
+                    $t[$key->getId()][] = $b;
+                    $t['competences'][$key->getId()] = '<span class="badge badge-'.$key->getCouleur().'">'.$key->getLibelle().'</span>';
                 }
-                $t[$d->getNiveau()->getCompetence()->getId()][] = $b;
-                $t['competences'][$d->getNiveau()->getCompetence()->getId()] = $d->getNiveau()->getCompetence()->getNomCourt();
             }
 
             return $this->json($t);

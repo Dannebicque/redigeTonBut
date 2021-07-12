@@ -1,112 +1,76 @@
 <table class="table table-bordered">
     <tr>
-        <th style="width: 20%">Nom de la ressource</th>
-        <td style="width: 40%" colspan="2">{{ apc_ressource.libelle }}</td>
-        <th style="width: 20%">Code</th>
-        <td style="width: 20%">{{ apc_ressource.codeMatiere }}</td>
-    </tr>
-    <tr>
+        <th>Parcours</th>
         <th>Semestre</th>
-        <td colspan="4">{{ apc_ressource.semestre != null ? apc_ressource.semestre.display : 'Non défini' }}</td>
     </tr>
     <tr>
-        <th>
-            Compétence(s) ciblée(s)
-        </th>
-        <td colspan="4">
-            {% for competence in apc_ressource.apcRessourceCompetences|filter(competence => competence.competence !=
-                null) %}
-                <span class="badge badge-lg badge-{{ competence.competence.couleur }}"
-                      data-provide="tooltip"
-                      title="{{ competence.competence.libelle }}">
-                    {{ competence.competence.nomCourt }}
-                </span>
-            {% endfor %}
-        </td>
-    </tr>
-    <tr>
-        <th>
-            Parcours concerné(s)
-        </th>
-        <td colspan="4">
-
+        <td>
             {% for parcours in apc_ressource.apcRessourceParcours %}
-                <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
-                        {{ parcours.parcours.libelle }}</span>
+                <span class="badge badge-parcours-{{ parcours.parcours != null ? parcours.parcours.couleur : ''}}">
+                        {{  parcours.parcours != null ? parcours.parcours.libelle : 'err'}}</span>
             {% else %}
                 <span class="badge bg-success">
                         Tous les parcours</span>
             {% endfor %}
-
         </td>
+        <td>{{ apc_ressource.semestre != null ? apc_ressource.semestre.libelle : '-' }}</td>
     </tr>
     <tr>
-        <th>
-            Apprentissages critiques
-        </th>
-        <td colspan="4">
-            {% for ac in apc_ressource.apcRessourceApprentissageCritiques|filter(ac => ac.apprentissageCritique !=
-                null) %}
-                <span class="badge badge-lg badge-{{ ac.apprentissageCritique.niveau.competence.couleur }}"
-                      data-provide="tooltip"
-                      title="{{ ac.apprentissageCritique.libelle }}">
-                    {{ ac.apprentissageCritique.code }}</span>
-            {% endfor %}
-        </td>
-    </tr>
-
-    <tr>
-        <th>SAÉ concernée(s)</th>
-        <td colspan="4">
-            {% for sae in apc_ressource.apcSaeRessources|filter(sae => sae.sae !=
-                null) %}
-                <span class="badge bg-primary"
-                      data-provide="tooltip"
-                      title="{{ sae.sae.libelle }}"
-                >{{ sae.sae.codeMatiere }}</span>
-            {% endfor %}
-        </td>
+        <th>Code et Nom</th>
+        <th>Volume horaire</th>
     </tr>
     <tr>
-        <th>Prérequis</th>
-        <td colspan="4">
-            {% for prerequis in apc_ressource.ressourcesPreRequises %}
-                <span class="badge bg-primary"
-                      data-provide="tooltip"
-                      title="{{ prerequis.libelle }}"
-                >{{ prerequis.codeMatiere }}</span>
-            {% endfor %}
-        </td>
-    </tr>
-    <tr>
-        <th>Description</th>
-        <td colspan="4">{{ apc_ressource.description != null ? apc_ressource.description|markdown_to_html : '' }}</td>
-    </tr>
-    <tr>
-        <th>Mots clés</th>
-        <td colspan="4">{{ apc_ressource.motsCles|keyWords }}</td>
-    </tr>
-    <tr>
-        <th rowspan="2">Heures Programme National</th>
-        <th class="text-center" colspan="2">NB heures totales</th>
-        <th class="text-center" colspan="2">Dont Heures TP</th>
-    </tr>
-    <tr>
-        <th class="text-center" colspan="2">{{ apc_ressource.heuresTotales }}</th>
-        <th class="text-center" colspan="2">{{ apc_ressource.tpPpn }}</th>
-    </tr>
-
-    <tr>
-        <th rowspan="2">Préconisation ACD</th>
-        <th class="text-center">CM</th>
-        <th class="text-center">TD</th>
-        <th class="text-center">TP</th>
-        <th class="text-center">Total</th>
-    </tr>
-    <tr>
-        <th class="text-center">{{ apc_ressource.cmPpn }}</th>
-        <th class="text-center">{{ apc_ressource.tdPpn }}</th>
-        <th class="text-center">{{ apc_ressource.tpPpn }}</th>
-        <th class="text-center">{{ apc_ressource.cmPpn + apc_ressource.tdPpn + apc_ressource.tpPpn }}</th>
+        <td>{{ apc_ressource.codeMatiere }} | {{ apc_ressource.libelle }}</td>
+        <td>{{ apc_ressource.heuresTotales }}h dont  {{ apc_ressource.tpPpn }}h TP</td>
     </tr>
 </table>
+
+<h3>Compétences ciblées</h3>
+<p>
+    {% for competence in apc_ressource.apcRessourceCompetences|filter(competence => competence.competence !=
+        null) %}
+        <span class="badge badge-lg badge-{{ competence.competence.couleur }}">
+                    {{ competence.competence.libelle }}
+                </span>
+    {% endfor %}
+</p>
+
+<h3>Apprentissages critiques</h3>
+<p>
+    {% for ac in apc_ressource.apcRessourceApprentissageCritiques|filter(ac => ac.apprentissageCritique !=
+        null) %}
+        <span class="badge badge-lg badge-{{ ac.apprentissageCritique.niveau.competence.couleur }}">
+                    {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle }}</span>
+    {% endfor %}
+</p>
+
+<h3>SAÉ concernées</h3>
+<p>
+    {% for sae in apc_ressource.apcSaeRessources|filter(sae => sae.sae !=
+        null) %}
+        <span class="badge bg-primary"
+              data-provide="tooltip"
+              title="{{ sae.sae.libelle }}"
+        >{{ sae.sae.codeMatiere }}</span>
+    {% endfor %}
+</p>
+
+<h3>Descriptif</h3>
+<p>
+    {{ apc_ressource.description != null ? apc_ressource.description|markdown_to_html : '' }}
+</p>
+
+<h3>Prérequis</h3>
+<p>
+    {% for prerequis in apc_ressource.ressourcesPreRequises %}
+        <span class="badge bg-primary">
+            {{ prerequis.codeMatiere }} | {{ prerequis.libelle }}
+        </span>
+    {% endfor %}
+</p>
+
+<h3>Mots clés</h3>
+<p>
+    {{ apc_ressource.motsCles|keyWords }}
+</p>
+

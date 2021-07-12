@@ -35,7 +35,7 @@ function getUpdateRessource() {
     },
     getLibelleCompetence (id) {
       if (this.acs !== false && id in this.acs.competences) {
-        return '# Coméptence : ' + this.acs.competences[id]
+        return '# Compétence : ' + this.acs.competences[id]
       }
       return '-erreur-'
     },

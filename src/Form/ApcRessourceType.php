@@ -38,7 +38,7 @@ class ApcRessourceType extends AbstractType
             ->add('libelle', TextType::class, ['label' => 'Libellé'])
             ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre'])
             ->add('libelleCourt', TextType::class, ['label' => 'Libellé court', 'attr' => ['maxlength' => 25], 'required' => false,
-                'help' => '25 caractères maximum'])
+                'help' => '25 caractères maximum, utile pour Apogée'])
 //            ->add('preRequis', TextareaType::class,
 //                ['label' => 'Pré-requis', 'attr' => ['rows' => 5], 'required' => false])
             ->add('description', TextareaType::class,
@@ -54,10 +54,8 @@ class ApcRessourceType extends AbstractType
                     'help' => 'Utilisez le "," pour séparer les mots clés.',
                     'required' => false,
                 ])
-            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales', ]) //'attr' => ['x-model' => 'heuresTotales']
-            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.', ]) //'attr' => ['x-model' => 'tdPpn']
-            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.', ]) //'attr' => ['x-model' => 'cmPpn']
-            ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP',]) // 'attr' => ['x-model' => 'tpPpn']
+            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales', ])
+            ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP',])
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
                 'required' => true,
