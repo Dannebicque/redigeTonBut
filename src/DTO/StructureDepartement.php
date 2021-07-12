@@ -9,8 +9,8 @@ class StructureDepartement
     public float $nbHeuresRessourcesSae = 0;
     public float $pourcentageAdaptationLocale = 0;
     public float $nbHeuresAdaptationLocale = 0;
-    public float $nbHeuresSae = 0;
-    public float $nbHeuresRessources = 0;
+//    public float $nbHeuresSae = 0;
+//    public float $nbHeuresRessources = 0;
     public int $nbSemaines = 0;
     public int $nbSemainesConges = 0;
     public int $nbSemainesStageMin = 0;
@@ -30,8 +30,8 @@ class StructureDepartement
         $this->nbHeuresRessourcesSae += $semestre->nbHeuresRessourcesSae;
         $this->totalPourcentageAdaptationLocale += $semestre->pourcentageAdaptationLocale;
         $this->nbHeuresAdaptationLocale += $semestre->nbHeuresAdaptationLocale;
-        $this->nbHeuresSae += $semestre->nbHeuresSae;
-        $this->nbHeuresRessources += $semestre->nbHeuresRessources;
+//        $this->nbHeuresSae += $semestre->nbHeuresSae;
+//        $this->nbHeuresRessources += $semestre->nbHeuresRessources;
         $this->nbSemaines += $semestre->nbSemaines;
         $this->nbSemainesConges += $semestre->nbSemainesConges;
         $this->nbSemainesStageMin += $semestre->nbSemainesStageMin;
@@ -57,8 +57,8 @@ class StructureDepartement
             'nbHeuresRessourcesSae' => $this->nbHeuresRessourcesSae,
             'totalPourcentageAdaptationLocale' => $this->totalPourcentageAdaptationLocale,
             'nbHeuresAdaptationLocale' => $this->nbHeuresAdaptationLocale,
-            'nbHeuresSae' => $this->nbHeuresSae,
-            'nbHeuresRessources' => $this->nbHeuresRessources,
+//            'nbHeuresSae' => $this->nbHeuresSae,
+//            'nbHeuresRessources' => $this->nbHeuresRessources,
             'nbSemaines' => $this->nbSemaines,
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,

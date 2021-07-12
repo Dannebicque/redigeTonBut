@@ -108,6 +108,21 @@ class Semestre extends BaseEntity
      */
     private Collection $apcCompetenceSemestres;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbHeuresEnseignementSaeLocale = 0;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbHeuresEnseignementLocale = 0;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbHeuresEnseignementRessourceLocale = 0;
+
     public function __construct()
     {
         $this->apcRessources = new ArrayCollection();
@@ -358,5 +373,41 @@ class Semestre extends BaseEntity
     public function getDepartement(): ?Departement
     {
         return $this->getAnnee()?->getDepartement();
+    }
+
+    public function getNbHeuresEnseignementSaeLocale(): float
+    {
+        return $this->nbHeuresEnseignementSaeLocale;
+    }
+
+    public function setNbHeuresEnseignementSaeLocale(float $nbHeuresEnseignementSaeLocale): self
+    {
+        $this->nbHeuresEnseignementSaeLocale = $nbHeuresEnseignementSaeLocale;
+
+        return $this;
+    }
+
+    public function getNbHeuresEnseignementLocale(): float
+    {
+        return $this->nbHeuresEnseignementLocale;
+    }
+
+    public function setNbHeuresEnseignementLocale(float $nbHeuresEnseignementLocale): self
+    {
+        $this->nbHeuresEnseignementLocale = $nbHeuresEnseignementLocale;
+
+        return $this;
+    }
+
+    public function getNbHeuresEnseignementRessourceLocale(): float
+    {
+        return $this->nbHeuresEnseignementRessourceLocale;
+    }
+
+    public function setNbHeuresEnseignementRessourceLocale(float $nbHeuresEnseignementRessourceLocale): self
+    {
+        $this->nbHeuresEnseignementRessourceLocale = $nbHeuresEnseignementRessourceLocale;
+
+        return $this;
     }
 }
