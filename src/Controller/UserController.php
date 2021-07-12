@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Classes\Import\MyUpload;
+use App\Classes\Import\UserImport;
 use App\Entity\Constantes;
 use App\Entity\User;
 use App\Event\UserEvent;
@@ -31,6 +33,35 @@ class UserController extends BaseController
 
         return $this->render('user/index.html.twig', [
             'users' => $users,
+        ]);
+    }
+
+    #[Route('/upload', name: 'import', methods: ['GET', 'POST'])]
+    public function upload(
+        MyUpload $myUpload,
+        UserImport $userImport,
+        Request $request
+    ): Response {
+
+        if ($request->isMethod('POST')) {
+            //gestion de l'upload
+            $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xlsx']);
+            if ($this->isGranted('ROLE_GT')) {
+                $userImport->import($fichier);
+                $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Liste importée avec succès');
+            } elseif ($this->isGranted('ROLE_PACD')) {
+                $userImport->importDepartement($fichier, $this->getDepartement());
+                $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Liste importée avec succès');
+            } else {
+                $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de l\'import. Vous n\'avez pas les droits requis.');
+            }
+
+            unlink($fichier);
+            return $this->redirectToRoute('administration_utilisateur_index');
+        }
+
+        return $this->render('user/upload.html.twig', [
+
         ]);
     }
 

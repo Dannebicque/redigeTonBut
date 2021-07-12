@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Uploader une liste d'utilisateur
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <div class="alert alert-info mb-3">
+            Pour uploader une liste d'utilisateur merci de respecter le format excel suivant :
+            <a href="{{ asset('modele_import.xlsx') }}">Fichier modèle</a>.
+            Le  département à indiquer est : {{ user_data.departement.sigle }}, les droits possibles sont ROLE_EDITEUR, ROLE_LECTEUR,
+            ROLE_PACD
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="fichier">Fichier excel pour import ;</label>
+                <input type="file" name="fichier" id="fichier" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Importer et activer les comptes</button>
+            <div class="alert alert-info mt-3">
+                L'import de liste va envoyer les accès à l'ensemble des utilisateurs.
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('administration_utilisateur_index') }}" class="btn btn-outline-primary
+    w-100 w-sm-auto"
+    >
+        <i class="bi bi-arrow-left-circle"></i>
+        <span>Retour</span>
+    </a>
+    <a href="{{ path('administration_utilisateur_new') }}" class="btn btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto"
+    >
+        <i class="bi bi-plus-circle"></i>
+        <span>Ajouter un utilisateur</span>
+    </a>
+{% endblock %}
+
+
