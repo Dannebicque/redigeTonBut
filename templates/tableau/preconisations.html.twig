@@ -21,7 +21,7 @@
                     <div class="card-body">
                         {{ render(controller(
                             'App\\Controller\\TableauController::tableauPreconisationsSemestre',
-                            { 'semestre': semestre.id }
+                            { 'semestre': semestre.id, 'parcours': parcours }
                         )) }}
                     </div>
                 </div>

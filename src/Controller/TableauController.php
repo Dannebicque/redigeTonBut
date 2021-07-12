@@ -9,6 +9,7 @@ use App\Entity\ApcParcours;
 use App\Entity\Semestre;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcNiveauRepository;
+use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
@@ -138,14 +139,17 @@ class TableauController extends BaseController
         ]);
     }
 
-    #[Route('/preconisations/{annee}', name: 'preconisations_annee', requirements: ['annee' => '\d+'])]
+    #[Route('/preconisations/{annee}/{parcours}', name: 'preconisations_annee', requirements: ['annee' => '\d+'])]
     public function tableauPreconisations(
-        Annee $annee
+        Annee $annee,
+        ApcParcours $parcours = null
     ): Response {
+        $semestres = $annee->getSemestres();
+
         return $this->render('tableau/preconisations.html.twig', [
-            'parcours' => null,
+            'parcours' => $parcours,
             'annee' => $annee,
-            'semestres' => $annee->getSemestres()
+            'semestres' => $semestres,
         ]);
     }
 
@@ -258,17 +262,32 @@ class TableauController extends BaseController
     }
 
     public function tableauPreconisationsSemestre(
-        ApcNiveauRepository $apcNiveauRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcRessourceRepository $apcRessourceRepository,
-        Semestre $semestre
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
+        ApcNiveauRepository $apcNiveauRepository,
+        Semestre $semestre,
+        ApcParcours $apcParcours = null,
     ) {
+
+        if ($apcParcours === null) {
+
+                $saes = $apcSaeRepository->findBySemestre($semestre);
+                $ressources= $apcRessourceRepository->findBySemestre($semestre);
+
+        } else {
+                $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $apcParcours);
+                $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $apcParcours);
+
+        }
+
         return $this->render('tableau/_preconisationsSemestre.html.twig',
             [
                 'semestre' => $semestre,
                 'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
-                'saes' => $apcSaeRepository->findBySemestre($semestre),
-                'ressources' => $apcRessourceRepository->findBySemestre($semestre),
+                'saes' => $saes,
+                'ressources' => $ressources,
             ]);
     }
 
