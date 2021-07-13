@@ -8,6 +8,9 @@ echo "Début mise à jour"
 echo "Git Pull"
 git pull origin main
 echo "end git pull"
+echo "generation des assets"
+npm run build
+echo "fin génératation des assets"
 echo "Nettoyage cache"
 rm -R var/cache/prod
 mkdir var/cache/prod
