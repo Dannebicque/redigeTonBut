@@ -13,6 +13,7 @@ use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
+use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -24,6 +25,7 @@ class MyWord
     public function __construct(KernelInterface $kernel)
     {
         $this->dir = $kernel->getProjectDir() . '/public/word/';
+        Settings::setOutputEscapingEnabled(true);
     }
 
     /**
@@ -104,6 +106,7 @@ class MyWord
     public function exportRessource(ApcRessource $apcRessource)
     {
         $templateProcessor = new TemplateProcessor($this->dir . 'ressource.docx');
+
         $templateProcessor->setValue('nomressource',
             $apcRessource->getCodeMatiere() . ' - ' . $apcRessource->getLibelle());
 
