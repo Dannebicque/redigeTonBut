@@ -1,0 +1,64 @@
+
+.table thead th {
+    background-color: var(--background-navcolor-dark);
+    color: var(--light-text);
+}
+
+.lignepubliee {
+    background-color: var(--gradient-3);
+    color: var(--dark-text);
+    font-weight: bold;
+}
+
+/** Cellules tableaux semestre/année **/
+
+.cell-jaune  {
+    background-color: var(--warning) !important;
+    color: var(--dark-text)!important;
+}
+
+.cell-jaune-pale {
+    background-color: #fff3cd!important;
+    color: var(--dark-text)!important;
+}
+
+.cell-bleu  {
+    background-color: #9ec5fe!important;
+    color: var(--dark-text)!important;
+}
+
+.cell-vert  {
+    background-color: #75b798!important;
+    color: var(--dark-text)!important;
+}
+
+.cell-gris  {
+    background-color: #ced4da!important;
+    color: var(--dark-text)!important;
+}
+
+.text-rouge {
+    color: var(--danger)!important;
+}
+
+
+
+/** Fin Cellules tableaux semestre/année **/
+
+
+tfoot>td>.titretableau {
+    background-color: #7030a0;
+    color: var(--light-text);
+    font-weight: bold;
+}
+
+.logo-but {
+    font-size: 20px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: var(--light-text);
+}
+html[data-navcolor='dark'] .logo-but {
+    color: var(--light-text)
+}
+
