@@ -23,7 +23,9 @@
             <td class="text-center cell-jaune-pale" colspan="2">Volume horaire des enseignements définis nationalement</td>
             <td colspan="{{ saes|length }}" rowspan="2" class="cell-jaune">&nbsp;</td>
             {% for ressource in ressources %}
-                <td class="text-rouge">xx</td>
+                <td class="text-rouge">
+                    <input type="text" class="form-control" value="xx" style="min-width: 50px">
+                </td>
             {% endfor %}
             <td class="text-rouge fw-bold">344</td>
             <td>&nbsp;</td>
@@ -33,7 +35,9 @@
         <tr>
             <td class="text-center cell-jaune-pale" colspan="2">Dont TP</td>
             {% for ressource in ressources %}
-                <td class="text-rouge">xx</td>
+                <td class="text-rouge">
+                    <input type="text" class="form-control" value="xx" style="min-width: 50px">
+                </td>
             {% endfor %}
             <td class="text-rouge fw-bold">120</td>
             <td class="text-rouge fw-bold">28 %</td>
@@ -43,25 +47,31 @@
             <td rowspan="2" colspan="2" class="text-center cell-jaune text-rouge fw-bold">
                 Volume horaire des enseignements définis par l'adaptation locale
             </td>
-            <td colspan="{{ saes|length }}" class="text-center cell-jaune text-rouge fw-bold">66</td>
+            <td colspan="{{ saes|length }}" class="text-center cell-jaune text-rouge fw-bold">
+                <input type="text" class="form-control" value="66">
+            </td>
             <td colspan="{{ ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">&nbsp;</td>
             <td rowspan="2" class="text-center cell-jaune text-rouge fw-bold">86</td>
             <td class="text-center cell-jaune text-rouge fw-bold">20 %</td>
-            <td colspan="2" class="text-center cell-jaune text-rouge">← Pourcentage d'adaptation locale (calculé)
+            <td colspan="2" class="cell-jaune text-rouge">← Pourcentage d'adaptation locale (calculé)
             </td>
         </tr>
         <tr>
-            <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">20</td>
-            <td colspan="2" class="text-center cell-jaune">rappel tableau global 6 semestres →</td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
+                <input type="text" class="form-control" value="20">
+            </td>
+            <td colspan="2" class="text-end cell-jaune">rappel tableau global 6 semestres →</td>
             <td class="text-center cell-jaune">20%</td>
         </tr>
 
         <tr>
             <td class="text-center" colspan="2" class="text-center cell-jaune text-rouge fw-bold">Dont TP</td>
-            <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">0</td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
+                <input type="text" class="form-control" value="0">
+            </td>
             <td class="text-center cell-jaune text-rouge fw-bold">0</td>
             <td class="text-center cell-jaune text-rouge fw-bold">0.00 %</td>
-            <td colspan="2" class="text-center cell-jaune text-rouge">← pourcentage de TP défini localement</td>
+            <td colspan="2" class="cell-jaune text-rouge">← pourcentage de TP défini localement</td>
         </tr>
         <tr>
             <td colspan="2">&nbsp;</td>
@@ -69,7 +79,9 @@
                 Volume horaire total des enseignements (calculé)
             </td>
             <td class="cell-vert text-rouge fw-bold">430</td>
-            <td class="cell-jaune-pale fw-bold">430</td>
+            <td class="cell-jaune-pale fw-bold">
+                <input type="text" class="form-control" value="430" style="min-width: 50px">
+            </td>
             <td colspan="2" class="cell-jaune-pale">← rappel volume total d'enseignement issu du tableau global des 6 semestres</td>
         </tr>
         <tr>
@@ -85,13 +97,15 @@
         <tr>
             <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tuteuré</td>
             <td colspan="{{ saes|length }}" class="cell-gris texte-rouge fw-bold">
-                80
+                <input type="text" class="form-control" value="80" style="min-width: 50px">
             </td>
             <td colspan="{{ ressources|length }}" class="cell-gris texte-rouge fw-bold">
                 &nbsp;
             </td>
             <td class="cell-gris texte-rouge fw-bold">80</td>
-            <td class="cell-jaune fw-bold">80</td>
+            <td class="cell-jaune fw-bold">
+                <input type="text" class="form-control" value="80">
+            </td>
             <td colspan="2" class="cell-jaune text-center">← rappel volume de projet tuteuré issu du tableau glabal
                                                            des 6 semestres</td>
         </tr>
