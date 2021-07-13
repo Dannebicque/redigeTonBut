@@ -15,6 +15,7 @@ class GoodDepartementVoter extends Voter
 {
     // these strings are just invented: you can use anything
     public const NEW = 'new';
+    public const DUPLICATE = 'duplicate';
     public const CONSULTE = 'consulte';
 
     private Security $security;

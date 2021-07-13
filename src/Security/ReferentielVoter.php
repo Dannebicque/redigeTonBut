@@ -15,6 +15,7 @@ class ReferentielVoter extends Voter
     // these strings are just invented: you can use anything
     public const VIEW = 'view';
     public const EDIT = 'edit';
+    public const DUPLICATE = 'duplicate';
     public const DELETE = 'delete';
 
     private Security $security;
@@ -27,7 +28,7 @@ class ReferentielVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::DUPLICATE])) {
             return false;
         }
 
@@ -60,6 +61,7 @@ class ReferentielVoter extends Voter
             case self::VIEW:
                 return $this->canView($post, $user);
             case self::EDIT:
+            case self::DUPLICATE:
                 return $this->canEdit($post, $user);
             case self::DELETE:
                 return $this->canDelete($post, $user);
@@ -95,7 +97,7 @@ class ReferentielVoter extends Voter
 
     private function canDelete(ApcSae|ApcRessource $post, User $user): bool
     {
-        if (!($this->security->isGranted('ROLE_PACD') || $this->security->isGranted('ROLE_CPN'))) {
+        if (!(in_array('ROLE_PACD', $user->getRoles()) || in_array('ROLE_CPN', $user->getRoles()))) {
             return false;
         }
 
