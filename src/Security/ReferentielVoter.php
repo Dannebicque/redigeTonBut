@@ -82,7 +82,7 @@ class ReferentielVoter extends Voter
 
     private function canEdit(ApcSae|ApcRessource $post, User $user): bool
     {
-        if ($this->security->isGranted('ROLE_LECTEUR')) {
+        if (in_array('ROLE_LECTEUR', $user->getRoles())) {
             return false;
         }
 
