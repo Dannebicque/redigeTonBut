@@ -86,5 +86,8 @@ class ApcSaeAddEdit
         foreach ($apcSae->getApcSaeRessources() as $ac) {
             $this->entityManager->remove($ac);
         }
+
+        $this->entityManager->flush();
+
     }
 }
