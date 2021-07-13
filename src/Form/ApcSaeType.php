@@ -32,7 +32,7 @@ class ApcSaeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->departement = $options['departement'];
-        $this->editable = $options['editable'];
+        $this->editable = !$options['editable'];
 
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code SAÉ',  'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
