@@ -102,4 +102,33 @@
             </section>
         {% endif %}
     {% endfor %}
+
+<section class="scroll-section" id="buttonTags">
+    <h2 class="small-title">Documents du GT</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Modèle fiche SAÉ</h5>
+                    <p class="card-text">
+                        <a href="{{ asset('documents_gt/fiche-SAE-juil2021.docx') }}" target="_blank" class="btn
+                        btn-primary"><i class="bi bi-download"></i> Télécharger</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Modèle fiche Ressource</h5>
+                    <p class="card-text">
+                        <a href="{{ asset('documents_gt/fiche-ressource-juil2021.docx') }}" target="_blank" class="btn
+                        btn-primary"><i class="bi bi-download"></i> Télécharger</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
