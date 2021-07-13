@@ -1,6 +1,8 @@
 {
     "type": "project",
-    "license": "proprietary",
+    "license": "MPL2.0",
+    "author": "David Annebicque",
+    "version": "1.0.1",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {

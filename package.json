@@ -12,6 +12,8 @@
         "webpack-notifier": "^1.6.0"
     },
     "license": "MPL2.0",
+    "author": "David Annebicque",
+    "name": "orebut",
     "private": true,
     "version": "1.0.1",
     "auto-changelog": {

@@ -1,7 +1,3 @@
-
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
-
-
 # ORéBUT
 
 Un outil pour accompagner les ACD dans la rédaction des programmes nationaux de B.U.T.
@@ -14,7 +10,7 @@ Un outil pour accompagner les ACD dans la rédaction des programmes nationaux de
 
 ## Documentation
 
-[Documentation](https://linktodocumentation)
+Comming soon...
 
 
 ## Features
