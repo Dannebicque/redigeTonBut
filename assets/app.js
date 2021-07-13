@@ -54,6 +54,25 @@ ready(() => {
   toastList.forEach((toast) => {
     toast.show()
   })
+
+  document.querySelectorAll('.changeSemestreRessources').forEach((elem) => {
+    elem.addEventListener('click', updateBoutonRessource)
+  })
+
+  function updateBoutonRessource(e) {
+    const sem = e.target.dataset.semestre;
+    document.getElementById('boutonAddRessource').setAttribute('href', Routing.generate('formation_apc_ressource_new', {semestre: sem}));
+  }
+    document.querySelectorAll('.changeSemestreSae').forEach((elem) => {
+    elem.addEventListener('click', updateBoutonSae)
+  })
+
+  function updateBoutonSae(e)
+  {
+    const sem = e.target.dataset.semestre;
+    document.getElementById('boutonAddSae').setAttribute('href', Routing.generate('formation_apc_sae_new', {semestre:sem}));
+  }
+
 });
 
 

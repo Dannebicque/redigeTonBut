@@ -1,13 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    {#  todo: Bouton export ? #}
+    {# todo: Bouton export ? #}
 
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
         {% for semestre in annee.semestres %}
+
+
             <li class="nav-item" role="presentation">
                 <a class="nav-link {% if (selectSemestre == null and loop.first) or (selectSemestre != null and selectSemestre.id
-                    == semestre.id) %}active{% endif %}" data-bs-toggle="tab" href="#semestre_{{ semestre.id }}"
+                    == semestre.id) %}active{% endif %} changeSemestreRessources" data-bs-toggle="tab"
+                   data-semestre="{{ semestre.id }}"
+                   href="#semestre_{{ semestre.id }}"
                    role="tab"
                    aria-selected="true">{{ semestre.libelle }}</a>
             </li>
@@ -19,9 +23,9 @@
             <div class="tab-pane {% if (selectSemestre == null and loop.first) or (selectSemestre != null and selectSemestre.id
                 == semestre.id) %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
                 <div class="row g-4 mb-4">
-                {% for ressource in ressources[semestre.id] %}
-                    {{ include('but/_cardRessource.html.twig') }}
-                {% endfor %}
+                    {% for ressource in ressources[semestre.id] %}
+                        {{ include('but/_cardRessource.html.twig') }}
+                    {% endfor %}
                 </div>
             </div>
         {% endfor %}
@@ -29,7 +33,7 @@
 {% endblock %}
 
 {% block header %}
-Ressources du B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}
+    Ressources du B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -42,11 +46,20 @@ Ressources du B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.l
 {% endblock %}
 
 {% block bouton_header %}
+    {% if selectSemestre != null %}
+        {% set sem = selectSemestre.id %}
+    {% else %}
+        {% set sem = annee.semestres[0] %}
+    {% endif %}
+
     {% if  is_granted('ROLE_EDITEUR') %}
-        <a href="{{ path('formation_apc_ressource_new') }}" class="btn btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto"
-           id="dashboardTourButton">
+        <a href="{{ path('formation_apc_ressource_new', {semestre:sem}) }}" class="btn btn-outline-primary btn-icon
+        btn-icon-end
+        w-100 w-sm-auto"
+           id="boutonAddRessource">
             <i class="bi bi-plus-circle"></i>
             <span>Ajouter une ressource</span>
         </a>
     {% endif %}
 {% endblock %}
+

@@ -36,9 +36,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApcRessourceController extends BaseController
 {
-    /**
-     * @Route("/new/{semestre}", name="apc_ressource_new", methods={"GET","POST"})
-     */
+     #[Route("/new/{semestre}", name: "apc_ressource_new", options: ['expose' =>true], methods: ["GET","POST"])]
     public function new(
         ApcRessourceOrdre $apcRessourceOrdre,
         ApcRessourceAddEdit $apcRessourceAddEdit,

@@ -25,7 +25,7 @@ class ApcRessourceOrdre
         $ordreMax = $this->apcRessourceRepository->findOrdreMax($semestre);
 
         //retourne +1
-        return $ordreMax[0]['ordreMax'] === null ? 1 : $ordreMax[0]['ordreMax']++;
+        return $ordreMax[0]['ordreMax'] === null ? 1 : ++$ordreMax[0]['ordreMax'];
     }
 
     public function deplaceRessource(ApcRessource $apcRessource, int $position)
