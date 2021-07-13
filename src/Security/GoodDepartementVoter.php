@@ -48,6 +48,8 @@ class GoodDepartementVoter extends Voter
             return true;
         }
 
+
+
         if (!$user instanceof User) {
             // the user must be logged in; if not, deny access
             return false;
@@ -80,18 +82,29 @@ class GoodDepartementVoter extends Voter
 
     private function canAdd(Semestre|Annee|Departement $post, User $user): bool
     {
-        if ($this->security->isGranted('ROLE_LECTEUR')) {
+        if (in_array('ROLE_LECTEUR', $user->getRoles())) {
             return false;
         }
+
+        if ($user->getDepartement() === null) {
+            return false;
+        }
+
         if ($post instanceof Departement) {
             return $user->getDepartement()->getId() === $post->getId();
         }
 
-        if ($user->getDepartement() === null || $post->getDepartement() === null) {
-            return false;
+        if ($post instanceof Annee && $post->getDepartement() !== null) {
+            return $user->getDepartement()->getId() === $post->getDepartement()->getId();
         }
 
+        if ($post instanceof Semestre) {
+            return $user->getDepartement()->getId() === $post->getAnnee()->getDepartement()->getId();
+        }
+
+
+
         // this assumes that the Post object has a `getOwner()` method
-        return $user->getDepartement()->getId() === $post->getDepartement()->getId();
+        return false;
     }
 }

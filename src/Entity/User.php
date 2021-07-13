@@ -60,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="users")
+     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="users", fetch="EAGER")
      */
     private ?Departement $departement = null;
 
