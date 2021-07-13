@@ -11,13 +11,20 @@
         "svelte-loader": "^3.1.2",
         "webpack-notifier": "^1.6.0"
     },
-    "license": "UNLICENSED",
+    "license": "MPL2.0",
     "private": true,
+    "version": "1.0.1",
+    "auto-changelog": {
+        "template": "keepachangelog",
+        "unreleased": true,
+        "commitLimit": false
+    },
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "build": "encore production --progress",
+        "version": "auto-changelog -p && git add CHANGELOG.md"
     },
     "dependencies": {
         "@popperjs/core": "^2.9.2",
