@@ -45,14 +45,23 @@
                                     </li>
                                     <li>
                                         <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                            <span class="label">Tableaux semestres</span>
+                                            <span class="label">Tableau croisé par semestre</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('tableau_horaire_annee', {annee: annee.id,
+                                            parcours: parcours.id}) }}">
+                                            <span class="label">Volumes horaires par semestre</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                            <span class="label">Tableau annuel</span>
+                                                            <span class="label">
+                                                                Préconisations par semestre
+                                                            </span>
                                         </a>
                                     </li>
+
                                     <li>
                                         <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id,
                                             parcours: parcours.id}) }}">
@@ -87,13 +96,20 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
-                                <span class="label">Tableau annuel</span>
+                            <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
+                                <span class="label">Tableau croisé par semestre</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
-                                <span class="label">Validation des AC par les SAÉ</span>
+                            <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">
+                                <span class="label">Volumes horaires par semestre</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
+                                                            <span class="label">
+                                                                Préconisations par semestre
+                                                            </span>
                             </a>
                         </li>
                     </ul>

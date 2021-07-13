@@ -59,4 +59,16 @@ class ApcParcoursNiveauRepository extends ServiceEntityRepository
 
         return $t;
     }
+
+    public function findBySemestre(Semestre $semestre, ApcParcours $parcours)
+    {
+        return $this->createQueryBuilder('n')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = n.annee')
+            ->where('a.id = :annee')
+            ->andWhere('n.parcours = :parcour')
+            ->setParameter('annee', $semestre->getAnnee()->getId())
+            ->setParameter('parcour', $parcours->getId())
+            ->getQuery()
+            ->getResult();
+    }
 }

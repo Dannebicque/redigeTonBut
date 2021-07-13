@@ -9,6 +9,7 @@ use App\Entity\ApcParcours;
 use App\Entity\Semestre;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcNiveauRepository;
+use App\Repository\ApcParcoursNiveauRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
@@ -120,16 +121,29 @@ class TableauController extends BaseController
         ]);
     }
 
-    #[Route('/croise/complet', name: 'croise_complet')]
-    public function tableauComplet(
-        SemestreRepository $semestreRepository
+    #[Route('/horaire/{annee}/{parcours}', name: 'horaire_annee', requirements: ['annee' => '\d+'])]
+    public function tableauH(
+        Annee $annee,
+        ApcParcours $parcours = null
     ): Response {
-        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
 
-        return $this->render('tableau/croise_complet.html.twig', [
-            'semestres' => $semestres
+        return $this->render('tableau/horaire.html.twig', [
+            'parcours' => $parcours,
+            'annee' => $annee,
+            'semestres' => $annee->getSemestres()
         ]);
     }
+
+//    #[Route('/croise/complet', name: 'croise_complet')]
+//    public function tableauComplet(
+//        SemestreRepository $semestreRepository
+//    ): Response {
+//        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
+//
+//        return $this->render('tableau/croise_complet.html.twig', [
+//            'semestres' => $semestres
+//        ]);
+//    }
 
     #[Route('/validation/{annee}', name: 'validation_sae_ac_annee', requirements: ['annee' => '\d+'])]
     public function validationSaeAc(
@@ -155,16 +169,16 @@ class TableauController extends BaseController
         ]);
     }
 
-    #[Route('/preconisations/complet', name: 'preconisations_complet')]
-    public function tableauPreconisationsComplet(
-        SemestreRepository $semestreRepository
-    ): Response {
-        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
-
-        return $this->render('tableau/preconisations_complet.html.twig', [
-            'semestres' => $semestres
-        ]);
-    }
+//    #[Route('/preconisations/complet', name: 'preconisations_complet')]
+//    public function tableauPreconisationsComplet(
+//        SemestreRepository $semestreRepository
+//    ): Response {
+//        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
+//
+//        return $this->render('tableau/preconisations_complet.html.twig', [
+//            'semestres' => $semestres
+//        ]);
+//    }
 
     public function tableauSemestre(
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
@@ -236,6 +250,77 @@ class TableauController extends BaseController
             ]);
     }
 
+
+    public function tableauHoraire(
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
+        ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
+        ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
+        ApcNiveauRepository $apcNiveauRepository,
+        ApcSaeRepository $apcSaeRepository,
+        ApcRessourceRepository $apcRessourceRepository,
+        Semestre $semestre,
+        ?ApcParcours $parcours = null
+    ) {
+        if ($parcours === null) {
+            $saes = $apcSaeRepository->findBySemestre($semestre);
+            $ressources = $apcRessourceRepository->findBySemestre($semestre);
+        } else {
+            $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+            $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+        }
+
+
+        $compSae = $apcSaeCompetenceRepository->findBySemestre($semestre);
+        $compRessources = $apcRessourceCompetenceRepository->findBySemestre($semestre);
+
+        $tab = [];
+        $coefficients = [];
+        $tab['saes'] = [];
+        $tab['ressources'] = [];
+
+        foreach ($saes as $sae) {
+            $tab['saes'][$sae->getId()] = [];
+            foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
+                $tab['saes'][$sae->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
+            }
+        }
+
+        foreach ($ressources as $ressource) {
+            $tab['ressources'][$ressource->getId()] = [];
+            foreach ($ressource->getApcRessourceApprentissageCritiques() as $ac) {
+                $tab['ressources'][$ressource->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
+            }
+        }
+
+        foreach ($compSae as $comp) {
+           if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
+               $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
+               $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
+           }
+            $coefficients[$comp->getCompetence()->getId()]['saes'][$comp->getSae()->getId()] = $comp->getCoefficient();
+        }
+
+        foreach ($compRessources as $comp) {
+            if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
+                $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
+                $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
+            }
+            $coefficients[$comp->getCompetence()->getId()]['ressources'][$comp->getRessource()->getId()] = $comp->getCoefficient();
+        }
+
+
+        return $this->render('tableau/_grilleHoraire.html.twig',
+            [
+                'semestre' => $semestre,
+                'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
+                'saes' => $saes,
+                'ressources' => $ressources,
+                'tab' => $tab,
+                'coefficients' => $coefficients
+            ]);
+    }
+
     public function tableauValidationAnneeSae(
         ApcSaeRepository $apcSaeRepository,
         Annee $annee
@@ -265,6 +350,7 @@ class TableauController extends BaseController
 
     public function tableauPreconisationsSemestre(
         ApcSaeRepository $apcSaeRepository,
+        ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
         ApcRessourceRepository $apcRessourceRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
@@ -277,17 +363,18 @@ class TableauController extends BaseController
 
                 $saes = $apcSaeRepository->findBySemestre($semestre);
                 $ressources= $apcRessourceRepository->findBySemestre($semestre);
-
+                 $niveaux =$apcNiveauRepository->findBySemestre($semestre);
         } else {
                 $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $apcParcours);
                 $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $apcParcours);
+                $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $apcParcours); //todo: a affiner...
 
         }
 
         return $this->render('tableau/_preconisationsSemestre.html.twig',
             [
                 'semestre' => $semestre,
-                'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
+                'niveaux' => $niveaux,
                 'saes' => $saes,
                 'ressources' => $ressources,
             ]);

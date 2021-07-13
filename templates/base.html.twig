@@ -210,14 +210,20 @@
 
                                                     <li>
                                                         <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                            <span class="label">Tableaux semestres</span>
+                                                            <span class="label">Tableau croisé par semestre</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('tableau_horaire_annee', {annee: annee.id,
+                                                            parcours: parcours.id}) }}">
+                                                            <span class="label">Volumes horaires par semestre</span>
                                                         </a>
                                                     </li>
                                                     <li>
                                                         <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
                                                             <span class="label">
-                                                                Tableau annuel
-                                                                                </span>
+                                                                Préconisations par semestre
+                                                            </span>
                                                         </a>
                                                     </li>
                                                     <li>
@@ -232,12 +238,17 @@
                                     {% else %}
                                         <li>
                                             <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
-                                                <span class="label">Tableaux Semestres</span>
+                                                <span class="label">Tableau croisé par semestre</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">
+                                                <span class="label">Volumes horaires par semestre</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
-                                                <span class="label">Tableau Annuel</span>
+                                                <span class="label">Préconisations par semestre</span>
                                             </a>
                                         </li>
                                         <li>

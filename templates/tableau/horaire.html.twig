@@ -23,7 +23,7 @@
             <div class="card">
                 <div class="card-body">
                     {{ render(controller(
-                        'App\\Controller\\TableauController::tableauSemestre',
+                        'App\\Controller\\TableauController::tableauHoraire',
                         { 'semestre': semestre.id, parcours: parcours != null ? parcours.id : null }
                     )) }}
                 </div>

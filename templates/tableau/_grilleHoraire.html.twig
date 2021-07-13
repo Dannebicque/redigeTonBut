@@ -1,0 +1,109 @@
+<div style="overflow-x: auto">
+    <table class="table table-bordered">
+        <tr>
+            <td rowspan="2" class="text-center cell-jaune-pale" colspan="2">Pôles</td>
+            <td colspan="{{ saes|length }}" class="text-center cell-jaune-pale">SAÉ</td>
+            <td colspan="{{ ressources|length }}" class="text-center cell-jaune-pale">Ressources</td>
+            <td rowspan="2" class="cell-bleu">Total</td>
+            <td rowspan="2" class="cell-bleu">
+                pourcentage du volume total d'enseignement
+            </td>
+            <td rowspan="2">&nbsp;</td>
+            <td rowspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            {% for sae in saes %}
+                <td class="cell-jaune">{{ sae.codeMatiere }}</td>
+            {% endfor %}
+            {% for ressource in ressources %}
+                <td class="cell-bleu">{{ ressource.codeMatiere }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td class="text-center cell-jaune-pale" colspan="2">Volume horaire des enseignements définis nationalement</td>
+            <td colspan="{{ saes|length }}" rowspan="2" class="cell-jaune">&nbsp;</td>
+            {% for ressource in ressources %}
+                <td class="text-rouge">xx</td>
+            {% endfor %}
+            <td class="text-rouge fw-bold">344</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="text-center cell-jaune-pale" colspan="2">Dont TP</td>
+            {% for ressource in ressources %}
+                <td class="text-rouge">xx</td>
+            {% endfor %}
+            <td class="text-rouge fw-bold">120</td>
+            <td class="text-rouge fw-bold">28 %</td>
+            <td colspan="2" class="cell-jaune text-rouge">← pourcentage de TP défini nationalement</td>
+        </tr>
+        <tr>
+            <td rowspan="2" colspan="2" class="text-center cell-jaune text-rouge fw-bold">
+                Volume horaire des enseignements définis par l'adaptation locale
+            </td>
+            <td colspan="{{ saes|length }}" class="text-center cell-jaune text-rouge fw-bold">66</td>
+            <td colspan="{{ ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">&nbsp;</td>
+            <td rowspan="2" class="text-center cell-jaune text-rouge fw-bold">86</td>
+            <td class="text-center cell-jaune text-rouge fw-bold">20 %</td>
+            <td colspan="2" class="text-center cell-jaune text-rouge">← Pourcentage d'adaptation locale (calculé)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">20</td>
+            <td colspan="2" class="text-center cell-jaune">rappel tableau global 6 semestres →</td>
+            <td class="text-center cell-jaune">20%</td>
+        </tr>
+
+        <tr>
+            <td class="text-center" colspan="2" class="text-center cell-jaune text-rouge fw-bold">Dont TP</td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">0</td>
+            <td class="text-center cell-jaune text-rouge fw-bold">0</td>
+            <td class="text-center cell-jaune text-rouge fw-bold">0.00 %</td>
+            <td colspan="2" class="text-center cell-jaune text-rouge">← pourcentage de TP défini localement</td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+            <td colspan="{{ saes|length + ressources|length  }}" class="text-end cell-vert">
+                Volume horaire total des enseignements (calculé)
+            </td>
+            <td class="cell-vert text-rouge fw-bold">430</td>
+            <td class="cell-jaune-pale fw-bold">430</td>
+            <td colspan="2" class="cell-jaune-pale">← rappel volume total d'enseignement issu du tableau global des 6 semestres</td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+            <td colspan="{{ saes|length + ressources|length  }}" class="text-end cell-vert">
+                Dont TP
+            </td>
+            <td class="cell-vert text-rouge fw-bold">120</td>
+            <td class="cell-jaune text-rouge fw-bold">27,91 %</td>
+            <td colspan="2" class="cell-jaune text-rouge fw-bold">
+                ← pourcentage de tp défini localement et nationalement</td>
+        </tr>
+        <tr>
+            <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tuteuré</td>
+            <td colspan="{{ saes|length }}" class="cell-gris texte-rouge fw-bold">
+                80
+            </td>
+            <td colspan="{{ ressources|length }}" class="cell-gris texte-rouge fw-bold">
+                &nbsp;
+            </td>
+            <td class="cell-gris texte-rouge fw-bold">80</td>
+            <td class="cell-jaune fw-bold">80</td>
+            <td colspan="2" class="cell-jaune text-center">← rappel volume de projet tuteuré issu du tableau glabal
+                                                           des 6 semestres</td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
+                Volume horaire total des enseignements avec projet tuteuré
+            </td>
+            <td class="cell-vert texte-rouge fw-bold">510</td>
+            <td class="cell-jaune fw-bold">510</td>
+            <td colspan="2" class="cell-jaune text-center">← rappel volume total enseignement + projet tuteuré issu du
+                                                     tableau global 6 semestres</td>
+        </tr>
+    </table>
+</div>
