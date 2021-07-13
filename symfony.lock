@@ -127,6 +127,12 @@
     "laminas/laminas-code": {
         "version": "4.3.0"
     },
+    "laminas/laminas-escaper": {
+        "version": "2.8.0"
+    },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.3.0"
+    },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },
@@ -165,6 +171,9 @@
     },
     "phpoffice/phpspreadsheet": {
         "version": "1.18.0"
+    },
+    "phpoffice/phpword": {
+        "version": "0.18.2"
     },
     "phpspec/prophecy": {
         "version": "1.13.0"
