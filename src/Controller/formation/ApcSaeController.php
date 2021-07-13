@@ -129,13 +129,12 @@ class ApcSaeController extends BaseController
     /**
      * @Route("/{id}/duplicate", name="apc_sae_duplicate", methods="GET|POST")
      */
-    public function duplicate(ApcSae $apcSae): Response
+    public function duplicate(
+        ApcSaeAddEdit $addEdit,
+        ApcSae $apcSae): Response
     {
         $this->denyAccessUnlessGranted('edit', $apcSae);
-        $newApcSae = clone $apcSae;
-
-        $this->entityManager->persist($newApcSae);
-        $this->entityManager->flush();
+        $newApcSae = $addEdit->duplique($apcSae);
         $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'SAÉ dupliquée avec succès.');
 
         return $this->redirectToRoute('formation_apc_sae_edit', ['id' => $newApcSae->getId()]);

@@ -6,11 +6,11 @@ namespace App\Classes\Apc;
 
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
+use App\Entity\ApcRessourceCompetence;
 use App\Entity\ApcRessourceParcours;
 use App\Entity\ApcSaeRessource;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcParcoursRepository;
-
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
 use App\Utils\Codification;
@@ -41,7 +41,8 @@ class ApcRessourceAddEdit
     }
 
 
-    public function addOrEdit(ApcRessource $apcRessource, $request) {
+    public function addOrEdit(ApcRessource $apcRessource, $request)
+    {
         $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
         $this->entityManager->persist($apcRessource);
 
@@ -90,6 +91,10 @@ class ApcRessourceAddEdit
         foreach ($apcRessource->getApcRessourceApprentissageCritiques() as $ac) {
             $this->entityManager->remove($ac);
         }
+        foreach ($apcRessource->getApcRessourceCompetences() as $ac) {
+            $this->entityManager->remove($ac);
+
+        }
         foreach ($apcRessource->getApcRessourceParcours() as $ac) {
             $this->entityManager->remove($ac);
         }
@@ -101,5 +106,42 @@ class ApcRessourceAddEdit
             $this->entityManager->remove($ac);
         }
         $this->entityManager->flush();
+    }
+
+    public function duplique(ApcRessource $apcRessource): ApcRessource
+    {
+        $ressource = clone $apcRessource;
+        $this->entityManager->persist($ressource);
+        $this->entityManager->flush();
+
+        foreach ($apcRessource->getApcRessourceApprentissageCritiques() as $ac) {
+            $newAc = new ApcRessourceApprentissageCritique($ressource, $ac->getApprentissageCritique());
+            $this->entityManager->persist($newAc);
+
+        }
+
+        foreach ($apcRessource->getApcRessourceCompetences() as $ac) {
+            $newAc = new ApcRessourceCompetence($ressource, $ac->getCompetence());
+            $this->entityManager->persist($newAc);
+
+        }
+
+        foreach ($apcRessource->getApcRessourceParcours() as $ac) {
+            $newAc = new ApcRessourceParcours($ressource, $ac->getParcours());
+            $this->entityManager->persist($newAc);
+        }
+
+        foreach ($apcRessource->getRessourcesPreRequises() as $ac) {
+            $ressource->addRessourcesPreRequise($ac);
+            $ac->addApcRessource($ressource);
+        }
+
+        foreach ($apcRessource->getApcSaeRessources() as $ac) {
+            $newAc = new ApcSaeRessource($ac->getSae(), $ressource);
+            $this->entityManager->persist($newAc);
+        }
+        $this->entityManager->flush();
+
+        return $ressource;
     }
 }

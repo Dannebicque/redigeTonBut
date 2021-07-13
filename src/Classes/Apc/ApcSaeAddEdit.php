@@ -9,6 +9,7 @@ use App\Entity\ApcRessourceApprentissageCritique;
 use App\Entity\ApcRessourceParcours;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeApprentissageCritique;
+use App\Entity\ApcSaeCompetence;
 use App\Entity\ApcSaeParcours;
 use App\Entity\ApcSaeRessource;
 use App\Repository\ApcApprentissageCritiqueRepository;
@@ -80,6 +81,10 @@ class ApcSaeAddEdit
         foreach ($apcSae->getApcSaeApprentissageCritiques() as $ac) {
             $this->entityManager->remove($ac);
         }
+
+        foreach ($apcSae->getApcSaeCompetences() as $ac) {
+            $this->entityManager->remove($ac);
+        }
         foreach ($apcSae->getApcSaeParcours() as $ac) {
             $this->entityManager->remove($ac);
         }
@@ -90,4 +95,37 @@ class ApcSaeAddEdit
         $this->entityManager->flush();
 
     }
+
+    public function duplique(ApcSae $apcSae): ApcSae
+    {
+        $sae = clone $apcSae;
+        $this->entityManager->persist($sae);
+        $this->entityManager->flush();
+
+        foreach ($apcSae->getApcSaeApprentissageCritiques() as $ac) {
+            $newAc = new ApcSaeApprentissageCritique($sae, $ac->getApprentissageCritique());
+            $this->entityManager->persist($newAc);
+
+        }
+
+        foreach ($apcSae->getApcSaeCompetences() as $ac) {
+            $newAc = new ApcSaeCompetence($sae, $ac->getCompetence());
+            $this->entityManager->persist($newAc);
+
+        }
+
+        foreach ($apcSae->getApcSaeParcours() as $ac) {
+            $newAc = new ApcSaeParcours($sae, $ac->getParcours());
+            $this->entityManager->persist($newAc);
+        }
+
+        foreach ($apcSae->getApcSaeRessources() as $ac) {
+            $newAc = new ApcSaeRessource($sae, $ac->getRessource());
+            $this->entityManager->persist($newAc);
+        }
+        $this->entityManager->flush();
+
+        return $sae;
+    }
+
 }

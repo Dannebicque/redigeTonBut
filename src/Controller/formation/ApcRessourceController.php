@@ -142,13 +142,12 @@ class ApcRessourceController extends BaseController
     /**
      * @Route("/{id}/duplicate", name="apc_ressource_duplicate", methods="GET|POST")
      */
-    public function duplicate(ApcRessource $apcRessource): Response
+    public function duplicate(
+        ApcRessourceAddEdit $apcRessourceAddEdit,
+        ApcRessource $apcRessource): Response
     {
         $this->denyAccessUnlessGranted('duplicate', $apcRessource);
-        $newApcRessource = clone $apcRessource;
-
-        $this->entityManager->persist($newApcRessource);
-        $this->entityManager->flush();
+        $newApcRessource =  $apcRessourceAddEdit->duplique($apcRessource);
         $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Ressource dupliquée avec succès.');
 
         return $this->redirectToRoute('formation_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
