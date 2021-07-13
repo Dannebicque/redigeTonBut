@@ -144,8 +144,7 @@ class MyWord
 
         $templateProcessor->setValue('parcours', $parcours);
         $templateProcessor->setValue('descriptif', $this->prepareTexte($apcRessource->getDescription()));
-        $templateProcessor->setValue('heures', $apcRessource->getHeuresTotales());
-        $templateProcessor->setValue('heuresTP', $apcRessource->getTpPpn());
+        $templateProcessor->setValue('heures', $apcRessource->getHeuresTotales().'h dont '.$apcRessource->getTpPpn().' h TP');
         $templateProcessor->setValue('sae', $saes);
         $templateProcessor->setValue('competences', $competences);
         $templateProcessor->setValue('apprentissages', $acs);
