@@ -129,14 +129,21 @@
                         Veuillez choisir un semestre pour récupérer les parcours.
                     </div>
                 </template>
+                <template x-if="parcours !== false">
                 <div class="row">
                     <template x-for="parcour in parcours">
                         <div class="col-6">
                             <input type="checkbox" name="parcours[]" :value="parcour.id" :checked="parcour.checked">&nbsp;
-                            <span x-text="parcour.code + ` | ` + parcour.libelle"></span>
+                            <span x-text="parcour.libelle"></span>
                         </div>
                     </template>
                 </div>
+                </template>
+                <template x-if="parcours === false">
+                    <div class="alert alert-info">
+                        Pas de parcours sur ce semestre.
+                    </div>
+                </template>
             </div>
             <small id="apc_sae_ressource_help" class="form-text text-muted">
                 Si le semestre est composé de Parcours, il sera possible d'y associer une ressource commune (contenu
