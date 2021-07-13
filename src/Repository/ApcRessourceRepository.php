@@ -74,13 +74,11 @@ class ApcRessourceRepository extends ServiceEntityRepository
         $query = $this->findByAnnee($annee);
 
         $t = [];
-        foreach ($annee->getSemestres() as $semestre)
-        {
+        foreach ($annee->getSemestres() as $semestre) {
             $t[$semestre->getId()] = [];
         }
 
-        foreach ($query as $res)
-        {
+        foreach ($query as $res) {
             $t[$res->getSemestre()->getId()][] = $res;
         }
 
@@ -101,17 +99,21 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBySemestreEtPrecendent(Semestre $semestre)
+    public function findBySemestreEtPrecendent(Semestre $semestre, array $semestres)
     {
         $query = $this->createQueryBuilder('r')
-            ->innerJoin(Semestre::class, 's', 'WITH', 'r.semestre = s.id')
-            ->where('s.ordreLmd <= :semestre')
-            ->setParameter('semestre', $semestre->getOrdreLmd())
             ->orderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC');
 
-       return $query->getQuery()
+        foreach ($semestres as $sem) {
+            if ($sem->getOrdreLmd() <= $semestre->getOrdreLmd()) {
+                $query->orWhere('r.semestre = :semestre')
+                    ->setParameter('semestre', $sem->getId());
+            }
+        }
+
+        return $query->getQuery()
             ->getResult();
     }
 

@@ -159,7 +159,7 @@ class ApcAjaxRessourceController extends BaseController
             }
 
 
-            $datas = $apcRessourceRepository->findBySemestreEtPrecendent($semestre);
+            $datas = $apcRessourceRepository->findBySemestreEtPrecendent($semestre, $this->getDepartement()->getSemestres());
 
             $t = [];
             foreach ($datas as $d) {
