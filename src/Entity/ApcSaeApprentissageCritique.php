@@ -28,6 +28,7 @@ class ApcSaeApprentissageCritique extends BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcApprentissageCritique::class, inversedBy="apcSaeApprentissageCritiques")
+     * @ORM\OrderBy({"code":"ASC"})
      */
     private ?ApcApprentissageCritique $apprentissageCritique;
 

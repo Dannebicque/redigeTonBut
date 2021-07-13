@@ -45,6 +45,7 @@ class ApcNiveau extends BaseEntity
 
     /**
      * @ORM\OneToMany(targetEntity=ApcApprentissageCritique::class, mappedBy="niveau", cascade={"persist","remove"})
+     * @ORM\OrderBy({"code":"ASC"})
      */
     private Collection $apcApprentissageCritiques;
 
