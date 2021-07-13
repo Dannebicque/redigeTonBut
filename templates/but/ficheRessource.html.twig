@@ -26,21 +26,21 @@
 
 {% block bouton_header %}
     <a href="{{ path('but_ressources_annee', {annee: apc_ressource.semestre.annee.id, semestre: apc_ressource
-    .semestre.id}) }}" class="btn btn-outline-info
+    .semestre.id}) }}" class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >
         <i class="bi-arrow-left-circle"></i>
         <span>Retour</span>
     </a>
-    <a href="{{ path('export_word_ressource', {ressource: apc_ressource.id}) }}" class="btn btn-outline-success
+    <a href="{{ path('export_word_ressource', {ressource: apc_ressource.id}) }}" class="btn btn-sm btn-outline-success
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >
         <i class="bi-download"></i>
         <span>Export Word</span>
     </a>
     {% if  is_granted('ROLE_EDITEUR') %}
-        <a href="{{ path('formation_apc_ressource_edit', {id:apc_ressource.id}) }}" class="btn btn-outline-warning
-        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        <a href="{{ path('formation_apc_ressource_edit', {id:apc_ressource.id}) }}"
+           class="btn btn-sm btn-outline-warning btn-icon btn-icon-end w-100 w-sm-auto mx-2"
            id="dashboardTourButton">
             <i class="bi-pencil-square"></i>
             <span>Modifier</span>

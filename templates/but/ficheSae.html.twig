@@ -26,13 +26,13 @@
 
 {% block bouton_header %}
     <a href="{{ path('but_sae_annee', {annee: apc_sae.semestre.annee.id, semestre: apc_sae
-    .semestre.id}) }}" class="btn btn-outline-info
+    .semestre.id}) }}" class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
        >
         <i class="bi-arrow-left-circle"></i>
         <span>Retour</span>
     </a>
-    <a href="{{ path('export_word_sae', {sae: apc_sae.id}) }}" class="btn btn-outline-success
+    <a href="{{ path('export_word_sae', {sae: apc_sae.id}) }}" class="btn btn-sm btn-outline-success
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >
         <i class="bi-download"></i>
@@ -40,7 +40,7 @@
     </a>
 
     {% if  is_granted('ROLE_EDITEUR') %}
-        <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-outline-warning
+        <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-sm btn-outline-warning
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
            >
             <i class="bi-pencil-square"></i>
