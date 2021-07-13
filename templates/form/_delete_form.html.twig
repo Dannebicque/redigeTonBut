@@ -1,0 +1,7 @@
+<form method="post" action="{{ path }}" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer cet élément ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
+    <button class="btn btn-sm btn-icon btn-icon-start btn-outline-danger ms-1">
+        <i class="bi-trash"></i>
+        <span class="d-none d-xxl-inline-block">Supprimer</span>
+    </button>
+</form>

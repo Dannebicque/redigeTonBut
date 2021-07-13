@@ -41,17 +41,17 @@ class ApcRessource extends AbstractMatiere
     private Collection $apcRessourceCompetences;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceApprentissageCritique::class, mappedBy="ressource")
+     * @ORM\OneToMany(targetEntity=ApcRessourceApprentissageCritique::class, mappedBy="ressource", cascade={"persist","remove"})
      */
     private Collection $apcRessourceApprentissageCritiques;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeRessource::class, mappedBy="ressource")
+     * @ORM\OneToMany(targetEntity=ApcSaeRessource::class, mappedBy="ressource", cascade={"persist","remove"})
      */
     private Collection $apcSaeRessources;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="ressource")
+     * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="ressource", cascade={"persist","remove"})
      */
     private Collection $apcRessourceParcours;
 
@@ -61,7 +61,7 @@ class ApcRessource extends AbstractMatiere
     private ?int $ordre = 1;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ApcRessource::class, inversedBy="apcRessources")
+     * @ORM\ManyToMany(targetEntity=ApcRessource::class, inversedBy="apcRessources", cascade={"persist","remove"})
      */
     private Collection $ressourcesPreRequises;
 

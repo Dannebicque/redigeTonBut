@@ -40,13 +40,8 @@
             <span>Modifier</span>
         </a>
         {% if is_granted('ROLE_PACD') %}
-            <a href="{{ path('formation_apc_ressource_edit', {id:apc_ressource.id}) }}" class="btn btn-outline-danger
-            btn-icon btn-icon-end
-            w-100 w-sm-auto"
-               id="dashboardTourButton">
-                <i class="bi-trash"></i>
-                <span>Supprimer</span>
-            </a>
+            {{ include('form/_delete_form.html.twig', {path: path('formation_apc_ressource_delete',
+                {id: apc_ressource.id, }), id: apc_ressource.id}) }}
         {% endif %}
     {% endif %}
 {% endblock %}

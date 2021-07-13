@@ -46,12 +46,12 @@ class ApcSae extends AbstractMatiere
     private Collection $apcSaeRessources;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeApprentissageCritique::class, mappedBy="sae")
+     * @ORM\OneToMany(targetEntity=ApcSaeApprentissageCritique::class, mappedBy="sae", cascade={"persist","remove"})
      */
     private Collection $apcSaeApprentissageCritiques;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="sae")
+     * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="sae", cascade={"persist","remove"})
      */
     private Collection $apcSaeParcours;
 
@@ -63,7 +63,7 @@ class ApcSae extends AbstractMatiere
     /**
      * @ORM\Column(type="text")
      */
-    private $objectifs;
+    private ?string $objectifs;
 
     public function __construct()
     {

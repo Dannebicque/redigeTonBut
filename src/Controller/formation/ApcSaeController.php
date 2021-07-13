@@ -105,13 +105,14 @@ class ApcSaeController extends BaseController
     }
 
     /**
-     * @Route("/{id}", name="apc_sae_delete", methods={"DELETE"})
+     * @Route("/{id}/effacer", name="apc_sae_delete", methods={"POST"})
      */
     public function delete(Request $request, ApcSae $apcSae): Response
     {
         $this->denyAccessUnlessGranted('delete', $apcSae);
         $id = $apcSae->getId();
         if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+            $annee = $apcSae->getSemestre()->getAnnee();
             $this->entityManager->remove($apcSae);
             $this->entityManager->flush();
             $this->addFlashBag(
@@ -119,12 +120,12 @@ class ApcSaeController extends BaseController
                 'SAÉ supprimée avec succès.'
             );
 
-            return $this->json($id, Response::HTTP_OK);
+            return $this->redirectToRoute('but_sae_annee', ['annee' => $annee->getId()]);
         }
 
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression d ela SAÉ');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la SAÉ.');
 
-        return $this->json(false, Response::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**

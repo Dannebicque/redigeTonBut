@@ -118,13 +118,14 @@ class ApcRessourceController extends BaseController
     }
 
     /**
-     * @Route("/{id}", name="apc_ressource_delete", methods="DELETE")
+     * @Route("/{id}/effacer", name="apc_ressource_delete", methods="post")
      */
     public function delete(Request $request, ApcRessource $apcRessource): Response
     {
         $this->denyAccessUnlessGranted('delete', $apcRessource);
         $id = $apcRessource->getId();
         if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+            $annee = $apcRessource->getSemestre()->getAnnee();
             $this->entityManager->remove($apcRessource);
             $this->entityManager->flush();
             $this->addFlashBag(
@@ -132,12 +133,12 @@ class ApcRessourceController extends BaseController
                 'Ressource supprimée avec succès.'
             );
 
-            return $this->json($id, Response::HTTP_OK);
+            return $this->redirectToRoute('but_ressources_annee', ['annee' => $annee->getId()]);
         }
 
         $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la ressource.');
 
-        return $this->json(false, Response::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**
