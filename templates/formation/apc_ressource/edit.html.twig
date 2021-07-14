@@ -41,3 +41,14 @@
     </script>
 {% endblock %}
 
+{% block bouton_header %}
+    <a href="{{ path('but_ressources_annee', {annee: apc_ressource.semestre.annee.id, semestre: apc_ressource
+    .semestre.id}) }}"
+       class="btn btn-sm btn-outline-info
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-arrow-left-circle"></i>
+        <span>Retour</span>
+    </a>
+{% endblock %}
+
