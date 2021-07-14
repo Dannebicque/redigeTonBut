@@ -9,6 +9,7 @@
 
 namespace App\Controller\competences;
 
+use App\Classes\Apc\ApcApprentissageCritiqueOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcNiveau;
@@ -25,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApcApprentissageCritiqueController extends BaseController
 {
-    #[Route('/{departement}', name: 'administration_apc_apprentissage_critique_index', methods: ['GET'], requirements: ['departement' => '\d+'])]
+    #[Route('/{departement}', name: 'administration_apc_apprentissage_critique_index', requirements: ['departement' => '\d+'], methods: ['GET'])]
     public function index(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
         Departement $departement
@@ -63,23 +64,44 @@ class ApcApprentissageCritiqueController extends BaseController
     }
 
     #[Route("/{id}/edit", name:"administration_apc_apprentissage_critique_edit", methods:["GET","POST"])]
-    public function edit(Request $request, ApcApprentissageCritique $apcApprentissageCritique): Response
+    public function edit(Request $request,
+        ApcApprentissageCritiqueOrdre $apcApprentissageCritiqueOrdre,
+        ApcApprentissageCritique $apcApprentissageCritique): Response
     {
         //todo: a finir
         $form = $this->createForm(ApcApprentissageCritiqueType::class, $apcApprentissageCritique);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
+            $apcApprentissageCritiqueOrdre->deplaceApprentissageCritique($apcApprentissageCritique, $apcApprentissageCritique->getOrdre());
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique modifié avec succès.');
 
-            return $this->redirectToRoute('administration_apc_apprentissage_critique_index');
+            if (null !== $request->request->get('btn_update')) {
+                return $this->redirectToRoute('administration_apc_referentiel_index',
+                    ['departement' => $apcApprentissageCritique->getDepartement()->getId()]);
+            }
         }
 
-        return $this->render('apc/apc_apprentissage_critique/edit.html.twig', [
+        return $this->render('competences/apc_apprentissage_critique/edit.html.twig', [
             'apc_apprentissage_critique' => $apcApprentissageCritique,
             'form'                       => $form->createView(),
         ]);
+    }
+
+    #[Route('/{id}/up', name: 'administration_apc_apprentissage_critique_up', methods: ['GET'])]
+    public function up(
+        Request $request,
+        ApcApprentissageCritique $apcApprentissageCritique
+    ): Response {
+
+    }
+
+    #[Route('/{id}/down', name: 'administration_apc_apprentissage_critique_down', methods: ['GET'])]
+    public function down(
+        Request $request,
+        ApcApprentissageCritique $apcApprentissageCritique
+    ): Response {
+
     }
 
     #[Route("/{id}", name:"administration_apc_apprentissage_critique_delete", methods:["DELETE"])]

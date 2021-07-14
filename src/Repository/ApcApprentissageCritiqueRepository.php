@@ -76,4 +76,17 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
 
         return $t;
     }
+
+    public function findOther(?int $ordreDestination, ApcApprentissageCritique $apcApprentissageCritique)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.ordre = :ordre')
+            ->andWhere('a.niveau = :niveau')
+            ->andWhere('a.id != :id')
+            ->setParameter('ordre', $ordreDestination)
+            ->setParameter('niveau', $apcApprentissageCritique->getNiveau()->getId())
+            ->setParameter('id', $apcApprentissageCritique->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

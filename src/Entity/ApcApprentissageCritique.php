@@ -183,4 +183,13 @@ class ApcApprentissageCritique extends BaseEntity
 
         return $this;
     }
+
+    public function getDepartement(): ?Departement
+    {
+        if ($this->getCompetence() !== null)
+        {
+            return $this->getCompetence()->getDepartement();
+        }
+        return null;
+    }
 }
