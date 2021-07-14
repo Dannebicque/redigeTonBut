@@ -9,6 +9,7 @@
 
 namespace App\Controller\competences;
 
+use App\Classes\Apc\ApcCompetenceOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcCompetenceSemestre;
@@ -33,12 +34,16 @@ class ApcCompetenceController extends BaseController
     }
 
      #[Route("/{id}/edit", name:"administration_apc_competence_edit", methods:["GET","POST"])]
-    public function edit(Request $request, ApcCompetence $apcCompetence): Response
+    public function edit(
+        ApcCompetenceOrdre $apcCompetenceOrdre,
+        Request $request, ApcCompetence $apcCompetence): Response
     {
+        $ordre = $apcCompetence->getCouleur();
         $form = $this->createForm(ApcCompetenceType::class, $apcCompetence);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $apcCompetenceOrdre->deplaceCompetence($apcCompetence, $ordre);
             $this->entityManager->flush();
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence modifiée avec succès.');
 

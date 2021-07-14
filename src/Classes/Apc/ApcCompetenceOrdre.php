@@ -18,26 +18,26 @@ class ApcCompetenceOrdre
 
     }
 
-    public function deplaceCompetence(ApcCompetence $apcCompetence, int $position)
+    public function deplaceCompetence(ApcCompetence $apcCompetence, string $ordreInitial)
     {
         //modifie l'ordre de la ressource
-        $ordreInitial = (int)substr($apcCompetence->getCouleur(),1,1);
+        $ordreDestination = $apcCompetence->getCouleur();
 
         //récupère toutes les ressources à déplacer
-        return $this->inverse($ordreInitial, $ordreInitial + $position, $apcCompetence);
+        return $this->inverse($ordreInitial, $ordreDestination, $apcCompetence);
     }
 
     private function inverse(?int $ordreInitial, ?int $ordreDestination, ApcCompetence $apcCompetence): bool
     {
-        $ressource = $this->apcComptenceRepository->findOneBy([
-            'couleur' => 'c'.$ordreDestination,
-            'departement' => $apcCompetence->getDepartement()->getId()
-        ]);
-        $apcCompetence->setCouleur('c'.$ordreDestination);
+        $ressource = $this->apcComptenceRepository->findOther(
+            $ordreDestination,
+            $apcCompetence
+        );
+        $apcCompetence->setCouleur($ordreDestination);
 
 
         if ($ressource !== null) {
-            $ressource->setCouleur('c'.$ordreInitial);
+            $ressource->setCouleur($ordreInitial);
         }
 
         $this->entityManager->flush();

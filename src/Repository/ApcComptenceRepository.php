@@ -52,4 +52,17 @@ class ApcComptenceRepository extends ServiceEntityRepository
 
         return $t;
     }
+
+    public function findOther(?int $ordreDestination, ApcCompetence $competence)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.couleur = :couleur')
+            ->andWhere('a.departement = :departement')
+            ->andWhere('a.id != :id')
+            ->setParameter('couleur', $ordreDestination)
+            ->setParameter('departement', $competence->getDepartement()->getId())
+            ->setParameter('id', $competence->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
