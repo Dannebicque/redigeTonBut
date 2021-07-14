@@ -20,7 +20,8 @@
             {% endfor %}
         </tr>
         <tr>
-            <td class="text-center cell-jaune-pale" colspan="2">Volume horaire des enseignements définis nationalement</td>
+            <td class="text-center cell-jaune-pale" colspan="2">Volume horaire des enseignements définis nationalement
+            </td>
             <td colspan="{{ saes|length }}" rowspan="2" class="cell-jaune">&nbsp;</td>
             {% for ressource in ressources %}
                 <td class="text-rouge">
@@ -75,24 +76,28 @@
         </tr>
         <tr>
             <td colspan="2">&nbsp;</td>
-            <td colspan="{{ saes|length + ressources|length  }}" class="text-end cell-vert">
+            <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
                 Volume horaire total des enseignements (calculé)
             </td>
             <td class="cell-vert text-rouge fw-bold">430</td>
-            <td class="cell-jaune-pale fw-bold">
-                <input type="text" class="form-control" value="430" style="min-width: 50px">
+            <td class="cell-jaune-pale fw-bold text-center">
+{#                <input type="text" class="form-control" value="430" style="min-width: 50px">#}
+                {{ semestre.nbHeuresRessourceSae }}
             </td>
-            <td colspan="2" class="cell-jaune-pale">← rappel volume total d'enseignement issu du tableau global des 6 semestres</td>
+            <td colspan="2" class="cell-jaune-pale">← rappel volume total d'enseignement issu du tableau global des 6
+                                                    semestres
+            </td>
         </tr>
         <tr>
             <td colspan="2">&nbsp;</td>
-            <td colspan="{{ saes|length + ressources|length  }}" class="text-end cell-vert">
+            <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
                 Dont TP
             </td>
             <td class="cell-vert text-rouge fw-bold">120</td>
-            <td class="cell-jaune text-rouge fw-bold">27,91 %</td>
+            <td class="cell-jaune text-rouge fw-bold text-center">27,91 %</td>
             <td colspan="2" class="cell-jaune text-rouge fw-bold">
-                ← pourcentage de tp défini localement et nationalement</td>
+                ← pourcentage de tp défini localement et nationalement
+            </td>
         </tr>
         <tr>
             <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tuteuré</td>
@@ -103,11 +108,12 @@
                 &nbsp;
             </td>
             <td class="cell-gris texte-rouge fw-bold">80</td>
-            <td class="cell-jaune fw-bold">
-                <input type="text" class="form-control" value="80">
+            <td class="cell-jaune fw-bold text-center">
+                {{ semestre.nbHeuresProjet }}
             </td>
             <td colspan="2" class="cell-jaune text-center">← rappel volume de projet tuteuré issu du tableau glabal
-                                                           des 6 semestres</td>
+                                                           des 6 semestres
+            </td>
         </tr>
         <tr>
             <td colspan="2">&nbsp;</td>
@@ -115,9 +121,10 @@
                 Volume horaire total des enseignements avec projet tuteuré
             </td>
             <td class="cell-vert texte-rouge fw-bold">510</td>
-            <td class="cell-jaune fw-bold">510</td>
+            <td class="cell-jaune fw-bold text-center">{{ semestre.nbHeuresRessourceSae+semestre.nbHeuresProjet }}</td>
             <td colspan="2" class="cell-jaune text-center">← rappel volume total enseignement + projet tuteuré issu du
-                                                     tableau global 6 semestres</td>
+                                                           tableau global 6 semestres
+            </td>
         </tr>
     </table>
 </div>

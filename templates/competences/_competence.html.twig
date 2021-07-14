@@ -68,12 +68,12 @@
                                     {id:ac.id}) }}" class="text-black text-small">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a href="{{ path('administration_apc_apprentissage_critique_up',
-                                    {id:ac.id}) }}" class="text-black text-small">
+                                <a href="{{ path('administration_apc_apprentissage_critique_deplace',
+                                    {id:ac.id, position: -1}) }}" class="text-black text-small">
                                     <i class="bi bi-arrow-up"></i>
                                 </a>
-                                <a href="{{ path('administration_apc_apprentissage_critique_down',
-                                    {id:ac.id}) }}" class="text-black text-small">
+                                <a href="{{ path('administration_apc_apprentissage_critique_deplace',
+                                    {id:ac.id, position:1}) }}" class="text-black text-small">
                                     <i class="bi bi-arrow-down"></i>
                                 </a>
 

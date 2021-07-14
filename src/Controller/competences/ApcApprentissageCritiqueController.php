@@ -10,13 +10,16 @@
 namespace App\Controller\competences;
 
 use App\Classes\Apc\ApcApprentissageCritiqueOrdre;
+use App\Classes\Apc\ApcRessourceOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcNiveau;
+use App\Entity\ApcRessource;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Form\ApcApprentissageCritiqueType;
 use App\Repository\ApcApprentissageCritiqueRepository;
+use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,15 +68,14 @@ class ApcApprentissageCritiqueController extends BaseController
 
     #[Route("/{id}/edit", name:"administration_apc_apprentissage_critique_edit", methods:["GET","POST"])]
     public function edit(Request $request,
-        ApcApprentissageCritiqueOrdre $apcApprentissageCritiqueOrdre,
         ApcApprentissageCritique $apcApprentissageCritique): Response
     {
-        //todo: a finir
         $form = $this->createForm(ApcApprentissageCritiqueType::class, $apcApprentissageCritique);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $apcApprentissageCritiqueOrdre->deplaceApprentissageCritique($apcApprentissageCritique, $apcApprentissageCritique->getOrdre());
+            $apcApprentissageCritique->setCode(Codification::codeApprentissageCritique($apcApprentissageCritique));
+            $this->entityManager->flush();//todo: vérifier doublon ou inversion? Mais dans ce cas, il faut garder la valeur d'origine
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique modifié avec succès.');
 
             if (null !== $request->request->get('btn_update')) {
@@ -88,32 +90,16 @@ class ApcApprentissageCritiqueController extends BaseController
         ]);
     }
 
-    #[Route('/{id}/up', name: 'administration_apc_apprentissage_critique_up', methods: ['GET'])]
-    public function up(
+    #[Route('/{id}/deplace/{position}', name: 'administration_apc_apprentissage_critique_deplace', methods: ['GET'])]
+    public function deplace(
         Request $request,
-        ApcApprentissageCritique $apcApprentissageCritique
-    ): Response {
+        ApcApprentissageCritiqueOrdre $apcRessourceOrdre,
+        ApcApprentissageCritique $apcApprentissageCritique, int $position): Response
+    {
+        //todo: a confirmer $this->denyAccessUnlessGranted('edit', $apcApprentissageCritique);
+        $apcRessourceOrdre->deplaceApprentissageCritique($apcApprentissageCritique, $position);
 
-    }
+        return $this->redirect($request->headers->get('referer'));
 
-    #[Route('/{id}/down', name: 'administration_apc_apprentissage_critique_down', methods: ['GET'])]
-    public function down(
-        Request $request,
-        ApcApprentissageCritique $apcApprentissageCritique
-    ): Response {
-
-    }
-
-    #[Route("/{id}", name:"administration_apc_apprentissage_critique_delete", methods:["DELETE"])]
-    public function delete(Request $request, ApcApprentissageCritique $apcApprentissageCritique): Response
-    {//todo: a finir
-        if ($this->isCsrfTokenValid('delete' . $apcApprentissageCritique->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($apcApprentissageCritique);
-            $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique supprimé avec succès.');
-        }
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de l\'apprentissage critique.');
-
-        return $this->redirectToRoute('administration_apc_apprentissage_critique_index');
     }
 }
