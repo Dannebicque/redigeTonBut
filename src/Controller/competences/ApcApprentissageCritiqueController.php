@@ -102,7 +102,7 @@ class ApcApprentissageCritiqueController extends BaseController
         ApcApprentissageCritique $apcApprentissageCritique, int $position): Response
     {
         //todo: a confirmer $this->denyAccessUnlessGranted('edit', $apcApprentissageCritique);
-        $apcRessourceOrdre->deplaceApprentissageCritique($apcApprentissageCritique, $position);
+        $apcRessourceOrdre->deplaceApprentissageCritiquePosition($apcApprentissageCritique, $position);
 
         return $this->redirect($request->headers->get('referer'));
 

@@ -48,4 +48,15 @@ class ApcApprentissageCritiqueOrdre
 
         return true;
     }
+
+    public function deplaceApprentissageCritiquePosition(
+        ApcApprentissageCritique $apcApprentissageCritique,
+        int $position
+    ) {
+        //modifie l'ordre de la ressource
+        $ordreInitial = $apcApprentissageCritique->getOrdre();
+
+        //récupère toutes les ressources à déplacer
+        return $this->inverse($ordreInitial, $ordreInitial + $position, $apcApprentissageCritique);
+    }
 }
