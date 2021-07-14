@@ -61,7 +61,7 @@ class ApcRessource extends AbstractMatiere
     private ?int $ordre = 1;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ApcRessource::class, inversedBy="apcRessources", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity=ApcRessource::class, inversedBy="apcRessources")
      */
     private Collection $ressourcesPreRequises;
 
