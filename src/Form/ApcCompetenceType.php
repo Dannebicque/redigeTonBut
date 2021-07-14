@@ -22,58 +22,22 @@ class ApcCompetenceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom_court', TextType::class, ['help' => 'Mot désignant la compétence'])
-            ->add('libelle', TextType::class, ['help' => 'Libellé long de la compétence'])
+            ->add('nom_court', TextType::class, ['help' => 'Mot désignant la compétence. 50 caractères maximum.', 'attr' => ['maxlength' => 50]])
+            ->add('libelle', TextType::class, ['help' => 'Libellé long de la compétence', 'disabled' => true])
             ->add('couleur', ChoiceType::class, [
                 'choices' => [
-                    'Rouge' => 'c1',
-                    'Orange' => 'c2',
-                    'Jaune' => 'c3',
-                    'Vert' => 'c4',
-                    'Bleu' => 'c5',
-                    'Violet' => 'c6',
+                    '1' => 'c1',
+                    '2' => 'c2',
+                    '3' => 'c3',
+                    '4' => 'c4',
+                    '5' => 'c5',
+                    '6' => 'c6',
                 ],
                 'expanded' => true,
+                'label' => 'Ordre de la compétence',
+                'help'  => 'Si une compétence occupe déjà la place elles seront inversées'
             ])
-            ->add('apcSituationProfessionnelles', CollectionType::class, [
-                'entry_type' => ApcSituationProfessionnelleType::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'prototype' => true,
-                'allow_delete' => true,
-                'label' => 'Situations professionnelles de la compétence',
-                'by_reference' => false,
-                'attr' => [
-                    'class' => 'selector-niveauSituationsProfessionnelles',
-                ],
-                'help' => 'Ajoutez les situations professionnelles de la compétence.',
-            ])
-            ->add('apcComposanteEssentielles', CollectionType::class, [
-                'entry_type' => ApcComposanteEssentielleType::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'prototype' => true,
-                'allow_delete' => true,
-                'label' => 'Composantes essentielles de la compétence',
-                'by_reference' => false,
-                'attr' => [
-                    'class' => 'selector-niveauComposanteEssentielles',
-                ],
-                'help' => 'Ajoutez les composantes essentielles de la compétence.',
-            ])
-            ->add('apcNiveaux', CollectionType::class, [
-                'entry_type' => ApcNiveauType::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'prototype' => true,
-                'allow_delete' => true,
-                'label' => 'Niveaux de la compétence',
-                'by_reference' => false,
-                'attr' => [
-                    'class' => 'selector-niveauCompetence',
-                ],
-                'help' => 'Ajoutez les niveaux de la compétence.',
-            ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

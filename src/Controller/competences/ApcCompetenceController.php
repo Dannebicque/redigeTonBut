@@ -13,7 +13,6 @@ use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcCompetenceSemestre;
 use App\Entity\Constantes;
-use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Form\ApcCompetenceType;
 use App\Repository\ApcCompetenceSemestreRepository;
@@ -25,30 +24,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route("/apc/competence")]
 class ApcCompetenceController extends BaseController
 {
-
-
-    #[Route("/{departement}/new", name:"administration_apc_competence_new", methods:["GET","POST"])]
-    public function new(Request $request, Departement $departement): Response
-    {
-        $apcComptence = new ApcCompetence($departement);
-        $form = $this->createForm(ApcCompetenceType::class, $apcComptence);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($apcComptence);
-            $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence ajoutée avec succès.');
-
-            return $this->redirectToRoute('administration_apc_referentiel_index', ['diplome' => $departement->getId()]);
-        }
-
-        return $this->render('competences/apc_competence/new.html.twig', [
-            'apc_competence' => $apcComptence,
-            'form' => $form->createView(),
-            'departement' => $departement,
-        ]);
-    }
-
      #[Route("/{id}/detail", name:"administration_apc_competence_show", methods:["GET"])]
     public function show(ApcCompetence $apcCompetence): Response
     {
@@ -67,45 +42,17 @@ class ApcCompetenceController extends BaseController
             $this->entityManager->flush();
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence modifiée avec succès.');
 
-            return $this->redirectToRoute('administration_apc_competence_index',
-                ['departement' => $apcCompetence->getDepartement()->getId()]);
+            if (null !== $request->request->get('btn_update')) {
+                return $this->redirectToRoute('administration_apc_referentiel_index',
+                    ['departement' => $apcCompetence->getDepartement()->getId()]);
+
+            }
         }
 
         return $this->render('competences/apc_competence/edit.html.twig', [
             'apc_competence' => $apcCompetence,
             'form' => $form->createView(),
         ]);
-    }
-
-    #[Route("/{id}", name:"administration_apc_competence_delete", methods:["DELETE"])]
-    public function delete(Request $request, ApcCompetence $apcCompetence): Response
-    {
-        $departement = $apcCompetence->getDepartement();
-
-        if ($this->isCsrfTokenValid('delete' . $apcCompetence->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($apcCompetence);
-            $this->entityManager->flush();
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence supprimée avec succès.');
-        }
-
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la compétence.');
-
-        return $this->redirectToRoute('administration_apc_referentiel_index',
-            [
-                'departement' => $departement->getId(),
-            ]);
-    }
-
-    #[Route("/{id}/duplicate", name:"administration_apc_competence_duplicate", methods:["GET","POST"])]
-    public function duplicate(ApcCompetence $apcCompetence): Response
-    {
-        $newApcCompetence = clone $apcCompetence;
-
-        $this->entityManager->persist($newApcCompetence);
-        $this->entityManager->flush();
-        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence dupliquée avec succès.');
-
-        return $this->redirectToRoute('administration_apc_competence_edit', ['id' => $newApcCompetence->getId()]);
     }
 
     /**
