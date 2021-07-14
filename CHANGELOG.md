@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.1.0...v1.1.1) (2021-07-14)
+
+
+### Bug Fixes
+
+* Compétences selon le parcours. ([5a11481](https://github.com/Dannebicque/redigeTonBut/commit/5a11481596a098def20b5e2771ef90a9f6a34169))
+* Ordre des AC. ([0cf8dc6](https://github.com/Dannebicque/redigeTonBut/commit/0cf8dc6282400017ca05aa0676cb7b06f790da7b))
+* typo fichiers word ([ff689b9](https://github.com/Dannebicque/redigeTonBut/commit/ff689b92f0c770aeb02e307323b58d5386c4f4e2))
+
 ## [1.1.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.0.2...v1.1.0) (2021-07-14)
 
 
