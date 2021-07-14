@@ -102,8 +102,10 @@ class ApcRessourceController extends BaseController
             if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
                 return $this->redirectToRoute('but_ressources_annee',
                     ['annee' => $apcRessource->getSemestre()->getAnnee()->getId()]);
-
             }
+
+            return $this->redirectToRoute('formation_apc_ressource_edit',
+                ['id' => $apcRessource->getId()]);
         }
 
         return $this->render('formation/apc_ressource/edit.html.twig', [
