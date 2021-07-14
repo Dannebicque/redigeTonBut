@@ -15,7 +15,7 @@
     "author": "David Annebicque",
     "name": "orebut",
     "private": true,
-    "version": "1.0.1",
+    "version": "1.0.2",
     "auto-changelog": {
         "template": "keepachangelog",
         "unreleased": true,
@@ -26,7 +26,7 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "version": "auto-changelog -p && git add CHANGELOG.md"
+        "version": "auto-changelog -p --starting-version 1.0.1 && git add CHANGELOG.md"
     },
     "dependencies": {
         "@popperjs/core": "^2.9.2",
