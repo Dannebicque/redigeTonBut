@@ -104,9 +104,6 @@ class ApcRessourceController extends BaseController
                     ['annee' => $apcRessource->getSemestre()->getAnnee()->getId()]);
 
             }
-
-            return $this->redirectToRoute('formation_apc_ressource_edit',
-                ['id' => $apcRessource->getId()]);
         }
 
         return $this->render('formation/apc_ressource/edit.html.twig', [
