@@ -154,12 +154,13 @@ class TableauController extends BaseController
 //        ]);
 //    }
 
-    #[Route('/validation/{annee}', name: 'validation_sae_ac_annee', requirements: ['annee' => '\d+'])]
+    #[Route('/validation/{annee}/{parcours}', name: 'validation_sae_ac_annee', requirements: ['annee' => '\d+'])]
     public function validationSaeAc(
-        Annee $annee
+        Annee $annee, ApcParcours $parcours = null
     ): Response {
         return $this->render('tableau/validation_sae_ac.html.twig', [
             'annee' => $annee,
+            'parcours' => $parcours,
             'semestres' => $annee->getSemestres()
         ]);
     }
@@ -194,6 +195,7 @@ class TableauController extends BaseController
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
+        ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
         ApcNiveauRepository $apcNiveauRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcRessourceRepository $apcRessourceRepository,
@@ -203,9 +205,11 @@ class TableauController extends BaseController
         if ($parcours === null) {
             $saes = $apcSaeRepository->findBySemestre($semestre);
             $ressources = $apcRessourceRepository->findBySemestre($semestre);
+            $niveaux = $apcNiveauRepository->findBySemestre($semestre);
         } else {
             $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
             $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+            $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
         }
 
 
@@ -251,7 +255,7 @@ class TableauController extends BaseController
         return $this->render('tableau/_grilleSemestre.html.twig',
             [
                 'semestre' => $semestre,
-                'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
+                'niveaux' => $niveaux,
                 'saes' => $saes,
                 'ressources' => $ressources,
                 'tab' => $tab,
@@ -331,10 +335,21 @@ class TableauController extends BaseController
     }
 
     public function tableauValidationAnneeSae(
+        ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcSaeRepository $apcSaeRepository,
-        Annee $annee
+        Annee $annee,
+        ApcParcours $parcours = null
     ) {
-        $saes = $apcSaeRepository->findByAnnee($annee);
+
+        if ($parcours === null) {
+            $niveaux = $annee->getApcNiveaux();
+            $saes = $apcSaeRepository->findByAnnee($annee);
+        } else {
+            $niveaux = $apcParcoursNiveauRepository->findBySemestre($annee->getSemestres()[0], $parcours);
+            $saes = $apcSaeParcoursRepository->findByAnnee($annee, $parcours);
+        }
+
 
         $tab = [];
         $tab['saes'] = [];
@@ -351,7 +366,7 @@ class TableauController extends BaseController
         return $this->render('tableau/_grilleValidation.html.twig',
             [
                 'annee' => $annee,
-                'niveaux' => $annee->getApcNiveaux(),
+                'niveaux' => $niveaux,
                 'saes' => $saes,
                 'tab' => $tab,
             ]);
@@ -365,19 +380,16 @@ class TableauController extends BaseController
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcNiveauRepository $apcNiveauRepository,
         Semestre $semestre,
-        ApcParcours $apcParcours = null,
+        ApcParcours $parcours = null,
     ) {
-
-        if ($apcParcours === null) {
-
+        if ($parcours === null) {
                 $saes = $apcSaeRepository->findBySemestre($semestre);
                 $ressources= $apcRessourceRepository->findBySemestre($semestre);
                  $niveaux =$apcNiveauRepository->findBySemestre($semestre);
         } else {
-                $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $apcParcours);
-                $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $apcParcours);
-                $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $apcParcours); //todo: a affiner...
-
+                $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+                $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+                $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
         }
 
         return $this->render('tableau/_preconisationsSemestre.html.twig',

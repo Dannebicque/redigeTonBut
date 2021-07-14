@@ -9,7 +9,7 @@
         <div class="card-body">
             {{ render(controller(
                 'App\\Controller\\TableauController::tableauValidationAnneeSae',
-                { 'annee': annee.id }
+                { 'annee': annee.id, 'parcours' : parcours.id }
             )) }}
         </div>
     </div>
