@@ -20,13 +20,13 @@ class ApcApprentissageCritiqueOrdre
         $this->apcApprentissageCritiqueRepository = $apcApprentissageCritiqueRepository;
     }
 
-    public function deplaceApprentissageCritique(ApcApprentissageCritique $apcApprentissageCritique, int $position)
+    public function deplaceApprentissageCritique(ApcApprentissageCritique $apcApprentissageCritique, int $ordreInitial)
     {
         //modifie l'ordre de la ressource
-        $ordreInitial = $apcApprentissageCritique->getOrdre();
+        $ordreFinal = $apcApprentissageCritique->getOrdre();
 
         //récupère toutes les ressources à déplacer
-        return $this->inverse($ordreInitial, $ordreInitial + $position, $apcApprentissageCritique);
+        return $this->inverse($ordreInitial, $ordreFinal, $apcApprentissageCritique);
     }
 
     private function inverse(?int $ordreInitial, ?int $ordreDestination, ApcApprentissageCritique $apcApprentissageCritique): bool

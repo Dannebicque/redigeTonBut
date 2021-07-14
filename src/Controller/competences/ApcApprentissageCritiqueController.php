@@ -68,13 +68,15 @@ class ApcApprentissageCritiqueController extends BaseController
 
     #[Route("/{id}/edit", name:"administration_apc_apprentissage_critique_edit", methods:["GET","POST"])]
     public function edit(Request $request,
+        ApcApprentissageCritiqueOrdre $apcApprentissageCritiqueOrdre,
         ApcApprentissageCritique $apcApprentissageCritique): Response
     {
+        $ordre = $apcApprentissageCritique->getOrdre();
         $form = $this->createForm(ApcApprentissageCritiqueType::class, $apcApprentissageCritique);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $apcApprentissageCritique->setCode(Codification::codeApprentissageCritique($apcApprentissageCritique));
+            $apcApprentissageCritiqueOrdre->deplaceApprentissageCritique($apcApprentissageCritique, $ordre);
             $this->entityManager->flush();//todo: vérifier doublon ou inversion? Mais dans ce cas, il faut garder la valeur d'origine
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique modifié avec succès.');
 
@@ -82,6 +84,9 @@ class ApcApprentissageCritiqueController extends BaseController
                 return $this->redirectToRoute('administration_apc_referentiel_index',
                     ['departement' => $apcApprentissageCritique->getDepartement()->getId()]);
             }
+
+            return $this->redirectToRoute('administration_apc_apprentissage_critique_edit',
+                ['id' => $apcApprentissageCritique->getId()]);
         }
 
         return $this->render('competences/apc_apprentissage_critique/edit.html.twig', [
