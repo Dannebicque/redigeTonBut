@@ -118,6 +118,21 @@ class Semestre extends BaseEntity
      */
     private float $nbHeuresEnseignementRessourceNational = 0;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbSemaines = 20;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbSemainesConges = 3;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbDemiJournees = 9;
+
     public function __construct()
     {
         $this->apcRessources = new ArrayCollection();
@@ -390,6 +405,42 @@ class Semestre extends BaseEntity
     public function setNbHeuresEnseignementRessourceNational(float $nbHeuresEnseignementRessourceNational): self
     {
         $this->nbHeuresEnseignementRessourceNational = $nbHeuresEnseignementRessourceNational;
+
+        return $this;
+    }
+
+    public function getNbSemaines(): float
+    {
+        return $this->nbSemaines;
+    }
+
+    public function setNbSemaines(float $nbSemaines): self
+    {
+        $this->nbSemaines = $nbSemaines;
+
+        return $this;
+    }
+
+    public function getNbSemainesConges(): float
+    {
+        return $this->nbSemainesConges;
+    }
+
+    public function setNbSemainesConges(float $nbSemainesConges): self
+    {
+        $this->nbSemainesConges = $nbSemainesConges;
+
+        return $this;
+    }
+
+    public function getNbDemiJournees(): float
+    {
+        return $this->nbDemiJournees;
+    }
+
+    public function setNbDemiJournees(float $nbDemiJournees): self
+    {
+        $this->nbDemiJournees = $nbDemiJournees;
 
         return $this;
     }

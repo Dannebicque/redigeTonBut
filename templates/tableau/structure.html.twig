@@ -82,6 +82,7 @@
                             /></td>
                     {% endfor %}
                     <td class="text-center">
+                        <span x-text="donnees.departement.totalAdaptationLocale"></span>
                     </td>
                     <td class="text-center fw-bold">
 
@@ -231,7 +232,12 @@
                     <th>Nbre de semaines</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
-                            <span x-text="donnees[{{ i }}].nbSemaines"></span>
+                            <input type="text" class="form-control"
+                                   data-field="nbSemaines"
+                                   data-semestre="{{ i }}"
+                                   x-model.number="donnees[{{ i }}].nbSemaines"
+                                   @keyup="update"
+                            />
                         </td>
                     {% endfor %}
                     <td class="text-center">
@@ -244,7 +250,12 @@
                     <th>Nbre de semaines de congés</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
-                            <span x-text="donnees[{{ i }}].nbSemainesConges"></span>
+                            <input type="text" class="form-control"
+                                   data-field="nbSemainesConges"
+                                   data-semestre="{{ i }}"
+                                   x-model.number="donnees[{{ i }}].nbSemainesConges"
+                                   @keyup="update"
+                            />
                         </td>
                     {% endfor %}
                     <td class="text-center">
@@ -323,7 +334,12 @@
                     <th>Demies journées</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
-                            <span x-text="donnees[{{ i }}].nbDemiJournees"></span>
+                            <input type="text" class="form-control"
+                                   data-field="nbDemiJournees"
+                                   data-semestre="{{ i }}"
+                                   x-model.number="donnees[{{ i }}].nbDemiJournees"
+                                   @keyup="update"
+                            />
                         </td>
                     {% endfor %}
                     <td></td>

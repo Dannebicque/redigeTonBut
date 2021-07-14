@@ -11,14 +11,14 @@ class StructureSemestre
     public float $nbHeuresRessourcesSae;
     public float $pourcentageAdaptationLocale;
 
-    public int $nbSemaines;
-    public int $nbSemainesConges;
+    public float $nbSemaines;
+    public float $nbSemainesConges;
     public int $nbSemainesStageMin;
     public int $nbSemainesStageMax;
     public int $nbSemainesCoursProjet;
     public float $nbHeuresProjet;
     public float $nbHeuresCoursProjet;
-    public int $nbDemiJournees;
+    public float $nbDemiJournees;
     public float $dureeHebdo;
     public float $nbMoyenneHeuresDemiJournee;
     public float $nbHeuresCoursHebdo;
@@ -40,18 +40,18 @@ class StructureSemestre
         $this->nbHeuresEnseignementRessourceLocale = $this->nbHeuresEnseignementLocale - $this->nbHeuresEnseignementSaeLocale;
         $this->nbHeuresEnseignementRessourceNational = $this->nbHeuresRessourcesSae-$this->nbHeuresEnseignementLocale;
 
-        $this->nbSemaines = 17;
-        $this->nbSemainesConges = 3;
+        $this->nbSemaines = $semestre->getNbSemaines();
+        $this->nbSemainesConges = $semestre->getNbSemainesConges();
         $this->nbSemainesStageMin = $semestre->getNbSemaineStageMin();
         $this->nbSemainesStageMax = $semestre->getNbSemainesStageMax();
         $this->nbSemainesCoursProjet = $this->nbSemaines - $this->nbSemainesConges;
         $this->nbHeuresProjet = $semestre->getNbHeuresProjet();
         $this->nbHeuresCoursProjet = $this->nbHeuresRessourcesSae + $this->nbHeuresProjet;
-        $this->nbDemiJournees = 9;
-        $this->dureeHebdo = $this->nbHeuresCoursProjet / $this->nbSemainesCoursProjet;
-        $this->nbMoyenneHeuresDemiJournee = $this->dureeHebdo / $this->nbDemiJournees;
-        $this->nbHeuresCoursHebdo = $this->nbHeuresRessourcesSae / $this->nbSemainesCoursProjet;
-        $this->nbHeuresHebdoProjet = $this->nbHeuresProjet / $this->nbSemainesCoursProjet;
+        $this->nbDemiJournees = $semestre->getNbDemiJournees();
+        $this->dureeHebdo = $this->nbSemainesCoursProjet !== 0 ? $this->nbHeuresCoursProjet / $this->nbSemainesCoursProjet : 0;
+        $this->nbMoyenneHeuresDemiJournee = $this->nbDemiJournees !== 0.0 ? $this->dureeHebdo / $this->nbDemiJournees : 0;
+        $this->nbHeuresCoursHebdo = $this->nbSemainesCoursProjet !== 0 ? $this->nbHeuresRessourcesSae / $this->nbSemainesCoursProjet : 0;
+        $this->nbHeuresHebdoProjet = $this->nbSemainesCoursProjet !== 0 ? $this->nbHeuresProjet / $this->nbSemainesCoursProjet : 0;
 
     }
 

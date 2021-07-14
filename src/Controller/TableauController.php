@@ -98,6 +98,15 @@ class TableauController extends BaseController
                 case 'nbHeuresEnseignementRessourceNational':
                     $semestre->setNbHeuresEnseignementRessourceNational(Convert::convertToFloat($parametersAsArray['valeur']));
                     break;
+                case 'nbSemaines':
+                    $semestre->setNbSemaines(Convert::convertToFloat($parametersAsArray['valeur']));
+                    break;
+                case 'nbSemainesConges':
+                    $semestre->setNbSemainesConges(Convert::convertToFloat($parametersAsArray['valeur']));
+                    break;
+                case 'nbDemiJournees':
+                    $semestre->setNbDemiJournees(Convert::convertToFloat($parametersAsArray['valeur']));
+                    break;
             }
 
             $this->entityManager->flush();

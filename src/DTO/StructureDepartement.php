@@ -27,6 +27,7 @@ class StructureDepartement
     public float $nbHeuresCoursHebdo = 0;
     public float $nbHeuresHebdoProjet = 0;
     private float $totalPourcentageAdaptationLocale = 0;
+    private float $totalAdaptationLocale = 0;
 
     public function setDepartement(Departement $departement): void
     {
@@ -36,7 +37,7 @@ class StructureDepartement
     public function addSemestre(StructureSemestre $semestre): void
     {
         $this->nbHeuresRessourcesSae += $semestre->nbHeuresRessourcesSae;
-        $this->totalPourcentageAdaptationLocale += $semestre->pourcentageAdaptationLocale;
+        $this->totalAdaptationLocale += $semestre->nbHeuresEnseignementLocale;
         $this->nbHeuresEnseignementLocale += $semestre->nbHeuresEnseignementLocale;
 
         $this->nbSemaines += $semestre->nbSemaines;
@@ -55,7 +56,7 @@ class StructureDepartement
 
     public function getMoyenneAdaptationLocale(): float
     {
-        return $this->totalPourcentageAdaptationLocale / 6;
+        return   $this->totalPourcentageAdaptationLocale / $this->departement->getNbHeuresDiplome() * 100;
     }
 
     public function getJson(): array
@@ -64,6 +65,7 @@ class StructureDepartement
             'nbHeuresRessourcesSae' => $this->nbHeuresRessourcesSae,
             'totalPourcentageAdaptationLocale' => $this->getMoyenneAdaptationLocale(),
             'nbHeuresEnseignementLocale' => $this->nbHeuresEnseignementLocale,
+            'totalAdaptationLocale' => $this->totalAdaptationLocale,
 
             'nbSemaines' => $this->nbSemaines,
             'nbSemainesConges' => $this->nbSemainesConges,
