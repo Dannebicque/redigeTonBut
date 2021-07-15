@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.1.1...v1.1.2) (2021-07-15)
+
+
+### Features
+
+* Tableau de volume horaire/semestre et par parcours fonctionnel ([cce75d6](https://github.com/Dannebicque/redigeTonBut/commit/cce75d65e9ffaf3fe88cda915452ddecd038ac2d))
+
 ### [1.1.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.1.0...v1.1.1) (2021-07-14)
 
 
