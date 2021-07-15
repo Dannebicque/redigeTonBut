@@ -28,6 +28,7 @@ class StructureDepartement
     public float $nbHeuresHebdoProjet = 0;
     private float $totalPourcentageAdaptationLocale = 0;
     private float $totalAdaptationLocale = 0;
+    private float $totalTp = 0;
 
     public function setDepartement(Departement $departement): void
     {
@@ -52,6 +53,7 @@ class StructureDepartement
         $this->nbMoyenneHeuresDemiJournee += $semestre->nbMoyenneHeuresDemiJournee;
         $this->nbHeuresCoursHebdo += $semestre->nbHeuresCoursHebdo;
         $this->nbHeuresHebdoProjet += $semestre->nbHeuresHebdoProjet;
+        $this->totalTp += $semestre->nbHeuresTpLocale + $semestre->nbHeuresTpNational;
     }
 
     public function getMoyenneAdaptationLocale(): float
@@ -68,6 +70,8 @@ class StructureDepartement
             'totalAdaptationLocale' => $this->totalAdaptationLocale,
 
             'nbSemaines' => $this->nbSemaines,
+            'totalTp' => $this->totalTp,
+            'ecartTotalTp' => 700 - $this->totalTp,
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
             'nbSemainesStageMax' => $this->nbSemainesStageMax,

@@ -27,8 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TableauController extends BaseController
 {
     #[Route('/structure', name: 'structure')]
-    public function structure(
-    ): Response
+    public function structure(): Response
     {
         return $this->render('tableau/structure.html.twig', [
         ]);
@@ -100,7 +99,7 @@ class TableauController extends BaseController
                 case 'nbHeuresProjet':
                     $semestre->setNbHeuresProjet(Convert::convertToFloat($parametersAsArray['valeur']));
                     break;
-                    case 'nbHeuresEnseignementLocale':
+                case 'nbHeuresEnseignementLocale':
                     $semestre->setNbHeuresEnseignementLocale(Convert::convertToFloat($parametersAsArray['valeur']));
                     break;
                 case 'nbHeuresEnseignementSaeLocale':
@@ -120,6 +119,12 @@ class TableauController extends BaseController
                     break;
                 case 'nbDemiJournees':
                     $semestre->setNbDemiJournees(Convert::convertToFloat($parametersAsArray['valeur']));
+                    break;
+                case 'nbHeuresTpNational':
+                    $semestre->setNbHeuresTpNational(Convert::convertToFloat($parametersAsArray['valeur']));
+                    break;
+                case 'nbHeuresTpLocale':
+                    $semestre->setNbHeuresTpLocale(Convert::convertToFloat($parametersAsArray['valeur']));
                     break;
             }
 
@@ -170,7 +175,8 @@ class TableauController extends BaseController
 
     #[Route('/validation/{annee}/{parcours}', name: 'validation_sae_ac_annee', requirements: ['annee' => '\d+'])]
     public function validationSaeAc(
-        Annee $annee, ApcParcours $parcours = null
+        Annee $annee,
+        ApcParcours $parcours = null
     ): Response {
         return $this->render('tableau/validation_sae_ac.html.twig', [
             'annee' => $annee,
@@ -250,10 +256,10 @@ class TableauController extends BaseController
         }
 
         foreach ($compSae as $comp) {
-           if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
-               $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
-               $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
-           }
+            if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
+                $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
+                $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
+            }
             $coefficients[$comp->getCompetence()->getId()]['saes'][$comp->getSae()->getId()] = $comp->getCoefficient();
         }
 
@@ -337,7 +343,7 @@ class TableauController extends BaseController
         return $this->render('tableau/_grilleHoraire.html.twig',
             [
                 'semestre' => $semestre,
-               // 'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
+                // 'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
                 'saes' => $saes,
                 'ressources' => $ressources,
 //                'tab' => $tab,
@@ -394,13 +400,13 @@ class TableauController extends BaseController
         ApcParcours $parcours = null,
     ) {
         if ($parcours === null) {
-                $saes = $apcSaeRepository->findBySemestre($semestre);
-                $ressources= $apcRessourceRepository->findBySemestre($semestre);
-                 $niveaux =$apcNiveauRepository->findBySemestre($semestre);
+            $saes = $apcSaeRepository->findBySemestre($semestre);
+            $ressources = $apcRessourceRepository->findBySemestre($semestre);
+            $niveaux = $apcNiveauRepository->findBySemestre($semestre);
         } else {
-                $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
-                $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
-                $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
+            $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+            $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+            $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
         }
 
         return $this->render('tableau/_preconisationsSemestre.html.twig',

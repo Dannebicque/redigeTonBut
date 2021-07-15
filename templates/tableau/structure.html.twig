@@ -28,7 +28,7 @@
                                    data-field="nbHeuresRessourcesSae"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbHeuresRessourcesSae"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                             /></td>
                     {% endfor %}
                     <td class="text-center" x-html="badgeSeuilInferieur(donnees.departement.nbHeuresRessourcesSae, {{ constant
@@ -53,7 +53,7 @@
                             <div class="input-group mb-3">
                                 <input type="text" class="adaptationLocale form-control"
                                        x-model.number="donnees[{{ i }}].pourcentageAdaptationLocale"
-                                       @keyup="update"
+                                       @keyup.debounce="update"
                                        data-field="pourcentageAdaptationLocale"
                                        data-semestre="{{ i }}"
 
@@ -78,7 +78,7 @@
                                    data-field="nbHeuresEnseignementLocale"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbHeuresEnseignementLocale"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                             /></td>
                     {% endfor %}
                     <td class="text-center">
@@ -98,7 +98,7 @@
                                    data-field="nbHeuresEnseignementSaeLocale"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbHeuresEnseignementSaeLocale"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                             /></td>
                     {% endfor %}
                     <td>
@@ -116,7 +116,7 @@
                                    data-field="nbHeuresEnseignementRessourceLocale"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbHeuresEnseignementRessourceLocale"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                             />
                         </td>
                     {% endfor %}
@@ -124,6 +124,7 @@
                     <td></td>
                     <td></td>
                 </tr>
+
                 <tr class="lignepubliee">
                     <th>Heures d'enseignement  ressources définies nationalement </th>
                     {% for i in 1..6 %}
@@ -131,7 +132,7 @@
                                    data-field="nbHeuresEnseignementRessourceNational"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbHeuresEnseignementRessourceNational"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                             /></td>
                     {% endfor %}
                     <td>
@@ -143,7 +144,40 @@
                 </tr>
 
                 <tr>
-                    <th colspan="10"></th>
+                    <th>Heures de tp définies nationalement</th>
+                    {% for i in 1..6 %}
+                        <td><input type="text" class="heures form-control"
+                                   data-field="nbHeuresTpNational"
+                                   data-semestre="{{ i }}"
+                                   x-model.number="donnees[{{ i }}].nbHeuresTpNational"
+                                   @keyup.debounce="update"
+                            /></td>
+                    {% endfor %}
+                    <td rowspan="2" class="text-center"
+                        x-html="badgeSeuilInferieur(donnees.departement.totalTp, {{ constant('NB_HEURES_TP', user_data
+                        .caracteristiques) }})">
+                    </td>
+                    <td rowspan="2" class="text-center fw-bold">
+                        {{ constant('NB_HEURES_TP', user_data.caracteristiques) }}
+                    </td>
+                    <td rowspan="2" class="text-center" x-html="badgeSeuil(donnees.departement.ecartTotalTp, 0)">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Heures de tp à définir localement</th>
+                    {% for i in 1..6 %}
+                        <td><input type="text" class="heures form-control"
+                                   data-field="nbHeuresTpLocale"
+                                   data-semestre="{{ i }}"
+                                   x-model.number="donnees[{{ i }}].nbHeuresTpLocale"
+                                   @keyup.debounce="update"
+                            /></td>
+                    {% endfor %}
+
+                </tr>
+
+                <tr>
+                    <th colspan="10">&nbsp;</th>
                 </tr>
                 <tr class="lignepubliee">
                     <th>Heures de projet tutoré</th>
@@ -151,7 +185,7 @@
                         <td>
                             <input type="text" class="heuresProjet form-control"
                                    x-model.number="donnees[{{ i }}].nbHeuresProjet"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                                    data-field="nbHeuresProjet"
                                    data-semestre="{{ i }}"
                             />
@@ -181,7 +215,7 @@
                 </tr>
 
                 <tr>
-                    <td colspan="10"></td>
+                    <td colspan="10">&nbsp;</td>
                 </tr>
                 <tr class="lignepubliee">
                     <th rowspan="2">Nbre de semaines de stage<br>
@@ -195,7 +229,7 @@
                                        class="stage form-control"
                                        id="nbSemainesStageMin_{{ i }}"
                                        x-model.number="donnees[{{ i }}].nbSemainesStageMin"
-                                       @keyup="update"
+                                       @keyup.debounce="update"
                                        data-field="nbSemainesStageMin"
                                        data-semestre="{{ i }}"
                                        placeholder="Minimum">
@@ -206,7 +240,7 @@
                                        class="stage form-control"
                                        id="nbSemainesStageMax_{{ i }}"
                                        x-model.number="donnees[{{ i }}].nbSemainesStageMax"
-                                       @keyup="update"
+                                       @keyup.debounce="update"
                                        data-field="nbSemainesStageMax"
                                        data-semestre="{{ i }}"
                                        placeholder="Maximum">
@@ -236,7 +270,7 @@
                                    data-field="nbSemaines"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbSemaines"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                             />
                         </td>
                     {% endfor %}
@@ -254,7 +288,7 @@
                                    data-field="nbSemainesConges"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbSemainesConges"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                             />
                         </td>
                     {% endfor %}
@@ -338,7 +372,7 @@
                                    data-field="nbDemiJournees"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbDemiJournees"
-                                   @keyup="update"
+                                   @keyup.debounce="update"
                             />
                         </td>
                     {% endfor %}
@@ -395,11 +429,19 @@
             </table>
         </div>
     </div>
-    {# todo: permettre export Excel.. un modèle à compléter ?. #}
 {% endblock %}
 
 {% block header %}
-    Tableau d'organisation globale du B.U.T. ...
+    Tableau d'organisation globale du B.U.T.
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('export_excel_structure') }}" class="btn btn-sm btn-outline-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-download"></i>
+        <span>Export Excel</span>
+    </a>
 {% endblock %}
 
 {% block breadcrumb %}

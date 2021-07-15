@@ -153,6 +153,16 @@ class Semestre extends BaseEntity
      */
     private float $vhNbHeuresProjetTutore = 0;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbHeuresTpNational = 0;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $nbHeuresTpLocale = 0;
+
     public function __construct()
     {
         $this->apcRessources = new ArrayCollection();
@@ -509,6 +519,30 @@ class Semestre extends BaseEntity
     public function setVhNbHeuresProjetTutore(float $vhNbHeuresProjetTutore): self
     {
         $this->vhNbHeuresProjetTutore = $vhNbHeuresProjetTutore;
+
+        return $this;
+    }
+
+    public function getNbHeuresTpNational(): float
+    {
+        return $this->nbHeuresTpNational;
+    }
+
+    public function setNbHeuresTpNational(float $nbHeuresTpNational): self
+    {
+        $this->nbHeuresTpNational = $nbHeuresTpNational;
+
+        return $this;
+    }
+
+    public function getNbHeuresTpLocale(): float
+    {
+        return $this->nbHeuresTpLocale;
+    }
+
+    public function setNbHeuresTpLocale(float $nbHeuresTpLocale): self
+    {
+        $this->nbHeuresTpLocale = $nbHeuresTpLocale;
 
         return $this;
     }

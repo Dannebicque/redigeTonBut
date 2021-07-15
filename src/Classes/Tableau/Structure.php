@@ -74,9 +74,26 @@ class Structure
         ExcelWriter $excelWriter,
         Departement $departement
     ): StreamedResponse {
-        $excelWriter->nouveauFichier('vol_global'); //todo: pourrait se baser sur un modèle ?
-        //todo: si plusieurs parcours, plusieurs fichiers ?
+        $this->departement = $departement;
+        $this->semestres = $departement->getSemestres();
 
+        $this->getDataTableau();
+        $spreadsheet = $excelWriter->createFromTemplate('tableau_structure.xlsx');
+
+        //complète le fichier
+        $sheet = $spreadsheet->getSheetByName('vol_global_T');
+        if ($sheet !== null) {
+            $sheet->getCell('B4')->setValue('BUT ' . $this->departement->getSigle());
+            $sheet->getCell('C4')->setValue($this->departement->getTypeDepartement());
+
+            for ($i = 1; $i <= 6; $i++) {
+                $sheet->getCellByColumnAndRow(2 + $i, 7)->setValue($this->donneesSemestres[$i]->nbHeuresRessourcesSae);
+                $sheet->getCellByColumnAndRow(2 + $i, 9)->setValue($this->donneesSemestres[$i]->pourcentageAdaptationLocale / 100);
+                $sheet->getCellByColumnAndRow(2 + $i, 11)->setValue($this->donneesSemestres[$i]->nbHeuresEnseignementSaeLocale);
+                $sheet->getCellByColumnAndRow(2 + $i, 17)->setValue($this->donneesSemestres[$i]->nbHeuresProjet);
+            }
+        }
+        $excelWriter->setSpreadsheet($spreadsheet);
         return $excelWriter->genereFichier('structure_'.$departement->getSigle());
 
     }
