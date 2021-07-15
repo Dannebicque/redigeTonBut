@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    Tableau croisé pour le B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}
+    Tableau Volume horaires pour le B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{%
+    endif %}
 {% endblock %}
 
 {% block content %}
@@ -17,7 +18,7 @@
             </li>
         {% endfor %}
     </ul>
-    <div class="tab-content">
+    <div class="tab-content" x-data="getUpdateVolumesHoraires({{ parcours != null ? parcours.id : null }})">
         {% for semestre in semestres %}
         <div class="tab-pane {% if loop.first %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
             <div class="card">
@@ -37,76 +38,4 @@
 et/ou libellé. #}
 {% block javascripts %}
     {{ parent() }}
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-
-        document.querySelectorAll('.changeAcSae').forEach((elem) => {
-          elem.addEventListener('change', changeAcSae)
-        })
-
-        document.querySelectorAll('.changeAcRessource').forEach((elem) => {
-          elem.addEventListener('change', changeAcRessource)
-        })
-
-        document.querySelectorAll('.changeCoeffSae').forEach((elem) => {
-          elem.addEventListener('keyup', changeCoeffSae)
-        })
-
-        document.querySelectorAll('.changeCoeffRessource').forEach((elem) => {
-          elem.addEventListener('keyup', changeCoeffRessource)
-        })
-
-        function changeAcSae (e) {
-          updateSae( e.target.checked, e.target.dataset.sae, e.target.dataset.ac)
-        }
-
-        function changeAcRessource (e) {
-          updateRessource( e.target.checked, e.target.dataset.ressource, e.target.dataset.ac)
-        }
-
-        function changeCoeffSae (e) {
-          updateCoeffSae( e.target.value, e.target.dataset.sae, e.target.dataset.competence)
-        }
-
-        function changeCoeffRessource (e) {
-          updateCoeffRessource( e.target.value, e.target.dataset.ressource, e.target.dataset.competence)
-        }
-
-        function updateSae (value, sae, ac) {
-          fetch(Routing.generate('formation_apc_sae_ac_update_ajax', {sae: sae, ac: ac}), {
-            method: 'POST',
-            body: JSON.stringify({
-              value: value
-            })
-          })
-        }
-
-        function updateRessource (value, ressource, ac) {
-          fetch(Routing.generate('formation_apc_ressource_ac_update_ajax', {ressource: ressource, ac: ac}), {
-            method: 'POST',
-            body: JSON.stringify({
-              value: value
-            })
-          })
-        }
-
-        function updateCoeffSae (value, sae, competence) {
-          fetch(Routing.generate('formation_apc_sae_coeff_update_ajax', {sae: sae, competence: competence}), {
-            method: 'POST',
-            body: JSON.stringify({
-              valeur: value
-            })
-          })
-        }
-
-        function updateCoeffRessource (value, ressource, competence) {
-          fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {ressource: ressource, competence: competence}), {
-            method: 'POST',
-            body: JSON.stringify({
-              valeur: value
-            })
-          })
-        }
-      })
-    </script>
 {% endblock %}

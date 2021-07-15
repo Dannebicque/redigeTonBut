@@ -41,6 +41,7 @@ import './js/alpinejs/getUpdateRessource'
 import './js/alpinejs/getUpdateSae'
 import './js/alpinejs/getUpdatePreconisation'
 import './js/alpinejs/getUpdateStructure'
+import './js/alpinejs/getUpdateVolumesHoraires'
 
 // Without jQuery
 // Define a convenience method and use it

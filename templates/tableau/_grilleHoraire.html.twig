@@ -25,10 +25,18 @@
             <td colspan="{{ saes|length }}" rowspan="2" class="cell-jaune">&nbsp;</td>
             {% for ressource in ressources %}
                 <td class="text-rouge">
-                    <input type="text" class="form-control" value="xx" style="min-width: 50px">
+                    <input type="text" class="heures form-control"
+                           data-type="heures_totales"
+                           data-ressource="{{ ressource.id }}"
+                           style="min-width: 50px"
+                           :value="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
+                           @keyup.debounce="updateHeuresRessource"
+                    />
                 </td>
             {% endfor %}
-            <td class="text-rouge fw-bold">344</td>
+            <td class="text-rouge text-center fw-bold">
+                <span x-text="donnees[{{ semestre.ordreLmd }}].totalEnseignementRessources"></span>
+            </td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -37,11 +45,21 @@
             <td class="text-center cell-jaune-pale" colspan="2">Dont TP</td>
             {% for ressource in ressources %}
                 <td class="text-rouge">
-                    <input type="text" class="form-control" value="xx" style="min-width: 50px">
+                    <input type="text" class="heures form-control"
+                           data-type="heures_tp"
+                           data-ressource="{{ ressource.id }}"
+                           style="min-width: 50px"
+                           :value="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
+                           @keyup.debounce="updateHeuresRessource"
+                    />
                 </td>
             {% endfor %}
-            <td class="text-rouge fw-bold">120</td>
-            <td class="text-rouge fw-bold">28 %</td>
+            <td class="text-rouge fw-bold">
+                <span x-text="donnees[{{ semestre.ordreLmd }}].totalDontTpRessources"></span>
+            </td>
+            <td class="text-rouge text-center fw-bold">
+                <span x-text="numberFormat(donnees[{{ semestre.ordreLmd }}].pourcentageTpNational)"></span>
+                 %</td>
             <td colspan="2" class="cell-jaune text-rouge">← pourcentage de TP défini nationalement</td>
         </tr>
         <tr>
@@ -49,29 +67,57 @@
                 Volume horaire des enseignements définis par l'adaptation locale
             </td>
             <td colspan="{{ saes|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                <input type="text" class="form-control" value="66">
+                <input type="text" class="heures form-control"
+                       data-field="vhNbHeuresEnseignementSae"
+                       data-semestre="{{ semestre.id }}"
+                       style="min-width: 50px"
+                       x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"
+                       @keyup.debounce="updateSemestre"
+                />
             </td>
             <td colspan="{{ ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">&nbsp;</td>
-            <td rowspan="2" class="text-center cell-jaune text-rouge fw-bold">86</td>
-            <td class="text-center cell-jaune text-rouge fw-bold">20 %</td>
+            <td rowspan="2" class="text-center cell-jaune text-rouge fw-bold">
+                <span x-text="donnees[{{ semestre.ordreLmd }}].totalAdaptationLocaleEnseignement"></span>
+            </td>
+            <td class="text-center cell-jaune text-rouge fw-bold">
+                <span x-text="numberFormat(donnees[{{ semestre.ordreLmd }}].pourcentageAdaptationLocaleCalcule)
+"></span>
+                %</td>
             <td colspan="2" class="cell-jaune text-rouge">← Pourcentage d'adaptation locale (calculé)
             </td>
         </tr>
         <tr>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                <input type="text" class="form-control" value="20">
+                <input type="text" class="heures form-control"
+                       data-field="vhNbHeureeEnseignementSaeRessource"
+                       data-semestre="{{ semestre.id }}"
+                       style="min-width: 50px"
+                       x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"
+                       @keyup.debounce="updateSemestre"
+                />
             </td>
             <td colspan="2" class="text-end cell-jaune">rappel tableau global 6 semestres →</td>
-            <td class="text-center cell-jaune">20%</td>
+            <td class="text-center cell-jaune">
+                {{ semestre.pourcentageAdaptationLocale }} %</td>
         </tr>
 
         <tr>
             <td class="text-center" colspan="2" class="text-center cell-jaune text-rouge fw-bold">Dont TP</td>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                <input type="text" class="form-control" value="0">
+                <input type="text" class="heures form-control"
+                       data-field="vhNbHeuresDontTpSaeRessource"
+                       data-semestre="{{ semestre.id }}"
+                       style="min-width: 50px"
+                       x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"
+                       @keyup.debounce="updateSemestre"
+                />
             </td>
-            <td class="text-center cell-jaune text-rouge fw-bold">0</td>
-            <td class="text-center cell-jaune text-rouge fw-bold">0.00 %</td>
+            <td class="text-center cell-jaune text-rouge fw-bold">
+                <span x-text="donnees[{{ semestre.ordreLmd }}].totalAdaptationLocaleDontTp"></span>
+            </td>
+            <td class="text-center cell-jaune text-rouge fw-bold">
+                <span x-text="numberFormat(donnees[{{ semestre.ordreLmd }}].pourcentageTpLocalement)"></span>
+                %</td>
             <td colspan="2" class="cell-jaune text-rouge">← pourcentage de TP défini localement</td>
         </tr>
         <tr>
@@ -79,7 +125,9 @@
             <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
                 Volume horaire total des enseignements (calculé)
             </td>
-            <td class="cell-vert text-rouge fw-bold">430</td>
+            <td class="cell-vert text-rouge fw-bold">
+                <span x-text="donnees[{{ semestre.ordreLmd }}].totalEnseignements"></span>
+            </td>
             <td class="cell-jaune-pale fw-bold text-center">
 {#                <input type="text" class="form-control" value="430" style="min-width: 50px">#}
                 {{ semestre.nbHeuresRessourceSae }}
@@ -93,8 +141,12 @@
             <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
                 Dont TP
             </td>
-            <td class="cell-vert text-rouge fw-bold">120</td>
-            <td class="cell-jaune text-rouge fw-bold text-center">27,91 %</td>
+            <td class="cell-vert text-rouge fw-bold">
+                <span x-text="donnees[{{ semestre.ordreLmd }}].totalDontTp"></span>
+            </td>
+            <td class="cell-jaune text-rouge fw-bold text-center">
+                <span x-text="numberFormat(donnees[{{ semestre.ordreLmd }}]
+                .pourcentageTpLocalementNationalement)"></span> %</td>
             <td colspan="2" class="cell-jaune text-rouge fw-bold">
                 ← pourcentage de tp défini localement et nationalement
             </td>
@@ -102,7 +154,13 @@
         <tr>
             <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tuteuré</td>
             <td colspan="{{ saes|length }}" class="cell-gris texte-rouge fw-bold">
-                <input type="text" class="form-control" value="80" style="min-width: 50px">
+                <input type="text" class="heures form-control"
+                       data-field="vhNbHeuresProjetTutores"
+                       data-semestre="{{ semestre.id }}"
+                       style="min-width: 50px"
+                       x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"
+                       @keyup.debounce="updateSemestre"
+                />
             </td>
             <td colspan="{{ ressources|length }}" class="cell-gris texte-rouge fw-bold">
                 &nbsp;
@@ -120,7 +178,9 @@
             <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
                 Volume horaire total des enseignements avec projet tuteuré
             </td>
-            <td class="cell-vert texte-rouge fw-bold">510</td>
+            <td class="cell-vert texte-rouge fw-bold">
+                <span x-text="donnees[{{ semestre.ordreLmd }}].totalEnseignementProjetTutore"></span>
+            </td>
             <td class="cell-jaune fw-bold text-center">{{ semestre.nbHeuresRessourceSae+semestre.nbHeuresProjet }}</td>
             <td colspan="2" class="cell-jaune text-center">← rappel volume total enseignement + projet tuteuré issu du
                                                            tableau global 6 semestres

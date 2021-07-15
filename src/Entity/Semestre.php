@@ -133,6 +133,26 @@ class Semestre extends BaseEntity
      */
     private float $nbDemiJournees = 9;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $vhNbHeuresEnseignementSae = 0;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $vhNbHeuresEnseignementSaeRessource = 0;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $vhNbHeuresDontTpSaeRessource = 0;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private float $vhNbHeuresProjetTutore = 0;
+
     public function __construct()
     {
         $this->apcRessources = new ArrayCollection();
@@ -441,6 +461,54 @@ class Semestre extends BaseEntity
     public function setNbDemiJournees(float $nbDemiJournees): self
     {
         $this->nbDemiJournees = $nbDemiJournees;
+
+        return $this;
+    }
+
+    public function getVhNbHeuresEnseignementSae(): float
+    {
+        return $this->vhNbHeuresEnseignementSae;
+    }
+
+    public function setVhNbHeuresEnseignementSae(float $vhNbHeuresEnseignementSae): self
+    {
+        $this->vhNbHeuresEnseignementSae = $vhNbHeuresEnseignementSae;
+
+        return $this;
+    }
+
+    public function getVhNbHeuresEnseignementSaeRessource(): float
+    {
+        return $this->vhNbHeuresEnseignementSaeRessource;
+    }
+
+    public function setVhNbHeuresEnseignementSaeRessource(float $vhNbHeuresEnseignementSaeRessource): self
+    {
+        $this->vhNbHeuresEnseignementSaeRessource = $vhNbHeuresEnseignementSaeRessource;
+
+        return $this;
+    }
+
+    public function getVhNbHeuresDontTpSaeRessource(): float
+    {
+        return $this->vhNbHeuresDontTpSaeRessource;
+    }
+
+    public function setVhNbHeuresDontTpSaeRessource(float $vhNbHeuresDontTpSaeRessource): self
+    {
+        $this->vhNbHeuresDontTpSaeRessource = $vhNbHeuresDontTpSaeRessource;
+
+        return $this;
+    }
+
+    public function getVhNbHeuresProjetTutore(): float
+    {
+        return $this->vhNbHeuresProjetTutore;
+    }
+
+    public function setVhNbHeuresProjetTutore(float $vhNbHeuresProjetTutore): self
+    {
+        $this->vhNbHeuresProjetTutore = $vhNbHeuresProjetTutore;
 
         return $this;
     }
