@@ -102,13 +102,11 @@ function getUpdateRessource() {
       })
     },
     async changeSemestre (e) {
-      //this.loaded = false
       e.stopPropagation()
       await this.updateSemestre()
     },
     async changeCompetence (e) {
       e.stopPropagation()
-      //this.getCompetences()
       await this.getApiAcs()
     }
   }

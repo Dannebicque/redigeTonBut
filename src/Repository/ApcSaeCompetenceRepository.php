@@ -37,4 +37,16 @@ class ApcSaeCompetenceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findBySaeArray($sae)
+    {
+        $res = $this->findBy(['sae' => $sae]);
+        $t = [];
+
+        foreach ($res as $r) {
+            $t[] = $r->getCompetence()->getId();
+        }
+
+        return $t;
+    }
 }

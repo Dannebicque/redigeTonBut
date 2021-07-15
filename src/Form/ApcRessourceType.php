@@ -39,8 +39,6 @@ class ApcRessourceType extends AbstractType
             ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre'])
             ->add('libelleCourt', TextType::class, ['label' => 'Libellé court', 'attr' => ['maxlength' => 25], 'required' => false,
                 'help' => '25 caractères maximum, utile pour Apogée'])
-//            ->add('preRequis', TextareaType::class,
-//                ['label' => 'Pré-requis', 'attr' => ['rows' => 5], 'required' => false])
             ->add('description', TextareaType::class,
                 [
                     'attr' => ['rows' => 20],
@@ -67,18 +65,6 @@ class ApcRessourceType extends AbstractType
                 'label' => 'Semestre',
                 'expanded' => true,
             ])
-//            ->add('competences', EntityType::class, [
-//                'class' => ApcCompetence::class,
-//                'choice_label' => 'nomCourt',
-//                'label' => 'Nom court de la compétence',
-//                'attr' => ['@change' => 'changeCompetence'],
-//                'expanded' => true,
-//                'multiple' => true,
-//                'query_builder' => function(ApcComptenceRepository $apcComptenceRepository) {
-//                    return $apcComptenceRepository->findByDepartementBuilder($this->departement);
-//                },
-//                'help' => 'Ajoutez les compétences couvertes par la ressource.',
-//            ])
         ;
     }
 

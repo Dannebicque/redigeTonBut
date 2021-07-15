@@ -1,6 +1,7 @@
 function getUpdateSae() {
   return {
     acs: [],
+    listeCompetences: [],
     competences: [],
     ressources: [],
     parcours: [],
@@ -21,17 +22,6 @@ function getUpdateSae() {
       }
       return null
     },
-    getCompetences () {
-      //init le select du semestre
-      this.competences = []
-      const ele = document.getElementsByName('apc_sae[competences][]')
-      for (let i = 0; i < ele.length; i++) {
-        if (ele[i].checked)
-          this.competences.push({
-            id: ele[i].value
-          })
-      }
-    },
     getAcs (id) {
       if (this.acs !== false && id in this.acs) {
         return this.acs[id]
@@ -39,10 +29,10 @@ function getUpdateSae() {
       return {}
     },
     getLibelleCompetence (id) {
-      if (this.acs !== false && id in this.acs.competences) {
+      if (this.acs !== false && this.acs.competences !== false && !(typeof this.acs.competences === 'undefined') && id in this.acs.competences) {
         return '# Compétence : ' + this.acs.competences[id]
       }
-      return '-erreur-'
+      return '-chargement-'
     },
     async getApiAcs() {
       this.acs = await fetch(Routing.generate('formation_apc_sae_ajax_ac'), {
@@ -56,9 +46,28 @@ function getUpdateSae() {
         return r.json()
       })
     },
+    async getApiCompetences() {
+      this.listeCompetences = await fetch(Routing.generate('competence_apc_competences_sae_semestre_ajax'), {
+        method: 'POST',
+        body: JSON.stringify({
+          semestre: this.semestre, //dépendre du parcours?
+          sae: sae
+        })
+      }).then(r => {
+        return r.json()
+      })
+
+      this.listeCompetences.forEach((comp) => {
+        if (comp.checked === true) {
+          this.competences.push(comp.id)
+        }
+      })
+    },
     async updateSemestre () {
-      this.getCompetences()
-      await this.getApiAcs()
+      await this.getApiCompetences().then(async () => {
+        //this.getCompetences()
+        await this.getApiAcs()
+      })
 
       this.ressources = await fetch(Routing.generate('formation_apc_ressources_ajax'), {
         method: 'POST',
@@ -81,13 +90,11 @@ function getUpdateSae() {
       })
     },
     async changeSemestre (e) {
-      //this.loaded = false
       e.stopPropagation()
       await this.updateSemestre()
     },
     async changeCompetence (e) {
       e.stopPropagation()
-      this.getCompetences()
       await this.getApiAcs()
     }
   }
