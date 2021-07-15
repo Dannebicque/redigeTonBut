@@ -12,7 +12,6 @@ use App\Repository\UserRepository;
 use App\Security\EmailActivation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -53,10 +52,12 @@ class UserController extends BaseController
                 $userImport->importDepartement($fichier, $this->getDepartement());
                 $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Liste importée avec succès');
             } else {
-                $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de l\'import. Vous n\'avez pas les droits requis.');
+                $this->addFlashBag(Constantes::FLASHBAG_ERROR,
+                    'Erreur lors de l\'import. Vous n\'avez pas les droits requis.');
             }
 
             unlink($fichier);
+
             return $this->redirectToRoute('administration_utilisateur_index');
         }
 
@@ -73,6 +74,11 @@ class UserController extends BaseController
     ): Response {
         $user = new User();
         $user->setActif(true);
+
+        if (!$this->isGranted('ROLE_GT') && $this->getDepartement() !== null) {
+            $user->setDepartement($this->getDepartement());
+        }
+
         $form = $this->createForm(UserType::class, $user, ['droit_gt' => $this->isGranted('ROLE_GT')]);
         $form->handleRequest($request);
 
@@ -91,7 +97,7 @@ class UserController extends BaseController
                 $eventDispatcher->dispatch($userEvent, UserEvent::CREATION_COMPTE);
             }
 
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS,'Utilisateur ajouté. Email envoyé.');
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Utilisateur ajouté. Email envoyé.');
 
             return $this->redirectToRoute('administration_utilisateur_index');
         }
@@ -110,19 +116,19 @@ class UserController extends BaseController
     ): Response {
 
 
-            $password = mb_substr(md5(mt_rand()), 0, 10);
-            $user->setPassword($encoder->hashPassword($user, $password));
-            $this->entityManager->flush();
+        $password = mb_substr(md5(mt_rand()), 0, 10);
+        $user->setPassword($encoder->hashPassword($user, $password));
+        $this->entityManager->flush();
 
-            if ($user->isVerified()) {
-                $userEvent = new UserEvent($user);
-                $userEvent->setPassword($password);
-                $eventDispatcher->dispatch($userEvent, UserEvent::INIT_PASSWORD);
-            }
+        if ($user->isVerified()) {
+            $userEvent = new UserEvent($user);
+            $userEvent->setPassword($password);
+            $eventDispatcher->dispatch($userEvent, UserEvent::INIT_PASSWORD);
+        }
 
-            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS,'Mot de passe réinitialisé et envoyé à l\'utilisateur.');
+        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Mot de passe réinitialisé et envoyé à l\'utilisateur.');
 
-            return $this->redirectToRoute('administration_utilisateur_index');
+        return $this->redirectToRoute('administration_utilisateur_index');
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]

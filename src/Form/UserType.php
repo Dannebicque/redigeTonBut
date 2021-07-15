@@ -47,6 +47,7 @@ class UserType extends AbstractType
                 ['label' => 'Spécialité',
                     'required' => false,
                     'class' => Departement::class,
+                    'disabled' => !$options['droit_gt'],
                     'choice_label' => 'sigle'])
             ->add('actif', ChoiceType::class, [
                 'choices' => ['Activé' => true, 'Désactivé'=>false],
