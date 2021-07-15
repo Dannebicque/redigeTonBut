@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.2.0...v1.2.1) (2021-07-15)
+
+
+### Bug Fixes
+
+* Affichage des mots clés ([90759e3](https://github.com/Dannebicque/redigeTonBut/commit/90759e3833aa7dd9414d6268a19e4341c9f349ee))
+* liste des bugs résolus ([b3cea31](https://github.com/Dannebicque/redigeTonBut/commit/b3cea31380ca169fd81037c6d9b414a556837b4d))
+* Modification de l'ordre des compétences ([18db755](https://github.com/Dannebicque/redigeTonBut/commit/18db755084c3f6bba2077b89ce1ff82770b277ed))
+* Typo dans les tableaux ([29b3bc3](https://github.com/Dannebicque/redigeTonBut/commit/29b3bc30e4bb5d9fb1cfb68fc83bf18a0a7b3cf1))
+* Typo fiche SAE ([83cf60b](https://github.com/Dannebicque/redigeTonBut/commit/83cf60bb5791537a56771a06b532c754076f42b0))
+
 ## [1.2.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.1.2...v1.2.0) (2021-07-15)
 
 
