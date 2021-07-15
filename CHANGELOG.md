@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.1.2...v1.2.0) (2021-07-15)
+
+
+### Bug Fixes
+
+* Gestion des compétences dans les ressources selon le semestre ([eb260b7](https://github.com/Dannebicque/redigeTonBut/commit/eb260b785375ecf1f87348c4ebdef201006b15b9))
+* Gestion des compétences dans les SAEs selon le semestre ([b4e9cec](https://github.com/Dannebicque/redigeTonBut/commit/b4e9ceca0dc3b7e1e9982e3c6f6ed2c4dfac805c))
+
 ### [1.1.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.1.1...v1.1.2) (2021-07-15)
 
 
@@ -38,4 +46,3 @@ All notable changes to this project will be documented in this file. See [standa
 * redirection après modification d'une ressource ([b1296f6](https://github.com/Dannebicque/redigeTonBut/commit/b1296f6e387b79b5152533b0db962e1048b433fb))
 * Redirection après modification d'une ressource ([f393de8](https://github.com/Dannebicque/redigeTonBut/commit/f393de833896db9a3a547c3be57ccf4b1bc3a7ba))
 * redirection après validation d'email ([d316207](https://github.com/Dannebicque/redigeTonBut/commit/d316207dd3819456e3fea111f3a27f62c665d480))
-
