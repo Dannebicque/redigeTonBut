@@ -9,7 +9,7 @@
         <div class="card-body">
             {{ form_start(form) }}
             {% form_theme form 'form/my-form.html.twig' %}
-            {{ form(form) }}
+            {{ form_rest(form) }}
             <button class="btn btn-success">Sauvegarder</button>
             <button class="btn btn-success" value="redirect_to_index" name="btn_update">
                 Sauvegarder et revenir au référentiel de compétences

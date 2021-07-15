@@ -30,7 +30,7 @@ class ApcController extends BaseController
      */
     public function referentiel(ApcStructure $apcStructure, Departement $departement = null): Response
     {
-
+        //todo: ordre compétence fonctionnel, mais pas dans l'affichage...
         $tParcours = $apcStructure->parcoursNiveaux($departement);
         $competences = $departement->getApcCompetences();
         $tComp = [];

@@ -27,7 +27,7 @@ class ApcCompetenceOrdre
         return $this->inverse($ordreInitial, $ordreDestination, $apcCompetence);
     }
 
-    private function inverse(?int $ordreInitial, ?int $ordreDestination, ApcCompetence $apcCompetence): bool
+    private function inverse(string $ordreInitial, string $ordreDestination, ApcCompetence $apcCompetence): bool
     {
         $ressource = $this->apcComptenceRepository->findOther(
             $ordreDestination,

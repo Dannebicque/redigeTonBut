@@ -39,7 +39,9 @@ class ApcComptenceRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->where('c.departement = :departement')
-            ->setParameter('departement', $departement->getId());
+            ->setParameter('departement', $departement->getId())
+            ->orderBy('c.couleur', 'ASC')
+            ;
     }
 
     public function findOneByDepartementArray(Departement $departement): array
@@ -53,7 +55,7 @@ class ApcComptenceRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findOther(?int $ordreDestination, ApcCompetence $competence)
+    public function findOther(string $ordreDestination, ApcCompetence $competence)
     {
         return $this->createQueryBuilder('a')
             ->where('a.couleur = :couleur')

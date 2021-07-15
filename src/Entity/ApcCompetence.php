@@ -72,12 +72,12 @@ class ApcCompetence extends BaseEntity
     /**
      * @ORM\Column(type="integer")
      */
-    private $numero;
+    private ?int $numero;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcCompetenceSemestre::class, mappedBy="competence")
      */
-    private $apcCompetenceSemestres;
+    private Collection $apcCompetenceSemestres;
 
 
     public function __construct(Departement $departement)

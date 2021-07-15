@@ -42,6 +42,7 @@ class Departement extends BaseEntity
 
     /**
      * @ORM\OneToMany(targetEntity=ApcCompetence::class, mappedBy="departement")
+     * @ORM\OrderBy({"couleur"="ASC"})
      */
     private Collection $apcCompetences;
 
