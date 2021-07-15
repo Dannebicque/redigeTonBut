@@ -199,17 +199,6 @@ class TableauController extends BaseController
         ]);
     }
 
-//    #[Route('/preconisations/complet', name: 'preconisations_complet')]
-//    public function tableauPreconisationsComplet(
-//        SemestreRepository $semestreRepository
-//    ): Response {
-//        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
-//
-//        return $this->render('tableau/preconisations_complet.html.twig', [
-//            'semestres' => $semestres
-//        ]);
-//    }
-
     public function tableauSemestre(
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
@@ -300,54 +289,11 @@ class TableauController extends BaseController
             $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
         }
 
-
-//        $compSae = $apcSaeCompetenceRepository->findBySemestre($semestre);
-//        $compRessources = $apcRessourceCompetenceRepository->findBySemestre($semestre);
-//
-//        $tab = [];
-//        $coefficients = [];
-//        $tab['saes'] = [];
-//        $tab['ressources'] = [];
-//
-//        foreach ($saes as $sae) {
-//            $tab['saes'][$sae->getId()] = [];
-//            foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
-//                $tab['saes'][$sae->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
-//            }
-//        }
-//
-//        foreach ($ressources as $ressource) {
-//            $tab['ressources'][$ressource->getId()] = [];
-//            foreach ($ressource->getApcRessourceApprentissageCritiques() as $ac) {
-//                $tab['ressources'][$ressource->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
-//            }
-//        }
-//
-//        foreach ($compSae as $comp) {
-//           if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
-//               $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
-//               $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
-//           }
-//            $coefficients[$comp->getCompetence()->getId()]['saes'][$comp->getSae()->getId()] = $comp->getCoefficient();
-//        }
-//
-//        foreach ($compRessources as $comp) {
-//            if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
-//                $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
-//                $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
-//            }
-//            $coefficients[$comp->getCompetence()->getId()]['ressources'][$comp->getRessource()->getId()] = $comp->getCoefficient();
-//        }
-
-
         return $this->render('tableau/_grilleHoraire.html.twig',
             [
                 'semestre' => $semestre,
-                // 'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
                 'saes' => $saes,
                 'ressources' => $ressources,
-//                'tab' => $tab,
-//                'coefficients' => $coefficients
             ]);
     }
 

@@ -18,14 +18,10 @@ use App\Repository\ApcParcoursNiveauRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/apc/parcours/niveau", name="administration_")
- */
+#[Route("/apc/parcours/niveau", name:"administration_")]
 class ApcParcoursNiveauController extends BaseController
 {
-    /**
-     * @Route("/ajax/{parcours}/{etat}/{niveau}", name="apc_parcours_niveau_ajax", options={"expose":true})
-     */
+    #[Route("/ajax/{parcours}/{etat}/{niveau}", name:"apc_parcours_niveau_ajax", options:["expose" =>true])]
     public function ajax(
         ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
         ApcParcours $parcours,
@@ -51,9 +47,7 @@ class ApcParcoursNiveauController extends BaseController
         return $this->json(true);
     }
 
-    /**
-     * @Route("/configuration/{parcours}", name="apc_parcours_niveau_new", methods={"GET","POST"})
-     */
+    #[Route("/configuration/{parcours}", name:"apc_parcours_niveau_new", methods:["GET","POST"])]
     public function new(
         ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
         ApcComptenceRepository $apcComptenceRepository,

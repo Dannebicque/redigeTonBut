@@ -60,9 +60,7 @@ class ApcCompetenceController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/{semestre}/{competence}/update_ects_ajax", name="administration_apc_competence_update_ects", methods="POST", options={"expose":true})
-     */
+    #[Route("/{semestre}/{competence}/update_ects_ajax", name:"administration_apc_competence_update_ects", methods:["POST"], options:["expose"=>true])]
     public function updateEcts(
         ApcCompetenceSemestreRepository $apcCompetenceSemestreRepository,
         Request $request, Semestre $semestre, ApcCompetence $competence) {

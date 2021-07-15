@@ -18,14 +18,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/apc/composante/essentielle")
- */
+#[Route("/apc/composante/essentielle")]
 class ApcComposanteEssentielleController extends BaseController
 {
-    /**
-     * @Route("/{competence}/new", name="administration_apc_composante_essentielle_new", methods={"GET","POST"})
-     */
+    #[Route("/{competence}/new", name:"administration_apc_composante_essentielle_new", methods:["GET","POST"])]
     public function new(Request $request, ApcCompetence $competence): Response
     {
         $apcComposanteEssentielle = new ApcComposanteEssentielle($competence);
@@ -47,9 +43,7 @@ class ApcComposanteEssentielleController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name="administration_apc_composante_essentielle_edit", methods={"GET","POST"})
-     */
+    #[Route("/{id}/edit", name:"administration_apc_composante_essentielle_edit", methods:["GET","POST"])]
     public function edit(Request $request, ApcComposanteEssentielle $apcComposanteEssentielle): Response
     {
         $form = $this->createForm(ApcComposanteEssentielleType::class, $apcComposanteEssentielle);
@@ -68,9 +62,7 @@ class ApcComposanteEssentielleController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="administration_apc_composante_essentielle_delete", methods={"DELETE"})
-     */
+    #[Route("/{id}", name:"administration_apc_composante_essentielle_delete", methods:["DELETE"])]
     public function delete(Request $request, ApcComposanteEssentielle $apcComposanteEssentielle): Response
     {
         if ($this->isCsrfTokenValid('delete' . $apcComposanteEssentielle->getId(), $request->request->get('_token'))) {

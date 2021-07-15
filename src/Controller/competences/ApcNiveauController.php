@@ -20,14 +20,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/apc/niveau")
- */
+#[Route("/apc/niveau")]
 class ApcNiveauController extends BaseController
 {
-    /**
-     * @Route("/{departement}/synchro-niveau-annee", name="administration_apc_niveau_annee_synchro", methods="GET")
-     */
+    #[Route("/{departement}/synchro-niveau-annee", name:"administration_apc_niveau_annee_synchro", methods:["GET"])]
     public function synchroNiveauAnnee(
         ApcNiveauRepository $apcNiveauRepository,
         Departement $departement,
@@ -53,9 +49,7 @@ class ApcNiveauController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/{competence}/new", name="administration_apc_niveau_new", methods={"GET","POST"})
-     */
+    #[Route("/{competence}/new", name:"administration_apc_niveau_new", methods:["GET","POST"])]
     public function new(Request $request, ApcCompetence $competence): Response
     {
         $apcNiveau = new ApcNiveau($competence);
@@ -77,9 +71,7 @@ class ApcNiveauController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name="administration_apc_niveau_edit", methods={"GET","POST"})
-     */
+    #[Route("/{id}/edit", name:"administration_apc_niveau_edit", methods:["GET","POST"])]
     public function edit(Request $request, ApcNiveau $apcNiveau): Response
     {
         $form = $this->createForm(ApcNiveauType::class, $apcNiveau);
@@ -99,9 +91,7 @@ class ApcNiveauController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="administration_apc_niveau_delete", methods={"DELETE"})
-     */
+    #[Route("/{id}", name:"administration_apc_niveau_delete", methods:["DELETE"])]
     public function delete(Request $request, ApcNiveau $apcNiveau): Response
     {
         $competence = $apcNiveau->getCompetence();

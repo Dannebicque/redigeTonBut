@@ -18,9 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/competence/api/competence", name="competence_")
- */
+#[Route('/competence/api/competence', name : 'competence_')]
 class ApcAjaxCompetenceController extends BaseController
 {
     #[Route("/ressource/ajax-semestre", name: "apc_competences_ressource_semestre_ajax", options: ["expose"=>true], methods: ["POST"])]

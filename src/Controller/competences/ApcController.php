@@ -20,14 +20,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/apc/referentiel-competences")
- */
+#[Route("/apc/referentiel-competences")]
 class ApcController extends BaseController
 {
-    /**
-     * @Route("/consulter/{departement}", name="administration_apc_referentiel_index", methods={"GET"})
-     */
+    #[Route("/consulter/{departement}", name:"administration_apc_referentiel_index", methods:["GET"])]
     public function referentiel(ApcStructure $apcStructure, Departement $departement = null): Response
     {
         //todo: ordre compétence fonctionnel, mais pas dans l'affichage...
@@ -55,9 +51,7 @@ class ApcController extends BaseController
         ]);
     }
 
-    /**
-     * @Route("/import", name="administration_apc_referentiel_import", methods={"GET|POST"})
-     */
+    #[Route("/import", name:"administration_apc_referentiel_import", methods:["GET","POST"])]
     public function index(
         DepartementRepository $departementRepository,
         MyUpload $myUpload,

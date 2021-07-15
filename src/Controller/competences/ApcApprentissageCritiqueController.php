@@ -10,23 +10,18 @@
 namespace App\Controller\competences;
 
 use App\Classes\Apc\ApcApprentissageCritiqueOrdre;
-use App\Classes\Apc\ApcRessourceOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcNiveau;
-use App\Entity\ApcRessource;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Form\ApcApprentissageCritiqueType;
 use App\Repository\ApcApprentissageCritiqueRepository;
-use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/apc/apprentissage/critique")
- */
+#[Route("/apc/apprentissage/critique")]
 class ApcApprentissageCritiqueController extends BaseController
 {
     #[Route('/{departement}', name: 'administration_apc_apprentissage_critique_index', requirements: ['departement' => '\d+'], methods: ['GET'])]
