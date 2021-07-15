@@ -38,4 +38,16 @@ class ApcRessourceCompetenceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByRessourceArray($ressource)
+    {
+        $res = $this->findBy(['ressource' => $ressource]);
+        $t = [];
+
+        foreach ($res as $r) {
+            $t[] = $r->getCompetence()->getId();
+        }
+
+        return $t;
+    }
+
 }

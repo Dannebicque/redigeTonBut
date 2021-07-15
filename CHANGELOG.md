@@ -39,4 +39,3 @@ All notable changes to this project will be documented in this file. See [standa
 * Redirection après modification d'une ressource ([f393de8](https://github.com/Dannebicque/redigeTonBut/commit/f393de833896db9a3a547c3be57ccf4b1bc3a7ba))
 * redirection après validation d'email ([d316207](https://github.com/Dannebicque/redigeTonBut/commit/d316207dd3819456e3fea111f3a27f62c665d480))
 
-## 1.0.2 - 2021-07-14

@@ -10,6 +10,7 @@ use App\Entity\ApcRessourceCompetence;
 use App\Entity\ApcRessourceParcours;
 use App\Entity\ApcSaeRessource;
 use App\Repository\ApcApprentissageCritiqueRepository;
+use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
@@ -25,10 +26,12 @@ class ApcRessourceAddEdit
     private ApcSaeRepository $apcSaeRepository;
     private ApcParcoursRepository $apcParcoursRepository;
     private ApcRessourceRepository $apcRessourceRepository;
+    private ApcComptenceRepository $apcComptenceRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
+        ApcComptenceRepository $apcComptenceRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcParcoursRepository $apcParcoursRepository,
         ApcRessourceRepository $apcRessourceRepository
@@ -37,6 +40,7 @@ class ApcRessourceAddEdit
         $this->apcApprentissageCritiqueRepository = $apcApprentissageCritiqueRepository;
         $this->apcSaeRepository = $apcSaeRepository;
         $this->apcParcoursRepository = $apcParcoursRepository;
+        $this->apcComptenceRepository = $apcComptenceRepository;
         $this->apcRessourceRepository = $apcRessourceRepository;
     }
 
@@ -45,6 +49,15 @@ class ApcRessourceAddEdit
     {
         $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
         $this->entityManager->persist($apcRessource);
+
+        $competences = $request->request->get('competences');
+        if (is_array($competences)) {
+            foreach ($competences as $idCompetence) {
+                $ac = $this->apcComptenceRepository->find($idCompetence);
+                $saeAc = new ApcRessourceCompetence($apcRessource, $ac);
+                $this->entityManager->persist($saeAc);
+            }
+        }
 
         $acs = $request->request->get('ac');
         if (is_array($acs)) {

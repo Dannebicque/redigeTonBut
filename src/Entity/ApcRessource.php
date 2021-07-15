@@ -210,9 +210,6 @@ class ApcRessource extends AbstractMatiere
         return $comptences;
     }
 
-    /**
-     * @return $this
-     */
     public function addCompetence(ApcCompetence $competence): self
     {
         $apcRessourceCompetence = new ApcRessourceCompetence($this, $competence);
@@ -221,9 +218,6 @@ class ApcRessource extends AbstractMatiere
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function removeCompetence(ApcCompetence $competence): self
     {
         foreach ($this->apcRessourceCompetences as $apcRessourceCompetence) {

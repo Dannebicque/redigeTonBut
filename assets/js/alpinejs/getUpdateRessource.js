@@ -1,6 +1,7 @@
 function getUpdateRessource() {
   return {
     acs: [],
+    listeCompetences: [],
     competences: [],
     saes: [],
     parcours: [],
@@ -22,22 +23,11 @@ function getUpdateRessource() {
       }
       return null
     },
-    getCompetences () {
-      //init le select du semestre
-      this.competences = []
-      const ele = document.getElementsByName('apc_ressource[competences][]')
-      for (let i = 0; i < ele.length; i++) {
-        if (ele[i].checked)
-          this.competences.push({
-            id: ele[i].value
-          })
-      }
-    },
     getLibelleCompetence (id) {
-      if (this.acs !== false && id in this.acs.competences) {
+      if (this.acs !== false && this.acs.competences !== false && !(typeof this.acs.competences === 'undefined') && id in this.acs.competences) {
         return '# Compétence : ' + this.acs.competences[id]
       }
-      return '-erreur-'
+      return '-chargement-'
     },
     getAcs (id) {
       if (this.acs !== false && id in this.acs) {
@@ -57,9 +47,29 @@ function getUpdateRessource() {
         return r.json()
       })
     },
+    async getApiCompetences() {
+      this.listeCompetences = await fetch(Routing.generate('competence_apc_competences_ressource_semestre_ajax'), {
+        method: 'POST',
+        body: JSON.stringify({
+          semestre: this.semestre, //dépendre du parcours?
+          ressource: ressource
+        })
+      }).then(r => {
+        return r.json()
+      })
+
+      this.listeCompetences.forEach((comp) => {
+        if (comp.checked === true) {
+          this.competences.push(comp.id)
+        }
+      })
+    },
     async updateSemestre () {
-      this.getCompetences()
-      await this.getApiAcs()
+
+      await this.getApiCompetences().then(async () => {
+        //this.getCompetences()
+        await this.getApiAcs()
+      })
 
       this.saes = await fetch(Routing.generate('formation_apc_sae_ajax'), {
         method: 'POST',
@@ -98,7 +108,7 @@ function getUpdateRessource() {
     },
     async changeCompetence (e) {
       e.stopPropagation()
-      this.getCompetences()
+      //this.getCompetences()
       await this.getApiAcs()
     }
   }
