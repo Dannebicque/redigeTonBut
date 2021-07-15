@@ -6,6 +6,7 @@ namespace App\Classes\Excel;
 
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Exception;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -15,15 +16,17 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class ExcelWriter
 {
     protected Spreadsheet $spreadsheet;
     protected ?Worksheet $sheet;
+    protected string $dir;
 
-    public function __construct()
+    public function __construct(KernelInterface $kernel)
     {
-
+        $this->dir = $kernel->getProjectDir().'/public/excel/';
     }
 
     public function nouveauFichier($libelle)
@@ -203,6 +206,10 @@ class ExcelWriter
         }
     }
 
+    public function setSpreadsheet(Spreadsheet $sheet) {
+        $this->spreadsheet = $sheet;
+    }
+
     public function genereFichier($name) {
         $this->pageSetup($name);
         $writer = new Xlsx($this->spreadsheet);
@@ -234,5 +241,17 @@ class ExcelWriter
             ->setOddHeader('&C&HDocument généré depuis ORéBUT');
         $this->spreadsheet->getActiveSheet()->getHeaderFooter()
             ->setOddFooter('&L&B' . $this->spreadsheet->getProperties()->getTitle() . '&RPage &P of &N');
+    }
+
+    public function createFromTemplate(string $fichier): Spreadsheet
+    {
+        $inputFileType = 'Xlsx'; // Xlsx - Xml - Ods - Slk - Gnumeric - Csv
+        $inputFileName = $this->dir.$fichier;
+
+        /**  Create a new Reader of the type defined in $inputFileType  **/
+        $reader = IOFactory::createReader($inputFileType);
+
+        /**  Load $inputFileName to a Spreadsheet Object  **/
+        return $reader->load($inputFileName);
     }
 }

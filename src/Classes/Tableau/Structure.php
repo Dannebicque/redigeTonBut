@@ -90,7 +90,16 @@ class Structure
                 $sheet->getCellByColumnAndRow(2 + $i, 7)->setValue($this->donneesSemestres[$i]->nbHeuresRessourcesSae);
                 $sheet->getCellByColumnAndRow(2 + $i, 9)->setValue($this->donneesSemestres[$i]->pourcentageAdaptationLocale / 100);
                 $sheet->getCellByColumnAndRow(2 + $i, 11)->setValue($this->donneesSemestres[$i]->nbHeuresEnseignementSaeLocale);
+                $sheet->getCellByColumnAndRow(2 + $i, 14)->setValue($this->donneesSemestres[$i]->nbHeuresTpNational);
+                $sheet->getCellByColumnAndRow(2 + $i, 15)->setValue($this->donneesSemestres[$i]->nbHeuresTpLocale);
                 $sheet->getCellByColumnAndRow(2 + $i, 17)->setValue($this->donneesSemestres[$i]->nbHeuresProjet);
+                if ($this->donneesSemestres[$i]->nbSemainesStageMin !== $this->donneesSemestres[$i]->nbSemainesStageMax) {
+                    $sheet->getCellByColumnAndRow(2 + $i,
+                        22)->setValue($this->donneesSemestres[$i]->nbSemainesStageMin . ' - ' . $this->donneesSemestres[$i]->nbSemainesStageMax);
+                } else {
+                    $sheet->getCellByColumnAndRow(2 + $i,
+                        22)->setValue( $this->donneesSemestres[$i]->nbSemainesStageMax);
+                }
             }
         }
         $excelWriter->setSpreadsheet($spreadsheet);

@@ -28,6 +28,8 @@ class StructureSemestre
     public float $nbHeuresEnseignementSaeLocale;
     public float $nbHeuresEnseignementRessourceLocale;
     public float $nbHeuresEnseignementRessourceNational;
+    public float $nbHeuresTpNational;
+    public float $nbHeuresTpLocale;
 
 
     public function __construct(Semestre $semestre)
@@ -40,6 +42,8 @@ class StructureSemestre
         $this->nbHeuresEnseignementRessourceLocale = $this->nbHeuresEnseignementLocale - $this->nbHeuresEnseignementSaeLocale;
         $this->nbHeuresEnseignementRessourceNational = $this->nbHeuresRessourcesSae-$this->nbHeuresEnseignementLocale;
 
+        $this->nbHeuresTpLocale = $semestre->getNbHeuresTpLocale();
+        $this->nbHeuresTpNational = $semestre->getNbHeuresTpNational();
         $this->nbSemaines = $semestre->getNbSemaines();
         $this->nbSemainesConges = $semestre->getNbSemainesConges();
         $this->nbSemainesStageMin = $semestre->getNbSemaineStageMin();
@@ -75,7 +79,9 @@ class StructureSemestre
             'dureeHebdo' => $this->dureeHebdo,
             'nbMoyenneHeuresDemiJournee' => $this->nbMoyenneHeuresDemiJournee,
             'nbHeuresCoursHebdo' => $this->nbHeuresCoursHebdo,
-            'nbHeuresHebdoProjet' => $this->nbHeuresHebdoProjet
+            'nbHeuresHebdoProjet' => $this->nbHeuresHebdoProjet,
+            'nbHeuresTpNational' => $this->nbHeuresTpNational,
+            'nbHeuresTpLocale' => $this->nbHeuresTpLocale
         ];
     }
 
