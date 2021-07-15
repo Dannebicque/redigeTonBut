@@ -72,7 +72,7 @@
                 </tr>
 
                 <tr class="lignepubliee">
-                    <th>Nbre d'heures d'enseignement définies localement</th>
+                    <th>Heures d'enseignement à définir localement</th>
                     {% for i in 1..6 %}
                         <td><input type="text" class="heures form-control"
                                    data-field="nbHeuresEnseignementLocale"
@@ -92,7 +92,7 @@
                     </td>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Nbre heures d'enseignement SAÉ définies localement</th>
+                    <th>Heures d'enseignement à définir localement dans les SAÉ</th>
                     {% for i in 1..6 %}
                         <td><input type="text" class="heures form-control"
                                    data-field="nbHeuresEnseignementSaeLocale"
@@ -109,7 +109,7 @@
                     </td>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Nbre heures d'enseignement des ressources définies localement</th>
+                    <th>Heures d'enseignement à définir localement dans les Ressources ou les SAÉ </th>
                     {% for i in 1..6 %}
                         <td>
                             <input type="text" class="heures form-control"
@@ -125,7 +125,7 @@
                     <td></td>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Nbre heures d'enseignement ressources définies nationalement</th>
+                    <th>Heures d'enseignement  ressources définies nationalement </th>
                     {% for i in 1..6 %}
                         <td><input type="text" class="heures form-control"
                                    data-field="nbHeuresEnseignementRessourceNational"
@@ -146,7 +146,7 @@
                     <th colspan="10"></th>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Nbre d'heures de projet (SAÉ)</th>
+                    <th>Heures de projet tutoré</th>
                     {% for i in 1..6 %}
                         <td>
                             <input type="text" class="heuresProjet form-control"
@@ -167,7 +167,7 @@
                     </td>
                 </tr>
                 <tr class="lignepubliee">
-                    <th scope="row">Nbre d"heures de projet/année min 150 h / max 250h</th>
+                    <th scope="row">Heures de projet/année min 150 h / max 250h</th>
                     {% for i in range(1, 6, 2) %}
                         <td class="text-center" colspan="2">
                             <span x-text="donnees[{{ i }}].nbHeuresProjet + donnees[{{ i+1 }}].nbHeuresProjet"></span>

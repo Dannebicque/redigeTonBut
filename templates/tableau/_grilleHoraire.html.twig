@@ -102,7 +102,7 @@
         </tr>
 
         <tr>
-            <td class="text-center" colspan="2" class="text-center cell-jaune text-rouge fw-bold">Dont TP</td>
+            <td colspan="2" class="text-center cell-jaune text-rouge fw-bold">Dont TP</td>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
                 <input type="text" class="heures form-control"
                        data-field="vhNbHeuresDontTpSaeRessource"
@@ -152,7 +152,7 @@
             </td>
         </tr>
         <tr>
-            <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tuteuré</td>
+            <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tutoré</td>
             <td colspan="{{ saes|length }}" class="cell-gris texte-rouge fw-bold">
                 <input type="text" class="heures form-control"
                        data-field="vhNbHeuresProjetTutores"
@@ -169,20 +169,20 @@
             <td class="cell-jaune fw-bold text-center">
                 {{ semestre.nbHeuresProjet }}
             </td>
-            <td colspan="2" class="cell-jaune text-center">← rappel volume de projet tuteuré issu du tableau glabal
+            <td colspan="2" class="cell-jaune text-center">← rappel volume de projet tutoré issu du tableau global
                                                            des 6 semestres
             </td>
         </tr>
         <tr>
             <td colspan="2">&nbsp;</td>
             <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
-                Volume horaire total des enseignements avec projet tuteuré
+                Volume horaire total des enseignements avec projet tutoré
             </td>
             <td class="cell-vert texte-rouge fw-bold">
                 <span x-text="donnees[{{ semestre.ordreLmd }}].totalEnseignementProjetTutore"></span>
             </td>
             <td class="cell-jaune fw-bold text-center">{{ semestre.nbHeuresRessourceSae+semestre.nbHeuresProjet }}</td>
-            <td colspan="2" class="cell-jaune text-center">← rappel volume total enseignement + projet tuteuré issu du
+            <td colspan="2" class="cell-jaune text-center">← rappel volume total enseignement + projet tutoré issu du
                                                            tableau global 6 semestres
             </td>
         </tr>
