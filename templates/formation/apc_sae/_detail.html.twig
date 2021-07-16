@@ -36,7 +36,7 @@
 
 <h3>Objectifs et probématique professionnelle</h3>
 <p>
-    {{ apc_sae.objectifs|raw }}
+    {{ apc_sae.objectifs != null ? apc_sae.objectifs|markdown_to_html : '' }}
 </p>
 <tr>
     <th>Description des objectifs de la SAÉ et de la problèmatique professionnelle associée</th>
@@ -64,6 +64,6 @@
 
 <h3>Descriptif générique</h3>
 <p>
-    {{ apc_sae.objectifs|raw }}
+    {{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}
 </p>
 
