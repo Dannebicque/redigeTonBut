@@ -2,7 +2,7 @@
     "type": "project",
     "license": "MPL2.0",
     "author": "David Annebicque",
-    "version": "1.0.2",
+    "version": "1.2.1",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {

@@ -9,6 +9,7 @@ use App\DTO\Tertiaire;
 use App\Entity\Departement;
 use App\Repository\AnneeRepository;
 use App\Repository\DepartementRepository;
+use Composer\InstalledVersions;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -70,5 +71,10 @@ class DataUserSession
         }
 
         return null;
+    }
+
+    public function version()
+    {
+        return InstalledVersions::getRootPackage()['pretty_version'];
     }
 }
