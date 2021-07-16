@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.2.1...v1.3.0) (2021-07-16)
+
+
+### Features
+
+* Affichage version ([127341c](https://github.com/Dannebicque/redigeTonBut/commit/127341cedb8d86dd7a4acc06cf38a3e7ce507e30))
+* Affichage, non éditable des textes des spécialités et parcours pour les lecteurs. ([0dfb13b](https://github.com/Dannebicque/redigeTonBut/commit/0dfb13bcf41bcd534aead0dc65fd20f69dc6bce4))
+* Ajout des lignes TP dans le tableau structurel ([c1eb76c](https://github.com/Dannebicque/redigeTonBut/commit/c1eb76c616db20113fa6159a81e32b5ca86c0d5f))
+* Export tableau structure 6 semestres format Excel ([70e58a3](https://github.com/Dannebicque/redigeTonBut/commit/70e58a3aeb67647038118d7154e80ee2f08f7189))
+* Fichier du GT (tableau) ([e705ec1](https://github.com/Dannebicque/redigeTonBut/commit/e705ec16fe7b53018134e32a4db657355da42a67))
+
+
+### Bug Fixes
+
+* Calculs ([e1c8bdd](https://github.com/Dannebicque/redigeTonBut/commit/e1c8bdd8ca3239c05348027606a0becf37ce2845))
+* Ordre des compétences ([b920ad5](https://github.com/Dannebicque/redigeTonBut/commit/b920ad5e4873ecf362218f3849ba400fdc0be629))
+* Pré-selection du département pour l'ajout d'un utilisateur et blocage ([cf9e1a1](https://github.com/Dannebicque/redigeTonBut/commit/cf9e1a129bdf13a7127f65adc19c48d42665cf41))
+* Renumérotation des AC lors du déplacement d'une compétence ([68814b6](https://github.com/Dannebicque/redigeTonBut/commit/68814b69eeddbe841376bd1bbd09456f32e64855))
+* Routes au format PHP8 ([dd13742](https://github.com/Dannebicque/redigeTonBut/commit/dd13742c0d424b52a60f3b976b1edcdd702c00c4))
+* Suppression code inutilisé ([d14fd54](https://github.com/Dannebicque/redigeTonBut/commit/d14fd54a5cf304423c387e7628c4e8c93230e076))
+* Suppression code inutilisé ([ea524cf](https://github.com/Dannebicque/redigeTonBut/commit/ea524cf39052c9118d59cd6e9d3fefa87769981b))
+
 ### [1.2.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.2.0...v1.2.1) (2021-07-15)
 
 
