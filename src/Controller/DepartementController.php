@@ -35,6 +35,15 @@ class DepartementController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/lecteur', name: 'lecteur_show', methods: ['GET'])]
+    public function showLecteur(
+        Departement $departement
+    ): Response {
+        return $this->render('departement/showLecteur.html.twig', [
+            'departement' => $departement,
+        ]);
+    }
+
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,

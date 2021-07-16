@@ -39,4 +39,13 @@ class ApcParcoursController extends BaseController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/{id}', name: 'apc_parcours_show', methods: ['GET'])]
+    public function show(
+        ApcParcours $apcParcours
+    ): Response {
+        return $this->render('competences/apc_parcours/show.html.twig', [
+            'apcParcours' => $apcParcours,
+        ]);
+    }
 }

@@ -144,19 +144,38 @@
                                         <span class="label">Liste des AC</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ path('administration_departement_edit', {id: user_data.departement
-                                    .id}) }}">
-                                        <span class="label">Texte descriptif de la spécialité</span>
-                                    </a>
-                                </li>
-                                {% for parcours in user_data.departement.apcParcours %}
+                                {% if is_granted('ROLE_GT') or is_granted('ROLE_CPN') or is_granted('ROLE_PACD') or
+                                    is_granted('ROLE_EDITEUR') %}
                                     <li>
-                                        <a href="{{ path('administration_apc_parcours_edit', {id:parcours.id}) }}">
-                                            <span class="label">texte du parcours : {{ parcours.libelle }}</span>
+                                        <a href="{{ path('administration_departement_edit', {id: user_data.departement
+                                        .id}) }}">
+                                            <span class="label">Texte descriptif de la spécialité</span>
                                         </a>
                                     </li>
-                                {% endfor %}
+                                    {% for parcours in user_data.departement.apcParcours %}
+                                        <li>
+                                            <a href="{{ path('administration_apc_parcours_edit', {id:parcours.id}) }}">
+                                                <span class="label">texte du parcours : {{ parcours.libelle }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li>
+                                        <a href="{{ path('administration_departement_lecteur_show', {id: user_data
+                                        .departement
+                                        .id}) }}">
+                                            <span class="label">Consulter le Texte descriptif de la spécialité</span>
+                                        </a>
+                                    </li>
+                                    {% for parcours in user_data.departement.apcParcours %}
+                                        <li>
+                                            <a href="{{ path('administration_apc_parcours_show', {id:parcours.id}) }}">
+                                                <span class="label">Consulter le  texte du parcours : {{ parcours
+                                                    .libelle }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
                             </ul>
                         </li>
                         <li>

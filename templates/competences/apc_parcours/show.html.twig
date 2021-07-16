@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Détail du parcours : {{ apcParcours.libelle }}{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+
+
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Libelle</th>
+                    <td>{{ apcParcours.libelle }}</td>
+                </tr>
+
+                <tr>
+                    <th>Code</th>
+                    <td>{{ apcParcours.code }}</td>
+                </tr>
+
+                <tr>
+                    <th>Texte descriptif</th>
+                    <td>{{ apcParcours.textePresentation }}</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+

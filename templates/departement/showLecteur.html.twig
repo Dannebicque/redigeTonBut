@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Détail de la spécialité : {{ departement.sigle }}{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Numéro Annexe</th>
+                    <td>{{ departement.numeroAnnexe }}</td>
+                </tr>
+                <tr>
+                    <th>Libelle</th>
+                    <td>{{ departement.libelle }}</td>
+                </tr>
+
+                <tr>
+                    <th>Sigle</th>
+                    <td>{{ departement.sigle }}</td>
+                </tr>
+                <tr>
+                    <th>Type Spécialité</th>
+                    <td>{{ departement.typeDepartement }}</td>
+                </tr>
+                <tr>
+                    <th>Type APC</th>
+                    <td>{{ departement.typeStructure }}</td>
+                </tr>
+                <tr>
+                    <th>Texte descriptif</th>
+                    <td>{{ departement.textePresentation }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
