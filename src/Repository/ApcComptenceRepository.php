@@ -65,6 +65,6 @@ class ApcComptenceRepository extends ServiceEntityRepository
             ->setParameter('departement', $competence->getDepartement()->getId())
             ->setParameter('id', $competence->getId())
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 }

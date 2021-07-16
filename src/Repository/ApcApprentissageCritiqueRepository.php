@@ -89,4 +89,15 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findByCompetence(ApcCompetence $competence)
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'a.niveau = n.id')
+            ->innerJoin(Annee::class, 'an', 'WITH', 'n.annee = an.id')
+            ->where('an.departement = :departement')
+            ->setParameter('departement', $competence->getDepartement()->getId())
+            ->getQuery()
+            ->getResult();
+    }
 }
