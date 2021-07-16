@@ -1,8 +1,8 @@
 {
   "bumpFiles": [
     {
-      "filename": "composer.json",
-      "type": "json"
+      "filename": ".env",
+      "type": "env"
     }
   ]
 }

@@ -1,8 +1,16 @@
 {
+    "name": "dannebicque/orebut",
+    "description": "Outil de rédaction des B.U.T.",
     "type": "project",
-    "license": "MPL2.0",
-    "author": "David Annebicque",
-    "version": "1.3.0",
+    "license": "MPL-2.0",
+    "authors": [
+        {
+            "name": "David Annebicque",
+            "email": "david.annebicque@gmail.com",
+            "homepage": "https://github.com/dannebicque/",
+            "role": "Developer"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
