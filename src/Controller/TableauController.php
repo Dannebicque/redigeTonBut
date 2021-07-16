@@ -57,13 +57,12 @@ class TableauController extends BaseController
         return $this->json($json);
     }
 
-    #[Route('/api-volumes-horaires', name: 'api_volumes_horaires', options: ['expose' => true])]
+    #[Route('/api-volumes-horaires/{parcours}', name: 'api_volumes_horaires', options: ['expose' => true])]
     public function apiVolumesHoraires(
         VolumesHoraires $volumesHoraires,
         SemestreRepository $semestreRepository,
         ApcParcours $parcours = null
     ): Response {
-
         $semestres = $semestreRepository->findByDepartement($this->getDepartement());
         $json = $volumesHoraires->setSemestres($semestres, $parcours)->getDataJson();
 
