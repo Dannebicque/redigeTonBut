@@ -45,14 +45,18 @@ class ApcSaeType extends AbstractType
                     'attr' => ['rows' => 20],
                     'label' => 'Descriptif générique',
                     'required' => false,
-                    'help' => 'Il est possible d\'utiliser la syntaxe Markdown dans ce bloc de texte',
+                    'help' => 'Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                    'help_html' => true,
                 ])
             ->add('objectifs', TextareaType::class,
                 [
                     'attr' => ['rows' => 20],
                     'label' => 'Objectifs et problématique professionnelle',
                     'required' => false,
-                    'help' => 'Il est possible d\'utiliser la syntaxe Markdown dans ce bloc de texte',
+                    'help' => 'Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                    'help_html' => true,
                 ])
 //            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.']) //, 'attr' => ['x-model' => 'tdPpn']
 //            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'cmPpn']

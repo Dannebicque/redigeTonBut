@@ -44,7 +44,9 @@ class ApcRessourceType extends AbstractType
                     'attr' => ['rows' => 20],
                     'label' => 'Description',
                     'required' => false,
-                    'help' => 'Il est possible d\'utiliser la syntaxe Markdown dans ce bloc de texte'
+                    'help' => 'Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                    'help_html' => true,
                 ])
             ->add('motsCles', TextType::class,
                 [

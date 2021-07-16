@@ -464,8 +464,8 @@
 
                         <ul class="breadcrumb pt-0 pe-0 mb-0">
                             <li class="breadcrumb-item mb-0 text-medium">
-                                <p class="mb-0 text-muted text-medium">&copy; 2021 David Annebicque - version {{
-                                    user_data.version }}</p>
+                                <p class="mb-0 text-muted text-medium">&copy; 2021 David Annebicque -
+                                                                       version {{ user_data.version }}</p>
                             </li>
                             <li class="breadcrumb-item mb-0 text-medium">
                                 <a href="#" class="btn-link">Docs</a>
@@ -498,6 +498,86 @@
                                        l'option "se souvenir de moi" sur la page de connexion.</p>
                                     <p>Les fichiers de log (en cas d'erreur ou de problème) sont complètement
                                        anonymes et sans information personnelles vous concernant.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                            class="modal fade modal-close-out"
+                            id="modalMarkdown"
+                            tabindex="-1"
+                            role="dialog"
+                            aria-labelledby="examplemodalMarkdown"
+                            aria-hidden="true"
+                    >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="examplemodalMarkdown">Syntaxe Markdwon</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Les listes</p>
+                                    Les listes à puces (* ou -)
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p>Syntaxe à utiliser</p>
+                                            * item 1<br>
+                                            * item 2<br>
+                                            <br>
+                                            - item 1<br>
+                                            - item 2<br>
+                                        </div>
+                                        <div class="col-6">
+                                            <p>Résultat</p>
+                                            <ul>
+                                                <li>Item 1</li>
+                                                <li>Item 2</li>
+                                            </ul>
+
+                                            <ul style="list-style:none">
+                                                <li>- Item 1</li>
+                                                <li>- Item 2</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    Les listes imbriquées puces (* ou -)
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p>Syntaxe à utiliser</p>
+                                            * item 1<br>
+                                            &nbsp;* item 1a<br>
+                                            &nbsp;* item 1b<br>
+                                            * item 2<br>
+                                            <br>
+                                            (décaler par un espace les items pour faire une sous liste)
+                                        </div>
+                                        <div class="col-6">
+                                            <p>Résultat</p>
+                                            <ul>
+                                                <li>Item 1</li>
+                                                <li style="list-style: none ;"> <ul>
+                                                        <li>Item 1a</li>
+                                                        <li>Item 1b</li>
+                                                    </ul></li>
+                                                <li>Item 2</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+                                    <p>Gras/Italique</p>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p>Syntaxe à utiliser</p>
+                                            **Texte en gras**
+                                        </div>
+                                        <div class="col-6">
+                                            <p>Résultat</p>
+                                            <strong>Texte en gras</strong>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
