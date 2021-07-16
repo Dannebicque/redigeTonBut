@@ -107,7 +107,8 @@
                     </template>
                     <template x-for="ressource in ressources">
                         <div class="col-6">
-                            <input type="checkbox" name="saes[]" :value="ressource.id" :checked="ressource.checked">&nbsp;
+                            <input type="checkbox" name="ressources[]" :value="ressource.id" :checked="ressource
+                            .checked">&nbsp;
                             <span x-text="ressource.code + ` | ` + ressource.libelle"></span>
                         </div>
                     </template>

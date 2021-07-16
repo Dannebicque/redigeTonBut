@@ -205,6 +205,7 @@ class ApcAjaxRessourceController extends BaseController
                     $tabRessourceParcours = [];
                 }
 
+
                 $t = [];
                 foreach ($datas as $d) {
                     $b = [];

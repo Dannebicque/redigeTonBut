@@ -33,7 +33,7 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
 
         $t = [];
         foreach ($query as $q) {
-            $t[] = $q->getSae()->getId();
+            $t[] = $q->getParcours()->getId();
         }
 
         return $t;

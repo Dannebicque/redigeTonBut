@@ -34,7 +34,7 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
 
         $t = [];
         foreach ($query as $q) {
-            $t[] = $q->getRessource()->getId();
+            $t[] = $q->getParcours()->getId();
         }
 
         return $t;
