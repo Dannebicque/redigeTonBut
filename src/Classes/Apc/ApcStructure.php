@@ -14,15 +14,30 @@
 namespace App\Classes\Apc;
 
 use App\Entity\Departement;
+use App\Repository\ApcParcoursNiveauRepository;
 
 class ApcStructure
 {
+
+    private ApcParcoursNiveauRepository $apcParcoursNiveauRepository;
+
+
+    public function __construct(ApcParcoursNiveauRepository $apcParcoursNiveauRepository)
+    {
+        $this->apcParcoursNiveauRepository = $apcParcoursNiveauRepository;
+    }
+
+
+
     public function parcoursNiveaux(Departement $departement): array
     {
+
+
         $tParcours = [];
         foreach ($departement->getApcParcours() as $parcours) {
+            $pn = $this->apcParcoursNiveauRepository->findParcoursNiveauCompetence($parcours);
             $tParcours[$parcours->getId()] = [];
-            foreach ($parcours->getApcParcoursNiveaux() as $niveau) {
+            foreach ($pn as $niveau) {
                 if (null !== $niveau && null !== $niveau->getNiveau()) {
                     $niv = $niveau->getNiveau();
                     if (null !== $niv && null !== $niv->getCompetence() && !\array_key_exists($niv->getCompetence()->getId(),

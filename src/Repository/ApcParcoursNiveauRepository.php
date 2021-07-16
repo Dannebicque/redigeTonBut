@@ -10,6 +10,7 @@
 namespace App\Repository;
 
 use App\Entity\Annee;
+use App\Entity\ApcCompetence;
 use App\Entity\ApcNiveau;
 use App\Entity\ApcParcours;
 use App\Entity\ApcParcoursNiveau;
@@ -78,5 +79,20 @@ class ApcParcoursNiveauRepository extends ServiceEntityRepository
         }
 
         return $t;
+    }
+
+    public function findParcoursNiveauCompetence(mixed $parcours)
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'p.niveau = n.id')
+            ->innerJoin(ApcParcours::class, 'ap', 'WITH', 'p.parcours = ap.id')
+            ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'n.competence = c.id')
+            ->where('ap.id = :parcours')
+            ->setParameter('parcours', $parcours)
+            ->orderBy('n.ordre', 'ASC')
+            ->addOrderBy('c.couleur', 'ASC')
+            ->getQuery()
+            ->getResult();
+
     }
 }
