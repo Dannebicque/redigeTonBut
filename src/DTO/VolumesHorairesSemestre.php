@@ -45,10 +45,10 @@ class VolumesHorairesSemestre
 
         $this->totalAdaptationLocaleEnseignement = $this->vhNbHeuresEnseignementSae + $this->vhNbHeureeEnseignementSaeRessource;
         $this->totalAdaptationLocaleDontTp = $this->vhNbHeuresDontTpSaeRessource;
-        $this->totalEnseignements = $this->totalEnseignementRessources + $this->vhNbHeureeEnseignementSaeRessource;
-        $this->totalDontTp = $this->vhNbHeuresDontTpSaeRessource + $this->vhNbHeuresDontTpSaeRessource;
+        $this->totalEnseignements = $this->totalEnseignementRessources + $this->vhNbHeuresEnseignementSae + $this->vhNbHeureeEnseignementSaeRessource;
+        $this->totalDontTp = $this->vhNbHeuresDontTpSaeRessource +  $this->totalDontTpRessources;
         $this->totalProjetTutore = $this->vhNbHeuresProjetTutores;
-        $this->totalEnseignementProjetTutore = $this->totalEnseignements + $this->totalEnseignementProjetTutore;
+        $this->totalEnseignementProjetTutore = $this->totalEnseignements + $this->totalProjetTutore;
 
         // Cible
         $this->cibleNbHeureeEnseignementSaeRessource = $semestre->getNbHeuresRessourceSae();

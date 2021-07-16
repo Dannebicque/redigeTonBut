@@ -165,7 +165,9 @@
             <td colspan="{{ ressources|length }}" class="cell-gris texte-rouge fw-bold">
                 &nbsp;
             </td>
-            <td class="cell-gris texte-rouge fw-bold">80</td>
+            <td class="cell-gris texte-rouge text-center fw-bold">
+                <span x-text="donnees[{{ semestre.ordreLmd }}].totalProjetTutore"></span>
+            </td>
             <td class="cell-jaune fw-bold text-center">
                 {{ semestre.nbHeuresProjet }}
             </td>
