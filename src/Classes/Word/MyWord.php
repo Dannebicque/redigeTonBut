@@ -11,9 +11,13 @@ namespace App\Classes\Word;
 
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
+use Parsedown;
+use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
+use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -38,39 +42,62 @@ class MyWord
     {
         $templateProcessor = new TemplateProcessor($this->dir . 'sae.docx');
         $templateProcessor->setValue('nomsae', $apcSae->getCodeMatiere() . ' - ' . $apcSae->getLibelle());
-        $competences = '';
+
+        $competences = new TextRun();
         foreach ($apcSae->getCompetences() as $competence) {
-            $competences .= '- ' . $competence->getLibelle() . '</w:t><w:br/><w:t>';
+            $competences->addText('- ' . $competence->getLibelle());
+            $competences->addTextBreak();
         }
 
-        $acs = '';
+        $acs = new TextRun();
         foreach ($apcSae->getApcSaeApprentissageCritiques() as $ac) {
             if (null !== $ac->getApprentissageCritique()) {
-                $acs .= '- ' . $ac->getApprentissageCritique()->getCode() . ' : ' . $ac->getApprentissageCritique()->getLibelle() . '</w:t><w:br/><w:t>';
+                $acs->addText('- ' . $ac->getApprentissageCritique()->getCode() . ' : ' . $ac->getApprentissageCritique()->getLibelle());
+                $acs->addTextBreak();
             }
         }
 
-        $ressources = '';
+        $ressources = new TextRun();
         foreach ($apcSae->getApcSaeRessources() as $ac) {
             if (null !== $ac->getRessource()) {
-                $ressources .= '- ' . $ac->getRessource()->getCodeMatiere() . ' : ' . $ac->getRessource()->getLibelle() . '</w:t><w:br/><w:t>';
+                $ressources->addText('- ' . $ac->getRessource()->getCodeMatiere() . ' : ' . $ac->getRessource()->getLibelle());
+                $ressources->addTextBreak();
             }
         }
 
-        $parcours = '';
+        $parcours = new TextRun();
         foreach ($apcSae->getApcSaeParcours() as $ac) {
             if (null !== $ac->getParcours()) {
-                $parcours .= '- ' . $ac->getParcours()->getLibelle() . '</w:t><w:br/><w:t>';
+
+                $parcours->addText('- ' . $ac->getParcours()->getLibelle());
+                $parcours->addTextBreak();
             }
         }
 
-        $templateProcessor->setValue('parcours', $parcours);
-        $templateProcessor->setValue('competences', $competences);
-        $templateProcessor->setValue('descriptif', $this->prepareTexte($apcSae->getDescription()));
-        $templateProcessor->setValue('objectifs', $this->prepareTexte($apcSae->getObjectifs()));
-        $templateProcessor->setValue('apprentissages', $acs);
-        $templateProcessor->setValue('ressources', $ressources);
-        $templateProcessor->setValue('semestre',  $apcSae->getSemestre()->getOrdreLmd());
+        $templateProcessor->setComplexValue('parcours', $parcours);
+        $templateProcessor->setComplexValue('competences', $competences);
+
+        // get elements in section
+        $containers = $this->prepareTexte($apcSae->getObjectifs());
+        $nbElements = count($containers);
+        $templateProcessor->cloneBlock('objectifsblock', $nbElements, true, true);
+
+        foreach ($containers as $i => $iValue) {
+            $templateProcessor->setComplexBlock('objectifs#' . ($i + 1), $iValue);
+        }
+
+        // get elements in section
+        $containers = $this->prepareTexte($apcSae->getDescription());
+        $nbElements = count($containers);
+        $templateProcessor->cloneBlock('descriptifblock', $nbElements, true, true);
+
+        foreach ($containers as $i => $iValue) {
+            $templateProcessor->setComplexBlock('descriptif#' . ($i + 1), $iValue);
+        }
+
+        $templateProcessor->setComplexValue('apprentissages', $acs);
+        $templateProcessor->setComplexValue('ressources', $ressources);
+        $templateProcessor->setValue('semestre', $apcSae->getSemestre()->getOrdreLmd());
 
         $filename = 'sae_' . $apcSae->getCodeMatiere() . ' ' . $apcSae->getLibelle() . '.docx';
 
@@ -91,10 +118,18 @@ class MyWord
 
     private function prepareTexte($text)
     {
-        $text = nl2br(trim($text));
-        $text = str_replace('<br />', '</w:t><w:br/><w:t>', $text);
+        $parseDown = new Parsedown();
+        $section = (new PhpWord())->addSection();
 
-        return $text;
+        $texte = $parseDown->text($text);
+        //$texte = nl2br($texte);
+        //$texte = str_replace(['<hr />','<li>', '</li>', '<ul>', '</ul>'], ['<br />','- ', '<br />', '', '<br />'], $texte);
+        //dump($texte);//die();
+
+
+        Html::addHtml($section, $texte, false, true);
+
+        return $section->getElements();
     }
 
     /**
@@ -110,45 +145,58 @@ class MyWord
         $templateProcessor->setValue('nomressource',
             $apcRessource->getCodeMatiere() . ' - ' . $apcRessource->getLibelle());
 
-        $competences = '';
+        $competences = new TextRun();
         foreach ($apcRessource->getCompetences() as $competence) {
-            $competences .= '- ' . $competence->getLibelle() . '</w:t><w:br/><w:t>';
+            $competences->addText('- ' . $competence->getLibelle());
+            $competences->addTextBreak();
         }
 
-        $acs = '';
+        $acs = new TextRun();
         foreach ($apcRessource->getApcRessourceApprentissageCritiques() as $ac) {
             if (null !== $ac->getApprentissageCritique()) {
-                $acs .= '- ' . $ac->getApprentissageCritique()->getCode() . ' : ' . $ac->getApprentissageCritique()->getLibelle() . '</w:t><w:br/><w:t>';
+                $acs->addText('- ' . $ac->getApprentissageCritique()->getCode() . ' : ' . $ac->getApprentissageCritique()->getLibelle());
+                $acs->addTextBreak();
             }
         }
 
-        $saes = '';
+        $saes = new TextRun();
         foreach ($apcRessource->getApcSaeRessources() as $ac) {
             if (null !== $ac->getRessource()) {
-                $saes .= '- ' . $ac->getSae()->getCodeMatiere() . ' : ' . $ac->getSae()->getLibelle() . '</w:t><w:br/><w:t>';
+                $saes->addText('- ' . $ac->getSae()->getCodeMatiere() . ' : ' . $ac->getSae()->getLibelle());
+                $saes->addTextBreak();
             }
         }
 
-        $ressources = '';
+        $ressources = new TextRun();
         foreach ($apcRessource->getRessourcesPreRequises() as $ac) {
-                $ressources .= '- ' . $ac->getCodeMatiere() . ' : ' . $ac->getLibelle() . '</w:t><w:br/><w:t>';
-
+            $ressources->addText('- ' . $ac->getCodeMatiere() . ' : ' . $ac->getLibelle());
+            $ressources->addTextBreak();
         }
 
-        $parcours = '';
+        $parcours = new TextRun();
         foreach ($apcRessource->getApcRessourceParcours() as $ac) {
             if (null !== $ac->getParcours()) {
-                $parcours .= '- ' . $ac->getParcours()->getLibelle() . '</w:t><w:br/><w:t>';
+                $parcours->addText('- ' . $ac->getParcours()->getLibelle());
+                $parcours->addTextBreak();
             }
         }
 
-        $templateProcessor->setValue('parcours', $parcours);
-        $templateProcessor->setValue('descriptif', $this->prepareTexte($apcRessource->getDescription()));
-        $templateProcessor->setValue('heures', $apcRessource->getHeuresTotales().'h dont '.$apcRessource->getTpPpn().' h TP');
-        $templateProcessor->setValue('sae', $saes);
-        $templateProcessor->setValue('competences', $competences);
-        $templateProcessor->setValue('apprentissages', $acs);
-        $templateProcessor->setValue('prerequis', $ressources);
+        // get elements in section
+        $containers = $this->prepareTexte($apcRessource->getDescription());
+        $nbElements = count($containers);
+        $templateProcessor->cloneBlock('descriptifblock', $nbElements, true, true);
+
+        foreach ($containers as $i => $iValue) {
+            $templateProcessor->setComplexBlock('descriptif#' . ($i + 1), $iValue);
+        }
+
+        $templateProcessor->setComplexValue('parcours', $parcours);
+        $templateProcessor->setValue('heures',
+            $apcRessource->getHeuresTotales() . 'h dont ' . $apcRessource->getTpPpn() . ' h TP');
+        $templateProcessor->setComplexValue('sae', $saes);
+        $templateProcessor->setComplexValue('competences', $competences);
+        $templateProcessor->setComplexValue('apprentissages', $acs);
+        $templateProcessor->setComplexValue('prerequis', $ressources);
         $templateProcessor->setValue('motscles', $this->prepareTexte($apcRessource->getMotsCles()));
         $templateProcessor->setValue('semestre', $apcRessource->getSemestre()->getOrdreLmd());
 
