@@ -9,6 +9,7 @@
 
 namespace App\Controller\competences;
 
+use App\Classes\Apc\ApcApprentissageCritiqueExport;
 use App\Classes\Apc\ApcApprentissageCritiqueOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
@@ -24,6 +25,17 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route("/apc/apprentissage/critique")]
 class ApcApprentissageCritiqueController extends BaseController
 {
+    #[Route('/export', name: 'administration_apc_apprentissage_critique_export', methods: ['GET'])]
+    public function export(
+        ApcApprentissageCritiqueExport $apcApprentissageCritiqueExport,
+        ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
+    ): Response {
+        $acs = $apcApprentissageCritiqueRepository->findByDepartement($this->getDepartement());
+
+        return $apcApprentissageCritiqueExport->exportDepartement($acs, $this->getDepartement());
+    }
+
+
     #[Route('/{departement}', name: 'administration_apc_apprentissage_critique_index', requirements: ['departement' => '\d+'], methods: ['GET'])]
     public function index(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
@@ -36,7 +48,6 @@ class ApcApprentissageCritiqueController extends BaseController
 
         ]);
     }
-
 
     #[Route("/new/{niveau}", name:"administration_apc_apprentissage_critique_new", methods:["GET","POST"])]
     public function new(Request $request, ApcNiveau $niveau): Response

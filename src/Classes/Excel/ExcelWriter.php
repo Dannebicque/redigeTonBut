@@ -29,11 +29,13 @@ class ExcelWriter
         $this->dir = $kernel->getProjectDir().'/public/excel/';
     }
 
-    public function nouveauFichier($libelle)
+    public function nouveauFichier($libelle = '')
     {
         $this->spreadsheet = new Spreadsheet();
         $this->spreadsheet->removeSheetByIndex(0);
-        $this->createSheet($libelle);
+        if ($libelle !== '') {
+            $this->createSheet($libelle);
+        }
     }
 
     /**
