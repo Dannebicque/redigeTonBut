@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    Mise à jour de la codification
+    <div class="card">
+        <div class="card-body">
+            <p>
+                Mettre à jour la codification des apprentissages critiques :
+                <a href="{{ path('update_codification_acs') }}" class="btn btn-warning">Mettre à jour</a>
+            </p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Semestre</th>
+                    <th>Ressources</th>
+                    <th>SAÉ</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for semestre in semestres %}
+                    <tr>
+                        <td>{{ semestre.libelle }}</td>
+                        <td><a href="{{ path('update_codification_ressources', {semestre:semestre.id}) }}" class="btn
+                    btn-warning">
+                                Mettre à jour
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('update_codification_sae', {semestre:semestre.id}) }}" class="btn btn-warning">
+                                Mettre à jour
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block header %}
+    Mise à jour de la codification
+{% endblock %}
+

@@ -308,6 +308,12 @@
                                     <span class="label">Gérer les accès</span>
                                 </a>
                             </li>
+
+                            <li>
+                                <a href="{{ path('update_codification_index') }}">
+                                    <span class="label">MàJ codification</span>
+                                </a>
+                            </li>
                             {% if not is_granted('ROLE_GT') %}
                                 <li>
                                     <a href="{{ path('administration_apc_referentiel_competence_export') }}">
