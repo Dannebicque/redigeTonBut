@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.2.3...v1.4.0) (2021-07-18)
+
+
+### Features
+
+* Export Excel des ACs ([f28fe57](https://github.com/Dannebicque/redigeTonBut/commit/f28fe5778388067f129a858d592c7b96e62532ce))
+* Import d'un référentiel de formation ([ae4e7c1](https://github.com/Dannebicque/redigeTonBut/commit/ae4e7c1f071e53c8d6585c43b626066ca8ed815f))
+* Mise à jour de tous les codes (AC, ressources, SAE) ([b09e1fb](https://github.com/Dannebicque/redigeTonBut/commit/b09e1fb6ae3ee82ff618cbb43cfbfaa25e4f701a))
+* Modal sur le markdown autorisé ([31e81f6](https://github.com/Dannebicque/redigeTonBut/commit/31e81f6fef295fa2df2e5fd37332755173d56789))
+* Saisie des mentions particulières selon les parcours des diplômes. ([4526a21](https://github.com/Dannebicque/redigeTonBut/commit/4526a21557bd9e3350da7ef64e9ebdc81338620f))
+
+
+### Bug Fixes
+
+* bug sur les formulaires SAE/ressources ([3a2871b](https://github.com/Dannebicque/redigeTonBut/commit/3a2871baf94c5d865204e6ca875d29a157415c98))
+* Calcul du pourcentage d'adaptation local global, calcul du pourcentage du semestre selon les heures (fonctionne depuis pourcentage->heures et heures->pourcentage) ([c88bfe5](https://github.com/Dannebicque/redigeTonBut/commit/c88bfe56549e3ac1b060e8a3c8c55af421eec5d7))
+* Export Word avec structures complexes ([4126a37](https://github.com/Dannebicque/redigeTonBut/commit/4126a3786b17c2d89e9e57cc74de2fac304237a4))
+* Problème parcours dans calcul horaire ([0be877a](https://github.com/Dannebicque/redigeTonBut/commit/0be877a79a6151bb0d628140554918f4b0046c30))
+* Traduction du markdown en HTml dans les fiches ([a75c3c9](https://github.com/Dannebicque/redigeTonBut/commit/a75c3c9ca3d93ffd840beec2097628c4c244640a))
+
 ## [1.3.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.2.3...v1.3.0) (2021-07-18)
 
 
