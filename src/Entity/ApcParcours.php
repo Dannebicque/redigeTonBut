@@ -68,6 +68,11 @@ class ApcParcours extends BaseEntity
      */
     private $ordre;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $modalitesParticulieres;
+
     public function __construct(Departement $departement)
     {
         $this->setDepartement($departement);
@@ -234,6 +239,18 @@ class ApcParcours extends BaseEntity
     public function setOrdre(int $ordre): self
     {
         $this->ordre = $ordre;
+
+        return $this;
+    }
+
+    public function getModalitesParticulieres(): ?string
+    {
+        return $this->modalitesParticulieres;
+    }
+
+    public function setModalitesParticulieres(?string $modalitesParticulieres): self
+    {
+        $this->modalitesParticulieres = $modalitesParticulieres;
 
         return $this;
     }

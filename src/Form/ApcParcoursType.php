@@ -25,8 +25,16 @@ class ApcParcoursType extends AbstractType
             ->add('code', TextType::class, ['label' => 'Code/Sigle'])
             ->add('textePresentation', TextareaType::class,
                 ['label' => 'Texte descriptif du parcours',
-                    'help' => 'Objectifs du parcours, métiers et secteurs d’activités visés, compétences visées. Dispositions particulières professions règlementées, certifications spéciales, TP sécurité́',
+                    'help' => 'Objectifs du parcours, métiers et secteurs d’activités visés, compétences visées. Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                    'help_html' => true,
                     'attr' => ['rows' => 50]])
+            ->add('modalitesParticulieres', TextareaType::class,
+                ['label' => 'Dispositions particulières',
+                    'help' => 'Dispositions particulières professions règlementées, certifications spéciales, TP sécurité́. Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                    'help_html' => true,
+                    'attr' => ['rows' => 20]])
         ;
     }
 
