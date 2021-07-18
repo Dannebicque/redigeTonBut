@@ -58,7 +58,7 @@ class StructureDepartement
 
     public function getMoyenneAdaptationLocale(): float
     {
-        return   $this->totalPourcentageAdaptationLocale / $this->departement->getNbHeuresDiplome() * 100;
+        return   $this->nbHeuresEnseignementLocale / $this->departement->getNbHeuresDiplome() * 100;
     }
 
     public function getJson(): array

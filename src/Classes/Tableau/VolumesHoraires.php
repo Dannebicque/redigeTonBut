@@ -47,7 +47,6 @@ class VolumesHoraires
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {
                 $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->parcours);
-
             }
 
 

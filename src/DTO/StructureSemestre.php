@@ -37,7 +37,7 @@ class StructureSemestre
         $this->nbHeuresRessourcesSae = $semestre->getNbHeuresRessourceSae();
         $this->pourcentageAdaptationLocale = $semestre->getPourcentageAdaptationLocale();
 
-        $this->nbHeuresEnseignementLocale = $semestre->getNbHeuresRessourceSae() * $semestre->getPourcentageAdaptationLocale() / 100;
+        $this->nbHeuresEnseignementLocale = $semestre->getNbHeuresEnseignementLocale();
         $this->nbHeuresEnseignementSaeLocale = $semestre->getNbHeuresEnseignementSaeLocale();
         $this->nbHeuresEnseignementRessourceLocale = $this->nbHeuresEnseignementLocale - $this->nbHeuresEnseignementSaeLocale;
         $this->nbHeuresEnseignementRessourceNational = $this->nbHeuresRessourcesSae-$this->nbHeuresEnseignementLocale;
@@ -72,7 +72,7 @@ class StructureSemestre
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
             'nbSemainesStageMax' => $this->nbSemainesStageMax,
-            'nbSemainesCoursProjet' => $this->nbSemainesCoursProjet,
+            'nbSemainesCoursProjet' => $this->nbSemainesCoursProjet-$this->nbSemainesStageMax,
             'nbHeuresProjet' => $this->nbHeuresProjet,
             'nbHeuresCoursProjet' => $this->nbHeuresCoursProjet,
             'nbDemiJournees' => $this->nbDemiJournees,
