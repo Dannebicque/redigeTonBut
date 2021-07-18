@@ -10,6 +10,7 @@
 namespace App\Repository;
 
 use App\Entity\ApcParcours;
+use App\Entity\Departement;
 use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -29,5 +30,16 @@ class ApcParcoursRepository extends ServiceEntityRepository
     public function findAll()
     {
         return $this->findBy([], ['ordre' => 'ASC', 'libelle' => 'ASC']);
+    }
+
+    public function findOneByDepartementArray(Departement $departement)
+    {
+        $t = [];
+        foreach ($departement->getApcParcours() as $parcours)
+        {
+            $t[$parcours->getCode()] = $parcours;
+        }
+
+        return $t;
     }
 }

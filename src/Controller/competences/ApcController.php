@@ -52,17 +52,16 @@ class ApcController extends BaseController
     }
 
     #[Route("/import", name:"administration_apc_referentiel_import", methods:["GET","POST"])]
-    public function index(
+    public function import(
         DepartementRepository $departementRepository,
         MyUpload $myUpload,
         ReferentielCompetenceImport $diplomeImport,
         Request $request
     ): Response {
         if ($request->isMethod('POST')) {
-            $departement = $departementRepository->find($request->request->get('departement'));
-            if (null !== $departement) {
+            if (null !== $this->getDepartement()) {
                 $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xml', 'xlsx']);
-                $diplomeImport->import($departement, $fichier, $request->request->get('typeFichier'));
+                $diplomeImport->import($this->getDepartement(), $fichier, $request->request->get('typeFichier'));
                 unlink($fichier);
                 $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Maquette importée avec succès');
             }

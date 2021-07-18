@@ -14,9 +14,11 @@ use App\Entity\ApcParcoursNiveau;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
 use App\Entity\ApcRessourceCompetence;
+use App\Entity\ApcRessourceParcours;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeApprentissageCritique;
 use App\Entity\ApcSaeCompetence;
+use App\Entity\ApcSaeParcours;
 use App\Entity\ApcSaeRessource;
 use App\Entity\ApcSituationProfessionnelle;
 use App\Entity\Departement;
@@ -160,7 +162,7 @@ class ReferentielCompetenceImport
                 $tParcour[$ordre] = $parc;
             } else {
                 //décomposition du parcours
-                for($i = 5; $i<=7; $i++) {
+                for ($i = 5; $i <= 7; $i++) {
                     if (trim($sheet->getCellByColumnAndRow($i, $ligne)->getValue()) !== '') {
                         $pn = new ApcParcoursNiveau();
                         $nom = $sheet->getCellByColumnAndRow($i, $ligne)->getValue();
@@ -172,7 +174,7 @@ class ReferentielCompetenceImport
                 }
 
             }
-            $ligne ++;
+            $ligne++;
         }
         $this->entityManager->flush();
     }
@@ -276,36 +278,71 @@ class ReferentielCompetenceImport
     {
         $xml = $this->openXmlFile();
         $tAcs = $this->entityManager->getRepository(ApcApprentissageCritique::class)->findOneByDepartementArray($this->departement);
+        $tParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByDepartementArray($this->departement);
         $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findOneByDepartementArray($this->departement);
+        $tSem = [];
         foreach ($xml->semestre as $sem) {
+
             $semestre = $this->entityManager->getRepository(Semestre::class)->findOneByDepartementEtNumero($this->departement,
                 $sem['numero'], $sem['ordreAnnee']);
 
             if (null !== $semestre) {
+                $tSem[] = $semestre;
                 $tRessources = [];
+                $tabPrerequis = [];
                 foreach ($sem->ressources->ressource as $ressource) {
                     $ar = new ApcRessource();
                     $ar->setSemestre($semestre);
-                    $ar->setOrdre((int)substr($ressource['code'], 2, 2));
+                    $ar->setOrdre((int)$ressource['ordre']);
                     $ar->setLibelle($ressource->titre);
-                    $ar->setTdPpn($ressource['heuresCMTD']);
+                    $ar->setHeuresTotales($ressource['heuresCMTD']);
                     $ar->setTpPpn($ressource['heuresTP']);
                     $ar->setDescription((string)$ressource->description);
                     $ar->setMotsCles((string)$ressource->motsCles);
-                    $ar->setCodeMatiere(Codification::codeRessource($ar));
+                    $ar->setCodeMatiere((string)$ressource['code']);
+                    //$ar->setCodeMatiere(Codification::codeRessource($ar)); -- todo: renommer le semestre à posteriori
                     $this->entityManager->persist($ar);
                     $tRessources[$ar->getCodeMatiere()] = $ar;
 
                     //acs
-                    foreach ($ressource->acs->ac as $ac) {
-                        $rac = new ApcRessourceApprentissageCritique($ar, $tAcs[trim((string)$ac)]);
-                        $this->entityManager->persist($rac);
+                    if ($ressource->acs !== null) {
+                        foreach ($ressource->acs->ac as $ac) {
+                            if (array_key_exists(trim((string)$ac), $tAcs)) {
+                                $rac = new ApcRessourceApprentissageCritique($ar, $tAcs[trim((string)$ac)]);
+                                $this->entityManager->persist($rac);
+                            }
+                        }
                     }
+
                     //competences
-                    foreach ($ressource->competences->competence as $comp) {
-                        $rac = new ApcRessourceCompetence($ar, $tCompetences[trim((string)$comp['nom'])]);
-                        $rac->setCoefficient((float)$comp['coefficient']);
-                        $this->entityManager->persist($rac);
+                    if ($ressource->competences !== null) {
+                        foreach ($ressource->competences->competence as $comp) {
+                            if (array_key_exists(trim((string)$comp['nom']), $tCompetences)) {
+                                $rac = new ApcRessourceCompetence($ar, $tCompetences[trim((string)$comp['nom'])]);
+                                $rac->setCoefficient((float)$comp['coefficient']);
+                                $this->entityManager->persist($rac);
+                            }
+                        }
+                    }
+
+                    //prerequis
+                    if ($ressource->prerequis !== null && $ressource->prerequis->ressource !== null) {
+                        foreach ($ressource->prerequis->ressource as $r) {
+                            if (!array_key_exists($ar->getCodeMatiere(), $tabPrerequis)) {
+                                $tabPrerequis[$ar->getCodeMatiere()] = [];
+                            }
+                            $tabPrerequis[$ar->getCodeMatiere()][] = (string)$r; //on sauvegarde et on trairera à la fin des ressources;
+                        }
+                    }
+
+                    //parcours
+                    if ($ressource->listeParcours !== null && $ressource->listeParcours->parcours !== null) {
+                        foreach ($ressource->listeParcours->parcours as $parcours) {
+                            if (array_key_exists(trim((string)$parcours), $tParcours)) {
+                                $rac = new ApcRessourceParcours($ar, $tParcours[trim((string)$parcours)]);
+                                $this->entityManager->persist($rac);
+                            }
+                        }
                     }
                     //les saes seront ajoutée par les SAE
                 }
@@ -314,37 +351,79 @@ class ReferentielCompetenceImport
                     $ar = new ApcSae();
                     $ar->setSemestre($semestre);
                     $ar->setLibelle($sae->titre);
-                    $ar->setOrdre((int)substr($sae['code'], 4, 2));
-                    $ar->setTdPpn((float)$sae['heuresCMTD']);
-                    $ar->setTpPpn((float)$sae['heuresTP']);
-                    $ar->setProjetPpn((float)$sae['heuresProjet']);
+                    $ar->setOrdre((int)$sae['ordre']);
                     $ar->setDescription((string)$sae->description);
-                    $ar->setExemples((string)$sae->exemples);
-                    $ar->setLivrables((string)$sae->livrables);
-                    $ar->setCodeMatiere(Codification::codeSae($ar));
+                    $ar->setObjectifs((string)$sae->objectifs);
+                    $ar->setCodeMatiere((string)$sae['code']);
+                    //$ar->setCodeMatiere(Codification::codeSae($ar));
 
                     $this->entityManager->persist($ar);
 
                     //acs
-                    foreach ($sae->acs->ac as $ac) {
-                        $rac = new ApcSaeApprentissageCritique($ar, $tAcs[trim((string)$ac)]);
-                        $this->entityManager->persist($rac);
+                    if ($sae->acs !== null) {
+                        foreach ($sae->acs->ac as $ac) {
+                            if (array_key_exists(trim((string)$ac), $tAcs)) {
+                                $rac = new ApcSaeApprentissageCritique($ar, $tAcs[trim((string)$ac)]);
+                                $this->entityManager->persist($rac);
+                            }
+                        }
                     }
 
                     //competences
-                    foreach ($sae->competences->competence as $comp) {
-                        $rac = new ApcSaeCompetence($ar, $tCompetences[trim((string)$comp['nom'])]);
-                        $rac->setCoefficient((float)$comp['coefficient']);
-                        $this->entityManager->persist($rac);
+                    if ($sae->competences !== null) {
+                        foreach ($sae->competences->competence as $comp) {
+                            if (array_key_exists(trim((string)$comp['nom']), $tCompetences)) {
+                                $rac = new ApcSaeCompetence($ar, $tCompetences[trim((string)$comp['nom'])]);
+                                $rac->setCoefficient((float)$comp['coefficient']);
+                                $this->entityManager->persist($rac);
+                            }
+                        }
                     }
                     //Ressources
-                    foreach ($sae->ressources->ressource as $comp) {
-                        $rac = new ApcSaeRessource($ar, $tRessources[trim((string)$comp)]);
-                        $this->entityManager->persist($rac);
+                    if ($sae->ressources !== null) {
+                        foreach ($sae->ressources->ressource as $comp) {
+                            if (array_key_exists(trim((string)$comp), $tRessources)) {
+                                $rac = new ApcSaeRessource($ar, $tRessources[trim((string)$comp)]);
+                                $this->entityManager->persist($rac);
+                            }
+                        }
+                    }
+
+                    //Parcours
+                    if ($sae->listeParcours !== null && $sae->listeParcours->parcours) {
+                        foreach ($sae->listeParcours->parcours as $parcours) {
+                            if (array_key_exists(trim((string)$parcours), $tParcours)) {
+                                $rac = new ApcSaeParcours($ar, $tParcours[trim((string)$parcours)]);
+                                $this->entityManager->persist($rac);
+                            }
+                        }
+                    }
+                }
+                dump($tabPrerequis);
+                foreach ($tabPrerequis as $key => $tpr) {
+                    foreach ($tpr as $r) {
+                        if (array_key_exists($r, $tRessources) && array_key_exists($key, $tRessources)) {
+                            $tRessources[$key]->addRessourcesPreRequise($tRessources[$r]);
+                            $tRessources[$r]->addApcRessource($tRessources[$key]);
+                            dump('ok');
+                        }
                     }
                 }
             }
         }
+
+        foreach ($tSem as $sem) {
+            foreach ($sem->getApcRessources() as $ressource)
+            {
+                $ressource->setCodeMatiere(Codification::codeRessource($ressource));
+            }
+
+            foreach ($sem->getApcSaes() as $sae)
+            {
+                $sae->setCodeMatiere(Codification::codeSae($sae));
+            }
+        }
+
         $this->entityManager->flush();
     }
 
