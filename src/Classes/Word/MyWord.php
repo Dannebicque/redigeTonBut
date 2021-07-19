@@ -118,15 +118,11 @@ class MyWord
 
     private function prepareTexte($text)
     {
+
         $parseDown = new Parsedown();
         $section = (new PhpWord())->addSection();
-
         $texte = $parseDown->text($text);
-        //$texte = nl2br($texte);
-        //$texte = str_replace(['<hr />','<li>', '</li>', '<ul>', '</ul>'], ['<br />','- ', '<br />', '', '<br />'], $texte);
-        //dump($texte);//die();
-
-
+        $texte = '<div style="text-align:justify">'.$texte.'</div>';
         Html::addHtml($section, $texte, false, true);
 
         return $section->getElements();
