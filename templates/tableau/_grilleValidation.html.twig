@@ -4,7 +4,7 @@
         <tr>
             <th colspan="3">&nbsp;</th>
             {% for semestre in annee.semestres %}
-                <th colspan="{{ semestre.apcSaes|length }}">Semestre {{ semestre.ordreLmd }}</th>
+                <th colspan="{{ tSaeSemestre[semestre.id]|length }}">Semestre {{ semestre.ordreLmd }}</th>
                 <th>&nbsp;</th>
             {% endfor %}
             <th>&nbsp;</th>
@@ -13,8 +13,10 @@
             <th colspan="">Compétences</th>
             <th>AC</th>
             <th>&nbsp;</th>
+            {% set taille = 0 %}
             {% for semestre in annee.semestres %}
-                {% for sae in semestre.apcSaes %}
+                {% for sae in tSaeSemestre[semestre.id] %}
+                    {% set taille = taille + 1 %}
                     <th><p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p></th>
                 {% endfor %}
                 <th>&nbsp;</th>
@@ -38,7 +40,7 @@
                     </th>
                     <th>&nbsp;</th>
                     {% for semestre in annee.semestres %}
-                        {% for sae in semestre.apcSaes %}
+                        {% for sae in tSaeSemestre[semestre.id] %}
                             <td>
                                 <input type="checkbox"
                                        data-sae="{{ sae.id }}"
@@ -59,7 +61,7 @@
                 </tr>
             {% endfor %}
             <tr>
-                <td colspan="{{ 6 + saes|length }}"></td>
+                <td colspan="{{ 6 + taille }}"></td>
             </tr>
         {% endfor %}
         </tbody>

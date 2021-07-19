@@ -319,6 +319,14 @@ class TableauController extends BaseController
             $saes = $apcSaeParcoursRepository->findByAnnee($annee, $parcours);
         }
 
+        $tSaeSemestre = [];
+        foreach ($annee->getSemestres() as $sem)
+        {
+            $tSaeSemestre[$sem->getId()] = [];
+        }
+        foreach ($saes as $sae) {
+            $tSaeSemestre[$sae->getSemestre()->getId()][] = $sae;
+        }
 
         $tab = [];
         $tab['saes'] = [];
@@ -338,6 +346,7 @@ class TableauController extends BaseController
                 'niveaux' => $niveaux,
                 'saes' => $saes,
                 'tab' => $tab,
+                'tSaeSemestre' => $tSaeSemestre,
             ]);
     }
 
