@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.4.0...v1.5.0) (2021-07-19)
+
+
+### Bug Fixes
+
+* Export XML référentiel de compétences et de formation. ([2359b16](https://github.com/Dannebicque/redigeTonBut/commit/2359b168dc5b356b11d8b05196e2bf568b586ccb))
+
 ## [1.4.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.2.3...v1.4.0) (2021-07-18)
 
 
