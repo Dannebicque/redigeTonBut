@@ -48,7 +48,7 @@ class StructureSemestre
         $this->nbSemainesConges = $semestre->getNbSemainesConges();
         $this->nbSemainesStageMin = $semestre->getNbSemaineStageMin();
         $this->nbSemainesStageMax = $semestre->getNbSemainesStageMax();
-        $this->nbSemainesCoursProjet = $this->nbSemaines - $this->nbSemainesConges;
+        $this->nbSemainesCoursProjet = $this->nbSemaines - $this->nbSemainesConges-$this->nbSemainesStageMax;
         $this->nbHeuresProjet = $semestre->getNbHeuresProjet();
         $this->nbHeuresCoursProjet = $this->nbHeuresRessourcesSae + $this->nbHeuresProjet;
         $this->nbDemiJournees = $semestre->getNbDemiJournees();
@@ -72,7 +72,7 @@ class StructureSemestre
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
             'nbSemainesStageMax' => $this->nbSemainesStageMax,
-            'nbSemainesCoursProjet' => $this->nbSemainesCoursProjet-$this->nbSemainesStageMax,
+            'nbSemainesCoursProjet' => $this->nbSemainesCoursProjet,
             'nbHeuresProjet' => $this->nbHeuresProjet,
             'nbHeuresCoursProjet' => $this->nbHeuresCoursProjet,
             'nbDemiJournees' => $this->nbDemiJournees,
