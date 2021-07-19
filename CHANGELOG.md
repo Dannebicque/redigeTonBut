@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.1...v1.5.2) (2021-07-19)
+
+
+### Bug Fixes
+
+* Ressources/Sae coefficients ([654b94b](https://github.com/Dannebicque/redigeTonBut/commit/654b94b9d14fc999eb098ef9e5c443b0e34ef088))
+
 ### [1.5.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.0...v1.5.1) (2021-07-19)
 
 
