@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.0...v1.5.1) (2021-07-19)
+
+
+### Bug Fixes
+
+* Calcul du nombre de semaines ([70c2348](https://github.com/Dannebicque/redigeTonBut/commit/70c23489a3de66b924703cc4cb314085fe372e74))
+* Calcul du total ECTS selon les parcours ([7df018e](https://github.com/Dannebicque/redigeTonBut/commit/7df018e390596a23ff27f2e7dea3bd5deb1005ff))
+* Ressources/Sae coefficients ([e0b83d8](https://github.com/Dannebicque/redigeTonBut/commit/e0b83d8e4a0d1d75305cafdeb1a4382ad976b27f))
+* Typos dans la fiche SAE ([dc56700](https://github.com/Dannebicque/redigeTonBut/commit/dc56700bd3d3c14c4210e3e0fa679466562fd43a))
+
 ## [1.5.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.4.0...v1.5.0) (2021-07-19)
 
 
