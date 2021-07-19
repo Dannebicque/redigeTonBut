@@ -197,7 +197,7 @@ class MyWord
         $templateProcessor->setComplexValue('competences', $competences);
         $templateProcessor->setComplexValue('apprentissages', $acs);
         $templateProcessor->setComplexValue('prerequis', $ressources);
-        $templateProcessor->setValue('motscles', $this->prepareTexte($apcRessource->getMotsCles()));
+        $templateProcessor->setValue('motscles', $apcRessource->getMotsCles());
         $templateProcessor->setValue('semestre', $apcRessource->getSemestre()->getOrdreLmd());
 
         $filename = 'ressource_' . $apcRessource->getCodeMatiere() . ' ' . $apcRessource->getLibelle() . '.docx';
