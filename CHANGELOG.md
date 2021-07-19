@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.2...v1.5.3) (2021-07-19)
+
+
+### Bug Fixes
+
+* Bug export word mots clés ([0a12d61](https://github.com/Dannebicque/redigeTonBut/commit/0a12d6180ff3444560c502de69b22179941f64b5))
+* Liste des SAE en fonction du parcours sur le tableau de validation par année ([018fb16](https://github.com/Dannebicque/redigeTonBut/commit/018fb1682222a529b6da7c93271d03bf1caaf681))
+* Ordre des compétences dans les tableaux ([4d17480](https://github.com/Dannebicque/redigeTonBut/commit/4d174808be9bbc866b361055594cfbed3bfb8460))
+* Ordre des compétences dans les tableaux ([f6d4ad1](https://github.com/Dannebicque/redigeTonBut/commit/f6d4ad1ad61c3411abfbbddcc5b0ca2c2cad2833))
+
 ### [1.5.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.1...v1.5.2) (2021-07-19)
 
 
