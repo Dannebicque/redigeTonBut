@@ -32,35 +32,51 @@
                 <th>&nbsp;</th>
 
                 {% for sae in saes %}
-                    <td>
-                        <input type="text" class="form-control"
-                               @keyup="updateSae"
-                               data-sae="{{ sae.id }}"
-                               data-competence="{{ niveau.competence.id }}"
-                               x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id
-                               }}, {{ niveau.competence.id }})">
+                    <td class="text-center">
+                        {% if is_granted('ROLE_LECTEUR') %}
+                            <span  x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }}, {{ niveau.competence.id }})"></span>
+                        {% else %}
+                            <input type="text" class="form-control"
+                                   @keyup="updateSae"
+                                   data-sae="{{ sae.id }}"
+                                   data-competence="{{ niveau.competence.id }}"
+                                   x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }}, {{ niveau.competence.id }})">
+                        {% endif %}
                     </td>
                 {% endfor %}
 
                 <th>&nbsp;</th>
                 {% for ressource in ressources %}
-                    <td>
-                        <input type="text" class="form-control"
-                               @keyup="updateRessource"
-                               style="min-width: 50px"
-                               data-ressource="{{ ressource.id }}"
-                               data-competence="{{ niveau.competence.id }}"
-                               x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id }}, {{ niveau.competence.id }})">
+                    <td  class="text-center">
+                        {% if is_granted('ROLE_LECTEUR') %}
+                            <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
+                            .ressources,
+{{ ressource.id }}, {{ niveau.competence.id }})"></span>
+                        {% else %}
+                            <input type="text" class="form-control"
+                                   @keyup="updateRessource"
+                                   style="min-width: 50px"
+                                   data-ressource="{{ ressource.id }}"
+                                   data-competence="{{ niveau.competence.id }}"
+                                   x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id }}, {{ niveau.competence.id }})">
+                        {% endif %}
                     </td>
                 {% endfor %}
                 <td></td>
-                <td><input type="text" class="form-control"
-                           @keyup="updateCompetence"
-                           style="min-width: 50px"
-                           data-competence="{{ niveau.competence.id }}"
-                           data-semestre="{{ semestre.id }}"
-                           x-bind:value="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
-                'ects')"></td>
+                <td class="text-center">
+                    {% if is_granted('ROLE_LECTEUR') %}
+                        <span x-html="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
+                'ects')"></span>
+                    {% else %}
+                        <input type="text" class="form-control"
+                               @keyup="updateCompetence"
+                               style="min-width: 50px"
+                               data-competence="{{ niveau.competence.id }}"
+                               data-semestre="{{ semestre.id }}"
+                               x-bind:value="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
+                'ects')">
+                    {% endif %}
+                </td>
                 <td x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }})"
                     class="text-center"
                 ></td>

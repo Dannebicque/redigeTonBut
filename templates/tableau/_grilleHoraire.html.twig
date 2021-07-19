@@ -22,9 +22,12 @@
         <tr>
             <td class="text-center cell-jaune-pale" colspan="2">Volume horaire des enseignements définis nationalement
             </td>
-            <td colspan="{{ saes|length }}" rowspan="2" class="cell-jaune">&nbsp;</td>
+            <td colspan="{{ saes|length }}" rowspan="2" class="cell-jaune ">&nbsp;</td>
             {% for ressource in ressources %}
-                <td class="text-rouge">
+                <td class="text-rouge text-center">
+                    {% if is_granted('ROLE_LECTEUR') %}
+                        <span x-html="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
+                    {% else %}
                     <input type="text" class="heures form-control"
                            data-type="heures_totales"
                            data-ressource="{{ ressource.id }}"
@@ -32,6 +35,7 @@
                            :value="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
                            @keyup.debounce="updateHeuresRessource"
                     />
+                    {% endif %}
                 </td>
             {% endfor %}
             <td class="text-rouge text-center fw-bold">
@@ -44,7 +48,10 @@
         <tr>
             <td class="text-center cell-jaune-pale" colspan="2">Dont TP</td>
             {% for ressource in ressources %}
-                <td class="text-rouge">
+                <td class="text-rouge text-center">
+                {% if is_granted('ROLE_LECTEUR') %}
+                    <span x-html="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
+            {% else %}
                     <input type="text" class="heures form-control"
                            data-type="heures_tp"
                            data-ressource="{{ ressource.id }}"
@@ -52,9 +59,10 @@
                            :value="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
                            @keyup.debounce="updateHeuresRessource"
                     />
+                {% endif %}
                 </td>
             {% endfor %}
-            <td class="text-rouge fw-bold">
+            <td class="text-rouge fw-bold text-center">
                 <span x-text="donnees[{{ semestre.ordreLmd }}].totalDontTpRessources"></span>
             </td>
             <td class="text-rouge text-center fw-bold">
@@ -67,6 +75,9 @@
                 Volume horaire des enseignements définis par l'adaptation locale
             </td>
             <td colspan="{{ saes|length }}" class="text-center cell-jaune text-rouge fw-bold">
+                {% if is_granted('ROLE_LECTEUR') %}
+                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"></span>
+                {% else %}
                 <input type="text" class="heures form-control"
                        data-field="vhNbHeuresEnseignementSae"
                        data-semestre="{{ semestre.id }}"
@@ -74,6 +85,7 @@
                        x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"
                        @keyup.debounce="updateSemestre"
                 />
+                {% endif %}
             </td>
             <td colspan="{{ ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">&nbsp;</td>
             <td rowspan="2" class="text-center cell-jaune text-rouge fw-bold">
@@ -88,6 +100,9 @@
         </tr>
         <tr>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
+                {% if is_granted('ROLE_LECTEUR') %}
+                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"></span>
+                {% else %}
                 <input type="text" class="heures form-control"
                        data-field="vhNbHeureeEnseignementSaeRessource"
                        data-semestre="{{ semestre.id }}"
@@ -95,6 +110,7 @@
                        x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"
                        @keyup.debounce="updateSemestre"
                 />
+                {% endif %}
             </td>
             <td colspan="2" class="text-end cell-jaune">rappel tableau global 6 semestres →</td>
             <td class="text-center cell-jaune">
@@ -104,6 +120,9 @@
         <tr>
             <td colspan="2" class="text-center cell-jaune text-rouge fw-bold">Dont TP</td>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
+                {% if is_granted('ROLE_LECTEUR') %}
+                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"></span>
+                {% else %}
                 <input type="text" class="heures form-control"
                        data-field="vhNbHeuresDontTpSaeRessource"
                        data-semestre="{{ semestre.id }}"
@@ -111,6 +130,7 @@
                        x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"
                        @keyup.debounce="updateSemestre"
                 />
+                {% endif %}
             </td>
             <td class="text-center cell-jaune text-rouge fw-bold">
                 <span x-text="donnees[{{ semestre.ordreLmd }}].totalAdaptationLocaleDontTp"></span>
@@ -125,11 +145,10 @@
             <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
                 Volume horaire total des enseignements (calculé)
             </td>
-            <td class="cell-vert text-rouge fw-bold">
+            <td class="cell-vert text-rouge fw-bold text-center">
                 <span x-text="donnees[{{ semestre.ordreLmd }}].totalEnseignements"></span>
             </td>
             <td class="cell-jaune-pale fw-bold text-center">
-{#                <input type="text" class="form-control" value="430" style="min-width: 50px">#}
                 {{ semestre.nbHeuresRessourceSae }}
             </td>
             <td colspan="2" class="cell-jaune-pale">← rappel volume total d'enseignement issu du tableau global des 6
@@ -141,7 +160,7 @@
             <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
                 Dont TP
             </td>
-            <td class="cell-vert text-rouge fw-bold">
+            <td class="cell-vert text-rouge fw-bold text-center">
                 <span x-text="donnees[{{ semestre.ordreLmd }}].totalDontTp"></span>
             </td>
             <td class="cell-jaune text-rouge fw-bold text-center">
@@ -153,7 +172,10 @@
         </tr>
         <tr>
             <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tutoré</td>
-            <td colspan="{{ saes|length }}" class="cell-gris texte-rouge fw-bold">
+            <td colspan="{{ saes|length }}" class="cell-gris texte-rouge fw-bold text-center">
+                {% if is_granted('ROLE_LECTEUR') %}
+                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"></span>
+                {% else %}
                 <input type="text" class="heures form-control"
                        data-field="vhNbHeuresProjetTutores"
                        data-semestre="{{ semestre.id }}"
@@ -161,6 +183,7 @@
                        x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"
                        @keyup.debounce="updateSemestre"
                 />
+                {% endif %}
             </td>
             <td colspan="{{ ressources|length }}" class="cell-gris texte-rouge fw-bold">
                 &nbsp;
@@ -180,7 +203,7 @@
             <td colspan="{{ saes|length + ressources|length }}" class="text-end cell-vert">
                 Volume horaire total des enseignements avec projet tutoré
             </td>
-            <td class="cell-vert texte-rouge fw-bold">
+            <td class="cell-vert texte-rouge fw-bold text-center">
                 <span x-text="donnees[{{ semestre.ordreLmd }}].totalEnseignementProjetTutore"></span>
             </td>
             <td class="cell-jaune fw-bold text-center">{{ semestre.nbHeuresRessourceSae+semestre.nbHeuresProjet }}</td>

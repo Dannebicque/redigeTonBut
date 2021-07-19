@@ -24,22 +24,25 @@
                 <tr class="lignepubliee">
                     <th>Nbre d'heures d'enseignement (ressources + SAé)</th>
                     {% for i in 1..6 %}
-                        <td><input type="text" class="heures form-control"
-                                   data-field="nbHeuresRessourcesSae"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbHeuresRessourcesSae"
-                                   @keyup.debounce="update"
-                            /></td>
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbHeuresRessourcesSae"></span>
+                            {% else %}
+                                <input type="text" class="heures form-control"
+                                       data-field="nbHeuresRessourcesSae"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbHeuresRessourcesSae"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
+                        </td>
                     {% endfor %}
                     <td class="text-center" x-html="badgeSeuilInferieur(donnees.departement.nbHeuresRessourcesSae, {{ constant
                         ('NB_HEURES_TOTAL', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center fw-bold">{{ constant('NB_HEURES_TOTAL', user_data.caracteristiques) }}</td>
                     <td class="text-center" x-html="badgeSeuil(donnees.departement.ecart, 0)">
-
-
                     </td>
-
                 </tr>
                 <tr>
                     <td colspan="10">&nbsp;</td>
@@ -49,17 +52,21 @@
                         <p class="text-small">max 667 h (secondaire) 600h (tertaire) sur 3 ans<br>
                                               max 40% du volume d'enseignement</p></th>
                     {% for i in 1..6 %}
-                        <td>
-                            <div class="input-group mb-3">
-                                <input type="text" class="adaptationLocale form-control"
-                                       x-model.number="donnees[{{ i }}].pourcentageAdaptationLocale"
-                                       @keyup.debounce="update"
-                                       data-field="pourcentageAdaptationLocale"
-                                       data-semestre="{{ i }}"
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].pourcentageAdaptationLocale"></span>
+                            {% else %}
+                                <div class="input-group mb-3">
+                                    <input type="text" class="adaptationLocale form-control"
+                                           x-model.number="donnees[{{ i }}].pourcentageAdaptationLocale"
+                                           @keyup.debounce="update"
+                                           data-field="pourcentageAdaptationLocale"
+                                           data-semestre="{{ i }}"
 
-                                />
-                                <span class="input-group-text" id="pourcentage{{ i }}">%</span>
-                            </div>
+                                    />
+                                    <span class="input-group-text" id="pourcentage{{ i }}">%</span>
+                                </div>
+                            {% endif %}
                         </td>
                     {% endfor %}
                     <td class="text-center" x-html="badgeSeuilInferieur(donnees.departement.totalPourcentageAdaptationLocale, {{ constant
@@ -74,12 +81,18 @@
                 <tr class="lignepubliee">
                     <th>Heures d'enseignement à définir localement</th>
                     {% for i in 1..6 %}
-                        <td><input type="text" class="heures form-control"
-                                   data-field="nbHeuresEnseignementLocale"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbHeuresEnseignementLocale"
-                                   @keyup.debounce="update"
-                            /></td>
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbHeuresEnseignementLocale"></span>
+                            {% else %}
+                                <input type="text" class="heures form-control"
+                                       data-field="nbHeuresEnseignementLocale"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbHeuresEnseignementLocale"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
+                        </td>
                     {% endfor %}
                     <td class="text-center">
                         <span x-text="donnees.departement.totalAdaptationLocale"></span>
@@ -94,12 +107,18 @@
                 <tr class="lignepubliee">
                     <th>Heures d'enseignement à définir localement dans les SAÉ</th>
                     {% for i in 1..6 %}
-                        <td><input type="text" class="heures form-control"
-                                   data-field="nbHeuresEnseignementSaeLocale"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbHeuresEnseignementSaeLocale"
-                                   @keyup.debounce="update"
-                            /></td>
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbHeuresEnseignementSaeLocale"></span>
+                            {% else %}
+                                <input type="text" class="heures form-control"
+                                       data-field="nbHeuresEnseignementSaeLocale"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbHeuresEnseignementSaeLocale"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
+                        </td>
                     {% endfor %}
                     <td>
                     </td>
@@ -109,15 +128,19 @@
                     </td>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Heures d'enseignement à définir localement dans les Ressources ou les SAÉ </th>
+                    <th>Heures d'enseignement à définir localement dans les Ressources ou les SAÉ</th>
                     {% for i in 1..6 %}
-                        <td>
-                            <input type="text" class="heures form-control"
-                                   data-field="nbHeuresEnseignementRessourceLocale"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbHeuresEnseignementRessourceLocale"
-                                   @keyup.debounce="update"
-                            />
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbHeuresEnseignementRessourceLocale"></span>
+                            {% else %}
+                                <input type="text" class="heures form-control"
+                                       data-field="nbHeuresEnseignementRessourceLocale"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbHeuresEnseignementRessourceLocale"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
                         </td>
                     {% endfor %}
                     <td></td>
@@ -126,14 +149,20 @@
                 </tr>
 
                 <tr class="lignepubliee">
-                    <th>Heures d'enseignement  ressources définies nationalement </th>
+                    <th>Heures d'enseignement ressources définies nationalement</th>
                     {% for i in 1..6 %}
-                        <td><input type="text" class="heures form-control"
-                                   data-field="nbHeuresEnseignementRessourceNational"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbHeuresEnseignementRessourceNational"
-                                   @keyup.debounce="update"
-                            /></td>
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbHeuresEnseignementRessourceNational"></span>
+                            {% else %}
+                                <input type="text" class="heures form-control"
+                                       data-field="nbHeuresEnseignementRessourceNational"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbHeuresEnseignementRessourceNational"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
+                        </td>
                     {% endfor %}
                     <td>
                     </td>
@@ -146,12 +175,18 @@
                 <tr>
                     <th>Heures de tp définies nationalement</th>
                     {% for i in 1..6 %}
-                        <td><input type="text" class="heures form-control"
-                                   data-field="nbHeuresTpNational"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbHeuresTpNational"
-                                   @keyup.debounce="update"
-                            /></td>
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbHeuresTpNational"></span>
+                            {% else %}
+                                <input type="text" class="heures form-control"
+                                       data-field="nbHeuresTpNational"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbHeuresTpNational"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
+                        </td>
                     {% endfor %}
                     <td rowspan="2" class="text-center"
                         x-html="badgeSeuilInferieur(donnees.departement.totalTp, {{ constant('NB_HEURES_TP', user_data
@@ -166,12 +201,18 @@
                 <tr>
                     <th>Heures de tp à définir localement</th>
                     {% for i in 1..6 %}
-                        <td><input type="text" class="heures form-control"
-                                   data-field="nbHeuresTpLocale"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbHeuresTpLocale"
-                                   @keyup.debounce="update"
-                            /></td>
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbHeuresTpLocale"></span>
+                            {% else %}
+                                <input type="text" class="heures form-control"
+                                       data-field="nbHeuresTpLocale"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbHeuresTpLocale"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
+                        </td>
                     {% endfor %}
 
                 </tr>
@@ -182,13 +223,17 @@
                 <tr class="lignepubliee">
                     <th>Heures de projet tutoré</th>
                     {% for i in 1..6 %}
-                        <td>
-                            <input type="text" class="heuresProjet form-control"
-                                   x-model.number="donnees[{{ i }}].nbHeuresProjet"
-                                   @keyup.debounce="update"
-                                   data-field="nbHeuresProjet"
-                                   data-semestre="{{ i }}"
-                            />
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbHeuresProjet"></span>
+                            {% else %}
+                                <input type="text" class="heuresProjet form-control"
+                                       x-model.number="donnees[{{ i }}].nbHeuresProjet"
+                                       @keyup.debounce="update"
+                                       data-field="nbHeuresProjet"
+                                       data-semestre="{{ i }}"
+                                />
+                            {% endif %}
                         </td>
                     {% endfor %}
                     <td class="text-center"
@@ -223,29 +268,34 @@
                                                12 à 16 semaines BUT 3</p>
                     </th>
                     {% for i in 1..6 %}
-                        <td>
-                            <div class="form-floating mb-3">
-                                <input type="text"
-                                       class="stage form-control"
-                                       id="nbSemainesStageMin_{{ i }}"
-                                       x-model.number="donnees[{{ i }}].nbSemainesStageMin"
-                                       @keyup.debounce="update"
-                                       data-field="nbSemainesStageMin"
-                                       data-semestre="{{ i }}"
-                                       placeholder="Minimum">
-                                <label for="nbSemainesStageMin_{{ i }}">Minimum</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text"
-                                       class="stage form-control"
-                                       id="nbSemainesStageMax_{{ i }}"
-                                       x-model.number="donnees[{{ i }}].nbSemainesStageMax"
-                                       @keyup.debounce="update"
-                                       data-field="nbSemainesStageMax"
-                                       data-semestre="{{ i }}"
-                                       placeholder="Maximum">
-                                <label for="nbSemainesStageMax_{{ i }}">Maximum</label>
-                            </div>
+                        <td class="text-center">
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbSemainesStageMin"></span> -
+                                <span x-html="donnees[{{ i }}].nbSemainesStageMax"></span>
+                            {% else %}
+                                <div class="form-floating mb-3">
+                                    <input type="text"
+                                           class="stage form-control"
+                                           id="nbSemainesStageMin_{{ i }}"
+                                           x-model.number="donnees[{{ i }}].nbSemainesStageMin"
+                                           @keyup.debounce="update"
+                                           data-field="nbSemainesStageMin"
+                                           data-semestre="{{ i }}"
+                                           placeholder="Minimum">
+                                    <label for="nbSemainesStageMin_{{ i }}">Minimum</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text"
+                                           class="stage form-control"
+                                           id="nbSemainesStageMax_{{ i }}"
+                                           x-model.number="donnees[{{ i }}].nbSemainesStageMax"
+                                           @keyup.debounce="update"
+                                           data-field="nbSemainesStageMax"
+                                           data-semestre="{{ i }}"
+                                           placeholder="Maximum">
+                                    <label for="nbSemainesStageMax_{{ i }}">Maximum</label>
+                                </div>
+                            {% endif %}
                         </td>
                     {% endfor %}
                     <td rowspan="2" class="text-center">
@@ -266,12 +316,16 @@
                     <th>Nbre de semaines</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
-                            <input type="text" class="form-control"
-                                   data-field="nbSemaines"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbSemaines"
-                                   @keyup.debounce="update"
-                            />
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbSemaines"></span>
+                            {% else %}
+                                <input type="text" class="form-control"
+                                       data-field="nbSemaines"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbSemaines"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
                         </td>
                     {% endfor %}
                     <td class="text-center">
@@ -283,13 +337,16 @@
                 <tr>
                     <th>Nbre de semaines de congés</th>
                     {% for i in 1..6 %}
-                        <td class="text-center">
+                        {% if is_granted('ROLE_LECTEUR') %}
+                            <span x-html=""></span>
+                        {% else %}
                             <input type="text" class="form-control"
                                    data-field="nbSemainesConges"
                                    data-semestre="{{ i }}"
                                    x-model.number="donnees[{{ i }}].nbSemainesConges"
                                    @keyup.debounce="update"
                             />
+                        {% endif %}
                         </td>
                     {% endfor %}
                     <td class="text-center">
@@ -325,7 +382,7 @@
                     {% endfor %}
                     <td class="text-center"
                         x-html="badgeSeuil(donnees.departement.nbHeuresCoursProjet, {{ user_data
-                    .caracteristiques.totalHeuresAvecProjet }})">
+                        .caracteristiques.totalHeuresAvecProjet }})">
                     </td>
                     <td class="text-center fw-bold">
                         {{ user_data.caracteristiques.totalHeuresAvecProjet }}
@@ -368,12 +425,16 @@
                     <th>Demies journées</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
-                            <input type="text" class="form-control"
-                                   data-field="nbDemiJournees"
-                                   data-semestre="{{ i }}"
-                                   x-model.number="donnees[{{ i }}].nbDemiJournees"
-                                   @keyup.debounce="update"
-                            />
+                            {% if is_granted('ROLE_LECTEUR') %}
+                                <span x-html="donnees[{{ i }}].nbDemiJournees"></span>
+                            {% else %}
+                                <input type="text" class="form-control"
+                                       data-field="nbDemiJournees"
+                                       data-semestre="{{ i }}"
+                                       x-model.number="donnees[{{ i }}].nbDemiJournees"
+                                       @keyup.debounce="update"
+                                />
+                            {% endif %}
                         </td>
                     {% endfor %}
                     <td></td>
@@ -455,6 +516,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-
 {% endblock %}
 

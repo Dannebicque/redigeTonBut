@@ -36,17 +36,22 @@
 
             {% for ac in niveau.apcApprentissageCritiques %}
                 <tr>
-                    <th class="bg_{{ niveau.competence.couleur }}"><p data-bs-toggle="tooltip" title="{{ ac.libelle }}">{{ ac.code }}</p>
+                    <th class="bg_{{ niveau.competence.couleur }}">
+                        <p data-bs-toggle="tooltip" title="{{ ac.libelle }}">{{ ac.code }}</p>
                     </th>
                     <th>&nbsp;</th>
                     {% for semestre in annee.semestres %}
                         {% for sae in tSaeSemestre[semestre.id] %}
-                            <td>
-                                <input type="checkbox"
-                                       data-sae="{{ sae.id }}"
-                                       data-ac="{{ ac.id }}"
-                                       class="changeAcSae"
-                                       {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}checked{% endif %} />
+                            <td class="text-center">
+                                {% if is_granted('ROLE_LECTEUR') %}
+                                    {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}X{% endif %}
+                                {% else %}
+                                    <input type="checkbox"
+                                           data-sae="{{ sae.id }}"
+                                           data-ac="{{ ac.id }}"
+                                           class="changeAcSae"
+                                           {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}checked{% endif %} />
+                                {% endif %}
                             </td>
                         {% endfor %}
                         <th>&nbsp;</th>
