@@ -32,7 +32,7 @@ class PreconisationSemestre
             $this->tCompetences[$competence->getId()]['rapport'] = 0;
             $this->tCompetences[$competence->getId()]['ects'] = 0;
         }
-        dump($this->tCompetences);
+
         foreach ($semestre->getApcCompetenceSemestres() as $apc) {
             if (array_key_exists($apc->getCompetence()->getId(), $this->tCompetences)) {
                 dump('ok');
@@ -41,7 +41,7 @@ class PreconisationSemestre
             }
         }
 
-
+        dump($this->tCompetences);
         foreach ($saes as $sae) {
             $this->tSaes[$sae->getId()] = [];
             $this->tSaes[$sae->getId()]['total'] = 0;
@@ -57,8 +57,11 @@ class PreconisationSemestre
 
             foreach ($sae->getApcSaeCompetences() as $comp) {
                 if (array_key_exists($comp->getCompetence()->getId(),
-                        $this->tCompetences) && array_key_exists($comp->getCompetence()->getId(),
-                        $this->tSaes[$sae->getId()])) {
+                    $this->tCompetences)) {
+
+                    if (!array_key_exists($comp->getCompetence()->getId(), $this->tSaes[$sae->getId()])) {
+                        $this->tSaes[$sae->getId()][$comp->getCompetence()->getId()] = [];
+                    }
                     $this->tSaes[$sae->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
                     $this->tSaes[$sae->getId()]['total'] += $comp->getCoefficient();
                     $this->tCompetences[$comp->getCompetence()->getId()]['total'] += $comp->getCoefficient();
@@ -78,13 +81,16 @@ class PreconisationSemestre
 
             foreach ($ressource->getApcRessourceCompetences() as $comp) {
                 if (array_key_exists($comp->getCompetence()->getId(),
-                        $this->tCompetences) && array_key_exists($comp->getCompetence()->getId(),
-                        $this->tRessources[$ressource->getId()])) {
-                $this->tRessources[$ressource->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
-                $this->tRessources[$ressource->getId()]['total'] += $comp->getCoefficient();
-                $this->tCompetences[$comp->getCompetence()->getId()]['total'] += $comp->getCoefficient();
-                $this->tCompetences[$comp->getCompetence()->getId()]['ressource'] += $comp->getCoefficient();
-            }
+                    $this->tCompetences)) {
+                    if (!array_key_exists($comp->getCompetence()->getId(), $this->tRessources[$ressource->getId()])) {
+                        $this->tRessources[$ressource->getId()][$comp->getCompetence()->getId()] = [];
+                    }
+
+                    $this->tRessources[$ressource->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
+                    $this->tRessources[$ressource->getId()]['total'] += $comp->getCoefficient();
+                    $this->tCompetences[$comp->getCompetence()->getId()]['total'] += $comp->getCoefficient();
+                    $this->tCompetences[$comp->getCompetence()->getId()]['ressource'] += $comp->getCoefficient();
+                }
             }
         }
 
