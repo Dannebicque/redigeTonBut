@@ -34,9 +34,12 @@ class ApcNiveauRepository extends ServiceEntityRepository
     public function findBySemestre(Semestre $semestre)
     {
         return $this->createQueryBuilder('n')
+            ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'n.competence = c.id')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = n.annee')
             ->where('a.id = :annee')
             ->setParameter('annee', $semestre->getAnnee()->getId())
+            ->orderBy('n.ordre')
+            ->addOrderBy('c.couleur')
             ->getQuery()
             ->getResult();
     }
