@@ -13,7 +13,7 @@ class PreconisationSemestre
     private array $tSaes = [];
     private array $tSemestre = [];
 
-    public function __construct(Semestre $semestre, array $competences)
+    public function __construct(Semestre $semestre, array $competences, array $ressources, array $saes)
     {
         $this->tSemestre['total_hors_projet'] = 0;
         $this->tSemestre['dont_tp'] = 0;
@@ -23,8 +23,7 @@ class PreconisationSemestre
         $this->tSemestre['pratique'] = 0;
         $this->tSemestre['nb_ects'] = 0;
 
-
-
+        dump($competences);
         foreach ($competences as $competence) {
             $this->tCompetences[$competence->getId()] = [];
             $this->tCompetences[$competence->getId()]['total'] = 0;
@@ -33,16 +32,15 @@ class PreconisationSemestre
             $this->tCompetences[$competence->getId()]['rapport'] = 0;
             $this->tCompetences[$competence->getId()]['ects'] = 0;
         }
-
-        foreach ($semestre->getApcCompetenceSemestres() as $apc)
-        {
-            $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getECTS();
-            $this->tSemestre['nb_ects'] += $apc->getECTS();
+        dump($this->tCompetences);
+        foreach ($semestre->getApcCompetenceSemestres() as $apc) {
+            if (array_key_exists($apc->getCompetence()->getId(), $this->tCompetences)) {
+                dump('ok');
+                $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getECTS();
+                $this->tSemestre['nb_ects'] += $apc->getECTS();
+            }
         }
 
-        //coeff ressources/SAE par compétences
-        $saes = $semestre->getApcSaes();
-        $ressources = $semestre->getApcRessources();
 
         foreach ($saes as $sae) {
             $this->tSaes[$sae->getId()] = [];
@@ -58,10 +56,14 @@ class PreconisationSemestre
 
 
             foreach ($sae->getApcSaeCompetences() as $comp) {
-                $this->tSaes[$sae->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
-                $this->tSaes[$sae->getId()]['total'] += $comp->getCoefficient();
-                $this->tCompetences[$comp->getCompetence()->getId()]['total'] += $comp->getCoefficient();
-                $this->tCompetences[$comp->getCompetence()->getId()]['sae'] += $comp->getCoefficient();
+                if (array_key_exists($comp->getCompetence()->getId(),
+                        $this->tCompetences) && array_key_exists($comp->getCompetence()->getId(),
+                        $this->tSaes[$sae->getId()])) {
+                    $this->tSaes[$sae->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
+                    $this->tSaes[$sae->getId()]['total'] += $comp->getCoefficient();
+                    $this->tCompetences[$comp->getCompetence()->getId()]['total'] += $comp->getCoefficient();
+                    $this->tCompetences[$comp->getCompetence()->getId()]['sae'] += $comp->getCoefficient();
+                }
             }
         }
         foreach ($ressources as $ressource) {
@@ -75,22 +77,27 @@ class PreconisationSemestre
             $this->tSemestre['pratique'] += $this->tRessources[$ressource->getId()]['heures_tp'];
 
             foreach ($ressource->getApcRessourceCompetences() as $comp) {
+                if (array_key_exists($comp->getCompetence()->getId(),
+                        $this->tCompetences) && array_key_exists($comp->getCompetence()->getId(),
+                        $this->tRessources[$ressource->getId()])) {
                 $this->tRessources[$ressource->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
                 $this->tRessources[$ressource->getId()]['total'] += $comp->getCoefficient();
                 $this->tCompetences[$comp->getCompetence()->getId()]['total'] += $comp->getCoefficient();
                 $this->tCompetences[$comp->getCompetence()->getId()]['ressource'] += $comp->getCoefficient();
+            }
             }
         }
 
         foreach ($competences as $competence) {
 
             if ($this->tCompetences[$competence->getId()]['total'] != 0) {
-                $this->tCompetences[$competence->getId()]['rapport'] = number_format($this->tCompetences[$competence->getId()]['sae'] / $this->tCompetences[$competence->getId()]['total'], 2);
+                $this->tCompetences[$competence->getId()]['rapport'] = number_format($this->tCompetences[$competence->getId()]['sae'] / $this->tCompetences[$competence->getId()]['total'],
+                    2);
             }
         }
 
         $this->tSemestre['total_vol_dont_prj'] = $this->tSemestre['total_hors_projet'] + $this->tSemestre['total_h_projet'];
-        if ( $this->tSemestre['total_vol_dont_prj'] > 0) {
+        if ($this->tSemestre['total_vol_dont_prj'] > 0) {
             $this->tSemestre['rapport'] = $this->tSemestre['pratique'] / $this->tSemestre['total_vol_dont_prj'];
         }
     }

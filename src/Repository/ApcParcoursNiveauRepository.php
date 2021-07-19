@@ -95,4 +95,28 @@ class ApcParcoursNiveauRepository extends ServiceEntityRepository
             ->getResult();
 
     }
+
+    public function findParcoursSemestreCompetence(Semestre $semestre, ApcParcours $apcParcours)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'p.niveau = n.id')
+            ->innerJoin(ApcParcours::class, 'ap', 'WITH', 'p.parcours = ap.id')
+            ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'n.competence = c.id')
+            ->where('ap.id = :parcours')
+            ->andWhere('n.annee = :annee')
+            ->setParameter('parcours', $apcParcours)
+            ->setParameter('annee', $semestre->getAnnee()->getId())
+            ->orderBy('n.ordre', 'ASC')
+            ->addOrderBy('c.couleur', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $t = [];
+        /** @var ApcParcoursNiveau $q */
+        foreach ($query as $q) {
+            $t[] = $q->getNiveau()->getCompetence();
+        }
+
+        return $t;
+    }
 }

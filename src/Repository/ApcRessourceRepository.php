@@ -10,7 +10,9 @@
 namespace App\Repository;
 
 use App\Entity\Annee;
+use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
+use App\Entity\ApcRessourceParcours;
 use App\Entity\Departement;
 use App\Entity\Diplome;
 use App\Entity\Semestre;
@@ -126,5 +128,24 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->setParameter('semestre', $semestre->getId())
             ->getQuery()
             ->getScalarResult();
+    }
+
+    public function findBySemestreAndParcours(Semestre $semestre, ?ApcParcours $apcParcours = null)
+    {
+        if ($apcParcours !== null) {
+            return $this->createQueryBuilder('r')
+                ->innerJoin(ApcRessourceParcours::class, 'p', 'WITH', 'r.id = p.ressource')
+                ->where('r.semestre = :semestre')
+                ->andWhere('p.parcours = :parcours')
+                ->setParameter('semestre', $semestre->getId())
+                ->setParameter('parcours', $apcParcours->getId())
+                ->orderBy('r.ordre', 'ASC')
+                ->addOrderBy('r.codeMatiere', 'ASC')
+                ->addOrderBy('r.libelle', 'ASC')
+                ->getQuery()
+                ->getResult();
+        }
+
+        return $this->findBySemestre($semestre);
     }
 }

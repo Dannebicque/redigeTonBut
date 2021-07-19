@@ -44,15 +44,16 @@ class TableauController extends BaseController
         return $this->json($json);
     }
 
-    #[Route('/api-preconisation', name: 'api_preconisation', options: ['expose' => true])]
+    #[Route('/api-preconisation/{parcours}', name: 'api_preconisation', options: ['expose' => true])]
     public function apiPreconisation(
         Preconisation $preconisation,
         SemestreRepository $semestreRepository,
-        ApcComptenceRepository $apcComptenceRepository
+        ApcComptenceRepository $apcComptenceRepository,
+        ApcParcours $parcours = null
     ): Response {
         $semestres = $semestreRepository->findByDepartement($this->getDepartement());
-        $competences = $apcComptenceRepository->findByDepartement($this->getDepartement());
-        $json = $preconisation->setSemestresCompetences($semestres, $competences)->getDataJson();
+
+        $json = $preconisation->setSemestresCompetences($semestres, $parcours)->getDataJson();
 
         return $this->json($json);
     }

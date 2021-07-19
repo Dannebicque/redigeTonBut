@@ -82,7 +82,6 @@ class ApcCompetenceController extends BaseController
             $apcCompSemetre->setCompetence($competence);
             $apcCompSemetre->setECTS($parametersAsArray['valeur']);
             $this->entityManager->persist($apcCompSemetre);
-
         }
         $this->entityManager->flush();
 

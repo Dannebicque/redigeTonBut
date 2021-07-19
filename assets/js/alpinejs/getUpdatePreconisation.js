@@ -1,5 +1,6 @@
-function getUpdatePreconisation () {
+function getUpdatePreconisation (parcours = null) {
   return {
+    parcours: parcours,
     donnees: {
       1: {competences: {}, ressources: {}, saes: {}, semestre: {}},
       2: {competences: {}, ressources: {}, saes: {}, semestre: {}},
@@ -9,7 +10,8 @@ function getUpdatePreconisation () {
       6: {competences: {}, ressources: {}, saes: {}, semestre: {}}
     },
     async init () {
-      this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
+      console.log(this.parcours)
+      this.donnees = await fetch(Routing.generate('tableau_api_preconisation', {parcours: this.parcours})).then(r => {
         return r.json()
       })
     },
@@ -23,7 +25,7 @@ function getUpdatePreconisation () {
           valeur: e.target.value
         })
       }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
+        this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
           return r.json()
         })
       })
@@ -39,7 +41,7 @@ function getUpdatePreconisation () {
           valeur: e.target.value
         })
       }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
+        this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
           return r.json()
         })
       })
@@ -55,7 +57,7 @@ function getUpdatePreconisation () {
           valeur: e.target.value
         })
       }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
+        this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
           return r.json()
         })
       })
@@ -71,7 +73,7 @@ function getUpdatePreconisation () {
           valeur: e.target.value
         })
       }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
+        this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
           return r.json()
         })
       })
@@ -87,7 +89,7 @@ function getUpdatePreconisation () {
           valeur: e.target.value
         })
       }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_preconisation')).then(r => {
+        this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
           return r.json()
         })
       })

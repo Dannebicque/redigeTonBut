@@ -12,6 +12,7 @@ namespace App\Repository;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
+use App\Entity\ApcSaeParcours;
 use App\Entity\Departement;
 use App\Entity\Diplome;
 use App\Entity\Semestre;
@@ -119,5 +120,24 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->setParameter('semestre', $semestre->getId())
             ->getQuery()
             ->getScalarResult();
+    }
+
+    public function findBySemestreAndParcours(mixed $semestre, ?ApcParcours $apcParcours)
+    {
+        if ($apcParcours !== null) {
+            return $this->createQueryBuilder('r')
+                ->innerJoin(ApcSaeParcours::class, 'p', 'WITH', 'r.id = p.sae')
+                ->where('r.semestre = :semestre')
+                ->andWhere('p.parcours = :parcours')
+                ->setParameter('semestre', $semestre->getId())
+                ->setParameter('parcours', $apcParcours->getId())
+                ->orderBy('r.ordre', 'ASC')
+                ->addOrderBy('r.codeMatiere', 'ASC')
+                ->addOrderBy('r.libelle', 'ASC')
+                ->getQuery()
+                ->getResult();
+        }
+
+        return $this->findBySemestre($semestre);
     }
 }

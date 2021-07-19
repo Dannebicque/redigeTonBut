@@ -50,4 +50,18 @@ class ApcNiveauRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findBySemestreArrayCompetence(Semestre $semestre)
+    {
+        $query = $this->findBySemestre($semestre);
+
+        $t = [];
+
+        foreach ($query as $q)
+        {
+            $t[]=$q->getCompetence();
+        }
+
+        return $t;
+    }
 }

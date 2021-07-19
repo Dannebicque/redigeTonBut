@@ -17,7 +17,7 @@
             </li>
         {% endfor %}
     </ul>
-    <div class="tab-content" x-data="getUpdatePreconisation()">
+    <div class="tab-content" x-data="getUpdatePreconisation({{ parcours != null ? parcours.id : null }})">
 
         {% for semestre in semestres %}
             <div class="tab-pane {% if loop.first %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
