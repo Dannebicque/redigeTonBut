@@ -5,7 +5,7 @@
             <h4 class="card-title">{{ sae.display }}
                 <span class="badge badge-primary">{{ sae
                     .semestre.libelle }}</span></h4>
-            <p>{{ sae.description }}</p>
+            <p>{{ sae.objectifs }}</p>
             <p>
                 {% for competence in sae.apcSaeCompetences %}
                     <span class="badge badge-{{ competence.competence.couleur }}">
