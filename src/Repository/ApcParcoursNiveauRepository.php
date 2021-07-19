@@ -65,11 +65,13 @@ class ApcParcoursNiveauRepository extends ServiceEntityRepository
     {
         $n = $this->createQueryBuilder('n')
             ->innerJoin(ApcNiveau::class, 'niv', 'WITH', 'n.niveau = niv.id')
+            ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'niv.competence = c.id')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = niv.annee')
             ->where('a.id = :annee')
             ->andWhere('n.parcours = :parcour')
             ->setParameter('annee', $semestre->getAnnee()->getId())
             ->setParameter('parcour', $parcours->getId())
+            ->orderBy('c.couleur', 'ASC')
             ->getQuery()
             ->getResult();
 
