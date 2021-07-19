@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.3...v1.5.4) (2021-07-19)
+
+
+### Bug Fixes
+
+* Blocage des tableaux pour le ROLE_LECTEUR ([ac1f707](https://github.com/Dannebicque/redigeTonBut/commit/ac1f707b2d6dfc141ddde53b64d8780ba1811643))
+* Blocage des tableaux pour le ROLE_LECTEUR ([84f2b3d](https://github.com/Dannebicque/redigeTonBut/commit/84f2b3d4ea329d7bd0cccba7e7145c655017ed79))
+* Couleur ressources dans fiche SAE ([5d55ffa](https://github.com/Dannebicque/redigeTonBut/commit/5d55ffa07a87d427f103a0d437d032e555507d39))
+* ordre compétences si pas de parcours ([b404e74](https://github.com/Dannebicque/redigeTonBut/commit/b404e74dc51661d5799280656062ae67b8afe107))
+* Textes justifiés dans les Word ([5feed58](https://github.com/Dannebicque/redigeTonBut/commit/5feed58078c175c695dc7ebee0ad82ebd882ac7e))
+* typo ([a974f50](https://github.com/Dannebicque/redigeTonBut/commit/a974f50c1b722cdc3abaf8569eae1fcb2d09a666))
+
 ### [1.5.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.2...v1.5.3) (2021-07-19)
 
 
