@@ -23,7 +23,6 @@ class PreconisationSemestre
         $this->tSemestre['pratique'] = 0;
         $this->tSemestre['nb_ects'] = 0;
 
-        dump($competences);
         foreach ($competences as $competence) {
             $this->tCompetences[$competence->getId()] = [];
             $this->tCompetences[$competence->getId()]['total'] = 0;
@@ -35,13 +34,11 @@ class PreconisationSemestre
 
         foreach ($semestre->getApcCompetenceSemestres() as $apc) {
             if (array_key_exists($apc->getCompetence()->getId(), $this->tCompetences)) {
-                dump('ok');
                 $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getECTS();
                 $this->tSemestre['nb_ects'] += $apc->getECTS();
             }
         }
 
-        dump($this->tCompetences);
         foreach ($saes as $sae) {
             $this->tSaes[$sae->getId()] = [];
             $this->tSaes[$sae->getId()]['total'] = 0;
