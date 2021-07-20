@@ -337,8 +337,9 @@
                 <tr>
                     <th>Nbre de semaines de congés</th>
                     {% for i in 1..6 %}
+                        <td class="text-center">
                         {% if is_granted('ROLE_LECTEUR') %}
-                            <span x-html=""></span>
+                            <span x-html="donnees[{{ i }}].nbSemainesConges"></span>
                         {% else %}
                             <input type="text" class="form-control"
                                    data-field="nbSemainesConges"
