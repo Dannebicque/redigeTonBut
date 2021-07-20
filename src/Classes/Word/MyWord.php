@@ -18,6 +18,8 @@ use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Html;
+use PhpOffice\PhpWord\SimpleType\Jc;
+use PhpOffice\PhpWord\Style\Paragraph;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -193,7 +195,12 @@ class MyWord
         $templateProcessor->setComplexValue('competences', $competences);
         $templateProcessor->setComplexValue('apprentissages', $acs);
         $templateProcessor->setComplexValue('prerequis', $ressources);
-        $templateProcessor->setValue('motscles', $apcRessource->getMotsCles());
+
+        $texte = '<div style="text-align:justify">'.$apcRessource->getMotsCles().'</div>';
+        $section = (new PhpWord())->addSection();
+        Html::addHtml($section, $texte, false, true);
+        $templateProcessor->setComplexBlock('motscles', $section->getElement(0));
+
         $templateProcessor->setValue('semestre', $apcRessource->getSemestre()->getOrdreLmd());
 
         $filename = 'ressource_' . $apcRessource->getCodeMatiere() . ' ' . $apcRessource->getLibelle() . '.docx';
