@@ -37,11 +37,11 @@
                             {% endif %}
                         </td>
                     {% endfor %}
-                    <td class="text-center" x-html="badgeSeuilInferieur(donnees.departement.nbHeuresRessourcesSae, {{ constant
+                    <td class="text-center" x-html="badgeEgalite(donnees.departement.nbHeuresRessourcesSae, {{ constant
                         ('NB_HEURES_TOTAL', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center fw-bold">{{ constant('NB_HEURES_TOTAL', user_data.caracteristiques) }}</td>
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.ecart, 0)">
+                    <td class="text-center" x-html="badgeEgalite(donnees.departement.ecart, 0)">
                     </td>
                 </tr>
                 <tr>
@@ -237,12 +237,13 @@
                         </td>
                     {% endfor %}
                     <td class="text-center"
-                        x-html="badgeSeuilInferieur(donnees.departement.nbHeuresProjet, {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }})">
+                        x-html="badgeEgalite(donnees.departement.nbHeuresProjet, {{ constant('NB_HEURES_PROJET', user_data
+                        .caracteristiques) }})">
                     </td>
                     <td class="text-center fw-bold">
                         {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }}
                     </td>
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.ecartProjet, 0)">
+                    <td class="text-center" x-html="badgeEgalite(donnees.departement.ecartProjet, 0)">
                     </td>
                 </tr>
                 <tr class="lignepubliee">

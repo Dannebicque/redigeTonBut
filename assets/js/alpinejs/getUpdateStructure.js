@@ -34,7 +34,12 @@ function getUpdateStructure () {
       if (valeur > seuil) {
         return '<span class="badge bg-danger text-uppercase">' + this.numberFormat(valeur) + '</span>'
       }
-
+      return '<span class="badge bg-success text-uppercase">' + this.numberFormat(valeur) + '</span>'
+    },
+    badgeEgalite (valeur, seuil) {
+      if (valeur !== seuil) {
+        return '<span class="badge bg-danger text-uppercase">' + this.numberFormat(valeur) + '</span>'
+      }
       return '<span class="badge bg-success text-uppercase">' + this.numberFormat(valeur) + '</span>'
     },
     badgeSeuilInferieur (valeur, seuil) {

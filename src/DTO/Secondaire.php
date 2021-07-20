@@ -8,6 +8,7 @@ class Secondaire extends Caracteristique
 {
     public const NB_HEURES_TOTAL = 2000;
     public const POURCENTAGE_TP_PROJET = 50;
+    public const NB_HEURES_TP = 700;
 
     public function heuresAdaptationLocale()
     {
