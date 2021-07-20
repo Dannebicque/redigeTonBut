@@ -3,7 +3,7 @@ security:
         ROLE_GT: ROLE_CPN
         ROLE_CPN: ROLE_PACD
         ROLE_PACD: ROLE_EDITEUR
-        ROLE_EDITEUR: ROLE_LECTEUR
+        #ROLE_EDITEUR: ROLE_LECTEUR
     encoders:
         App\Entity\User:
             algorithm: auto
