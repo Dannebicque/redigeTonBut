@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.8](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.7...v1.5.8) (2021-07-20)
+
+
+### Bug Fixes
+
+* Affichage tableau structure, volume heures TP spécialités tertiaires ([bc8ed8e](https://github.com/Dannebicque/redigeTonBut/commit/bc8ed8e2c7b1106b86fb92b655350a251d57dd8d))
+* mots clés justifiés dans le word ([40ba1ca](https://github.com/Dannebicque/redigeTonBut/commit/40ba1cad7258aaa21e22829530e54a45badf6c08))
+* typo tableau export excel ([988b760](https://github.com/Dannebicque/redigeTonBut/commit/988b760a38a74457192d1d71b34499fa02c38281))
+
 ### [1.5.7](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.6...v1.5.7) (2021-07-20)
 
 
