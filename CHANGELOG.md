@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.9](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.8...v1.5.9) (2021-07-26)
+
+
+### Bug Fixes
+
+* mot de passe perdu et accès. ([efe63bb](https://github.com/Dannebicque/redigeTonBut/commit/efe63bb05cfeea9fe2c526cc28823634fd535b13))
+* Typo dans le rôle ([ee8b201](https://github.com/Dannebicque/redigeTonBut/commit/ee8b2014bf4cdfa678e04d7069ab2a300cebb3d9))
+
 ### [1.5.8](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.7...v1.5.8) (2021-07-20)
 
 
