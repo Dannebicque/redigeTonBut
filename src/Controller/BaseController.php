@@ -15,6 +15,7 @@ use App\Entity\Departement;
 use App\Repository\DepartementRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -83,7 +84,7 @@ class BaseController extends AbstractController
         }
     }
 
-    public function getDepartement() : Departement
+    public function getDepartement(): Departement|RedirectResponse|null
     {
         if ($this->isGranted('ROLE_GT')) {
             if ($this->session->get('departement') !== null) {

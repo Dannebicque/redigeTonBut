@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class DataUserSession
 {
     private UserInterface $user;
-    private ?Departement $departement;
+    private ?Departement $departement = null;
     private AnneeRepository $anneeRepository;
     private DepartementRepository $departementRepository;
     private string $dir;
