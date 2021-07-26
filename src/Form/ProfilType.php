@@ -18,7 +18,7 @@ class ProfilType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $choix = [
-            'Editeur' => 'ROLE_EDIT',
+            'Editeur' => 'ROLE_EDITEUR',
             'Lecteur' => 'ROLE_LECTEUR',
             'Membre du GT' => 'ROLE_GT',
             'Secrétaire de CPN' => 'ROLE_CPN',
