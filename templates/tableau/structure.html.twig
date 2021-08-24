@@ -79,7 +79,7 @@
                 </tr>
 
                 <tr class="lignepubliee">
-                    <th>Heures d'enseignement à définir localement</th>
+                    <th>Nbre d'heures d'enseignement définies localement</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
                             {% if is_granted('ROLE_LECTEUR') %}
@@ -105,7 +105,7 @@
                     </td>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Heures d'enseignement à définir localement dans les SAÉ</th>
+                    <th>Nbre heures d'enseignement SAÉ définies localement</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
                             {% if is_granted('ROLE_LECTEUR') %}
@@ -128,7 +128,7 @@
                     </td>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Heures d'enseignement à définir localement dans les Ressources ou les SAÉ</th>
+                    <th>Nbre heures d'enseignement à définir localement dans les Ressources ou les SAÉ</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
                             {% if is_granted('ROLE_LECTEUR') %}
@@ -149,7 +149,7 @@
                 </tr>
 
                 <tr class="lignepubliee">
-                    <th>Heures d'enseignement ressources définies nationalement</th>
+                    <th>Nbre heures d'enseignement des ressources définies nationalement</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
                             {% if is_granted('ROLE_LECTEUR') %}
@@ -173,7 +173,7 @@
                 </tr>
 
                 <tr>
-                    <th>Heures de tp définies nationalement</th>
+                    <th>Nbre heures de tp définies nationalement</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
                             {% if is_granted('ROLE_LECTEUR') %}
@@ -199,7 +199,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Heures de tp à définir localement</th>
+                    <th>Nbre heures de tp à définir localement</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
                             {% if is_granted('ROLE_LECTEUR') %}
@@ -221,7 +221,7 @@
                     <th colspan="10">&nbsp;</th>
                 </tr>
                 <tr class="lignepubliee">
-                    <th>Heures de projet tutoré</th>
+                    <th>Nbre d'heures de projet tutoré</th>
                     {% for i in 1..6 %}
                         <td class="text-center">
                             {% if is_granted('ROLE_LECTEUR') %}
@@ -247,7 +247,7 @@
                     </td>
                 </tr>
                 <tr class="lignepubliee">
-                    <th scope="row">Heures de projet/année min 150 h / max 250h</th>
+                    <th scope="row">Nbre heures de projet/année min 150 h / max 250h</th>
                     {% for i in range(1, 6, 2) %}
                         <td class="text-center" colspan="2">
                             <span x-text="donnees[{{ i }}].nbHeuresProjet + donnees[{{ i+1 }}].nbHeuresProjet"></span>
