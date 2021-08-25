@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.10](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.9...v1.5.10) (2021-08-25)
+
+
+### Bug Fixes
+
+* Cohérence des libellés ([e21a147](https://github.com/Dannebicque/redigeTonBut/commit/e21a147469667a69fde382827d8bc5fa7f1a810a))
+* Mise en page et lisibilité des formulaires SAE et Ressources ([5d6691c](https://github.com/Dannebicque/redigeTonBut/commit/5d6691ca07f70a0cc410ab5b66154efe17d1a0e5))
+* Tempo pour la saisie dans les zones de coefficients ([238f095](https://github.com/Dannebicque/redigeTonBut/commit/238f09568df275f6081d11ce6f8937fa490ac6b1))
+
 ### [1.5.9](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.8...v1.5.9) (2021-07-26)
 
 
