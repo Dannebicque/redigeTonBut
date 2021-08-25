@@ -1,40 +1,48 @@
-<div class="row">
-    <div class="col-sm-2">
-        {{ form_row(form.codeMatiere) }}
-    </div>
-    <div class="col-sm-2">
-        {{ form_row(form.ordre) }}
-    </div>
-    <div class="col-sm-5">
-        {{ form_row(form.libelle) }}
-    </div>
-    <div class="col-sm-3">
-        {{ form_row(form.libelleCourt) }}
-    </div>
+<section>
+    <h2 class="small-title">Données générales</h2>
+    <div class="card mb-5">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    {{ form_row(form.codeMatiere) }}
+                </div>
+                <div class="col-sm-2">
+                    {{ form_row(form.ordre) }}
+                </div>
+                <div class="col-sm-5">
+                    {{ form_row(form.libelle) }}
+                </div>
+                <div class="col-sm-3">
+                    {{ form_row(form.libelleCourt) }}
+                </div>
 
-    <div class="col-sm-6">
-        {{ form_row(form.heuresTotales) }}
-    </div>
-    <div class="col-sm-6">
-        {{ form_row(form.tpPpn) }}
-    </div>
-
-
-    <div class="col-sm-12">
-        {{ form_row(form.description) }}
-    </div>
-
-    <div class="col-sm-12">
-        {{ form_row(form.motsCles) }}
-    </div>
-    <div class="col-sm-12">
-        {{ form_row(form.semestre) }}
+                <div class="col-sm-6">
+                    {{ form_row(form.heuresTotales) }}
+                </div>
+                <div class="col-sm-6">
+                    {{ form_row(form.tpPpn) }}
+                </div>
 
 
-        <fieldset class="form-group">
-            <legend class="col-form-label required">
-                Compétences du semestre
-            </legend>
+                <div class="col-sm-12">
+                    {{ form_row(form.description) }}
+                </div>
+
+                <div class="col-sm-12">
+                    {{ form_row(form.motsCles) }}
+                </div>
+                <div class="col-sm-12">
+                    {{ form_row(form.semestre) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2 class="small-title">Compétences du semestre et Apprentissage(s) Critique(s)</h2>
+    <div class="card mb-5">
+        <div class="card-body">
             <div id="saeRessource">
                 <template x-if="semestre == null">
                     <div class="alert alert-warning">
@@ -57,16 +65,13 @@
             <small id="apc_sae_ressource_help" class="form-text text-muted">
                 Ajoutez les Compétences concernées par la ressource pour obtenir les apprentissages critiques.
             </small>
-        </fieldset>
+            <br><br>
+            <p class="fw-bold">Choix des apprentissage(s) critique(s)</p>
 
-        <fieldset class="form-group">
-            <legend class="col-form-label required">
-                Apprentissage(s) critique(s) couvert(s)
-            </legend>
             <div id="acRessources">
                 <template x-if="semestre == null || acs.length == 0 || acs === false">
                     <div class="alert alert-warning">
-                        Veuillez choisir  un semestre et au moins une compétence
+                        Veuillez choisir un semestre et au moins une compétence
                     </div>
                 </template>
 
@@ -77,7 +82,7 @@
                         <div class="row">
                             <template x-for="ac in getAcs(competence)">
                                 <div class="col-6">
-                                    <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked" >&nbsp;
+                                    <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked">&nbsp;
                                     <span x-text="ac.code + ` | ` + ac.libelle"></span>
                                 </div>
                             </template>
@@ -87,12 +92,14 @@
             </div>
             <small id="apc_sae_competences_help" class="form-text text-muted">Ajoutez les compétences couvertes par
                                                                               la ressources.</small>
-        </fieldset>
+        </div>
+    </div>
+</section>
 
-        <fieldset class="form-group">
-            <legend class="col-form-label required">
-                Prérequis (ressource du semestre ou des semestres précédents)
-            </legend>
+<section>
+    <h2 class="small-title">Prérequis (ressource du semestre ou des semestres précédents)</h2>
+    <div class="card mb-5">
+        <div class="card-body">
             <div id="preRequisRessources">
                 <template x-if="semestre == null">
                     <div class="alert alert-warning">
@@ -113,12 +120,14 @@
             <small id="apc_sae_ressource_help" class="form-text text-muted">
                 Ajoutez les éventuelles ressources pré-requises.
             </small>
-        </fieldset>
+        </div>
+    </div>
+</section>
 
-        <fieldset class="form-group">
-            <legend class="col-form-label required">
-                SAÉ concernée(s)
-            </legend>
+<section>
+    <h2 class="small-title">SAÉ concernée(s)</h2>
+    <div class="card mb-5">
+        <div class="card-body">
             <div id="saeRessource">
                 <template x-if="semestre == null">
                     <div class="alert alert-warning">
@@ -130,8 +139,8 @@
                         <div class="col-12">
                             <div class="alert alert-info">
                                 Pas de SAÉ dans ce semestre. Les ressources pourront
-                                                          être associées depuis les SAÉ ou plus tard en modifiant la
-                                                          fiche.
+                                être associées depuis les SAÉ ou plus tard en modifiant la
+                                fiche.
                             </div>
                         </div>
                     </template>
@@ -143,14 +152,18 @@
                     </template>
                 </div>
             </div>
-            <small id="apc_sae_ressource_help" class="form-text text-muted">Ajoutez les SAÉ concernées par la ressource
+            <small id="apc_sae_ressource_help" class="form-text text-muted">Ajoutez les SAÉ concernées par la
+                                                                            ressource
                                                                             .</small>
-        </fieldset>
 
-        <fieldset class="form-group mb-5">
-            <legend class="col-form-label required">
-                Parcours de la spécialité
-            </legend>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2 class="small-title">Parcours de la spécialité</h2>
+    <div class="card mb-5">
+        <div class="card-body">
             <div id="ressourcesSae">
                 <template x-if="semestre == null">
                     <div class="alert alert-warning">
@@ -158,14 +171,14 @@
                     </div>
                 </template>
                 <template x-if="parcours !== false">
-                <div class="row">
-                    <template x-for="parcour in parcours">
-                        <div class="col-6">
-                            <input type="checkbox" name="parcours[]" :value="parcour.id" :checked="parcour.checked">&nbsp;
-                            <span x-text="parcour.libelle"></span>
-                        </div>
-                    </template>
-                </div>
+                    <div class="row">
+                        <template x-for="parcour in parcours">
+                            <div class="col-6">
+                                <input type="checkbox" name="parcours[]" :value="parcour.id" :checked="parcour.checked">&nbsp;
+                                <span x-text="parcour.libelle"></span>
+                            </div>
+                        </template>
+                    </div>
                 </template>
                 <template x-if="parcours === false">
                     <div class="alert alert-info">
@@ -178,7 +191,8 @@
                 strictement identique) à plusieurs parcours. Si le contenu diffère, même légèrement, il est
                 préférable de dupliquer la SAÉ pour l'éditer librement selon le parcours.
             </small>
-        </fieldset>
+
+        </div>
     </div>
-</div>
+</section>
 

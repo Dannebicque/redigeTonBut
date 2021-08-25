@@ -5,8 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card">
-        <div class="card-body" x-data="getUpdateRessource()">
+        <div x-data="getUpdateRessource()">
             {{ form_start(form) }}
             {% form_theme form 'form/my-form.html.twig' %}
             {{ include('formation/apc_ressource/_form.html.twig') }}
@@ -14,7 +13,7 @@
             <button class="btn btn-success">Sauvegarder</button>
             {{ form_end(form) }}
         </div>
-    </div>
+
 {% endblock %}
 
 {% block breadcrumb %}

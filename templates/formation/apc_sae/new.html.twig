@@ -5,15 +5,13 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card">
-        <div class="card-body" x-data="getUpdateSae()">
-            {{ form_start(form) }}
-            {% form_theme form 'form/my-form.html.twig' %}
-            {{ include('formation/apc_sae/_form.html.twig') }}
+    <div x-data="getUpdateSae()">
+        {{ form_start(form) }}
+        {% form_theme form 'form/my-form.html.twig' %}
+        {{ include('formation/apc_sae/_form.html.twig') }}
 
-            <button class="btn btn-success">Sauvegarder</button>
-            {{ form_end(form) }}
-        </div>
+        <button class="btn btn-success">Sauvegarder</button>
+        {{ form_end(form) }}
     </div>
 {% endblock %}
 
