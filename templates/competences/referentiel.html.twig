@@ -34,7 +34,8 @@
                         <ul class="nav nav-pills responsive-tabs nav-justified mb-4" role="tablist">
                             {% for parcour in parcours %}
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab"
+                                    <button class="nav-link {% if loop.first %}active{% endif %} "
+                                            data-bs-toggle="tab"
                                             data-bs-target="#parcour_comp_{{ parcour.id }}" role="tab" aria-selected="false"
                                             type="button">{{ parcour.libelle }}</button>
                                 </li>

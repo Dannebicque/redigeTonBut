@@ -290,7 +290,7 @@ class ApcAjaxRessourceController extends BaseController
         } else {
             //on ajoute
             $acRessource = new ApcRessourceCompetence($ressource, $competence);
-            $acRessource->setCoefficient($parametersAsArray['valeur']);
+            $acRessource->setCoefficient(Convert::convertToFloat($parametersAsArray['valeur']));
             $this->entityManager->persist($acRessource);
 
         }
@@ -316,10 +316,10 @@ class ApcAjaxRessourceController extends BaseController
 
         switch ($type) {
             case 'heures_totales':
-                $ressource->setHeuresTotales($parametersAsArray['valeur']);
+                $ressource->setHeuresTotales(Convert::convertToFloat($parametersAsArray['valeur']));
                 break;
             case 'heures_tp':
-                $ressource->setTpPpn($parametersAsArray['valeur']);
+                $ressource->setTpPpn(Convert::convertToFloat($parametersAsArray['valeur']));
                 break;
         }
         $this->entityManager->flush();

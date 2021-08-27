@@ -37,7 +37,7 @@
                             <span  x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }}, {{ niveau.competence.id }})"></span>
                         {% else %}
                             <input type="text" class="form-control"
-                                   @keyup.debounce="updateSae"
+                                   @blur="updateSae"
                                    data-sae="{{ sae.id }}"
                                    data-competence="{{ niveau.competence.id }}"
                                    x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }}, {{ niveau.competence.id }})">
@@ -54,7 +54,7 @@
 {{ ressource.id }}, {{ niveau.competence.id }})"></span>
                         {% else %}
                             <input type="text" class="form-control"
-                                   @keyup.debounce="updateRessource"
+                                   @blur="updateRessource"
                                    style="min-width: 50px"
                                    data-ressource="{{ ressource.id }}"
                                    data-competence="{{ niveau.competence.id }}"
@@ -69,7 +69,7 @@
                 'ects')"></span>
                     {% else %}
                         <input type="text" class="form-control"
-                               @keyup.debounce="updateCompetence"
+                               @blur="updateCompetence"
                                style="min-width: 50px"
                                data-competence="{{ niveau.competence.id }}"
                                data-semestre="{{ semestre.id }}"
@@ -88,7 +88,7 @@
         {% endfor %}
 
         <tr>
-            <th colspan="2">Poids de chaque SAÉ ou ressource</th>
+            <th colspan="2">Poids  chaque SAÉ ou ressource</th>
             <th>&nbsp;</th>
             {% for sae in saes %}
                 <td class="text-center"

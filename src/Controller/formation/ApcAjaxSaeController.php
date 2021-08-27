@@ -226,7 +226,7 @@ class ApcAjaxSaeController extends BaseController
         } else {
             //on ajoute
             $acRessource = new ApcSaeCompetence($sae, $competence);
-            $acRessource->setCoefficient($parametersAsArray['valeur']);
+            $acRessource->setCoefficient(Convert::convertToFloat($parametersAsArray['valeur']));
             $this->entityManager->persist($acRessource);
 
         }
@@ -248,13 +248,13 @@ class ApcAjaxSaeController extends BaseController
         switch ($type)
         {
             case 'heures_totales':
-                $sae->setHeuresTotales($parametersAsArray['valeur']);
+                $sae->setHeuresTotales(Convert::convertToFloat($parametersAsArray['valeur']));
                 break;
             case 'heures_tp':
-                $sae->setTpPpn($parametersAsArray['valeur']);
+                $sae->setTpPpn(Convert::convertToFloat($parametersAsArray['valeur']));
                 break;
             case 'heures_projet':
-                $sae->setProjetPpn($parametersAsArray['valeur']);
+                $sae->setProjetPpn(Convert::convertToFloat($parametersAsArray['valeur']));
                 break;
         }
         $this->entityManager->flush();

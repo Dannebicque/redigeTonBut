@@ -22,7 +22,7 @@ function getUpdatePreconisation (parcours = null) {
       }), {
         method: 'POST',
         body: JSON.stringify({
-          valeur: e.target.value
+          valeur: e.target.value.replace(',','.')
         })
       }).then(async () => {
         this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
@@ -38,7 +38,7 @@ function getUpdatePreconisation (parcours = null) {
       }), {
         method: 'POST',
         body: JSON.stringify({
-          valeur: e.target.value
+          valeur: e.target.value.replace(',','.')
         })
       }).then(async () => {
         this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
@@ -98,7 +98,7 @@ function getUpdatePreconisation (parcours = null) {
     afficheValeurCoefficient (tableau, id, competence) {
       if (id in tableau) {
         if (competence in tableau[id]) {
-          return tableau[id][competence].coefficient
+          return this.numberFormat(tableau[id][competence].coefficient)
         }
       }
       return ''
@@ -106,27 +106,27 @@ function getUpdatePreconisation (parcours = null) {
     afficheVolumeHoraire (tableau, id, libelle) {
       if (id in tableau) {
         if (libelle in tableau[id]) {
-          return tableau[id][libelle]
+          return this.numberFormat(tableau[id][libelle])
         }
       }
       return ''
     },
     afficheVolumeHoraireTotal (tableau, libelle) {
       if (libelle in tableau) {
-        return tableau[libelle]
+        return this.numberFormat(tableau[libelle])
       }
       return ''
     },
     afficheTotalEcts (tableau, libelle) {
       if (libelle in tableau) {
-        return tableau[libelle]
+        return this.numberFormat(tableau[libelle])
       }
       return ''
     },
     afficheValeurTotal (tableau, id, cle = 'total') {
       if (id in tableau) {
 
-        return tableau[id][cle]
+        return this.numberFormat(tableau[id][cle])
 
       }
       return ''

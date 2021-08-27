@@ -33,7 +33,7 @@
                            data-ressource="{{ ressource.id }}"
                            style="min-width: 50px"
                            :value="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
-                           @keyup.debounce="updateHeuresRessource"
+                           @blur="updateHeuresRessource"
                     />
                     {% endif %}
                 </td>
@@ -57,7 +57,7 @@
                            data-ressource="{{ ressource.id }}"
                            style="min-width: 50px"
                            :value="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
-                           @keyup.debounce="updateHeuresRessource"
+                           @blur="updateHeuresRessource"
                     />
                 {% endif %}
                 </td>
@@ -83,7 +83,7 @@
                        data-semestre="{{ semestre.id }}"
                        style="min-width: 50px"
                        x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"
-                       @keyup.debounce="updateSemestre"
+                       @blur="updateSemestre"
                 />
                 {% endif %}
             </td>
@@ -108,7 +108,7 @@
                        data-semestre="{{ semestre.id }}"
                        style="min-width: 50px"
                        x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"
-                       @keyup.debounce="updateSemestre"
+                       @blur="updateSemestre"
                 />
                 {% endif %}
             </td>
@@ -128,7 +128,7 @@
                        data-semestre="{{ semestre.id }}"
                        style="min-width: 50px"
                        x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"
-                       @keyup.debounce="updateSemestre"
+                       @blur="updateSemestre"
                 />
                 {% endif %}
             </td>
@@ -181,7 +181,7 @@
                        data-semestre="{{ semestre.id }}"
                        style="min-width: 50px"
                        x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"
-                       @keyup.debounce="updateSemestre"
+                       @blur="updateSemestre"
                 />
                 {% endif %}
             </td>
