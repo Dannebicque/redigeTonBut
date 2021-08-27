@@ -54,7 +54,7 @@
 {{ ressource.id }}, {{ niveau.competence.id }})"></span>
                         {% else %}
                             <input type="text" class="form-control"
-                                   @keyup="updateRessource"
+                                   @keyup.debounce="updateRessource"
                                    style="min-width: 50px"
                                    data-ressource="{{ ressource.id }}"
                                    data-competence="{{ niveau.competence.id }}"
@@ -69,7 +69,7 @@
                 'ects')"></span>
                     {% else %}
                         <input type="text" class="form-control"
-                               @keyup="updateCompetence"
+                               @keyup.debounce="updateCompetence"
                                style="min-width: 50px"
                                data-competence="{{ niveau.competence.id }}"
                                data-semestre="{{ semestre.id }}"
