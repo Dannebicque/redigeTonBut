@@ -266,8 +266,7 @@ class ApcAjaxRessourceController extends BaseController
      * @Route("/{ressource}/{competence}/update_coeff_ajax", name="apc_ressource_coeff_update_ajax", methods="POST",
      *                                                       options={"expose":true})
      */
-    public
-    function updateCoeff(
+    public function updateCoeff(
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         Request $request,
         ApcRessource $ressource,

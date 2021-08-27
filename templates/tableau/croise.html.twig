@@ -50,11 +50,11 @@ et/ou libellé. #}
         })
 
         document.querySelectorAll('.changeCoeffSae').forEach((elem) => {
-          elem.addEventListener('keyup', changeCoeffSae)
+          elem.addEventListener('blur', changeCoeffSae)
         })
 
         document.querySelectorAll('.changeCoeffRessource').forEach((elem) => {
-          elem.addEventListener('keyup', changeCoeffRessource)
+          elem.addEventListener('blur', changeCoeffRessource)
         })
 
         function changeAcSae (e) {
@@ -95,7 +95,7 @@ et/ou libellé. #}
           fetch(Routing.generate('formation_apc_sae_coeff_update_ajax', {sae: sae, competence: competence}), {
             method: 'POST',
             body: JSON.stringify({
-              valeur: value
+              valeur: value.replace(',','.')
             })
           })
         }
@@ -104,7 +104,7 @@ et/ou libellé. #}
           fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {ressource: ressource, competence: competence}), {
             method: 'POST',
             body: JSON.stringify({
-              valeur: value
+              valeur: value.replace(',','.')
             })
           })
         }
