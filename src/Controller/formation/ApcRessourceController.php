@@ -64,8 +64,8 @@ class ApcRessourceController extends BaseController
                 'Ressource ajoutée avec succès.'
             );
 
-            return $this->redirectToRoute('but_ressources_annee',
-                ['annee' => $apcRessource->getSemestre()->getAnnee()->getId()]);
+            return $this->redirectToRoute('but_ressources_annee_semestre',
+                ['annee' => $apcRessource->getSemestre()->getAnnee()->getId(),'semestre' => $apcRessource->getSemestre()->getId() ]);
         }
 
         return $this->render('formation/apc_ressource/new.html.twig', [
@@ -100,8 +100,8 @@ class ApcRessourceController extends BaseController
             );
 
             if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
-                return $this->redirectToRoute('but_ressources_annee',
-                    ['annee' => $apcRessource->getSemestre()->getAnnee()->getId()]);
+                return $this->redirectToRoute('but_ressources_annee_semestre',
+                    ['annee' => $apcRessource->getSemestre()->getAnnee()->getId(), 'semestre' => $apcRessource->getSemestre()->getId()]);
             }
 
             return $this->redirectToRoute('formation_apc_ressource_edit',
@@ -122,7 +122,7 @@ class ApcRessourceController extends BaseController
         $this->denyAccessUnlessGranted('delete', $apcRessource);
         $id = $apcRessource->getId();
         if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
-            $annee = $apcRessource->getSemestre()->getAnnee();
+            $semestre = $apcRessource->getSemestre();
             $this->entityManager->remove($apcRessource);
             $this->entityManager->flush();
             $this->addFlashBag(
@@ -130,7 +130,8 @@ class ApcRessourceController extends BaseController
                 'Ressource supprimée avec succès.'
             );
 
-            return $this->redirectToRoute('but_ressources_annee', ['annee' => $annee->getId()]);
+            return $this->redirectToRoute('but_ressources_annee_semestre', ['annee' => $semestre->getAnnee()->getId(),
+                'semestre' => $semestre->getId()]);
         }
 
         $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la ressource.');

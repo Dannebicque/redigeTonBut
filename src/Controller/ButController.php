@@ -28,6 +28,7 @@ class ButController extends AbstractController
         ]);
     }
 
+    #[Route('/ressources/{annee}/{semestre}', name: 'ressources_annee_semestre', requirements: ['annee' => '\d+'])]
     #[Route('/ressources/{annee}/{semestre}/{parcours}', name: 'ressources_annee', requirements: ['annee' => '\d+'])]
     #[Route('/ressources/{annee}/{parcours}', name: 'ressources_annee', requirements: ['annee' => '\d+'])]
     public function ressources(
@@ -49,6 +50,7 @@ class ButController extends AbstractController
         ]);
     }
 
+    #[Route('/sae/{annee}/{semestre}', name: 'sae_annee_semestre', requirements: ['annee' => '\d+'])]
     #[Route('/sae/{annee}/{semestre}/{parcours}', name: 'sae_annee', requirements: ['annee' => '\d+'])]
     #[Route('/sae/{annee}/{parcours}', name: 'sae_annee', requirements: ['annee' => '\d+'])]
     public function saes(

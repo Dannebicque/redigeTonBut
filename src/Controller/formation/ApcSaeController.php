@@ -55,7 +55,7 @@ class ApcSaeController extends BaseController
                 'SAÉ ajoutée avec succès.'
             );
 
-            return $this->redirectToRoute('but_sae_annee', ['annee' => $apcSae->getSemestre()->getAnnee()->getId()]);
+            return $this->redirectToRoute('but_sae_annee_semestre', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId()]);
         }
 
         return $this->render('formation/apc_sae/new.html.twig', [
@@ -89,7 +89,7 @@ class ApcSaeController extends BaseController
             );
 
             if (null !== $request->request->get('btn_update') && null !== $apcSae->getSemestre() && null !== $apcSae->getSemestre()->getAnnee()) {
-                return $this->redirectToRoute('but_sae_annee', ['annee' => $apcSae->getSemestre()->getAnnee()->getId()]);
+                return $this->redirectToRoute('but_sae_annee_semestre', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId()]);
             }
 
             return $this->redirectToRoute('formation_apc_sae_edit',
@@ -110,7 +110,7 @@ class ApcSaeController extends BaseController
         $this->denyAccessUnlessGranted('delete', $apcSae);
         $id = $apcSae->getId();
         if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
-            $annee = $apcSae->getSemestre()->getAnnee();
+            $semestre = $apcSae->getSemestre();
             $this->entityManager->remove($apcSae);
             $this->entityManager->flush();
             $this->addFlashBag(
@@ -118,7 +118,7 @@ class ApcSaeController extends BaseController
                 'SAÉ supprimée avec succès.'
             );
 
-            return $this->redirectToRoute('but_sae_annee', ['annee' => $annee->getId()]);
+            return $this->redirectToRoute('but_sae_annee_semestre', ['annee' => $semestre->getAnnee()->getId(), 'semestre' => $semestre->getId() ]);
         }
 
         $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la SAÉ.');
