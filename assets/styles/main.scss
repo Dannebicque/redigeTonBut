@@ -62,3 +62,8 @@ html[data-navcolor='dark'] .logo-but {
     color: var(--light-text)
 }
 
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    height: auto;
+}
+
