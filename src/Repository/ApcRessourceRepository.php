@@ -101,17 +101,19 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBySemestreEtPrecendent(Semestre $semestre, array $semestres)
+    public function findBySemestreEtPrecedent(Semestre $semestre, array $semestres)
     {
         $query = $this->createQueryBuilder('r')
             ->orderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC');
 
+        $i = 0;
         foreach ($semestres as $sem) {
             if ($sem->getOrdreLmd() <= $semestre->getOrdreLmd()) {
-                $query->orWhere('r.semestre = :semestre')
-                    ->setParameter('semestre', $sem->getId());
+                $query->orWhere('r.semestre = :semestre'.$i)
+                    ->setParameter('semestre'.$i, $sem->getId());
+                $i++;
             }
         }
 
