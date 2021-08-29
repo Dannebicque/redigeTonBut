@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.11](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.10...v1.5.11) (2021-08-29)
+
+
+### Bug Fixes
+
+* Gestion de ',' et '.' pour les décimaux ([f95e31b](https://github.com/Dannebicque/redigeTonBut/commit/f95e31b97008447d9ec8faae5850dae25441617d))
+* Hauteur des boutons en onglet ([66ea96c](https://github.com/Dannebicque/redigeTonBut/commit/66ea96c14d62073c34914b18bc7badfced196bef))
+* Modification pour mise à jour des tableaux (floatant et blur) ([ca22c19](https://github.com/Dannebicque/redigeTonBut/commit/ca22c1917d999f6bfa1f1fde696ec72226e994e9))
+* Ressources des semestres précédents ([7987e9d](https://github.com/Dannebicque/redigeTonBut/commit/7987e9d1566e81d351764e8912a12bd6a256108f))
+* Retour sur le bon onglet semestre dans les pages SAE et Ressources ([20817f8](https://github.com/Dannebicque/redigeTonBut/commit/20817f82b717c141ce6eac1be828e52f87dba06b))
+* Tempo pour la saisie dans les zones de coefficients ([dbfc4dc](https://github.com/Dannebicque/redigeTonBut/commit/dbfc4dce60bfade99e032ba26a8c7447cf40edd7))
+
 ### [1.5.10](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.9...v1.5.10) (2021-08-25)
 
 
