@@ -46,7 +46,7 @@
     {% if selectSemestre != null %}
         {% set sem = selectSemestre.id %}
     {% else %}
-        {% set sem = annee.semestres[0] %}
+        {% set sem = annee.semestres[0].id %}
     {% endif %}
 
     {% if is_granted('ROLE_EDITEUR') %}
