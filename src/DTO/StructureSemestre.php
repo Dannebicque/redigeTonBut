@@ -62,26 +62,26 @@ class StructureSemestre
     public function getJson()
     {
         return [
-            'nbHeuresRessourcesSae' => number_format($this->nbHeuresRessourcesSae, 2),
-            'pourcentageAdaptationLocale' => number_format($this->pourcentageAdaptationLocale, 2),
-            'nbHeuresEnseignementLocale' => number_format($this->nbHeuresEnseignementLocale, 2),
-            'nbHeuresEnseignementSaeLocale' => number_format($this->nbHeuresEnseignementSaeLocale, 2),
-            'nbHeuresEnseignementRessourceLocale' => number_format($this->nbHeuresEnseignementRessourceLocale, 2),
-            'nbHeuresEnseignementRessourceNational' => number_format($this->nbHeuresEnseignementRessourceNational, 2),
+            'nbHeuresRessourcesSae' => round($this->nbHeuresRessourcesSae, 2),
+            'pourcentageAdaptationLocale' => round($this->pourcentageAdaptationLocale, 2),
+            'nbHeuresEnseignementLocale' => round($this->nbHeuresEnseignementLocale, 2),
+            'nbHeuresEnseignementSaeLocale' => round($this->nbHeuresEnseignementSaeLocale, 2),
+            'nbHeuresEnseignementRessourceLocale' => round($this->nbHeuresEnseignementRessourceLocale, 2),
+            'nbHeuresEnseignementRessourceNational' => round($this->nbHeuresEnseignementRessourceNational, 2),
             'nbSemaines' => $this->nbSemaines,
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
             'nbSemainesStageMax' => $this->nbSemainesStageMax,
             'nbSemainesCoursProjet' => $this->nbSemainesCoursProjet,
-            'nbHeuresProjet' => number_format($this->nbHeuresProjet, 2),
-            'nbHeuresCoursProjet' => number_format($this->nbHeuresCoursProjet, 2),
+            'nbHeuresProjet' => round($this->nbHeuresProjet, 2),
+            'nbHeuresCoursProjet' => round($this->nbHeuresCoursProjet, 2),
             'nbDemiJournees' => $this->nbDemiJournees,
-            'dureeHebdo' => number_format($this->dureeHebdo, 2),
+            'dureeHebdo' => round($this->dureeHebdo, 2),
             'nbMoyenneHeuresDemiJournee' => number_format($this->nbMoyenneHeuresDemiJournee, 2),
-            'nbHeuresCoursHebdo' => number_format($this->nbHeuresCoursHebdo, 2),
-            'nbHeuresHebdoProjet' => number_format($this->nbHeuresHebdoProjet, 2),
-            'nbHeuresTpNational' => number_format($this->nbHeuresTpNational, 2),
-            'nbHeuresTpLocale' => number_format($this->nbHeuresTpLocale, 2)
+            'nbHeuresCoursHebdo' => round($this->nbHeuresCoursHebdo, 2),
+            'nbHeuresHebdoProjet' => round($this->nbHeuresHebdoProjet, 2),
+            'nbHeuresTpNational' => round($this->nbHeuresTpNational, 2),
+            'nbHeuresTpLocale' => round($this->nbHeuresTpLocale, 2)
         ];
     }
 

@@ -64,27 +64,27 @@ class StructureDepartement
     public function getJson(): array
     {
         return [
-            'nbHeuresRessourcesSae' => $this->nbHeuresRessourcesSae,
-            'totalPourcentageAdaptationLocale' => $this->getMoyenneAdaptationLocale(),
-            'nbHeuresEnseignementLocale' => $this->nbHeuresEnseignementLocale,
-            'totalAdaptationLocale' => $this->totalAdaptationLocale,
+            'nbHeuresRessourcesSae' => round($this->nbHeuresRessourcesSae,2),
+            'totalPourcentageAdaptationLocale' => round($this->getMoyenneAdaptationLocale(),2),
+            'nbHeuresEnseignementLocale' => round($this->nbHeuresEnseignementLocale,2),
+            'totalAdaptationLocale' => round($this->totalAdaptationLocale,2),
 
             'nbSemaines' => $this->nbSemaines,
-            'totalTp' => $this->totalTp,
-            'ecartTotalTp' => 700 - $this->totalTp,
+            'totalTp' => round($this->totalTp,2),
+            'ecartTotalTp' => round(700 - $this->totalTp,2),
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
             'nbSemainesStageMax' => $this->nbSemainesStageMax,
             'nbSemainesCoursProjet' => $this->nbSemainesCoursProjet,
-            'nbHeuresProjet' => $this->nbHeuresProjet,
-            'nbHeuresCoursProjet' => $this->nbHeuresCoursProjet,
+            'nbHeuresProjet' => round($this->nbHeuresProjet,2),
+            'nbHeuresCoursProjet' => round($this->nbHeuresCoursProjet,2),
             'nbDemiJournees' => $this->nbDemiJournees,
-            'dureeHebdo' => $this->dureeHebdo,
-            'nbMoyenneHeuresDemiJournee' => $this->nbMoyenneHeuresDemiJournee,
-            'nbHeuresCoursHebdo' => $this->nbHeuresCoursHebdo,
-            'nbHeuresHebdoProjet' => $this->nbHeuresHebdoProjet,
-            'ecart' => $this->departement->getNbHeuresDiplome() - $this->nbHeuresRessourcesSae,
-            'ecartProjet' => Caracteristique::NB_HEURES_PROJET - $this->nbHeuresProjet,
+            'dureeHebdo' => round($this->dureeHebdo,2),
+            'nbMoyenneHeuresDemiJournee' => round($this->nbMoyenneHeuresDemiJournee,2),
+            'nbHeuresCoursHebdo' => round($this->nbHeuresCoursHebdo,2),
+            'nbHeuresHebdoProjet' => round($this->nbHeuresHebdoProjet,2),
+            'ecart' => round($this->departement->getNbHeuresDiplome() - $this->nbHeuresRessourcesSae,2),
+            'ecartProjet' => round(Caracteristique::NB_HEURES_PROJET - $this->nbHeuresProjet,2),
         ];
     }
 }
