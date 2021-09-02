@@ -394,7 +394,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Nbre d'heures d'enseignement /année</th>
+                    <th>Nbre d'heures d'enseignement / année</th>
                     {% for i in range(1, 6, 2) %}
                         <td class="text-center" colspan="2">
                             <span x-text="donnees[{{ i }}].nbHeuresRessourcesSae + donnees[{{ i+1 }}]
@@ -409,7 +409,7 @@
                 </tr>
                 <tr>
                     <th>Nbre d'heures d'enseignement + projet/année</th>
-                    {% for i in 1..3 %}
+                    {% for i in range(1, 6, 2) %}
                         <td class="text-center" colspan="2">
                             <span x-text="donnees[{{ i }}].nbHeuresCoursProjet + donnees[{{ i+1 }}]
                             .nbHeuresCoursProjet"></span>

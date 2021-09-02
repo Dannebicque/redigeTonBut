@@ -40,7 +40,7 @@ class StructureSemestre
         $this->nbHeuresEnseignementLocale = $semestre->getNbHeuresEnseignementLocale();
         $this->nbHeuresEnseignementSaeLocale = $semestre->getNbHeuresEnseignementSaeLocale();
         $this->nbHeuresEnseignementRessourceLocale = $this->nbHeuresEnseignementLocale - $this->nbHeuresEnseignementSaeLocale;
-        $this->nbHeuresEnseignementRessourceNational = $this->nbHeuresRessourcesSae-$this->nbHeuresEnseignementLocale;
+        $this->nbHeuresEnseignementRessourceNational = $this->nbHeuresRessourcesSae - $this->nbHeuresEnseignementLocale;
 
         $this->nbHeuresTpLocale = $semestre->getNbHeuresTpLocale();
         $this->nbHeuresTpNational = $semestre->getNbHeuresTpNational();
@@ -48,7 +48,7 @@ class StructureSemestre
         $this->nbSemainesConges = $semestre->getNbSemainesConges();
         $this->nbSemainesStageMin = $semestre->getNbSemaineStageMin();
         $this->nbSemainesStageMax = $semestre->getNbSemainesStageMax();
-        $this->nbSemainesCoursProjet = $this->nbSemaines - $this->nbSemainesConges-$this->nbSemainesStageMax;
+        $this->nbSemainesCoursProjet = $this->nbSemaines - $this->nbSemainesConges - $this->nbSemainesStageMax;
         $this->nbHeuresProjet = $semestre->getNbHeuresProjet();
         $this->nbHeuresCoursProjet = $this->nbHeuresRessourcesSae + $this->nbHeuresProjet;
         $this->nbDemiJournees = $semestre->getNbDemiJournees();
@@ -62,26 +62,26 @@ class StructureSemestre
     public function getJson()
     {
         return [
-            'nbHeuresRessourcesSae' => $this->nbHeuresRessourcesSae,
-            'pourcentageAdaptationLocale' => $this->pourcentageAdaptationLocale,
-            'nbHeuresEnseignementLocale' => $this->nbHeuresEnseignementLocale,
-            'nbHeuresEnseignementSaeLocale' => $this->nbHeuresEnseignementSaeLocale,
-            'nbHeuresEnseignementRessourceLocale' => $this->nbHeuresEnseignementRessourceLocale,
-            'nbHeuresEnseignementRessourceNational' => $this->nbHeuresEnseignementRessourceNational,
+            'nbHeuresRessourcesSae' => number_format($this->nbHeuresRessourcesSae, 2),
+            'pourcentageAdaptationLocale' => number_format($this->pourcentageAdaptationLocale, 2),
+            'nbHeuresEnseignementLocale' => number_format($this->nbHeuresEnseignementLocale, 2),
+            'nbHeuresEnseignementSaeLocale' => number_format($this->nbHeuresEnseignementSaeLocale, 2),
+            'nbHeuresEnseignementRessourceLocale' => number_format($this->nbHeuresEnseignementRessourceLocale, 2),
+            'nbHeuresEnseignementRessourceNational' => number_format($this->nbHeuresEnseignementRessourceNational, 2),
             'nbSemaines' => $this->nbSemaines,
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
             'nbSemainesStageMax' => $this->nbSemainesStageMax,
             'nbSemainesCoursProjet' => $this->nbSemainesCoursProjet,
-            'nbHeuresProjet' => $this->nbHeuresProjet,
-            'nbHeuresCoursProjet' => $this->nbHeuresCoursProjet,
+            'nbHeuresProjet' => number_format($this->nbHeuresProjet, 2),
+            'nbHeuresCoursProjet' => number_format($this->nbHeuresCoursProjet, 2),
             'nbDemiJournees' => $this->nbDemiJournees,
-            'dureeHebdo' => $this->dureeHebdo,
-            'nbMoyenneHeuresDemiJournee' => $this->nbMoyenneHeuresDemiJournee,
-            'nbHeuresCoursHebdo' => $this->nbHeuresCoursHebdo,
-            'nbHeuresHebdoProjet' => $this->nbHeuresHebdoProjet,
-            'nbHeuresTpNational' => $this->nbHeuresTpNational,
-            'nbHeuresTpLocale' => $this->nbHeuresTpLocale
+            'dureeHebdo' => number_format($this->dureeHebdo, 2),
+            'nbMoyenneHeuresDemiJournee' => number_format($this->nbMoyenneHeuresDemiJournee, 2),
+            'nbHeuresCoursHebdo' => number_format($this->nbHeuresCoursHebdo, 2),
+            'nbHeuresHebdoProjet' => number_format($this->nbHeuresHebdoProjet, 2),
+            'nbHeuresTpNational' => number_format($this->nbHeuresTpNational, 2),
+            'nbHeuresTpLocale' => number_format($this->nbHeuresTpLocale, 2)
         ];
     }
 
