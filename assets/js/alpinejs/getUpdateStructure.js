@@ -26,13 +26,13 @@ function getUpdateStructure () {
 
     },
     totalAnneeNbHeuresProjet(semestre) {
-      return this.numberFormat(this.donnees[semestre].nbHeuresProjet + this.donnees[semestre + 1].nbHeuresProjet)
+      return this.numberFormat( Number(this.donnees[semestre].nbHeuresProjet) + Number(this.donnees[semestre + 1].nbHeuresProjet))
     },
     totalAnneeNbHeuresRessourcesSae(semestre) {
-      return this.numberFormat(this.donnees[semestre].nbHeuresRessourcesSae + this.donnees[semestre + 1].nbHeuresRessourcesSae)
+      return this.numberFormat(Number(this.donnees[semestre].nbHeuresRessourcesSae) + Number(this.donnees[semestre + 1].nbHeuresRessourcesSae))
     },
     totalAnneeNbHeuresCoursProjet(semestre) {
-      return this.numberFormat(this.donnees[semestre].nbHeuresCoursProjet + this.donnees[semestre + 1].nbHeuresCoursProjet)
+      return this.numberFormat(Number(this.donnees[semestre].nbHeuresCoursProjet) + Number(this.donnees[semestre + 1].nbHeuresCoursProjet))
     },
     numberFormat (valeur) {
       if (typeof valeur !== 'undefined') {
@@ -46,13 +46,13 @@ function getUpdateStructure () {
       return '<span class="badge bg-success text-uppercase">' + this.numberFormat(valeur) + '</span>'
     },
     badgeEgalite (valeur, seuil) {
-      if (valeur !== seuil) {
+      if (Number(valeur) !== Number(seuil)) {
         return '<span class="badge bg-danger text-uppercase">' + this.numberFormat(valeur) + '</span>'
       }
       return '<span class="badge bg-success text-uppercase">' + this.numberFormat(valeur) + '</span>'
     },
     badgeSeuilInferieur (valeur, seuil) {
-      if (valeur < seuil) {
+      if (Number(valeur) < Number(seuil)) {
         return '<span class="badge bg-danger text-uppercase">' + this.numberFormat(valeur) + '</span>'
       }
 
