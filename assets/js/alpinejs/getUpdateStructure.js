@@ -27,7 +27,7 @@ function getUpdateStructure () {
     },
     numberFormat (valeur) {
       if (typeof valeur !== 'undefined') {
-        return valeur.toFixed(2)
+        return Number(valeur).toFixed(2)
       }
     },
     badgeSeuil (valeur, seuil) {
