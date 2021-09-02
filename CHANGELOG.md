@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.13](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.12...v1.5.13) (2021-09-02)
+
+
+### Bug Fixes
+
+* Somme nombre heure cours + projet année ([3a5a8b5](https://github.com/Dannebicque/redigeTonBut/commit/3a5a8b5f4e04be27036c87b28e5e119b9865ceb3))
+* Somme nombre heure cours + projet année ([cfba215](https://github.com/Dannebicque/redigeTonBut/commit/cfba2150736c76dae76af451bafc209bbfe75649))
+* Somme nombre heure cours + projet année ([73f0e74](https://github.com/Dannebicque/redigeTonBut/commit/73f0e74b6f4ae8b906de95a64fc495aae9f42844))
+* Somme nombre heure cours + projet année ([ec6a871](https://github.com/Dannebicque/redigeTonBut/commit/ec6a8716b1eee1cac0f345527f83c4bc46be9193))
+* Somme nombre heure cours + projet année ([8d769a9](https://github.com/Dannebicque/redigeTonBut/commit/8d769a9e50baab11964eb46c32f2db7817d70173))
+
 ### [1.5.12](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.11...v1.5.12) (2021-09-02)
 
 
