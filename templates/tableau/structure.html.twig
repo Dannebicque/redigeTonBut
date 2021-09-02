@@ -251,7 +251,7 @@
                     <th scope="row">Nbre heures de projet/année min 150 h / max 250h</th>
                     {% for i in range(1, 6, 2) %}
                         <td class="text-center" colspan="2">
-                            <span x-text="totalAnneeNbHeuresProjet(i)"></span>
+                            <span x-text="totalAnneeNbHeuresProjet({{ i }})"></span>
                         </td>
                     {% endfor %}
                     <td class="text-center">
@@ -397,7 +397,7 @@
                     <th>Nbre d'heures d'enseignement / année</th>
                     {% for i in range(1, 6, 2) %}
                         <td class="text-center" colspan="2">
-                            <span x-text="totalAnneeNbHeuresRessourcesSae(i)"></span>
+                            <span x-text="totalAnneeNbHeuresRessourcesSae({{ i }})"></span>
                         </td>
                     {% endfor %}
                     <td class="text-center">
@@ -410,7 +410,7 @@
                     <th>Nbre d'heures d'enseignement + projet/année</th>
                     {% for i in range(1, 6, 2) %}
                         <td class="text-center" colspan="2">
-                            <span x-text="totalAnneeNbHeuresCoursProjet(i)"></span>
+                            <span x-text="totalAnneeNbHeuresCoursProjet({{ i }})"></span>
                         </td>
                     {% endfor %}
                     <td class="text-center">
