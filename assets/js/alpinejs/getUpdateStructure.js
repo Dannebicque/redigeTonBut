@@ -25,6 +25,15 @@ function getUpdateStructure () {
       })
 
     },
+    totalAnneeNbHeuresProjet(semestre) {
+      return this.numberFormat(this.donnees[semestre].nbHeuresProjet + this.donnees[semestre + 1].nbHeuresProjet)
+    },
+    totalAnneeNbHeuresRessourcesSae(semestre) {
+      return this.numberFormat(this.donnees[semestre].nbHeuresRessourcesSae + this.donnees[semestre + 1].nbHeuresRessourcesSae)
+    },
+    totalAnneeNbHeuresCoursProjet(semestre) {
+      return this.numberFormat(this.donnees[semestre].nbHeuresCoursProjet + this.donnees[semestre + 1].nbHeuresCoursProjet)
+    },
     numberFormat (valeur) {
       if (typeof valeur !== 'undefined') {
         return Number(valeur).toFixed(2)
