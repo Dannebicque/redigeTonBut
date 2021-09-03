@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.14](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.13...v1.5.14) (2021-09-03)
+
+
+### Bug Fixes
+
+* arrondi des nombres ([9eddb08](https://github.com/Dannebicque/redigeTonBut/commit/9eddb08a788b90760becdbaac69748cf15e2b822))
+* Modification des formulaires SAE et Ressources ([b317f86](https://github.com/Dannebicque/redigeTonBut/commit/b317f86d6d9b8dc1bd1a476753b1adc4399c4e9c))
+
 ### [1.5.13](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.12...v1.5.13) (2021-09-02)
 
 
