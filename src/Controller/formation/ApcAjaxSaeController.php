@@ -84,7 +84,6 @@ class ApcAjaxSaeController extends BaseController
                     }
 
                     $t[$key->getId()][] = $b;
-                    $t['competences'][$key->getId()] = '<span class="badge badge-'.$key->getCouleur().'">'.$key->getLibelle().'</span>';
                 }
             }
 

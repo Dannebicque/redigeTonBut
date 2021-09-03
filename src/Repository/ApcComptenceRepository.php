@@ -10,12 +10,7 @@
 namespace App\Repository;
 
 use App\Entity\ApcCompetence;
-use App\Entity\ApcNiveau;
-use App\Entity\ApcParcours;
-use App\Entity\ApcParcoursNiveau;
 use App\Entity\Departement;
-use App\Entity\Diplome;
-use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -38,8 +38,8 @@ class ApcNiveauRepository extends ServiceEntityRepository
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = n.annee')
             ->where('a.id = :annee')
             ->setParameter('annee', $semestre->getAnnee()->getId())
-            ->orderBy('n.ordre')
-            ->addOrderBy('c.couleur')
+            ->orderBy('n.ordre', 'ASC')
+            ->addOrderBy('c.couleur', 'ASC')
             ->getQuery()
             ->getResult();
     }

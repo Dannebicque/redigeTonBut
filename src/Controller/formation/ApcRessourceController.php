@@ -14,6 +14,7 @@ use App\Classes\Apc\ApcRessourceAddEdit;
 use App\Classes\Apc\ApcRessourceOrdre;
 use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
+use App\Entity\ApcCompetence;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
 use App\Entity\ApcRessourceParcours;
@@ -22,6 +23,8 @@ use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Form\ApcRessourceType;
 use App\Repository\ApcApprentissageCritiqueRepository;
+use App\Repository\ApcCompetenceSemestreRepository;
+use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
@@ -38,6 +41,7 @@ class ApcRessourceController extends BaseController
 {
      #[Route("/new/{semestre}", name: "apc_ressource_new", options: ['expose' =>true], methods: ["GET","POST"])]
     public function new(
+        ApcComptenceRepository $apcComptenceRepository,
         ApcRessourceOrdre $apcRessourceOrdre,
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,

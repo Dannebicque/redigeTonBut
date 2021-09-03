@@ -47,6 +47,7 @@ class ApcAjaxCompetenceController extends BaseController
 
                     $b['id'] = $d->getCompetence()->getId();
                     $b['libelle'] = $d->getCompetence()->getLibelle();
+                    $b['display'] = '<span class="badge badge-'.$d->getCompetence()->getCouleur().'">'.$d->getCompetence()->getLibelle().'</span>';
                     $b['checked'] = true === in_array($d->getCompetence()->getId(), $resComp);
                     $t[] = $b;
                 }
@@ -84,6 +85,7 @@ class ApcAjaxCompetenceController extends BaseController
 
                     $b['id'] = $d->getCompetence()->getId();
                     $b['libelle'] = $d->getCompetence()->getLibelle();
+                    $b['display'] = '<span class="badge badge-'.$d->getCompetence()->getCouleur().'">'.$d->getCompetence()->getLibelle().'</span>';
                     $b['checked'] = true === in_array($d->getCompetence()->getId(), $resComp);
                     $t[] = $b;
                 }

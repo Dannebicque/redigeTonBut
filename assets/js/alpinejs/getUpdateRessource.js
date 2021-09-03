@@ -23,12 +23,6 @@ function getUpdateRessource() {
       }
       return null
     },
-    getLibelleCompetence (id) {
-      if (this.acs !== false && this.acs.competences !== false && !(typeof this.acs.competences === 'undefined') && id in this.acs.competences) {
-        return '# Compétence : ' + this.acs.competences[id]
-      }
-      return '-chargement-'
-    },
     getAcs (id) {
       if (this.acs !== false && id in this.acs) {
         return this.acs[id]

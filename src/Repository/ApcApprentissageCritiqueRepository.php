@@ -56,6 +56,7 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
     ) {
         $query = $this->createQueryBuilder('a')
             ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'a.niveau = n.id')
+            ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'n.competence = c.id')
             ->where('n.annee = :annee')
             ->setParameter('annee', $annee->getId());
 
@@ -65,6 +66,7 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
         }
 
         return $query->andWhere(implode(' OR ', $ors))
+            ->orderBy('c.couleur', 'ASC')
             ->getQuery()
             ->getResult();
     }

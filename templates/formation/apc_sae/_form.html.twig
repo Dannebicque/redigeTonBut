@@ -36,6 +36,7 @@
     <h2 class="small-title">Compétences du semestre et Apprentissage(s) Critique(s)</h2>
     <div class="card mb-5">
         <div class="card-body">
+            <p class="fw-bold">Choix des apprentissage(s) critique(s)</p>
             <div id="saeRessource">
                 <template x-if="semestre == null">
                     <div class="alert alert-warning">
@@ -44,13 +45,21 @@
                 </template>
                 <div class="row">
                     <template x-for="competence in listeCompetences">
-                        <div class="col-6">
+                        <div class="col-12 mb-2">
                             <input type="checkbox" x-model="competences"
                                    :value="competence.id"
                                    name="competences[]"
                                    @change="changeCompetence"
                                    :checked="competence.checked">&nbsp;
-                            <span x-text="competence.libelle"></span>
+                            <span x-html="competence.display"></span>
+                        <div class="row">
+                            <template x-for="ac in getAcs(competence.id)">
+                                <div class="col-6">
+                                    <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked">&nbsp;
+                                    <span x-text="ac.code + ` | ` + ac.libelle"></span>
+                                </div>
+                            </template>
+                        </div>
                         </div>
                     </template>
                 </div>
@@ -58,32 +67,32 @@
             <small id="apc_sae_ressource_help" class="form-text text-muted">
                 Ajoutez les Compétences concernées par la SAÉ pour obtenir les apprentissages critiques.
             </small>
-            <br><br>
 
-            <p class="fw-bold">Choix des apprentissage(s) critique(s)</p>
-            <div id="acSae">
-                <template x-if="semestre == null || acs.length == 0 || acs === false">
-                    <div class="alert alert-warning">
-                        Veuillez choisir un semestre et au moins une compétence
-                    </div>
-                </template>
-                <div class="row">
-                    <template x-for="competence in competences">
-                        <div>
-                            <br>
-                            <strong x-html="getLibelleCompetence(competence)"></strong>
-                            <div class="row">
-                                <template x-for="ac in getAcs(competence)">
-                                    <div class="col-6">
-                                        <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked">&nbsp;
-                                        <span x-text="ac.code + ` | ` + ac.libelle"></span>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
+
+{#            <p class="fw-bold">Choix des apprentissage(s) critique(s)</p>#}
+{#            <div id="acSae">#}
+{#                <template x-if="semestre == null || acs.length == 0 || acs === false">#}
+{#                    <div class="alert alert-warning">#}
+{#                        Veuillez choisir un semestre et au moins une compétence#}
+{#                    </div>#}
+{#                </template>#}
+{#                <div class="row">#}
+{#                    <template x-for="competence in competences">#}
+{#                        <div>#}
+{#                            <br>#}
+{#                            <strong x-html="getLibelleCompetence(competence)"></strong>#}
+{#                            <div class="row">#}
+{#                                <template x-for="ac in getAcs(competence)">#}
+{#                                    <div class="col-6">#}
+{#                                        <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked">&nbsp;#}
+{#                                        <span x-text="ac.code + ` | ` + ac.libelle"></span>#}
+{#                                    </div>#}
+{#                                </template>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </template>#}
+{#                </div>#}
+{#            </div>#}
             <small id="apc_sae_competences_help" class="form-text text-muted">
                 Ajoutez les compétences couvertes par la SAÉ.
             </small>
