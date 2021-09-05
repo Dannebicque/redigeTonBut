@@ -1,4 +1,4 @@
-function getUpdateRessource() {
+function getUpdateRessource () {
   return {
     acs: [],
     listeCompetences: [],
@@ -7,10 +7,10 @@ function getUpdateRessource() {
     parcours: [],
     prerequis: [],
     semestre: null,
-   async  init () {
+    async init () {
       this.semestre = this.displayRadioValue()
       if (this.semestre !== null) {
-       await  this.updateSemestre()
+        await this.updateSemestre()
       }
     },
     displayRadioValue () {
@@ -29,7 +29,7 @@ function getUpdateRessource() {
       }
       return {}
     },
-    async getApiAcs() {
+    async getApiAcs () {
       this.acs = await fetch(Routing.generate('formation_apc_ressources_ajax_ac'), {
         method: 'POST',
         body: JSON.stringify({
@@ -41,7 +41,7 @@ function getUpdateRessource() {
         return r.json()
       })
     },
-    async getApiCompetences() {
+    async getApiCompetences () {
       this.listeCompetences = await fetch(Routing.generate('competence_apc_competences_ressource_semestre_ajax'), {
         method: 'POST',
         body: JSON.stringify({
@@ -102,8 +102,30 @@ function getUpdateRessource() {
     async changeCompetence (e) {
       e.stopPropagation()
       await this.getApiAcs()
+    },
+    selectAll (e) {
+      e.preventDefault()
+      this.competences = [] //vider le tableau
+      document.querySelectorAll('.competence').forEach((elem) => {
+        elem.checked = true
+        this.competences.push(elem.value)
+      })
+      this.changeCompetence(e).then(() => {
+        document.querySelectorAll('.ac').forEach((elem) => {
+          elem.checked = true
+        })
+      })
+    },
+    unselectAll (e) {
+      e.preventDefault()
+      document.querySelectorAll('.ac').forEach((elem) => {
+        elem.checked = false
+      })
+      document.querySelectorAll('.competence').forEach((elem) => {
+        elem.checked = false
+      })
     }
   }
 }
 
-window.getUpdateRessource = getUpdateRessource;
+window.getUpdateRessource = getUpdateRessource

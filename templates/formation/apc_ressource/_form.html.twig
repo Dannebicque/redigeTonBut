@@ -62,12 +62,14 @@
                                    :value="competence.id"
                                    name="competences[]"
                                    @change="changeCompetence"
+                                   class="competence"
                                    :checked="competence.checked">&nbsp;
                             <span x-html="competence.display"></span>
                             <div class="row">
                                 <template x-for="ac in getAcs(competence.id)">
                                     <div class="col-6">
-                                        <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked">&nbsp;
+                                        <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked"
+                                               class="ac">&nbsp;
                                         <span x-text="ac.code + ` | ` + ac.libelle"></span>
                                     </div>
                                 </template>
@@ -78,30 +80,10 @@
             </div>
             <small id="apc_sae_ressource_help" class="form-text text-muted">
                 Ajoutez les Compétences concernées par la ressource pour obtenir les apprentissages critiques.
-            </small>
-
-
-            {# <div id="acRessources"> #}
-
-            {# </template> #}
-
-            {# <template x-for="competence in competences"> #}
-            {# <div> #}
-            {# <br> #}
-            {# <strong x-html="getLibelleCompetence(competence)"></strong> #}
-            {# <div class="row"> #}
-            {# <template x-for="ac in getAcs(competence)"> #}
-            {# <div class="col-6"> #}
-            {# <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked">&nbsp; #}
-            {# <span x-text="ac.code + ` | ` + ac.libelle"></span> #}
-            {# </div> #}
-            {# </template> #}
-            {# </div> #}
-            {# </div> #}
-            {# </template> #}
-            {# </div> #}
-            <small id="apc_sae_competences_help" class="form-text text-muted">Ajoutez les compétences couvertes par
-                                                                              la ressources.</small>
+                Ajoutez les compétences couvertes par la ressources.
+            </small><br>
+            <a href="#" @click="selectAll">Selectionner toutes les compétences et les apprentissages critiques</a> |
+            <a href="#" @click="unselectAll">Retirer toutes les compétences et les apprentissages critiques</a>
         </div>
     </div>
 </section>

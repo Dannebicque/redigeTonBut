@@ -96,6 +96,28 @@ function getUpdateSae() {
     async changeCompetence (e) {
       e.stopPropagation()
       await this.getApiAcs()
+    },
+    selectAll (e) {
+      e.preventDefault()
+      this.competences = [] //vider le tableau
+      document.querySelectorAll('.competence').forEach((elem) => {
+        elem.checked = true
+        this.competences.push(elem.value)
+      })
+      this.changeCompetence(e).then(() => {
+        document.querySelectorAll('.ac').forEach((elem) => {
+          elem.checked = true
+        })
+      })
+    },
+    unselectAll (e) {
+      e.preventDefault()
+      document.querySelectorAll('.ac').forEach((elem) => {
+        elem.checked = false
+      })
+      document.querySelectorAll('.competence').forEach((elem) => {
+        elem.checked = false
+      })
     }
   }
 }
