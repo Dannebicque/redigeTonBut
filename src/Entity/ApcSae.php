@@ -65,6 +65,11 @@ class ApcSae extends AbstractMatiere
      */
     private ?string $objectifs;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $exemples;
+
     public function __construct()
     {
         $this->apcSaeCompetences = new ArrayCollection();
@@ -281,6 +286,18 @@ class ApcSae extends AbstractMatiere
     public function setObjectifs(string $objectifs): self
     {
         $this->objectifs = $objectifs;
+
+        return $this;
+    }
+
+    public function getExemples(): ?string
+    {
+        return $this->exemples;
+    }
+
+    public function setExemples(?string $exemples): self
+    {
+        $this->exemples = $exemples;
 
         return $this;
     }

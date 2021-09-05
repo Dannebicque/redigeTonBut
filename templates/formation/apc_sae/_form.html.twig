@@ -15,7 +15,39 @@
                 <div class="col-sm-3">
                     {{ form_row(form.libelleCourt) }}
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
 
+<section>
+    <h2 class="small-title">Préconisation de répartition (non publié)</h2>
+    <div class="card mb-5 bg-secondary text-white">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    {{ form_row(form.cmPpn) }}
+                </div>
+                <div class="col-sm-3">
+                    {{ form_row(form.tdPpn) }}
+                </div>
+                <div class="col-sm-3">
+                    {{ form_row(form.tpPpn) }}
+                </div>
+                <div class="col-sm-3">
+                    {{ form_row(form.projetPpn) }}
+                </div>
+            </div>
+            <small class="text-white">Données non publiées, à seule fin de préconisation pour les départements.</small>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2 class="small-title">Objectifs et descriptions</h2>
+    <div class="card mb-5">
+        <div class="card-body">
+            <div class="row">
                 <div class="col-sm-12">
                     {{ form_row(form.objectifs) }}
                 </div>
@@ -31,6 +63,8 @@
         </div>
     </div>
 </section>
+
+
 
 <section>
     <h2 class="small-title">Compétences du semestre et Apprentissage(s) Critique(s)</h2>
@@ -147,6 +181,19 @@
                 strictement identique) à plusieurs parcours. Si le contenu diffère, même légèrement, il est
                 préférable de dupliquer la SAÉ pour l'éditer librement selon le parcours.
             </small>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2 class="small-title">Exemple(s) pour la SAÉ (non publié)</h2>
+    <div class="card mb-5 bg-secondary text-white">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    {{ form_row(form.exemples) }}
+                </div>
+            </div>
         </div>
     </div>
 </section>

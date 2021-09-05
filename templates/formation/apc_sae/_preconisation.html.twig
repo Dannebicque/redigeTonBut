@@ -1,0 +1,22 @@
+<div class="alert alert-warning">
+    Ces données ne sont pas publiées dans le référentiel de formation et sont indicatives !
+</div><br>
+<table class="table table-bordered">
+    <tr>
+        <th>CM</th>
+        <th>TD</th>
+        <th>TP</th>
+        <th>Projet (autonomie)</th>
+    </tr>
+    <tr>
+        <td>{{ apc_sae.cmPpn }}</td>
+        <td>{{ apc_sae.tdPpn }}</td>
+        <td>{{ apc_sae.tpPpn }}</td>
+        <td>{{ apc_sae.projetPpn }}</td>
+    </tr>
+</table>
+<br>
+<h3>Exemple(s) de mise en pratique de la SAÉ</h3>
+<p>
+    {{ apc_sae.exemples != null ? apc_sae.exemples|markdown_to_html : '' }}
+</p>

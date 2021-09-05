@@ -58,10 +58,30 @@ class ApcSaeType extends AbstractType
                                    data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
                     'help_html' => true,
                 ])
-//            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD', 'help' => 'A titre indicatif pour les départements.']) //, 'attr' => ['x-model' => 'tdPpn']
-//            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'cmPpn']
-//            ->add('tpPpn', TextType::class, ['label' => 'Préconisation  TP','help' => 'A titre indicatif pour les départements.'])//, 'attr' => ['x-model' => 'tpPpn']
-//            ->add('projetPpn', TextType::class, ['label' => 'Préconisation "projet tutoré"','help' => 'A titre indicatif pour les départements.'])
+            ->add('exemples', TextareaType::class,
+                [
+                    'attr' => ['rows' => 20],
+                    'label_attr' => ['class' => 'text-white'],
+                    'help_attr' => ['class' => 'text-white'],
+                    'label' => 'Exemple(s) de mise en pratique',
+                    'required' => false,
+                    'help' => 'Cette zone est indicative et ne sera pas publiée dans le référentiel de formation. Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                    'help_html' => true,
+                ])
+            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD',
+                'help' => 'A titre indicatif pour les départements.',
+                'label_attr' => ['class' => 'text-white'],
+                'help_attr' => ['class' => 'text-white'],])
+            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.',
+                'label_attr' => ['class' => 'text-white'],
+                'help_attr' => ['class' => 'text-white'],])
+            ->add('tpPpn', TextType::class, ['label' => 'Préconisation  TP','help' => 'A titre indicatif pour les départements.',
+                'label_attr' => ['class' => 'text-white'],
+                'help_attr' => ['class' => 'text-white'],])
+            ->add('projetPpn', TextType::class, ['label' => 'Préconisation "projet tutoré"','help' => 'A titre indicatif pour les départements.',
+                'label_attr' => ['class' => 'text-white'],
+                'help_attr' => ['class' => 'text-white'],])
 
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
