@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Form\DepartementType;
 use App\Repository\DepartementRepository;
@@ -55,8 +56,10 @@ class DepartementController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('administration_departement_index');
+            $this->addFlash(
+                Constantes::FLASHBAG_SUCCESS,
+                'Spécialité/Parcours mis à jour avec succès.'
+            );
         }
 
         return $this->render('departement/edit.html.twig', [
