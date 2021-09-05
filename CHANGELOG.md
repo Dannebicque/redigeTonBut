@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.15](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.14...v1.5.15) (2021-09-05)
+
+
+### Features
+
+* Affichage des préconisations dans SAE et zone d'exemple libre ([2d85c73](https://github.com/Dannebicque/redigeTonBut/commit/2d85c736e406677e1ee04754a99be3c5791a056e))
+* Option pour ajouter ou retirer toutes les compétences et AC dans une fiche ressource/SAE ([73fffe3](https://github.com/Dannebicque/redigeTonBut/commit/73fffe3d56d8c4c8cc9d0cf9db066f98684689ca))
+
+
+### Bug Fixes
+
+* champ optionnel dans la fiche parcours ([fde4195](https://github.com/Dannebicque/redigeTonBut/commit/fde419599884b6ad4fd96cd5db9e6ccf6c493555))
+* Mauvais retour après mise à jour spécialité ([9d87042](https://github.com/Dannebicque/redigeTonBut/commit/9d8704207474c6e4e623aea9fddd868cfe933a5d))
+
 ### [1.5.14](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.13...v1.5.14) (2021-09-03)
 
 
