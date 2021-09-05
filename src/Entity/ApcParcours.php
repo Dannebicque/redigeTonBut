@@ -61,17 +61,17 @@ class ApcParcours extends BaseEntity
     /**
      * @ORM\Column(type="string", length=20)
      */
-    private $couleur;
+    private ?string $couleur;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $ordre;
+    private ?int $ordre = 1;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $modalitesParticulieres;
+    private ?string $modalitesParticulieres;
 
     public function __construct(Departement $departement)
     {

@@ -28,12 +28,14 @@ class ApcParcoursType extends AbstractType
                     'help' => 'Objectifs du parcours, métiers et secteurs d’activités visés, compétences visées. Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
                                    data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
                     'help_html' => true,
+                    'required' => false,
                     'attr' => ['rows' => 50]])
             ->add('modalitesParticulieres', TextareaType::class,
                 ['label' => 'Dispositions particulières',
                     'help' => 'Dispositions particulières professions règlementées, certifications spéciales, TP sécurité́. Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
                                    data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
                     'help_html' => true,
+                    'required' => false,
                     'attr' => ['rows' => 20]])
         ;
     }
