@@ -9,14 +9,13 @@
                 <th>
                     <p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p><br>
                     {% if not is_granted('ROLE_LECTEUR') %}
-                        <a type="button" class="btn btn-secondary"
+                        <a class="btn btn-secondary"
                            title="Déplacer vers la gauche la SAÉ"
                            {% if sae.ordre == 1 %}disabled{% endif %}
                            style="padding:0 8px; font-size:0.7em"
-                           href="{{ path('formation_apc_sae_deplace', {id: sae.id, position: -1}) }}">
-                            <<
+                           href="{{ path('formation_apc_sae_deplace', {id: sae.id, position: -1}) }}"><<
                         </a>
-                        <a type="button"
+                        <a
                            class="btn btn-secondary"
                            style="padding:0 8px; font-size:0.7em"
                            title="Déplacer vers la droite la SAÉ"
@@ -29,7 +28,7 @@
             {% endfor %}
             <th>
                 {% if not is_granted('ROLE_LECTEUR') %}
-                    <a type="button" class="btn btn-secondary"
+                    <a class="btn btn-secondary"
                        style="padding:0 8px; font-size:0.7em"
                        title="Ajouter une SAÉ au semestre"
                        href="{{ path('formation_apc_sae_new', {semestre:semestre.id}) }}"
@@ -40,13 +39,13 @@
                 <th>
                     <p data-bs-toggle="tooltip" title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</p><br>
                     {% if not is_granted('ROLE_LECTEUR') %}
-                        <a type="button" class="btn btn-secondary" style="padding:0 8px; font-size:0.7em"
+                        <a class="btn btn-secondary" style="padding:0 8px; font-size:0.7em"
                            {% if ressource.ordre == 1 %}disabled{% endif %}
                            title="Déplacer vers la gauche la ressource"
                            href="{{ path('formation_apc_ressource_deplace', {id: ressource.id, position: -1}) }}">
                             <<
                         </a>
-                        <a type="button" class="btn btn-secondary" style="padding:0 8px; font-size:0.7em"
+                        <a class="btn btn-secondary" style="padding:0 8px; font-size:0.7em"
                            {% if ressource.ordre == ressources|length %}disabled{% endif %}
                            title="Déplacer vers la droite la ressource"
                            href="{{ path('formation_apc_ressource_deplace', {id: ressource.id, position: 1}) }}">
@@ -57,7 +56,7 @@
             {% endfor %}
             <th>
                 {% if not is_granted('ROLE_LECTEUR') %}
-                    <a type="button" class="btn btn-secondary"
+                    <a class="btn btn-secondary"
                        style="padding:0 8px; font-size:0.7em"
                        title="Ajouter une ressource au semestre"
                        href="{{ path('formation_apc_ressource_new', {semestre:semestre.id}) }}"
