@@ -139,9 +139,7 @@
                                     {% endfor %}
                                 {% else %}
                                     <li>
-                                        <a href="{{ path('administration_departement_lecteur_show', {id: user_data
-                                        .departement
-                                        .id}) }}">
+                                        <a href="{{ path('administration_departement_lecteur_show', {id: user_data.departement.id}) }}">
                                             <span class="label">Consulter le Texte descriptif de la spécialité</span>
                                         </a>
                                     </li>
@@ -306,8 +304,8 @@
                                 {# todo: possibilité d'export d'autres format ? mais pas en sauvegarde #}
 {#                            {% endif %}#}
                             <li>
-                                <a href="#">
-                                    <span class="label">Importer une sauvegarde du référentiel</span>
+                                <a href="{{ path('administration_apc_referentiel_import_formation_index') }}">
+                                    <span class="label">Importer le référentiel de formation</span>
                                 </a>
                             </li>
                         </ul>

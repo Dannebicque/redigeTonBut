@@ -54,6 +54,17 @@ class ApcComptenceRepository extends ServiceEntityRepository
         return $t;
     }
 
+    public function findByDepartementArray(Departement $departement): array
+    {
+        $comps = $this->findByDepartement($departement);
+        $t = [];
+        foreach ($comps as $c) {
+            $t[$c->getCouleur()] = $c;
+        }
+
+        return $t;
+    }
+
     public function findOther(string $ordreDestination, ApcCompetence $competence)
     {
         return $this->createQueryBuilder('a')

@@ -24,6 +24,7 @@ use App\Entity\ApcSituationProfessionnelle;
 use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Utils\Codification;
+use App\Utils\Convert;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -399,13 +400,11 @@ class ReferentielCompetenceImport
                         }
                     }
                 }
-                dump($tabPrerequis);
                 foreach ($tabPrerequis as $key => $tpr) {
                     foreach ($tpr as $r) {
                         if (array_key_exists($r, $tRessources) && array_key_exists($key, $tRessources)) {
                             $tRessources[$key]->addRessourcesPreRequise($tRessources[$r]);
                             $tRessources[$r]->addApcRessource($tRessources[$key]);
-                            dump('ok');
                         }
                     }
                 }
@@ -413,13 +412,11 @@ class ReferentielCompetenceImport
         }
 
         foreach ($tSem as $sem) {
-            foreach ($sem->getApcRessources() as $ressource)
-            {
+            foreach ($sem->getApcRessources() as $ressource) {
                 $ressource->setCodeMatiere(Codification::codeRessource($ressource));
             }
 
-            foreach ($sem->getApcSaes() as $sae)
-            {
+            foreach ($sem->getApcSaes() as $sae) {
                 $sae->setCodeMatiere(Codification::codeSae($sae));
             }
         }
@@ -432,5 +429,171 @@ class ReferentielCompetenceImport
         $reader = new Xlsx();
 
         return $reader->load($this->fichier);
+    }
+
+    private function importFormationExcel()
+    {
+        $tSemestres = $this->entityManager->getRepository(Semestre::class)->findByDepartementArray($this->departement);
+        $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findByDepartementArray($this->departement);
+        $tAcs = $this->entityManager->getRepository(ApcApprentissageCritique::class)->findOneByDepartementArray($this->departement);
+        $tSaes = $this->entityManager->getRepository(ApcSae::class)->findByDepartementArray($this->departement);
+        $tabParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByDepartementArray($this->departement);
+
+        $excel = $this->openExcelFile();
+        $sheet = $excel->getSheet(0);//ressources
+        $tabRessources = [];
+
+        $ligne = 2;
+        while (null !== $sheet->getCellByColumnAndRow(1, $ligne)->getValue()) {
+            echo $ligne;
+            $res = new ApcRessource();
+            $res->setSemestre($tSemestres[trim($sheet->getCellByColumnAndRow(1, $ligne)->getValue())]);
+            $res->setCodeMatiere(trim($sheet->getCellByColumnAndRow(2, $ligne)->getValue()));
+            $res->setLibelle(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
+            $res->setLibelleCourt(trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue()));
+            $res->setOrdre(trim($sheet->getCellByColumnAndRow(5, $ligne)->getValue()));
+            //compétences
+            for ($i = 1; $i <= 6; $i++) {
+                if ($sheet->getCellByColumnAndRow(5 + $i, $ligne)->getValue() !== null) {
+                    //compétence
+                    $acResComp = new ApcRessourceCompetence($res, $tCompetences['c'.$i]);
+                    $this->entityManager->persist($acResComp);
+
+                    $acs = explode(';', $sheet->getCellByColumnAndRow(5 + $i, $ligne)->getValue());
+                    //ajout des AC
+                    foreach ($acs as $codeAc) {
+                        $codeAc = trim($codeAc);
+                        if (array_key_exists($codeAc, $tAcs)) {
+                            $acRes = new ApcRessourceApprentissageCritique($res, $tAcs[$codeAc]);
+                            $this->entityManager->persist($acRes);
+                        }
+                    }
+                }
+            }
+
+            //SAE (12)
+            if ($sheet->getCellByColumnAndRow(12, $ligne)->getValue() !== null) {
+                $saes = explode(';', $sheet->getCellByColumnAndRow(12, $ligne)->getValue());
+                //ajout des AC
+                foreach ($saes as $sae) {
+                    $sae = trim($sae);
+                    if (array_key_exists($sae, $tSaes)) {
+                        $resSae = new ApcSaeRessource($tSaes[$sae], $res);
+                        $this->entityManager->persist($resSae);
+                    }
+                }
+            }
+            //ressources (13)
+            if ($sheet->getCellByColumnAndRow(13, $ligne)->getValue() !== null) {
+                $ressources = explode(';', $sheet->getCellByColumnAndRow(13, $ligne)->getValue());
+                //ajout des AC
+                foreach ($ressources as $ressource) {
+                    $ressource = trim($ressource);
+                    if (array_key_exists($ressource, $tabRessources)) {
+                        $res->addRessourcesPreRequise($tabRessources[$ressource]);
+                        $tabRessources[$ressource]->addApcRessource($res);
+                    }
+                }
+            }
+
+            $res->setHeuresTotales(Convert::convertToFloat($sheet->getCellByColumnAndRow(14,
+                $ligne)->getValue()));//a convertir
+            $res->setTpPpn(Convert::convertToFloat($sheet->getCellByColumnAndRow(15, $ligne)->getValue()));//a convertir
+            $res->setDescription(trim($sheet->getCellByColumnAndRow(16, $ligne)->getValue()));
+            $res->setMotsCles(trim($sheet->getCellByColumnAndRow(17, $ligne)->getValue()));
+            //parcours
+            if ($sheet->getCellByColumnAndRow(18, $ligne)->getValue() !== null) {
+                $parcours = explode(';', $sheet->getCellByColumnAndRow(18, $ligne)->getValue());
+                //ajout des AC
+                foreach ($parcours as $parcour) {
+                    $parcour = trim($parcour);
+                    if (array_key_exists($parcour, $tabParcours)) {
+                        $resSae = new ApcRessourceParcours($res, $tabParcours[$parcour]);
+                        $this->entityManager->persist($resSae);
+                    }
+                }
+            }
+
+            $this->entityManager->persist($res);
+            $tabRessources[$res->getCodeMatiere()] = $res;
+            $ligne++;
+        }
+        $this->entityManager->flush();
+
+        //Ajout des SAE
+        $ligne = 2;
+        $sheet = $excel->getSheet(1);//SAE
+        while (null !== $sheet->getCellByColumnAndRow(1, $ligne)->getValue()) {
+            echo $ligne;
+            $sae = new ApcSae();
+            $sae->setSemestre($tSemestres[trim($sheet->getCellByColumnAndRow(1, $ligne)->getValue())]);
+            $sae->setCodeMatiere(trim($sheet->getCellByColumnAndRow(2, $ligne)->getValue()));
+            $sae->setLibelle(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
+            $sae->setLibelleCourt(trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue()));
+            $sae->setOrdre(trim($sheet->getCellByColumnAndRow(5, $ligne)->getValue()));
+
+            //compétences
+            for ($i = 1; $i <= 6; $i++) {
+                if ($sheet->getCellByColumnAndRow(5 + $i, $ligne)->getValue() !== null) {
+                    //compétence
+                    $acSaeComp = new ApcSaeCompetence($sae, $tCompetences['c'.$i]);
+                    $this->entityManager->persist($acSaeComp);
+
+                    $acs = explode(';', $sheet->getCellByColumnAndRow(5 + $i, $ligne)->getValue());
+                    //ajout des AC
+                    foreach ($acs as $codeAc) {
+                        $codeAc = trim($codeAc);
+                        if (array_key_exists($codeAc, $tAcs)) {
+                            $acRes = new ApcSaeApprentissageCritique($sae, $tAcs[$codeAc]);
+                            $this->entityManager->persist($acRes);
+                        }
+                    }
+                }
+            }
+
+            //parcours
+            if ($sheet->getCellByColumnAndRow(13, $ligne)->getValue() !== null) {
+                $parcours = explode(';', $sheet->getCellByColumnAndRow(13, $ligne)->getValue());
+                //ajout des AC
+                foreach ($parcours as $parcour) {
+                    $parcour = trim($parcour);
+                    if (array_key_exists($parcour, $tabParcours)) {
+                        $resSae = new ApcRessourceParcours($res, $tabParcours[$parcour]);
+                        $this->entityManager->persist($resSae);
+                    }
+                }
+            }
+            $sae->setObjectifs(trim($sheet->getCellByColumnAndRow(14, $ligne)->getValue()));
+            $sae->setDescription(trim($sheet->getCellByColumnAndRow(15, $ligne)->getValue()));
+            $sae->setHeuresTotales(Convert::convertToFloat($sheet->getCellByColumnAndRow(16,
+                $ligne)->getValue()));//a convertir
+            $sae->setTpPpn(Convert::convertToFloat($sheet->getCellByColumnAndRow(17,
+                $ligne)->getValue()));//a convertir
+            $sae->setProjetPpn(Convert::convertToFloat($sheet->getCellByColumnAndRow(18,
+                $ligne)->getValue()));//a convertir
+            $sae->setExemples(trim($sheet->getCellByColumnAndRow(19, $ligne)->getValue()));
+
+            $this->entityManager->persist($sae);
+            $this->entityManager->flush();
+
+            //Ressources (12)
+            if ($sheet->getCellByColumnAndRow(12, $ligne)->getValue() !== null) {
+                $ressources = explode(';', $sheet->getCellByColumnAndRow(12, $ligne)->getValue());
+                //ajout des AC
+                foreach ($ressources as $ressource) {
+                    $ressource = trim($ressource);
+                    if (array_key_exists($ressource, $tabRessources)) {
+                        $sr = $this->entityManager->getRepository(ApcSaeRessource::class)->findOneBy(['ressource' => $tabRessources[$ressource]->getId(), 'sae' => $sae->getId()]);
+                        if ($sr === null) {
+                            $resSae = new ApcSaeRessource($sae, $tabRessources[$ressource]);
+                            $this->entityManager->persist($resSae);
+                        }
+                    }
+                }
+            }
+            $this->entityManager->flush();
+            $ligne++;
+        }
+
     }
 }

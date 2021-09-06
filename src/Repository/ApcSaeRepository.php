@@ -80,6 +80,17 @@ class ApcSaeRepository extends ServiceEntityRepository
         return $tab;
     }
 
+    public function findByDepartementArray(?Departement $departement)
+    {
+        $saes = $this->findByDepartement($departement);
+        $tab = [];
+        foreach ($saes as $sae) {
+            $tab[$sae->getCodeMatiere()] = $sae;
+        }
+
+        return $tab;
+    }
+
     public function findByAnneeArray(Annee $annee)
     {
         $query = $this->findByAnnee($annee);
