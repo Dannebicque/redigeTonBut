@@ -69,14 +69,11 @@ class ApcSaeType extends AbstractType
                                    data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
                     'help_html' => true,
                 ])
-            ->add('tdPpn', TextType::class, ['label' => 'Préconisation TD',
+            ->add('heuresTotales', TextType::class, ['label' => 'Préconisation Heures totales',
                 'help' => 'A titre indicatif pour les départements.',
                 'label_attr' => ['class' => 'text-white'],
                 'help_attr' => ['class' => 'text-white'],])
-            ->add('cmPpn', TextType::class, ['label' => 'Préconisation CM', 'help' => 'A titre indicatif pour les départements.',
-                'label_attr' => ['class' => 'text-white'],
-                'help_attr' => ['class' => 'text-white'],])
-            ->add('tpPpn', TextType::class, ['label' => 'Préconisation  TP','help' => 'A titre indicatif pour les départements.',
+            ->add('tpPpn', TextType::class, ['label' => 'Préconisation Dont TP','help' => 'A titre indicatif pour les départements.',
                 'label_attr' => ['class' => 'text-white'],
                 'help_attr' => ['class' => 'text-white'],])
             ->add('projetPpn', TextType::class, ['label' => 'Préconisation "projet tutoré"','help' => 'A titre indicatif pour les départements.',
