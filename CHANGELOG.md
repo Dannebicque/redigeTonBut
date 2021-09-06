@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.16](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.15...v1.5.16) (2021-09-06)
+
+
+### Features
+
+* Import d'une référentiel de formation au format Excel ([a9b3677](https://github.com/Dannebicque/redigeTonBut/commit/a9b367754df34ca8d0059573e4d80995bd270d42))
+
+
+### Bug Fixes
+
+* Bugs CSS avec Safari ([86d26a8](https://github.com/Dannebicque/redigeTonBut/commit/86d26a8e37090d42144048b15a3420ac954f665c))
+* Préconisation heures SAE ([aaccc49](https://github.com/Dannebicque/redigeTonBut/commit/aaccc498f27bf2750b16c191a9780f17c78ccfbc))
+
 ### [1.5.15](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.14...v1.5.15) (2021-09-05)
 
 
