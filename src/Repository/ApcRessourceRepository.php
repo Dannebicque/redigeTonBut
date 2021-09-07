@@ -104,7 +104,8 @@ class ApcRessourceRepository extends ServiceEntityRepository
     public function findBySemestreEtPrecedent(Semestre $semestre, array $semestres)
     {
         $query = $this->createQueryBuilder('r')
-            ->orderBy('r.ordre', 'ASC')
+            ->orderBy('r.semestre', 'ASC')
+            ->addOrderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC');
 
@@ -149,5 +150,16 @@ class ApcRessourceRepository extends ServiceEntityRepository
         }
 
         return $this->findBySemestre($semestre);
+    }
+
+    public function findByDepartementArray(Departement $departement)
+    {
+        $ressources = $this->findByDepartement($departement);
+        $tab = [];
+        foreach ($ressources as $res) {
+            $tab[$res->getCodeMatiere()] = $res;
+        }
+
+        return $tab;
     }
 }

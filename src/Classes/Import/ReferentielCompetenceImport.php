@@ -438,10 +438,11 @@ class ReferentielCompetenceImport
         $tAcs = $this->entityManager->getRepository(ApcApprentissageCritique::class)->findOneByDepartementArray($this->departement);
         $tSaes = $this->entityManager->getRepository(ApcSae::class)->findByDepartementArray($this->departement);
         $tabParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByDepartementArray($this->departement);
+        $tabRessources = $this->entityManager->getRepository(ApcRessource::class)->findByDepartementArray($this->departement);
 
         $excel = $this->openExcelFile();
         $sheet = $excel->getSheet(0);//ressources
-        $tabRessources = [];
+
 
         $ligne = 2;
         while (null !== $sheet->getCellByColumnAndRow(1, $ligne)->getValue()) {
