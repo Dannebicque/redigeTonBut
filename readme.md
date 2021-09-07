@@ -33,13 +33,15 @@ Contributions are always welcome!
 ## Installation
 
 ```bash 
-git clone
-cd redigetonbut/
-composer install
-yarn install
-yarn encore prod
-
+git clone https://github.com/Dannebicque/redigeTonBut.git
+cd redigeTonBut/
 cp .env .env.local
+# Mettre à jour les données de la base de données, le serveur SMTP dans .env.local
+composer install # les dépendances de Symfony
+npm install # les dépendances JS/CSS
+npm run build # compilation des assets
+
+# Création de la BDD, création de la structure, chargement des données fictives. Inutile ici si le dump est importé.
 bin/console d:d:c
 bin/console d:s:u -f
 bin/console d:f:l
