@@ -10,6 +10,7 @@
 namespace App\Form;
 
 use App\Entity\ApcCompetence;
+use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\Departement;
 use App\Entity\Semestre;
@@ -27,11 +28,14 @@ class ApcRessourceType extends AbstractType
 {
     protected ?Departement $departement;
     protected bool $editable;
+    protected ?ApcParcours $parcours;
+
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->departement = $options['departement'];
         $this->editable = !$options['editable'];
+        $this->parcours = $options['parcours'];
 
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code Ressource', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
@@ -62,7 +66,7 @@ class ApcRessourceType extends AbstractType
                 'choice_label' => 'display',
                 'attr' => ['x-model'=> 'semestre', '@change' => 'changeSemestre'],
                 'query_builder' => function(SemestreRepository $semestreRepository) {
-                    return $semestreRepository->findByDepartementBuilder($this->departement);
+                    return $semestreRepository->findByDepartementParcoursBuilder($this->departement, $this->parcours);
                 },
                 'label' => 'Semestre',
                 'expanded' => true,
@@ -76,6 +80,7 @@ class ApcRessourceType extends AbstractType
             'data_class' => ApcRessource::class,
             'departement' => null,
             'editable' => null,
+            'parcours' => null,
         ]);
     }
 }

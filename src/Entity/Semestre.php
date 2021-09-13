@@ -163,6 +163,11 @@ class Semestre extends BaseEntity
      */
     private float $nbHeuresTpLocale = 0;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="semestres")
+     */
+    private $apcParcours;
+
     public function __construct()
     {
         $this->apcRessources = new ArrayCollection();
@@ -543,6 +548,18 @@ class Semestre extends BaseEntity
     public function setNbHeuresTpLocale(float $nbHeuresTpLocale): self
     {
         $this->nbHeuresTpLocale = $nbHeuresTpLocale;
+
+        return $this;
+    }
+
+    public function getApcParcours(): ?ApcParcours
+    {
+        return $this->apcParcours;
+    }
+
+    public function setApcParcours(?ApcParcours $apcParcours): self
+    {
+        $this->apcParcours = $apcParcours;
 
         return $this;
     }

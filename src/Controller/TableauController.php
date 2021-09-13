@@ -7,10 +7,12 @@ use App\Classes\Tableau\Structure;
 use App\Classes\Tableau\VolumesHoraires;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
+use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcParcoursNiveauRepository;
+use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
@@ -27,18 +29,31 @@ use Symfony\Component\Routing\Annotation\Route;
 class TableauController extends BaseController
 {
     #[Route('/structure', name: 'structure')]
-    public function structure(): Response
+    public function structure(ApcParcoursRepository $apcParcoursRepository): Response
     {
+        $parcours = null;
+        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+            $parcours = $apcParcoursRepository->findBy(['departement' => $this->getDepartement()->getId()]);
+        }
+
         return $this->render('tableau/structure.html.twig', [
+            'parcours' => $parcours
         ]);
     }
 
-    #[Route('/api-structure', name: 'api_structure', options: ["expose" => true])]
+    #[Route('/api-structure/{parcours}', name: 'api_structure', options: ["expose" => true])]
     public function apiStructure(
         Structure $structure,
-        SemestreRepository $semestreRepository
+        SemestreRepository $semestreRepository,
+        ?ApcParcours $parcours = null
     ): Response {
-        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
+        dump($parcours);
+        if ($parcours !== null && $this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+            $semestres = $semestreRepository->findByParcours($parcours);
+        } else {
+            $semestres = $semestreRepository->findByDepartement($this->getDepartement());
+
+        }
         $json = $structure->setSemestres($semestres)->setDepartement($this->getDepartement())->getDataJson();
 
         return $this->json($json);
@@ -70,17 +85,22 @@ class TableauController extends BaseController
         return $this->json($json);
     }
 
-    #[Route('/api-structure-update', name: 'api_structure_update', options: ['expose' => true])]
+    #[Route('/api-structure-update/{parcours}', name: 'api_structure_update', options: ['expose' => true])]
     public function apiStructureUpdate(
         SemestreRepository $semestreRepository,
-        Request $request
+        Request $request,
+        ?ApcParcours $parcours = null
     ) {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
         }
 
-        $semestre = $semestreRepository->findSemestre($this->getDepartement(), $parametersAsArray['semestre']);
+        if ($parcours === null) {
+            $semestre = $semestreRepository->findSemestre($this->getDepartement(), $parametersAsArray['semestre']);
+        } else {
+            $semestre = $semestreRepository->findSemestreParcours($this->getDepartement(), $parametersAsArray['semestre'], $parcours);
+        }
         if ($semestre !== null) {//todo: et vériifer lien semestre/département
 
             switch ($parametersAsArray['champ']) {
@@ -144,27 +164,42 @@ class TableauController extends BaseController
 
     #[Route('/croise/{annee}/{parcours}', name: 'croise_annee', requirements: ['annee' => '\d+'])]
     public function tableau(
+        SemestreRepository $semestreRepository,
         Annee $annee,
         ApcParcours $parcours = null
     ): Response {
 
+        if ($parcours === null) {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
+        } else {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
+        }
+
+
         return $this->render('tableau/croise.html.twig', [
             'parcours' => $parcours,
             'annee' => $annee,
-            'semestres' => $annee->getSemestres()
+            'semestres' => $semestres
         ]);
     }
 
     #[Route('/horaire/{annee}/{parcours}', name: 'horaire_annee', requirements: ['annee' => '\d+'])]
     public function tableauH(
+        SemestreRepository $semestreRepository,
         Annee $annee,
         ApcParcours $parcours = null
     ): Response {
 
+        if ($parcours === null) {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
+        } else {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
+        }
+
         return $this->render('tableau/horaire.html.twig', [
             'parcours' => $parcours,
             'annee' => $annee,
-            'semestres' => $annee->getSemestres()
+            'semestres' => $semestres
         ]);
     }
 
@@ -193,10 +228,15 @@ class TableauController extends BaseController
 
     #[Route('/preconisations/{annee}/{parcours}', name: 'preconisations_annee', requirements: ['annee' => '\d+'])]
     public function tableauPreconisations(
+        SemestreRepository $semestreRepository,
         Annee $annee,
         ApcParcours $parcours = null
     ): Response {
-        $semestres = $annee->getSemestres();
+        if ($parcours !== null && $this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
+        } else {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
+        }
 
         return $this->render('tableau/preconisations.html.twig', [
             'parcours' => $parcours,

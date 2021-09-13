@@ -34,11 +34,11 @@ class ApcAjaxCompetenceController extends BaseController
         }
 
         $semestre = $semestreRepository->find($parametersAsArray['semestre']);
-
         if (null !== $semestre) {
             $competences = $apcNiveauRepository->findBySemestre($semestre);
 
-            $resComp = $apcRessourceCompetenceRepository->findByRessourceArray(['ressource' => $parametersAsArray['ressource']]);
+            //$resComp = $apcRessourceCompetenceRepository->findByRessourceArray(['ressource' => $parametersAsArray['ressource']]);
+            $resComp = $apcRessourceCompetenceRepository->findByRessourceArray($parametersAsArray['ressource']);
             if ($competences !== null) {
 
                 $t = [];
@@ -72,11 +72,10 @@ class ApcAjaxCompetenceController extends BaseController
         }
 
         $semestre = $semestreRepository->find($parametersAsArray['semestre']);
-
         if (null !== $semestre) {
             $competences = $apcNiveauRepository->findBySemestre($semestre);
 
-            $resComp = $apcSaeCompetenceRepository->findBySaeArray(['ressource' => $parametersAsArray['sae']]);
+            $resComp = $apcSaeCompetenceRepository->findBySaeArray($parametersAsArray['sae']);
             if ($competences !== null) {
 
                 $t = [];

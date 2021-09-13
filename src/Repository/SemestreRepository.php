@@ -10,6 +10,7 @@
 namespace App\Repository;
 
 use App\Entity\Annee;
+use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Diplome;
 use App\Entity\Semestre;
@@ -40,6 +41,23 @@ class SemestreRepository extends ServiceEntityRepository
             ->where('a.departement = :departement')
             ->setParameter('departement', $departement->getId())
             ->orderBy('s.ordreLmd', 'ASC')
+            ->addOrderBy('s.libelle', 'ASC');
+    }
+
+    public function findByDepartementParcoursBuilder(Departement $departement, ?ApcParcours $parcours = null): QueryBuilder
+    {
+        $query = $this->createQueryBuilder('s')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
+            ->where('a.departement = :departement')
+            ->setParameter('departement', $departement->getId())
+            ;
+
+        if ($parcours !== null && $departement->getTypeStructure() === Departement::TYPE3) {
+            $query->andWhere('s.apcParcours = :parcours')
+                ->setParameter('parcours', $parcours->getId());
+        }
+
+        return $query->orderBy('s.ordreLmd', 'ASC')
             ->addOrderBy('s.libelle', 'ASC');
     }
 
@@ -86,6 +104,34 @@ class SemestreRepository extends ServiceEntityRepository
             ->andWhere('s.ordreLmd = :numero')
             ->setParameter('departement', $departement->getId())
             ->setParameter('numero', $semestre)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findByParcours(ApcParcours $apcParcours)
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.apcParcours = :parcours')
+            ->setParameter('parcours', $apcParcours->getId())
+            ->orderBy('s.ordreLmd', 'ASC')
+            ->addOrderBy('s.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findSemestreParcours(
+        Departement $departement,
+        int $semestre,
+        ApcParcours $parcours
+    ) {
+        return $this->createQueryBuilder('s')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
+            ->where('a.departement = :departement')
+            ->andWhere('s.ordreLmd = :numero')
+            ->andWhere('s.apcParcours = :parcours')
+            ->setParameter('departement', $departement->getId())
+            ->setParameter('numero', $semestre)
+            ->setParameter('parcours', $parcours->getId())
             ->getQuery()
             ->getOneOrNullResult();
     }

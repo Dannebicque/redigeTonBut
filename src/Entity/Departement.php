@@ -82,12 +82,23 @@ class Departement extends BaseEntity
      */
     private ?string $textePresentation;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="departements_enfnat")
+     */
+    private $departement_parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Departement::class, mappedBy="departement_parent")
+     */
+    private $departements_enfnat;
+
     public function __construct()
     {
         $this->annees = new ArrayCollection();
         $this->apcCompetences = new ArrayCollection();
         $this->apcParcours = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->departements_enfnat = new ArrayCollection();
     }
 
     public function getLibelle(): ?string
@@ -332,5 +343,47 @@ class Departement extends BaseEntity
     public function getNbHeuresDiplome(): int
     {
         return $this->isSecondaire() ? 2000 : 1800;
+    }
+
+    public function getDepartementParent(): ?self
+    {
+        return $this->departement_parent;
+    }
+
+    public function setDepartementParent(?self $departement_parent): self
+    {
+        $this->departement_parent = $departement_parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getDepartementsEnfnat(): Collection
+    {
+        return $this->departements_enfnat;
+    }
+
+    public function addDepartementsEnfnat(self $departementsEnfnat): self
+    {
+        if (!$this->departements_enfnat->contains($departementsEnfnat)) {
+            $this->departements_enfnat[] = $departementsEnfnat;
+            $departementsEnfnat->setDepartementParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepartementsEnfnat(self $departementsEnfnat): self
+    {
+        if ($this->departements_enfnat->removeElement($departementsEnfnat)) {
+            // set the owning side to null (unless already changed)
+            if ($departementsEnfnat->getDepartementParent() === $this) {
+                $departementsEnfnat->setDepartementParent(null);
+            }
+        }
+
+        return $this;
     }
 }

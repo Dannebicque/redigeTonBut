@@ -1,6 +1,7 @@
-function getUpdateStructure () {
+function getUpdateStructure (parcours = null) {
   return {
     pourcent: 0,
+    parcours: parcours,
     donnees: {
       1: {},
       2: {},
@@ -11,7 +12,7 @@ function getUpdateStructure () {
       departement: {}
     },
     update (e) {
-      fetch(Routing.generate('tableau_api_structure_update'), {
+      fetch(Routing.generate('tableau_api_structure_update', {parcours:this.parcours}), {
         method: 'POST',
         body: JSON.stringify({
           semestre: e.target.dataset.semestre,
@@ -19,7 +20,7 @@ function getUpdateStructure () {
           valeur: e.target.value
         })
       }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_structure')).then(r => {
+        this.donnees = await fetch(Routing.generate('tableau_api_structure', {parcours:this.parcours})).then(r => {
           return r.json()
         })
       })

@@ -12,6 +12,8 @@ namespace App\Repository;
 use App\Entity\Annee;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcNiveau;
+use App\Entity\ApcParcours;
+use App\Entity\ApcParcoursNiveau;
 use App\Entity\Departement;
 use App\Entity\Diplome;
 use App\Entity\Semestre;
@@ -33,14 +35,21 @@ class ApcNiveauRepository extends ServiceEntityRepository
 
     public function findBySemestre(Semestre $semestre)
     {
-        return $this->createQueryBuilder('n')
+        $query = $this->createQueryBuilder('n')
             ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'n.competence = c.id')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = n.annee')
             ->where('a.id = :annee')
             ->setParameter('annee', $semestre->getAnnee()->getId())
             ->orderBy('n.ordre', 'ASC')
-            ->addOrderBy('c.couleur', 'ASC')
-            ->getQuery()
+            ->addOrderBy('c.couleur', 'ASC');
+
+        if ($semestre->getApcParcours() !== null) {
+            $query->innerJoin(ApcParcoursNiveau::class, 'pn', 'WITH', 'n.id = pn.niveau')
+                ->andWhere('pn.parcours = :parcours')
+                ->setParameter('parcours', $semestre->getApcParcours()->getId());
+        }
+
+        return $query->getQuery()
             ->getResult();
     }
 
@@ -60,9 +69,8 @@ class ApcNiveauRepository extends ServiceEntityRepository
 
         $t = [];
 
-        foreach ($query as $q)
-        {
-            $t[]=$q->getCompetence();
+        foreach ($query as $q) {
+            $t[] = $q->getCompetence();
         }
 
         return $t;

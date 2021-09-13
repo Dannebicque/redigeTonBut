@@ -27,12 +27,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ApcSaeType extends AbstractType
 {
     protected ?Departement $departement;
+    protected ?ApcParcours $parcours;
     private bool $editable;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->departement = $options['departement'];
         $this->editable = !$options['editable'];
+        $this->parcours = $options['parcours'];
 
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code SAÉ',  'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
@@ -86,7 +88,7 @@ class ApcSaeType extends AbstractType
                 'choice_label' => 'display',
                 'attr' => ['x-model'=> 'semestre', '@change' => 'changeSemestre'],
                 'query_builder' => function(SemestreRepository $semestreRepository) {
-                    return $semestreRepository->findByDepartementBuilder($this->departement);
+                    return $semestreRepository->findByDepartementParcoursBuilder($this->departement, $this->parcours);
                 },
                 'label' => 'Semestre',
                 'expanded' => true,
@@ -100,6 +102,7 @@ class ApcSaeType extends AbstractType
             'data_class' => ApcSae::class,
             'departement' => null,
             'editable' => null,
+            'parcours' => null,
         ]);
     }
 }

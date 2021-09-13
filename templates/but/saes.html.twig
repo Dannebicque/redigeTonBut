@@ -3,7 +3,7 @@
 {% block content %}
     {#  todo: bouton : Bouton export  #}
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
-        {% for semestre in annee.semestres %}
+        {% for semestre in semestres %}
             <li class="nav-item" role="presentation">
                 <a class="nav-link {% if (selectSemestre == null and loop.first) or (selectSemestre != null and selectSemestre.id
                     == semestre.id) %}active{% endif %} changeSemestreSae"
@@ -16,7 +16,7 @@
     </ul>
 
     <div class="tab-content">
-        {% for semestre in annee.semestres %}
+        {% for semestre in semestres %}
             <div class="tab-pane {% if (selectSemestre == null and loop.first) or (selectSemestre != null and selectSemestre.id
                 == semestre.id) %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
                 <div class="row g-4 mb-4">
@@ -50,6 +50,17 @@
     {% endif %}
 
     {% if is_granted('ROLE_EDITEUR') %}
+        {% if user_data.departement.typeStructure == 'type3' and parcours is defined %}
+            <a href="{{ path('formation_apc_sae_new', {semestre: sem, parcours: parcours.id}) }}" class="btn
+            btn-outline-primary
+            btn-icon btn-icon-end
+    w-100
+    w-sm-auto"
+               id="boutonAddSae">
+                <i class="bi bi-plus-circle"></i>
+                <span>Ajouter une SAÉ</span>
+            </a>
+            {% else %}
     <a href="{{ path('formation_apc_sae_new', {semestre: sem}) }}" class="btn btn-outline-primary btn-icon btn-icon-end
     w-100
     w-sm-auto"
@@ -57,6 +68,7 @@
         <i class="bi bi-plus-circle"></i>
         <span>Ajouter une SAÉ</span>
     </a>
+                {% endif %}
     {% endif %}
 {% endblock %}
 

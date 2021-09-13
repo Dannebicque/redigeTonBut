@@ -13,6 +13,7 @@ namespace App\Controller\formation;
 use App\Classes\Apc\ApcSaeAddEdit;
 use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
+use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
 use App\Entity\Constantes;
 use App\Entity\Semestre;
@@ -26,12 +27,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApcSaeController extends BaseController
 {
-    #[Route('/new/{semestre}', name: 'apc_sae_new', options: ['expose' => true], methods: ['GET', 'POST'])]
+    #[Route('/new/{semestre}/{parcours}', name: 'apc_sae_new', options: ['expose' => true], methods: ['GET', 'POST'])]
     public function new(
         ApcSaeOrdre $apcSaeOrdre,
         ApcSaeAddEdit $apcSaeAddEdit,
         Request $request,
-        Semestre $semestre = null
+        Semestre $semestre = null,
+        ApcParcours $parcours = null
     ): Response {
         $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
         $apcSae = new ApcSae();
@@ -43,7 +45,8 @@ class ApcSaeController extends BaseController
 
         $form = $this->createForm(ApcSaeType::class, $apcSae, [
             'departement' => $this->getDepartement(),
-            'editable' => $this->isGranted('ROLE_GT')
+            'editable' => $this->isGranted('ROLE_GT'),
+            'parcours' => $parcours
         ]);
         $form->handleRequest($request);
 

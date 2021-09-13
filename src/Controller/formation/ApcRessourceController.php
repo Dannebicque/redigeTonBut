@@ -15,6 +15,7 @@ use App\Classes\Apc\ApcRessourceOrdre;
 use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
+use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
 use App\Entity\ApcRessourceParcours;
@@ -39,13 +40,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApcRessourceController extends BaseController
 {
-     #[Route("/new/{semestre}", name: "apc_ressource_new", options: ['expose' =>true], methods: ["GET","POST"])]
+     #[Route("/new/{semestre}/{parcours}", name: "apc_ressource_new", options: ['expose' =>true], methods: ["GET","POST"])]
     public function new(
         ApcComptenceRepository $apcComptenceRepository,
         ApcRessourceOrdre $apcRessourceOrdre,
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
-        Semestre $semestre = null
+        Semestre $semestre = null,
+         ApcParcours $parcours = null
     ): Response {
         $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
         $apcRessource = new ApcRessource();
@@ -57,7 +59,8 @@ class ApcRessourceController extends BaseController
 
         $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
             'departement' => $this->getDepartement(),
-            'editable' => $this->isGranted('ROLE_GT')
+            'editable' => $this->isGranted('ROLE_GT'),
+            'parcours' => $parcours
         ]);
         $form->handleRequest($request);
 

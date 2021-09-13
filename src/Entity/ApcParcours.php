@@ -73,12 +73,18 @@ class ApcParcours extends BaseEntity
      */
     private ?string $modalitesParticulieres;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Semestre::class, mappedBy="apcParcours")
+     */
+    private $semestres;
+
     public function __construct(Departement $departement)
     {
         $this->setDepartement($departement);
         $this->apcParcoursNiveaux = new ArrayCollection();
         $this->apcSaeParcours = new ArrayCollection();
         $this->apcRessourceParcours = new ArrayCollection();
+        $this->semestres = new ArrayCollection();
     }
 
     public function getLibelle(): ?string
@@ -251,6 +257,36 @@ class ApcParcours extends BaseEntity
     public function setModalitesParticulieres(?string $modalitesParticulieres): self
     {
         $this->modalitesParticulieres = $modalitesParticulieres;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Semestre[]
+     */
+    public function getSemestres(): Collection
+    {
+        return $this->semestres;
+    }
+
+    public function addSemestre(Semestre $semestre): self
+    {
+        if (!$this->semestres->contains($semestre)) {
+            $this->semestres[] = $semestre;
+            $semestre->setApcParcours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSemestre(Semestre $semestre): self
+    {
+        if ($this->semestres->removeElement($semestre)) {
+            // set the owning side to null (unless already changed)
+            if ($semestre->getApcParcours() === $this) {
+                $semestre->setApcParcours(null);
+            }
+        }
 
         return $this;
     }

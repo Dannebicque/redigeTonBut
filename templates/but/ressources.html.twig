@@ -4,9 +4,7 @@
     {# todo: Bouton export ? #}
 
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
-        {% for semestre in annee.semestres %}
-
-
+        {% for semestre in semestres %}
             <li class="nav-item" role="presentation">
                 <a class="nav-link {% if (selectSemestre == null and loop.first) or (selectSemestre != null and selectSemestre.id
                     == semestre.id) %}active{% endif %} changeSemestreRessources" data-bs-toggle="tab"
@@ -19,7 +17,7 @@
     </ul>
 
     <div class="tab-content">
-        {% for semestre in annee.semestres %}
+        {% for semestre in semestres %}
             <div class="tab-pane {% if (selectSemestre == null and loop.first) or (selectSemestre != null and selectSemestre.id
                 == semestre.id) %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
                 <div class="row g-4 mb-4">

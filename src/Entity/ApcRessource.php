@@ -70,6 +70,11 @@ class ApcRessource extends AbstractMatiere
      */
     private Collection $apcRessources;
 
+    /**
+     * @ORM\Column(type="string", length=5, nullable=true)
+     */
+    private $typeFiche;
+
     public function __construct()
     {
         $this->apcRessourceCompetences = new ArrayCollection();
@@ -336,5 +341,17 @@ class ApcRessource extends AbstractMatiere
     public function getDepartement():?Departement
     {
         return $this->getSemestre()?->getAnnee()?->getDepartement();
+    }
+
+    public function getTypeFiche(): ?string
+    {
+        return $this->typeFiche;
+    }
+
+    public function setTypeFiche(?string $typeFiche): self
+    {
+        $this->typeFiche = $typeFiche;
+
+        return $this;
     }
 }
