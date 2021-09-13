@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.16...v1.6.0) (2021-09-13)
+
+
+### Features
+
+* Gestion du type 3 avec un tableau de structure par parcours. ([6d31ed4](https://github.com/Dannebicque/redigeTonBut/commit/6d31ed4faf90ea1325ca092cea1acedf052829d5))
+
+
+### Bug Fixes
+
+* .env et readme ([5728efb](https://github.com/Dannebicque/redigeTonBut/commit/5728efbe38ba2b7335f305291426cd4c57a0a2a7))
+* Suppression ou non d'un référentiel existant lors de l'import ([8733372](https://github.com/Dannebicque/redigeTonBut/commit/8733372de7261a31f251d1a7dc98af72c3a0d817))
+* typo ([26f50b2](https://github.com/Dannebicque/redigeTonBut/commit/26f50b2173d1a51900810596bdefc4902d852ca5))
+
 ### [1.5.16](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.15...v1.5.16) (2021-09-06)
 
 
