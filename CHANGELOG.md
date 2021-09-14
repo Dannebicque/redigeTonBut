@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.1...v1.6.2) (2021-09-14)
+
+
+### Bug Fixes
+
+* Correctif du menu ([397098b](https://github.com/Dannebicque/redigeTonBut/commit/397098b55ee6937c9c2fd1e93cd4c2864e6d8561))
+* Liste des semestres avec les API pour les types 3. ([7f0342f](https://github.com/Dannebicque/redigeTonBut/commit/7f0342f714805451d073002488e36b7b02d6e22d))
+* Liste des semestres hors type 3 ([0ea07e5](https://github.com/Dannebicque/redigeTonBut/commit/0ea07e5d992c1f3661b3066a6e1fdef1fe841ae7))
+* Suppression de dump restant. ([091f7d2](https://github.com/Dannebicque/redigeTonBut/commit/091f7d2ee9b74dedda991c29edb51143b7552b48))
+
 ### [1.6.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.0...v1.6.1) (2021-09-14)
 
 
