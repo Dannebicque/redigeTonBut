@@ -51,8 +51,8 @@ class TableauController extends BaseController
             $semestres = $semestreRepository->findByParcours($parcours);
         } else {
             $semestres = $semestreRepository->findByDepartement($this->getDepartement());
-
         }
+
         $json = $structure->setSemestres($semestres)->setDepartement($this->getDepartement())->getDataJson();
 
         return $this->json($json);
@@ -62,10 +62,13 @@ class TableauController extends BaseController
     public function apiPreconisation(
         Preconisation $preconisation,
         SemestreRepository $semestreRepository,
-        ApcComptenceRepository $apcComptenceRepository,
         ApcParcours $parcours = null
     ): Response {
-        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
+        if ($parcours === null) {
+            $semestres = $semestreRepository->findByDepartement($this->getDepartement());
+        } else {
+            $semestres = $semestreRepository->findByDepartementParcours($this->getDepartement(), $parcours);
+        }
 
         $json = $preconisation->setSemestresCompetences($semestres, $parcours)->getDataJson();
 
@@ -78,7 +81,12 @@ class TableauController extends BaseController
         SemestreRepository $semestreRepository,
         ApcParcours $parcours = null
     ): Response {
-        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
+        if ($parcours === null) {
+            $semestres = $semestreRepository->findByDepartement($this->getDepartement());
+        } else {
+            $semestres = $semestreRepository->findByDepartementParcours($this->getDepartement(), $parcours);
+        }
+
         $json = $volumesHoraires->setSemestres($semestres, $parcours)->getDataJson();
 
         return $this->json($json);

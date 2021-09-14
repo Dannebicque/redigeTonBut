@@ -160,4 +160,11 @@ class SemestreRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findByDepartementParcours(
+        Departement $departement,
+        ApcParcours $parcours
+    ) {
+        return $this->findByDepartementParcoursBuilder($departement, $parcours)->getQuery()->getResult();
+    }
 }
