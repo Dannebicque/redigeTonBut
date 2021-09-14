@@ -47,7 +47,6 @@ class TableauController extends BaseController
         SemestreRepository $semestreRepository,
         ?ApcParcours $parcours = null
     ): Response {
-        dump($parcours);
         if ($parcours !== null && $this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
             $semestres = $semestreRepository->findByParcours($parcours);
         } else {
