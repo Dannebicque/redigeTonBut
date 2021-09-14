@@ -168,12 +168,11 @@ class TableauController extends BaseController
         ApcParcours $parcours = null
     ): Response {
 
-        if ($parcours === null) {
+        if ($parcours === null || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
         }
-
 
         return $this->render('tableau/croise.html.twig', [
             'parcours' => $parcours,
@@ -189,7 +188,7 @@ class TableauController extends BaseController
         ApcParcours $parcours = null
     ): Response {
 
-        if ($parcours === null) {
+        if ($parcours === null || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -201,17 +200,6 @@ class TableauController extends BaseController
             'semestres' => $semestres
         ]);
     }
-
-//    #[Route('/croise/complet', name: 'croise_complet')]
-//    public function tableauComplet(
-//        SemestreRepository $semestreRepository
-//    ): Response {
-//        $semestres = $semestreRepository->findByDepartement($this->getDepartement());
-//
-//        return $this->render('tableau/croise_complet.html.twig', [
-//            'semestres' => $semestres
-//        ]);
-//    }
 
     #[Route('/validation/{annee}/{parcours}', name: 'validation_sae_ac_annee', requirements: ['annee' => '\d+'])]
     public function validationSaeAc(
@@ -231,10 +219,10 @@ class TableauController extends BaseController
         Annee $annee,
         ApcParcours $parcours = null
     ): Response {
-        if ($parcours !== null && $this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
-            $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
-        } else {
+        if ($parcours === null || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
+        } else {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
         }
 
         return $this->render('tableau/preconisations.html.twig', [
@@ -245,6 +233,7 @@ class TableauController extends BaseController
     }
 
     public function tableauSemestre(
+        SemestreRepository $semestreRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
@@ -265,7 +254,6 @@ class TableauController extends BaseController
             $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
             $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
         }
-
 
         $compSae = $apcSaeCompetenceRepository->findBySemestre($semestre);
         $compRessources = $apcRessourceCompetenceRepository->findBySemestre($semestre);

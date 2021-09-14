@@ -135,4 +135,29 @@ class SemestreRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findSemestresByAnneeParcours(
+        Annee $annee,
+        ApcParcours $parcours
+    ) {
+        return $this->createQueryBuilder('s')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
+            ->where('a.id = :annee')
+            ->andWhere('s.apcParcours = :parcours')
+            ->setParameter('annee', $annee->getId())
+            ->setParameter('parcours', $parcours->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findSemestresByAnnee(
+        Annee $annee
+    ) {
+        return $this->createQueryBuilder('s')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
+            ->where('a.id = :annee')
+            ->setParameter('annee', $annee->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
