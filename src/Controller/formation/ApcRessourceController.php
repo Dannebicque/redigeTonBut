@@ -46,8 +46,7 @@ class ApcRessourceController extends BaseController
         ApcRessourceOrdre $apcRessourceOrdre,
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
-        Semestre $semestre = null,
-         ApcParcours $parcours = null
+        Semestre $semestre = null, ApcParcours $parcours = null
     ): Response {
         $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
         $apcRessource = new ApcRessource();
@@ -71,6 +70,10 @@ class ApcRessourceController extends BaseController
                 'Ressource ajoutée avec succès.'
             );
 
+            if ($parcours !== null) {
+                return $this->redirectToRoute('but_ressources_annee',
+                    ['annee' => $apcRessource->getSemestre()->getAnnee()->getId(), 'semestre' => $apcRessource->getSemestre()->getId(), 'parcours' => $parcours->getId() ]);
+            }
             return $this->redirectToRoute('but_ressources_annee_semestre',
                 ['annee' => $apcRessource->getSemestre()->getAnnee()->getId(),'semestre' => $apcRessource->getSemestre()->getId() ]);
         }

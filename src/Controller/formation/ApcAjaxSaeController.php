@@ -18,10 +18,7 @@ use App\Entity\ApcCompetence;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeApprentissageCritique;
 use App\Entity\ApcSaeCompetence;
-use App\Entity\ApcSaeRessource;
-use App\Entity\Constantes;
 use App\Entity\Departement;
-use App\Form\ApcSaeType;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeApprentissageCritiqueRepository;
@@ -30,7 +27,6 @@ use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
 use App\Utils\Convert;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -78,7 +74,7 @@ class ApcAjaxSaeController extends BaseController
                 $b['checked'] = true === in_array($d->getId(), $tabAcSae);
                 if (null !== $d->getNiveau()) {
                     $key = $d->getNiveau()->getCompetence();
-                    if ( null !== $key && !array_key_exists($key->getId(),
+                    if (null !== $key && !array_key_exists($key->getId(),
                             $t)) {
                         $t[$key->getId()] = [];
                     }
@@ -178,15 +174,22 @@ class ApcAjaxSaeController extends BaseController
      * @Route("/{sae}/{ac}/update_ajax", name="apc_sae_ac_update_ajax", methods="POST", options={"expose":true})
      */
     public function updateAc(
+        ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         ApcSaeApprentissageCritiqueRepository $apcSaeApprentissageCritiqueRepository,
-        Request $request, ApcSae $sae, ApcApprentissageCritique $ac) {
+        Request $request,
+        ApcSae $sae,
+        ApcApprentissageCritique $ac
+    ) {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
         }
 
         //regarde si déjà existant
-        $acSae = $apcSaeApprentissageCritiqueRepository->findOneBy(['sae' => $sae->getId(), 'apprentissageCritique' => $ac->getId()]);
+        $acSae = $apcSaeApprentissageCritiqueRepository->findOneBy([
+            'sae' => $sae->getId(),
+            'apprentissageCritique' => $ac->getId()
+        ]);
 
         if ($acSae !== null) {
             //selon la valeur, on supprime
@@ -198,6 +201,18 @@ class ApcAjaxSaeController extends BaseController
             if ((bool)$parametersAsArray['value'] === true) {
                 $acSae = new ApcSaeApprentissageCritique($sae, $ac);
                 $this->entityManager->persist($acSae);
+
+                $comp = $ac->getCompetence();
+                if ($comp !== null) {
+                    $cp = $apcSaeCompetenceRepository->findOneBy([
+                        'competence' => $comp->getId(),
+                        'sae' => $sae->getId()
+                    ]);
+                    if ($cp === null) {
+                        $competence = new ApcSaeCompetence($sae, $comp);
+                        $this->entityManager->persist($competence);
+                    }
+                }
             }
         }
         $this->entityManager->flush();
@@ -206,18 +221,25 @@ class ApcAjaxSaeController extends BaseController
     }
 
     /**
-     * @Route("/{sae}/{competence}/update_coeff_ajax", name="apc_sae_coeff_update_ajax", methods="POST", options={"expose":true})
+     * @Route("/{sae}/{competence}/update_coeff_ajax", name="apc_sae_coeff_update_ajax", methods="POST",
+     *                                                 options={"expose":true})
      */
     public function updateCoeff(
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
-        Request $request, ApcSae $sae, ApcCompetence $competence) {
+        Request $request,
+        ApcSae $sae,
+        ApcCompetence $competence
+    ) {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
         }
 
         //regarde si déjà existant
-        $acRessource = $apcSaeCompetenceRepository->findOneBy(['sae' => $sae->getId(), 'competence' => $competence->getId()]);
+        $acRessource = $apcSaeCompetenceRepository->findOneBy([
+            'sae' => $sae->getId(),
+            'competence' => $competence->getId()
+        ]);
 
         if ($acRessource !== null) {
             //on modifie
@@ -235,17 +257,20 @@ class ApcAjaxSaeController extends BaseController
     }
 
     /**
-     * @Route("/{sae}/{type}/update_heures_ajax", name="apc_sae_heure_update_ajax", methods="POST", options={"expose":true})
+     * @Route("/{sae}/{type}/update_heures_ajax", name="apc_sae_heure_update_ajax", methods="POST",
+     *                                            options={"expose":true})
      */
     public function updateHeures(
-        Request $request, ApcSae $sae, string $type) {
+        Request $request,
+        ApcSae $sae,
+        string $type
+    ) {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
         }
 
-        switch ($type)
-        {
+        switch ($type) {
             case 'heures_totales':
                 $sae->setHeuresTotales(Convert::convertToFloat($parametersAsArray['valeur']));
                 break;

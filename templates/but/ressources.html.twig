@@ -51,13 +51,25 @@
     {% endif %}
 
     {% if  is_granted('ROLE_EDITEUR') %}
-        <a href="{{ path('formation_apc_ressource_new', {semestre:sem}) }}" class="btn btn-outline-primary btn-icon
+        {% if user_data.departement.typeStructure == 'type3' and parcours is defined %}
+            <a href="{{ path('formation_apc_ressource_new', {semestre: sem, parcours: parcours.id}) }}" class="btn
+            btn-outline-primary
+            btn-icon btn-icon-end
+    w-100
+    w-sm-auto"
+               id="boutonAddSae">
+                <i class="bi bi-plus-circle"></i>
+                <span>Ajouter une ressource</span>
+            </a>
+        {% else %}
+            <a href="{{ path('formation_apc_ressource_new', {semestre:sem}) }}" class="btn btn-outline-primary btn-icon
         btn-icon-end
         w-100 w-sm-auto"
-           id="boutonAddRessource">
-            <i class="bi bi-plus-circle"></i>
-            <span>Ajouter une ressource</span>
-        </a>
+               id="boutonAddRessource">
+                <i class="bi bi-plus-circle"></i>
+                <span>Ajouter une ressource</span>
+            </a>
+        {% endif %}
     {% endif %}
 {% endblock %}
 

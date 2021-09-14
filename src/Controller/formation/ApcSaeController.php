@@ -58,6 +58,11 @@ class ApcSaeController extends BaseController
                 'SAÉ ajoutée avec succès.'
             );
 
+            if ($parcours !== null) {
+                return $this->redirectToRoute('but_sae_annee',
+                    ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId(), 'parcours' => $parcours->getId() ]);
+            }
+
             return $this->redirectToRoute('but_sae_annee_semestre', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId()]);
         }
 

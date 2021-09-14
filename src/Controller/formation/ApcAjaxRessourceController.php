@@ -226,8 +226,8 @@ class ApcAjaxRessourceController extends BaseController
      * @Route("/{ressource}/{ac}/update_ajax", name="apc_ressource_ac_update_ajax", methods="POST",
      *                                         options={"expose":true})
      */
-    public
-    function updateAc(
+    public function updateAc(
+        ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         ApcRessourceApprentissageCritiqueRepository $apcRessourceApprentissageCritiqueRepository,
         Request $request,
         ApcRessource $ressource,
@@ -249,11 +249,24 @@ class ApcAjaxRessourceController extends BaseController
             if ((bool)$parametersAsArray['value'] === false) {
                 $this->entityManager->remove($acRessource);
             }
+            //todo: vérifier si la compétence est associée et qu'il n'y a plus d'AC, donc supprimer ?
         } else {
             //selon la valeur, on ajoute
             if ((bool)$parametersAsArray['value'] === true) {
                 $acRessource = new ApcRessourceApprentissageCritique($ressource, $ac);
                 $this->entityManager->persist($acRessource);
+                //vérifier si la compétence est déjà associée dans le cas contraire, ajouter.
+                $comp = $ac->getCompetence();
+                if ($comp !== null) {
+                    $cp = $apcRessourceCompetenceRepository->findOneBy([
+                        'competence' => $comp->getId(),
+                        'ressource' => $ressource->getId()
+                    ]);
+                    if ($cp === null) {
+                        $competence = new ApcRessourceCompetence($ressource,$comp);
+                        $this->entityManager->persist($competence);
+                    }
+                }
             }
         }
         $this->entityManager->flush();
