@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.0...v1.6.1) (2021-09-14)
+
+
+### Bug Fixes
+
+* Ajout d'une compétence si ajout d'un AC dans une nouvelle compétence ([62bcd54](https://github.com/Dannebicque/redigeTonBut/commit/62bcd54dbc01a438e78aa70f75b626edf14de0cf))
+* Changement de l'adresse mail suite changement du serveur ([f6e64b3](https://github.com/Dannebicque/redigeTonBut/commit/f6e64b308f27b5d2a6d58ad4c233c969e62447d7))
+
 ## [1.6.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.5.16...v1.6.0) (2021-09-13)
 
 
