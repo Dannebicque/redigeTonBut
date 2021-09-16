@@ -241,7 +241,6 @@ class TableauController extends BaseController
     }
 
     public function tableauSemestre(
-        SemestreRepository $semestreRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
@@ -339,6 +338,7 @@ class TableauController extends BaseController
     }
 
     public function tableauValidationAnneeSae(
+        SemestreRepository $semestreRepository,
         ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcSaeRepository $apcSaeRepository,
@@ -354,13 +354,19 @@ class TableauController extends BaseController
             $saes = $apcSaeParcoursRepository->findByAnnee($annee, $parcours);
         }
 
+        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours !== null ) {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
+        } else {
+            $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
+        }
+
         $tSaeSemestre = [];
         foreach ($annee->getSemestres() as $sem)
         {
-            $tSaeSemestre[$sem->getId()] = [];
+            $tSaeSemestre[$sem->getOrdreLmd()] = [];
         }
         foreach ($saes as $sae) {
-            $tSaeSemestre[$sae->getSemestre()->getId()][] = $sae;
+            $tSaeSemestre[$sae->getSemestre()->getOrdreLmd()][] = $sae;
         }
 
         $tab = [];
@@ -382,6 +388,7 @@ class TableauController extends BaseController
                 'saes' => $saes,
                 'tab' => $tab,
                 'tSaeSemestre' => $tSaeSemestre,
+                'semestres' => $semestres
             ]);
     }
 

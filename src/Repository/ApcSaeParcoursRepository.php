@@ -43,10 +43,11 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
     {
         $req = $this->createQueryBuilder('p')
             ->innerJoin(ApcSae::class, 's', 'WITH', 'p.sae = s.id')
+            ->innerJoin(Semestre::class, 'se', 'WITH', 's.semestre = se.id')
             ->where('p.parcours = :parcours')
-            ->andWhere('s.semestre = :semestre')
+            ->andWhere('se.ordreLmd = :semestre')
             ->setParameter('parcours', $parcours->getId())
-            ->setParameter('semestre', $semestre->getId())
+            ->setParameter('semestre', $semestre->getOrdreLmd())
             ->orderBy('s.ordre', 'ASC')
             ->addOrderBy('s.codeMatiere', 'ASC')
             ->getQuery()
