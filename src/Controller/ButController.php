@@ -14,6 +14,7 @@ use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\SemestreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,21 +31,18 @@ class ButController extends BaseController
         ]);
     }
 
-    #[Route('/ressources-semestre/{annee}/{semestre}', name: 'ressources_annee_semestre', requirements: ['annee' => '\d+'])]
-    #[Route('/ressources/{annee}/{parcours}/{semestre}', name: 'ressources_annee', requirements: ['annee' => '\d+'])]
     #[Route('/ressources-parcours/{annee}/{parcours}', name: 'ressources_annee', requirements: ['annee' => '\d+'])]
     public function ressources(
+        Request $request,
         SemestreRepository $semestreRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcRessourceRepository $apcRessourceRepository,
-        Annee $annee, Semestre $semestre = null, ApcParcours $parcours = null): Response
+        Annee $annee, ApcParcours $parcours = null): Response
     {
         if ($parcours !== null) {
             $ressources = $apcRessourceParcoursRepository->findByAnneeArray($annee, $parcours);
-
         } else {
             $ressources = $apcRessourceRepository->findByAnneeArray($annee);
-
         }
 
         if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours !== null ) {
@@ -56,19 +54,18 @@ class ButController extends BaseController
         return $this->render('but/ressources.html.twig', [
             'ressources' => $ressources,
             'annee' => $annee,
-            'selectSemestre' => $semestre,
+            'selectSemestre' => $request->query->get('semestre'),
             'parcours' => $parcours,
             'semestres' => $semestres
         ]);
     }
 
-    #[Route('/sae-semestre/{annee}/{semestre}', name: 'sae_annee_semestre', requirements: ['annee' => '\d+'])]
-    #[Route('/sae/{annee}/{parcours}/{semestre}', name: 'sae_annee', requirements: ['annee' => '\d+'])]
     #[Route('/sae-parcours/{annee}/{parcours}', name: 'sae_annee', requirements: ['annee' => '\d+'])]
     public function saes(
+        Request $request,
         SemestreRepository $semestreRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
-        ApcSaeRepository $apcSaeRepository, Annee $annee, Semestre $semestre = null, ApcParcours $parcours = null): Response
+        ApcSaeRepository $apcSaeRepository, Annee $annee, ApcParcours $parcours = null): Response
     {
         if ($parcours !== null) {
             $saes = $apcSaeParcoursRepository->findByAnneeArray($annee, $parcours);
@@ -86,7 +83,7 @@ class ButController extends BaseController
             'annee' => $annee,
             'saes' => $saes,
             'parcours' => $parcours,
-            'selectSemestre' => $semestre,
+            'selectSemestre' => $request->query->get('semestre'),
             'semestres' => $semestres
         ]);
     }

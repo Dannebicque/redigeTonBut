@@ -47,7 +47,7 @@
         <div class="card-footer">
             <div class="col-12 d-flex align-items-center justify-content-md-end mb-2">
                 <a href="{{ path('but_fiche_ressource',
-                    {'apcRessource': ressource.id, }) }}"
+                    {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null }) }}"
                    class="btn btn-block btn-sm btn-icon btn-icon-start btn-outline-primary ms-1"
                    target="_blank"
                 >
@@ -58,13 +58,14 @@
             {% if is_granted('ROLE_EDITEUR')  %}
             <div class="col-12 d-flex align-items-center justify-content-md-end">
                 <a href="{{ path('formation_apc_ressource_duplicate',
-                {'id': ressource.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info ms-1"
+                {'id': ressource.id, parcours: parcours != null ? parcours.id : null }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info ms-1"
                    type="button">
                     <i class="bi-files"></i>
                     <span class="d-none d-xxl-inline-block">Dupliquer</span>
                 </a>
                 <a href="{{ path('formation_apc_ressource_edit',
-                    {'id': ressource.id, }) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
+                    {'id': ressource.id, parcours: parcours != null ? parcours.id : null }) }}" class="btn btn-sm
+                    btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
                     <i class="bi-pencil-square"></i>
                     <span class="d-none d-xxl-inline-block">Modifier</span>
                 </a>

@@ -63,7 +63,7 @@ class ApcSaeController extends BaseController
                     ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId(), 'parcours' => $parcours->getId() ]);
             }
 
-            return $this->redirectToRoute('but_sae_annee_semestre', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId()]);
+            return $this->redirectToRoute('but_sae_annee', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId()]);
         }
 
         return $this->render('formation/apc_sae/new.html.twig', [
@@ -97,11 +97,11 @@ class ApcSaeController extends BaseController
             );
 
             if (null !== $request->request->get('btn_update') && null !== $apcSae->getSemestre() && null !== $apcSae->getSemestre()->getAnnee()) {
-                return $this->redirectToRoute('but_sae_annee_semestre', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId()]);
+                return $this->redirectToRoute('but_sae_annee', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId(), 'parcours' => $request->query->get('parcours')]);
             }
 
             return $this->redirectToRoute('formation_apc_sae_edit',
-                ['id' => $apcSae->getId()]);
+                ['id' => $apcSae->getId(), 'parcours' => $request->query->get('parcours')]);
         }
 
         return $this->render('formation/apc_sae/edit.html.twig', [
@@ -126,7 +126,7 @@ class ApcSaeController extends BaseController
                 'SAÉ supprimée avec succès.'
             );
 
-            return $this->redirectToRoute('but_sae_annee_semestre', ['annee' => $semestre->getAnnee()->getId(), 'semestre' => $semestre->getId() ]);
+            return $this->redirectToRoute('but_sae_annee', ['annee' => $semestre->getAnnee()->getId(), 'semestre' => $semestre->getId(), 'parcours' => $request->query->get('parcours') ]);
         }
 
         $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la SAÉ.');

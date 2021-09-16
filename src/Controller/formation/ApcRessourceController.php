@@ -12,25 +12,14 @@ namespace App\Controller\formation;
 
 use App\Classes\Apc\ApcRessourceAddEdit;
 use App\Classes\Apc\ApcRessourceOrdre;
-use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
-use App\Entity\ApcCompetence;
 use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
-use App\Entity\ApcRessourceApprentissageCritique;
-use App\Entity\ApcRessourceParcours;
-use App\Entity\ApcSaeRessource;
 use App\Entity\Constantes;
+use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Form\ApcRessourceType;
-use App\Repository\ApcApprentissageCritiqueRepository;
-use App\Repository\ApcCompetenceSemestreRepository;
 use App\Repository\ApcComptenceRepository;
-use App\Repository\ApcParcoursRepository;
-use App\Repository\ApcRessourceParcoursRepository;
-use App\Repository\ApcRessourceRepository;
-use App\Repository\ApcSaeRepository;
-use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,13 +29,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApcRessourceController extends BaseController
 {
-     #[Route("/new/{semestre}/{parcours}", name: "apc_ressource_new", options: ['expose' =>true], methods: ["GET","POST"])]
+    #[Route("/new/{semestre}/{parcours}", name: "apc_ressource_new", options: ['expose' => true], methods: [
+        "GET",
+        "POST"
+    ])]
     public function new(
         ApcComptenceRepository $apcComptenceRepository,
         ApcRessourceOrdre $apcRessourceOrdre,
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
-        Semestre $semestre = null, ApcParcours $parcours = null
+        Semestre $semestre = null,
+        ApcParcours $parcours = null
     ): Response {
         $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
         $apcRessource = new ApcRessource();
@@ -72,10 +65,18 @@ class ApcRessourceController extends BaseController
 
             if ($parcours !== null) {
                 return $this->redirectToRoute('but_ressources_annee',
-                    ['annee' => $apcRessource->getSemestre()->getAnnee()->getId(), 'semestre' => $apcRessource->getSemestre()->getId(), 'parcours' => $parcours->getId() ]);
+                    [
+                        'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
+                        'semestre' => $apcRessource->getSemestre()->getId(),
+                        'parcours' => $parcours->getId()
+                    ]);
             }
-            return $this->redirectToRoute('but_ressources_annee_semestre',
-                ['annee' => $apcRessource->getSemestre()->getAnnee()->getId(),'semestre' => $apcRessource->getSemestre()->getId() ]);
+
+            return $this->redirectToRoute('but_ressources_annee',
+                [
+                    'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
+                    'semestre' => $apcRessource->getSemestre()->getId()
+                ]);
         }
 
         return $this->render('formation/apc_ressource/new.html.twig', [
@@ -110,12 +111,17 @@ class ApcRessourceController extends BaseController
             );
 
             if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
-                return $this->redirectToRoute('but_ressources_annee_semestre',
-                    ['annee' => $apcRessource->getSemestre()->getAnnee()->getId(), 'semestre' => $apcRessource->getSemestre()->getId()]);
+
+                return $this->redirectToRoute('but_ressources_annee',
+                    [
+                        'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
+                        'semestre' => $apcRessource->getSemestre()->getId(),
+                        'parcours' => $request->query->get('parcours')
+                    ]);
             }
 
             return $this->redirectToRoute('formation_apc_ressource_edit',
-                ['id' => $apcRessource->getId()]);
+                ['id' => $apcRessource->getId(),'parcours' => $request->query->get('parcours')]);
         }
 
         return $this->render('formation/apc_ressource/edit.html.twig', [
@@ -140,8 +146,11 @@ class ApcRessourceController extends BaseController
                 'Ressource supprimée avec succès.'
             );
 
-            return $this->redirectToRoute('but_ressources_annee_semestre', ['annee' => $semestre->getAnnee()->getId(),
-                'semestre' => $semestre->getId()]);
+            return $this->redirectToRoute('but_ressources_annee', [
+                'annee' => $semestre->getAnnee()->getId(),
+                'semestre' => $semestre->getId(),
+                'parcours' => $request->query->get('parcours')
+            ]);
         }
 
         $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la ressource.');
@@ -154,10 +163,10 @@ class ApcRessourceController extends BaseController
      */
     public function duplicate(
         ApcRessourceAddEdit $apcRessourceAddEdit,
-        ApcRessource $apcRessource): Response
-    {
+        ApcRessource $apcRessource
+    ): Response {
         $this->denyAccessUnlessGranted('duplicate', $apcRessource);
-        $newApcRessource =  $apcRessourceAddEdit->duplique($apcRessource);
+        $newApcRessource = $apcRessourceAddEdit->duplique($apcRessource);
         $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Ressource dupliquée avec succès.');
 
         return $this->redirectToRoute('formation_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
@@ -169,8 +178,9 @@ class ApcRessourceController extends BaseController
     public function deplace(
         Request $request,
         ApcRessourceOrdre $apcRessourceOrdre,
-        ApcRessource $apcRessource, int $position): Response
-    {
+        ApcRessource $apcRessource,
+        int $position
+    ): Response {
         $this->denyAccessUnlessGranted('edit', $apcRessource);
         $apcRessourceOrdre->deplaceRessource($apcRessource, $position);
 
