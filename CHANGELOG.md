@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.3...v1.6.4) (2021-09-16)
+
+
+### Bug Fixes
+
+* Gestion des parcours sur les fiches ressources/SAE ([7b2df5d](https://github.com/Dannebicque/redigeTonBut/commit/7b2df5d0cada3f2fe91f5b6f41466d2beea1d97e))
+
 ### [1.6.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.2...v1.6.3) (2021-09-16)
 
 
