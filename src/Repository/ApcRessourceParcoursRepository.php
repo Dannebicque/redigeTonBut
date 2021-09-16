@@ -94,12 +94,12 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
         $t = [];
         foreach ($annee->getSemestres() as $semestre)
         {
-            $t[$semestre->getId()] = [];
+            $t[$semestre->getOrdreLmd()] = [];
         }
 
         foreach ($query as $res)
         {
-            $t[$res->getSemestre()->getId()][] = $res;
+            $t[$res->getSemestre()->getOrdreLmd()][] = $res;
         }
 
         return $t;

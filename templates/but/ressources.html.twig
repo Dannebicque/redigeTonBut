@@ -21,7 +21,7 @@
             <div class="tab-pane {% if (selectSemestre == null and loop.first) or (selectSemestre != null and selectSemestre.id
                 == semestre.id) %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
                 <div class="row g-4 mb-4">
-                    {% for ressource in ressources[semestre.id] %}
+                    {% for ressource in ressources[semestre.ordreLmd] %}
                         {{ include('but/_cardRessource.html.twig') }}
                     {% endfor %}
                 </div>
