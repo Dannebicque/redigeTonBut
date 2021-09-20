@@ -78,17 +78,17 @@ class ApcRessource extends AbstractMatiere
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $cmPreco;
+    private ?float $cmPreco = 0;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $tdPreco;
+    private ?float $tdPreco = 0;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $tpPreco;
+    private ?float $tpPreco = 0;
 
     public function __construct()
     {

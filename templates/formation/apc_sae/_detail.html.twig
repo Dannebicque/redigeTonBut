@@ -63,8 +63,10 @@
     {{ apc_sae.description != null ? apc_sae.description|nl2br|markdown_to_html : '' }}
 </p>
 
+{% if not is_granted('ROLE_CPN') %}
 <h3>Exemple(s) (non publié)</h3>
 <p>
     {{ apc_sae.exemples != null ? apc_sae.exemples|nl2br|markdown_to_html : '' }}
 </p>
+{% endif %}
 

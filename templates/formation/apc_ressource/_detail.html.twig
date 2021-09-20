@@ -24,7 +24,27 @@
         <td>{{ apc_ressource.heuresTotales }}h dont  {{ apc_ressource.tpPpn }}h TP</td>
     </tr>
 </table>
-
+<br>
+{% if not is_granted('ROLE_CPN') %}
+<h3>Préconisation heures (non publié)</h3>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>CM</th>
+        <th>TD</th>
+        <th>TP</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{ apc_ressource.cmPreco }}</td>
+        <td>{{ apc_ressource.tdPreco }}</td>
+        <td>{{ apc_ressource.tpPreco }}</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+{% endif %}
 <h3>Compétences ciblées</h3>
 <p>
     {% for competence in apc_ressource.apcRessourceCompetences|filter(competence => competence.competence !=
