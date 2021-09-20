@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.5](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.4...v1.6.5) (2021-09-20)
+
+
+### Bug Fixes
+
+* Espaces dans les zones de saisie et dans l'export Word ([b921518](https://github.com/Dannebicque/redigeTonBut/commit/b92151833d572ddf6ace496035b11977316e0fc3))
+* Export des fichiers Excel de structure selon le parcours (type 3) ([66be879](https://github.com/Dannebicque/redigeTonBut/commit/66be87903ffd53ff52bf2cfb3b50fb910296745f))
+
 ### [1.6.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.3...v1.6.4) (2021-09-16)
 
 
