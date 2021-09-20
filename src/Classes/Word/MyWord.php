@@ -123,7 +123,7 @@ class MyWord
 
         $parseDown = new Parsedown();
         $section = (new PhpWord())->addSection();
-        $texte = $parseDown->text($text);
+        $texte = $parseDown->text(nl2br($text));
         $texte = '<div style="text-align:justify">'.$texte.'</div>';
         Html::addHtml($section, $texte, false, true);
 
