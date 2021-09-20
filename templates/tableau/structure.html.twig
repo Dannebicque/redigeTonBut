@@ -16,8 +16,19 @@
                 <div class="tab-pane {% if loop.first %}active{% endif %}" id="parcour_{{ parcour.id }}"
                      role="tabpanel">
                     <div class="card">
+                        <div class="card-header">
+                            <h2>{{ parcour.libelle }}</h2>
+                            {% if user_data.departement.typeStructure == 'type3' %}
+                                <a href="{{ path('export_excel_structure', {parcours: parcour.id}) }}" class="btn
+                                btn-sm btn-outline-success
+btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+                                >
+                                    <i class="bi-download"></i>
+                                    <span>Export Excel du parcours</span>
+                                </a>
+                            {% endif %}
+                        </div>
                         <div class="card-body">
-                            {{ parcour.libelle }}
                             {{ include('tableau/_structure.html.twig', {codeParcours: parcour.id}) }}
                         </div>
                     </div>
@@ -29,29 +40,31 @@
     {% endif %}
 {% endblock %}
 
-                {% block header %}
-                    Tableau d'organisation globale du B.U.T.
-                {% endblock %}
+{% block header %}
+    Tableau d'organisation globale du B.U.T.
+{% endblock %}
 
-                {% block bouton_header %}
-                    <a href="{{ path('export_excel_structure') }}" class="btn btn-sm btn-outline-success
-        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-                    >
-                        <i class="bi-download"></i>
-                        <span>Export Excel</span>
-                    </a>
-                {% endblock %}
+{% block bouton_header %}
+    {% if user_data.departement.typeStructure != 'type3' %}
+    <a href="{{ path('export_excel_structure') }}" class="btn btn-sm btn-outline-success
+btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-download"></i>
+        <span>Export Excel</span>
+    </a>
+    {% endif %}
+{% endblock %}
 
-                {% block breadcrumb %}
-                    {{ include('composants/breadcrumb.html.twig', {liens:[
-                        {
-                            href:'',
-                            title: 'Tableau d\'organisation globale',
-                        }
-                    ]}) }}
-                {% endblock %}
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'Tableau d\'organisation globale',
+        }
+    ]}) }}
+{% endblock %}
 
-                {% block javascripts %}
-                    {{ parent() }}
-                {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
 

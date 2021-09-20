@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Classes\Excel\ExcelWriter;
 use App\Classes\Tableau\Structure;
+use App\Entity\ApcParcours;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,9 +18,9 @@ class ExportExcelController extends BaseController
         $this->excelWriter = $excelWriter;
     }
 
-    #[Route('/structure', name: 'structure')]
-    public function structure(Structure $structure): Response
+    #[Route('/structure/{parcours}', name: 'structure')]
+    public function structure(Structure $structure, ApcParcours $parcours = null): Response
     {
-        return $structure->genereFichierExcel($this->excelWriter, $this->getDepartement());
+        return $structure->genereFichierExcel($this->excelWriter, $this->getDepartement(), $parcours);
     }
 }

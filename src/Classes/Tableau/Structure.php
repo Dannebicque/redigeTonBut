@@ -4,6 +4,7 @@ namespace App\Classes\Tableau;
 use App\Classes\Excel\ExcelWriter;
 use App\DTO\StructureDepartement;
 use App\DTO\StructureSemestre;
+use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -72,10 +73,15 @@ class Structure
 
     public function genereFichierExcel(
         ExcelWriter $excelWriter,
-        Departement $departement
+        Departement $departement,
+        ?ApcParcours $parcours = null
     ): StreamedResponse {
         $this->departement = $departement;
-        $this->semestres = $departement->getSemestres();
+        if ($parcours === null) {
+            $this->semestres = $departement->getSemestres();
+        } else {
+            $this->semestres = $parcours->getSemestresArray();
+        }
 
         $this->getDataTableau();
         $spreadsheet = $excelWriter->createFromTemplate('tableau_structure.xlsx');
@@ -85,7 +91,9 @@ class Structure
         if ($sheet !== null) {
             $sheet->getCell('B4')->setValue('BUT ' . $this->departement->getSigle());
             $sheet->getCell('C4')->setValue($this->departement->getTypeDepartement());
-
+            if ($parcours !== null) {
+                $sheet->getCell('B5')->setValue('PARCOURS '.$parcours->getLibelle());
+            }
             for ($i = 1; $i <= 6; $i++) {
                 $sheet->getCellByColumnAndRow(2 + $i, 7)->setValue($this->donneesSemestres[$i]->nbHeuresRessourcesSae);
                 $sheet->getCellByColumnAndRow(2 + $i, 9)->setValue($this->donneesSemestres[$i]->pourcentageAdaptationLocale / 100);

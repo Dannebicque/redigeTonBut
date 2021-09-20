@@ -290,4 +290,17 @@ class ApcParcours extends BaseEntity
 
         return $this;
     }
+
+    public function getSemestresArray()
+    {
+
+        $semestres = [];
+        foreach ($this->getSemestres() as $semestre) {
+                $semestres[] = $semestre;
+
+        }
+
+        return $semestres;
+
+    }
 }
