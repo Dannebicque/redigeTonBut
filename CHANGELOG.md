@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.8](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.7...v1.6.8) (2021-09-20)
+
+
+### Features
+
+* Affichage des préconisations sur les fiches ressources/SAE ([77ad968](https://github.com/Dannebicque/redigeTonBut/commit/77ad96858a955cebd135bcdcb697b1a87343687a))
+
+
+### Bug Fixes
+
+* Affichage du bon numéro de niveau sur le référentiel de compétences ([77ba83a](https://github.com/Dannebicque/redigeTonBut/commit/77ba83ad4eb4e79d818be2a9885c3ffcf597e254))
+
 ### [1.6.7](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.6...v1.6.7) (2021-09-20)
 
 
