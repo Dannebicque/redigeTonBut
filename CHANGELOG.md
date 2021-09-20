@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.7](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.6...v1.6.7) (2021-09-20)
+
+
+### Features
+
+* Preconisations ressources ([5997101](https://github.com/Dannebicque/redigeTonBut/commit/59971019bcf0a2b8d5dea0a85c871d9dcdf3aa59))
+
 ### [1.6.6](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.5...v1.6.6) (2021-09-20)
 
 
