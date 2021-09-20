@@ -75,6 +75,21 @@ class ApcRessource extends AbstractMatiere
      */
     private $typeFiche;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $cmPreco;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tdPreco;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tpPreco;
+
     public function __construct()
     {
         $this->apcRessourceCompetences = new ArrayCollection();
@@ -351,6 +366,42 @@ class ApcRessource extends AbstractMatiere
     public function setTypeFiche(?string $typeFiche): self
     {
         $this->typeFiche = $typeFiche;
+
+        return $this;
+    }
+
+    public function getCmPreco(): ?float
+    {
+        return $this->cmPreco;
+    }
+
+    public function setCmPreco(?float $cmPreco): self
+    {
+        $this->cmPreco = $cmPreco;
+
+        return $this;
+    }
+
+    public function getTdPreco(): ?float
+    {
+        return $this->tdPreco;
+    }
+
+    public function setTdPreco(?float $tdPreco): self
+    {
+        $this->tdPreco = $tdPreco;
+
+        return $this;
+    }
+
+    public function getTpPreco(): ?float
+    {
+        return $this->tpPreco;
+    }
+
+    public function setTpPreco(?float $tpPreco): self
+    {
+        $this->tpPreco = $tpPreco;
 
         return $this;
     }

@@ -60,6 +60,17 @@ class ApcRessourceType extends AbstractType
                 ])
             ->add('heuresTotales', TextType::class, ['label' => 'Heures totales', ])
             ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP',])
+            ->add('cmPreco', TextType::class, ['label' => 'Préconisation Heures CM',
+                'help' => 'A titre indicatif pour les départements.',
+                'label_attr' => ['class' => 'text-white'],
+                'help_attr' => ['class' => 'text-white'],])
+            ->add('tdPreco', TextType::class, ['label' => 'Préconisation Heures TD','help' => 'A titre indicatif pour les départements.',
+                'label_attr' => ['class' => 'text-white'],
+                'help_attr' => ['class' => 'text-white'],])
+            ->add('tpPreco', TextType::class, ['label' => 'Préconisation Heures TP','help' => 'A titre indicatif pour les départements.',
+                'label_attr' => ['class' => 'text-white'],
+                'help_attr' => ['class' => 'text-white'],])
+
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
                 'required' => true,

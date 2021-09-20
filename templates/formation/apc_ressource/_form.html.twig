@@ -22,8 +22,36 @@
                 <div class="col-sm-6">
                     {{ form_row(form.tpPpn) }}
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
 
+<section>
+    <h2 class="small-title">Préconisation de répartition (non publié)</h2>
+    <div class="card mb-5 bg-secondary text-white">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    {{ form_row(form.cmPreco) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_row(form.tdPreco) }}
+                </div>
+                <div class="col-sm-4">
+                    {{ form_row(form.tpPreco) }}
+                </div>
+            </div>
+            <small class="text-white">Données non publiées, à seule fin de préconisation pour les départements.</small>
+        </div>
+    </div>
+</section>
 
+<section>
+    <h2 class="small-title">Descriptions, et mots clés</h2>
+    <div class="card mb-5">
+        <div class="card-body">
+            <div class="row">
                 <div class="col-sm-12">
                     {{ form_row(form.description) }}
                 </div>
