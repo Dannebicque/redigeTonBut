@@ -57,9 +57,8 @@ class Codification
             if (count($nbParcoursComp) !== count($nbParcoursAC))
             {
                 if (count($nbParcoursAC) === 1) {
-                    return chr($nbParcoursAC[0]->getParcours()->getOrdre()+64);
+                    return $nbParcoursAC[0]->getParcours()->getCode();
                 }
-
             }
         }
     }
