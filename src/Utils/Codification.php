@@ -7,6 +7,7 @@ use App\Entity\ApcCompetence;
 use App\Entity\ApcComposanteEssentielle;
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
+use App\Entity\Departement;
 use App\Entity\Semestre;
 
 class Codification
@@ -24,7 +25,7 @@ class Codification
 
     public static function codeApprentissageCritique(ApcApprentissageCritique $apcApprentissageCritique) : string
     {
-        return 'AC'.$apcApprentissageCritique->getNiveau()?->getAnnee()?->getOrdre().$apcApprentissageCritique->getCompetence()?->getNumero().'.'.self::codeSurDeuxChiffres($apcApprentissageCritique->getOrdre());
+        return 'AC'.$apcApprentissageCritique->getNiveau()?->getAnnee()?->getOrdre().$apcApprentissageCritique->getCompetence()?->getNumero().'.'.self::codeSurDeuxChiffres($apcApprentissageCritique->getOrdre()).self::codeParcoursAc($apcApprentissageCritique);
     }
 
     public static function codeUe(ApcCompetence $apcCompetence, Semestre $semestre) : string
@@ -45,5 +46,21 @@ class Codification
         }
 
         return $ordre;
+    }
+
+    private static function codeParcoursAc(ApcApprentissageCritique $apcApprentissageCritique)
+    {
+        $nbParcoursAC = $apcApprentissageCritique->getNiveau()?->getApcParcoursNiveaux();
+        $nbParcoursComp = $apcApprentissageCritique->getCompetence()->getDepartement()->getApcParcours();
+        if ( $apcApprentissageCritique->getCompetence()->getDepartement()->getTypeStructure() === Departement::TYPE1)
+        {
+            if (count($nbParcoursComp) !== count($nbParcoursAC))
+            {
+                if (count($nbParcoursAC) === 1) {
+                    return chr($nbParcoursAC[0]->getParcours()->getOrdre()+64);
+                }
+
+            }
+        }
     }
 }

@@ -52,7 +52,7 @@ class ApcNiveau extends BaseEntity
     /**
      * @ORM\OneToMany(targetEntity=ApcParcoursNiveau::class, mappedBy="niveau")
      */
-    private Collection $apcParcoursNiveaux;
+    private $apcParcoursNiveaux;
 
     public function __construct(ApcCompetence $competence = null)
     {
@@ -141,9 +141,9 @@ class ApcNiveau extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcParcoursNiveau[]
+     * @return ApcParcoursNiveau[]
      */
-    public function getApcParcoursNiveaux(): Collection
+    public function getApcParcoursNiveaux()
     {
         return $this->apcParcoursNiveaux;
     }

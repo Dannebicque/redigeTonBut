@@ -56,7 +56,6 @@ class UpdateCodificationController extends BaseController
         {
             $ac->setCode(Codification::codeApprentissageCritique($ac));
         }
-
         $this->entityManager->flush();
 
         return $this->redirectToRoute('update_codification_index');
