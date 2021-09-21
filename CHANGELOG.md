@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.9](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.8...v1.6.9) (2021-09-21)
+
+
+### Features
+
+* Codification des AC qui ne sont que sur un parcours ([d72774e](https://github.com/Dannebicque/redigeTonBut/commit/d72774e0b106e1a5d4ee1a18854285144b73c6fb))
+* Codification des AC qui ne sont que sur un parcours ([7feca37](https://github.com/Dannebicque/redigeTonBut/commit/7feca37c9462dd4cfca210682450089bb52abd68))
+
 ### [1.6.8](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.7...v1.6.8) (2021-09-20)
 
 
