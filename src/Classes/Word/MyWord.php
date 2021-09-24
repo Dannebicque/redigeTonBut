@@ -120,13 +120,12 @@ class MyWord
 
     private function prepareTexte($text)
     {
-
         $parseDown = new Parsedown();
         $section = (new PhpWord())->addSection();
-        $texte = $parseDown->text(nl2br($text));
+        $parseDown->setBreaksEnabled(true);
+        $texte = $parseDown->text($text);
         $texte = '<div style="text-align:justify">'.$texte.'</div>';
-        Html::addHtml($section, $texte, false, true);
-
+        Html::addHtml($section, $texte, false, false);
         return $section->getElements();
     }
 
