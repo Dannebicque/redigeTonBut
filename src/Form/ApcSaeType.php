@@ -73,12 +73,17 @@ class ApcSaeType extends AbstractType
                 ])
             ->add('heuresTotales', TextType::class, ['label' => 'Préconisation Heures totales',
                 'help' => 'A titre indicatif pour les départements.',
+                'required' => false,
                 'label_attr' => ['class' => 'text-white'],
                 'help_attr' => ['class' => 'text-white'],])
-            ->add('tpPpn', TextType::class, ['label' => 'Préconisation Dont TP','help' => 'A titre indicatif pour les départements.',
+            ->add('tpPpn', TextType::class, ['label' => 'Préconisation Dont TP',
+                'required' => false,
+                'help' => 'A titre indicatif pour les départements.',
                 'label_attr' => ['class' => 'text-white'],
                 'help_attr' => ['class' => 'text-white'],])
-            ->add('projetPpn', TextType::class, ['label' => 'Préconisation "projet tutoré"','help' => 'A titre indicatif pour les départements.',
+            ->add('projetPpn', TextType::class, ['label' => 'Préconisation "projet tutoré"',
+                'required' => false,
+                'help' => 'A titre indicatif pour les départements.',
                 'label_attr' => ['class' => 'text-white'],
                 'help_attr' => ['class' => 'text-white'],])
 
