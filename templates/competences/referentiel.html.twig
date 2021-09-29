@@ -136,3 +136,13 @@
     </div>
 {% endblock %}
 
+{% block bouton_header %}
+    <a href="{{ path('export_referentiel_competences', {departement:departement.id}) }}" class="btn btn-sm
+    btn-outline-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-download"></i>
+        <span>Export PDF</span>
+    </a>
+{% endblock %}
+

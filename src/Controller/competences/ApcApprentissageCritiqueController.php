@@ -113,4 +113,39 @@ class ApcApprentissageCritiqueController extends BaseController
         return $this->redirect($request->headers->get('referer'));
 
     }
+
+    #[Route('/{id}/delete', name: 'administration_apc_apprentissage_critique_delete', methods: ['POST'])]
+    public function delete(
+        Request $request,
+        ApcApprentissageCritique $apcApprentissageCritique
+    ): Response
+    {
+        $this->denyAccessUnlessGranted('delete', $apcApprentissageCritique);
+        $departement = $apcApprentissageCritique->getDepartement()->getId();
+        $id = $apcApprentissageCritique->getId();
+        if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+            foreach ($apcApprentissageCritique->getApcSaeApprentissageCritiques() as $s) {
+                $this->entityManager->remove($s);
+            }
+
+            foreach ($apcApprentissageCritique->getApcRessourceApprentissageCritiques() as $s) {
+                $this->entityManager->remove($s);
+            }
+
+
+            $this->entityManager->remove($apcApprentissageCritique);
+            $this->entityManager->flush();
+            $this->addFlashBag(
+                Constantes::FLASHBAG_SUCCESS,
+                'Apprentissage critique supprimée avec succès.'
+            );
+
+            return $this->redirectToRoute('administration_apc_referentiel_index',
+                ['departement' => $departement]);
+        }
+
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la ressource.');
+
+        return $this->redirect($request->headers->get('referer'));
+    }
 }

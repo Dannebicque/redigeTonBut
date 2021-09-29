@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{  absolute_url(asset('build/app-pdf.css')) }}">
+    <style>
+        table, th, td, tr {
+            border: 0;
+        }
+    </style>
+    <title>PDF - Référentiel de compétences {{ departement.sigle }}</title>
+</head>
+<body>
+
+<!--Conteneur principal -->
+<div class="container-fluid" id="content"
+    {% for parcour in parcours %}
+        <h2>Compétences du parcours : {{ parcour.libelle }}</h2>
+        <div style="page-break-after: always"></div>
+        {% for competence in competencesParcours[parcour.id] %}
+            <div>
+                {{ include('competences/_competence_pdf.html.twig') }}
+            </div>
+            <div style="page-break-after: always"></div>
+        {% endfor %}
+    {% endfor %}
+</div><!-- fin conteneur principal-->
+
+</body>
+</html>
+

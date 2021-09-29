@@ -25,6 +25,7 @@
         "doctrine/orm": "^2.9",
         "erusev/parsedown": "^1.7",
         "friendsofsymfony/jsrouting-bundle": "^2.7",
+        "knplabs/knp-snappy-bundle": "^1.8",
         "phpdocumentor/reflection-docblock": "^5.2",
         "phpoffice/phpspreadsheet": "^1.18",
         "phpoffice/phpword": "^0.18.1",

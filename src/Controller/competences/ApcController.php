@@ -16,6 +16,8 @@ use App\Controller\BaseController;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Repository\DepartementRepository;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Knp\Snappy\Pdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,6 +51,40 @@ class ApcController extends BaseController
             'parcours' => $departement->getApcParcours(),
             'parcoursNiveaux' => $tParcours,
         ]);
+    }
+
+    #[Route('/exporter/{departement}', name: 'export_referentiel_competences', methods: ['GET'])]
+    public function exportReferentiel(Pdf $knpSnappyPdf, ApcStructure $apcStructure, Departement $departement = null): PdfResponse
+    {
+        $tParcours = $apcStructure->parcoursNiveaux($departement);
+        $competences = $departement->getApcCompetences();
+        $tComp = [];
+        foreach ($competences as $comp) {
+            $tComp[$comp->getId()] = $comp;
+        }
+        $competencesParcours = [];
+
+        foreach ($tParcours as $key => $parc) {
+            $competencesParcours[$key] = [];
+            foreach ($parc as $k => $v) {
+                $competencesParcours[$key][] = $tComp[$k];
+            }
+        }
+
+        $html = $this->renderView('competences/export-referentiel.html.twig',[
+            'competencesParcours' => $competencesParcours,
+            'departement' => $departement,
+            'competences' => $competences,
+            'parcours' => $departement->getApcParcours(),
+            'parcoursNiveaux' => $tParcours,
+        ]);
+
+        return new PdfResponse(
+            $knpSnappyPdf->getOutputFromHtml($html, [
+                'orientation'=>'Landscape'
+            ]),
+            'referentiel-competence-'.$departement->getSigle().'.pdf'
+        );
     }
 
     #[Route("/import", name:"administration_apc_referentiel_import", methods:["GET","POST"])]

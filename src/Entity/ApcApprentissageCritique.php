@@ -51,7 +51,7 @@ class ApcApprentissageCritique extends BaseEntity
     /**
      * @ORM\Column(type="integer")
      */
-    private $ordre;
+    private ?int $ordre;
 
     /**
      * ApcApprentissageCritique constructor.

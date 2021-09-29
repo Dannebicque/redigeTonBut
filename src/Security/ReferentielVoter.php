@@ -3,6 +3,7 @@
 
 namespace App\Security;
 
+use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
 use App\Entity\User;
@@ -33,7 +34,7 @@ class ReferentielVoter extends Voter
         }
 
         // only vote on `ApcRessource` or ApcRessource objects
-        if (!($subject instanceof ApcRessource || $subject instanceof ApcSae)) {
+        if (!($subject instanceof ApcRessource || $subject instanceof ApcSae || $subject instanceof ApcApprentissageCritique)) {
             return false;
         }
 
@@ -95,7 +96,7 @@ class ReferentielVoter extends Voter
         return $user->getDepartement()->getId() === $post->getDepartement()->getId();
     }
 
-    private function canDelete(ApcSae|ApcRessource $post, User $user): bool
+    private function canDelete(ApcSae|ApcRessource|ApcApprentissageCritique $post, User $user): bool
     {
         if (!(in_array('ROLE_PACD', $user->getRoles()) || in_array('ROLE_CPN', $user->getRoles()))) {
             return false;

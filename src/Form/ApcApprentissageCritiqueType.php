@@ -21,11 +21,11 @@ class ApcApprentissageCritiqueType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('code', TextType::class, ['disabled' => true])
+            ->add('code', TextType::class, ['disabled' => true, 'help'  => 'Le code est généré automatiquement en fonction de l\'ordre.'])
             ->add('ordre', IntegerType::class, ['label' => 'Ordre de l\'AC',
-                'help'  => 'Si une compétence occupe déjà la place elles seront inversées',
+                'help'  => 'Si un AC occupe déjà la place ils seront inversés',
             ])
-            ->add('libelle', TextType::class, ['disabled' => true]);
+            ->add('libelle', TextType::class, ['label' => 'Libellé de l\'AC']); // ['disabled' => true]
     }
 
     public function configureOptions(OptionsResolver $resolver)

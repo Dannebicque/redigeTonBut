@@ -28,6 +28,10 @@
 {% endblock %}
 
 {% block bouton_header %}
+    {% if is_granted('ROLE_PACD') %}
+        {{ include('form/_delete_form.html.twig', {path: path('administration_apc_apprentissage_critique_delete',
+            {id: apc_apprentissage_critique.id, }), id: apc_apprentissage_critique.id}) }}
+    {% endif %}
     <a href="{{ path('administration_apc_referentiel_index', {departement:apc_apprentissage_critique.departement.id}) }}"
        class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"

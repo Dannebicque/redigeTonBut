@@ -124,6 +124,18 @@
     "jms/metadata": {
         "version": "2.5.0"
     },
+    "knplabs/knp-snappy": {
+        "version": "v1.2.1"
+    },
+    "knplabs/knp-snappy-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "c81bdcf4a9d4e7b1959071457f9608631865d381"
+        }
+    },
     "laminas/laminas-code": {
         "version": "4.3.0"
     },
@@ -525,6 +537,9 @@
     },
     "symfony/polyfill-uuid": {
         "version": "v1.23.0"
+    },
+    "symfony/process": {
+        "version": "v5.3.7"
     },
     "symfony/profiler-pack": {
         "version": "v1.0.5"
