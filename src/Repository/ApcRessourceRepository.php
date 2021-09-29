@@ -110,6 +110,7 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->addOrderBy('r.libelle', 'ASC');
 
         $i = 0;
+        //todo: ne filtre pas selon les parcours...
         foreach ($semestres as $sem) {
             if ($sem->getOrdreLmd() <= $semestre->getOrdreLmd()) {
                 $query->orWhere('r.semestre = :semestre'.$i)

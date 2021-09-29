@@ -24,6 +24,7 @@ use App\Repository\ApcRessourceApprentissageCritiqueRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
+use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
@@ -97,6 +98,7 @@ class ApcAjaxRessourceController extends BaseController
     public function ajaxSae(
         SemestreRepository $semestreRepository,
         ApcSaeRessourceRepository $apcSaeRessourceRepository,
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcSaeRepository $apcSaeRepository,
         Request $request
     ): Response {
@@ -114,6 +116,14 @@ class ApcAjaxRessourceController extends BaseController
             }
 
             $datas = $apcSaeRepository->findBySemestre($semestre);
+
+            if ($semestre->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+                $parcours = $semestre->getApcParcours();
+                if ($parcours !== null) {
+                    $datas2 = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+                    $datas = array_merge($datas, $datas2);
+                }
+            }
 
             $t = [];
             foreach ($datas as $d) {
