@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.9...v1.7.0) (2021-09-29)
+
+
+### Features
+
+* Export du tableau de préconisation et croisé AC/SAE/Ressource au format Excel ([6d5e2f2](https://github.com/Dannebicque/redigeTonBut/commit/6d5e2f25ca398cd35d258a9d096da95be578b3f9))
+* Export PDF du référentiel de compétences ([65b5c49](https://github.com/Dannebicque/redigeTonBut/commit/65b5c49653f453a148bf10926f2cdcfb7853f8a6))
+* Export Zip des fiches SAES/Ressources au format Word. ([11a31a3](https://github.com/Dannebicque/redigeTonBut/commit/11a31a3db34dd8b64d30b129baca73bd08c944ee))
+
+
+### Bug Fixes
+
+* Amélioration ergonomique ([6d56080](https://github.com/Dannebicque/redigeTonBut/commit/6d56080231e27b1ef2ba8ba86c3bcd7b9dd9bb1b))
+* Champs optionnels pour les préconisations des heures. ([c303497](https://github.com/Dannebicque/redigeTonBut/commit/c3034973ae246e037672cf6351bdf01c97050e0e))
+* Liste des SAE/Ressources pré-requises ([cede7d4](https://github.com/Dannebicque/redigeTonBut/commit/cede7d4cfb09b027ad78cb47097620e9692c84a4))
+* masque temporaire des exports non fonctionnels ([1e12d35](https://github.com/Dannebicque/redigeTonBut/commit/1e12d35c7db5afb50e63f909728ccffb834e32ee))
+* Retour à la ligne propre pour Word. ([24bd2eb](https://github.com/Dannebicque/redigeTonBut/commit/24bd2ebef6d80dc273dbb9c3e1a415e77ea18503))
+
 ### [1.6.9](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.8...v1.6.9) (2021-09-21)
 
 
