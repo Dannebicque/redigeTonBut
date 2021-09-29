@@ -42,64 +42,7 @@ class MyWord
      */
     public function exportSae(ApcSae $apcSae)
     {
-        $templateProcessor = new TemplateProcessor($this->dir . 'sae.docx');
-        $templateProcessor->setValue('nomsae', $apcSae->getCodeMatiere() . ' - ' . $apcSae->getLibelle());
-
-        $competences = new TextRun();
-        foreach ($apcSae->getCompetences() as $competence) {
-            $competences->addText('- ' . $competence->getLibelle());
-            $competences->addTextBreak();
-        }
-
-        $acs = new TextRun();
-        foreach ($apcSae->getApcSaeApprentissageCritiques() as $ac) {
-            if (null !== $ac->getApprentissageCritique()) {
-                $acs->addText('- ' . $ac->getApprentissageCritique()->getCode() . ' : ' . $ac->getApprentissageCritique()->getLibelle());
-                $acs->addTextBreak();
-            }
-        }
-
-        $ressources = new TextRun();
-        foreach ($apcSae->getApcSaeRessources() as $ac) {
-            if (null !== $ac->getRessource()) {
-                $ressources->addText('- ' . $ac->getRessource()->getCodeMatiere() . ' : ' . $ac->getRessource()->getLibelle());
-                $ressources->addTextBreak();
-            }
-        }
-
-        $parcours = new TextRun();
-        foreach ($apcSae->getApcSaeParcours() as $ac) {
-            if (null !== $ac->getParcours()) {
-
-                $parcours->addText('- ' . $ac->getParcours()->getLibelle());
-                $parcours->addTextBreak();
-            }
-        }
-
-        $templateProcessor->setComplexValue('parcours', $parcours);
-        $templateProcessor->setComplexValue('competences', $competences);
-
-        // get elements in section
-        $containers = $this->prepareTexte($apcSae->getObjectifs());
-        $nbElements = count($containers);
-        $templateProcessor->cloneBlock('objectifsblock', $nbElements, true, true);
-
-        foreach ($containers as $i => $iValue) {
-            $templateProcessor->setComplexBlock('objectifs#' . ($i + 1), $iValue);
-        }
-
-        // get elements in section
-        $containers = $this->prepareTexte($apcSae->getDescription());
-        $nbElements = count($containers);
-        $templateProcessor->cloneBlock('descriptifblock', $nbElements, true, true);
-
-        foreach ($containers as $i => $iValue) {
-            $templateProcessor->setComplexBlock('descriptif#' . ($i + 1), $iValue);
-        }
-
-        $templateProcessor->setComplexValue('apprentissages', $acs);
-        $templateProcessor->setComplexValue('ressources', $ressources);
-        $templateProcessor->setValue('semestre', $apcSae->getSemestre()->getOrdreLmd());
+       $templateProcessor = $this->genereWordSae($apcSae);
 
         $filename = 'sae_' . $apcSae->getCodeMatiere() . ' ' . $apcSae->getLibelle() . '.docx';
 
@@ -136,6 +79,27 @@ class MyWord
      * @throws CreateTemporaryFileException
      */
     public function exportRessource(ApcRessource $apcRessource)
+    {
+        $templateProcessor = $this->genereWord($apcRessource);
+
+        $filename = 'ressource_' . $apcRessource->getCodeMatiere() . ' ' . $apcRessource->getLibelle() . '.docx';
+
+        return new StreamedResponse(
+            static function() use ($templateProcessor) {
+                $templateProcessor->saveAs('php://output');
+            },
+            200,
+            [
+                'Content-Description' => 'File Transfer',
+                'Content-Transfer-Encoding' => 'binary',
+                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'Content-Disposition' => 'attachment;filename="' . $filename . '"',
+            ]
+        );
+    }
+
+    private function genereWord(ApcRessource $apcRessource)
     {
         $templateProcessor = new TemplateProcessor($this->dir . 'ressource.docx');
 
@@ -202,20 +166,92 @@ class MyWord
 
         $templateProcessor->setValue('semestre', $apcRessource->getSemestre()->getOrdreLmd());
 
+        return $templateProcessor;
+    }
+
+    private function genereWordSae(ApcSae $apcSae)
+    {
+        $templateProcessor = new TemplateProcessor($this->dir . 'sae.docx');
+        $templateProcessor->setValue('nomsae', $apcSae->getCodeMatiere() . ' - ' . $apcSae->getLibelle());
+
+        $competences = new TextRun();
+        foreach ($apcSae->getCompetences() as $competence) {
+            $competences->addText('- ' . $competence->getLibelle());
+            $competences->addTextBreak();
+        }
+
+        $acs = new TextRun();
+        foreach ($apcSae->getApcSaeApprentissageCritiques() as $ac) {
+            if (null !== $ac->getApprentissageCritique()) {
+                $acs->addText('- ' . $ac->getApprentissageCritique()->getCode() . ' : ' . $ac->getApprentissageCritique()->getLibelle());
+                $acs->addTextBreak();
+            }
+        }
+
+        $ressources = new TextRun();
+        foreach ($apcSae->getApcSaeRessources() as $ac) {
+            if (null !== $ac->getRessource()) {
+                $ressources->addText('- ' . $ac->getRessource()->getCodeMatiere() . ' : ' . $ac->getRessource()->getLibelle());
+                $ressources->addTextBreak();
+            }
+        }
+
+        $parcours = new TextRun();
+        foreach ($apcSae->getApcSaeParcours() as $ac) {
+            if (null !== $ac->getParcours()) {
+
+                $parcours->addText('- ' . $ac->getParcours()->getLibelle());
+                $parcours->addTextBreak();
+            }
+        }
+
+        $templateProcessor->setComplexValue('parcours', $parcours);
+        $templateProcessor->setComplexValue('competences', $competences);
+
+        // get elements in section
+        $containers = $this->prepareTexte($apcSae->getObjectifs());
+        $nbElements = count($containers);
+        $templateProcessor->cloneBlock('objectifsblock', $nbElements, true, true);
+
+        foreach ($containers as $i => $iValue) {
+            $templateProcessor->setComplexBlock('objectifs#' . ($i + 1), $iValue);
+        }
+
+        // get elements in section
+        $containers = $this->prepareTexte($apcSae->getDescription());
+        $nbElements = count($containers);
+        $templateProcessor->cloneBlock('descriptifblock', $nbElements, true, true);
+
+        foreach ($containers as $i => $iValue) {
+            $templateProcessor->setComplexBlock('descriptif#' . ($i + 1), $iValue);
+        }
+
+        $templateProcessor->setComplexValue('apprentissages', $acs);
+        $templateProcessor->setComplexValue('ressources', $ressources);
+        $templateProcessor->setValue('semestre', $apcSae->getSemestre()->getOrdreLmd());
+
+        return $templateProcessor;
+    }
+
+    public function exportAndSaveressource(ApcRessource $apcRessource, $dir)
+    {
+        $templateProcessor = $this->genereWord($apcRessource);
+
         $filename = 'ressource_' . $apcRessource->getCodeMatiere() . ' ' . $apcRessource->getLibelle() . '.docx';
 
-        return new StreamedResponse(
-            static function() use ($templateProcessor) {
-                $templateProcessor->saveAs('php://output');
-            },
-            200,
-            [
-                'Content-Description' => 'File Transfer',
-                'Content-Transfer-Encoding' => 'binary',
-                'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'Content-Disposition' => 'attachment;filename="' . $filename . '"',
-            ]
-        );
+        $pathToSave = $dir.$filename;
+        $templateProcessor->saveAs($pathToSave);
+        return $pathToSave;
+    }
+
+    public function exportAndSaveSae(ApcSae $apcSae, $dir)
+    {
+        $templateProcessor = $this->genereWordSae($apcSae);
+
+        $filename = 'sae_' . $apcSae->getCodeMatiere() . ' ' . $apcSae->getLibelle() . '.docx';
+
+        $pathToSave = $dir.$filename;
+        $templateProcessor->saveAs($pathToSave);
+        return $pathToSave;
     }
 }

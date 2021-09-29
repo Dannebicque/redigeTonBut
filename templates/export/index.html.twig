@@ -4,6 +4,9 @@
 
 {% block content %}
 
+    <a href="{{ path('export_referentiel_competences', {departement:user_data.departement.id}) }}">
+        Export PDF du référentiel de compétences au format PDF
+    </a><br><br>
 
     {% for annee in user_data.annees %}
         <section class="scroll-section" id="buttonTags">
