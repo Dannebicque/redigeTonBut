@@ -19,6 +19,32 @@
 
             <div class="tab-pane {% if (selectSemestre == null and loop.first) or (selectSemestre != null and selectSemestre
                 == semestre.id) %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
+                <div class="row">
+                    <div class="col-10">&nbsp;</div>
+                    <div class="col-2">
+                        {% if is_granted('ROLE_EDITEUR') %}
+                            {% if user_data.departement.typeStructure == 'type3' and parcours is defined %}
+                                <a href="{{ path('formation_apc_sae_new', {semestre: semestre.id, parcours: parcours.id}) }}" class="btn
+            btn-outline-primary
+            btn-icon btn-icon-end
+    w-100
+    w-sm-auto"
+                                   id="boutonAddSae">
+                                    <i class="bi bi-plus-circle"></i>
+                                    <span>Ajouter une SAÉ</span>
+                                </a>
+                            {% else %}
+                                <a href="{{ path('formation_apc_sae_new', {semestre: semestre.id}) }}" class="btn btn-outline-primary btn-icon btn-icon-end
+    w-100
+    w-sm-auto"
+                                   id="boutonAddSae">
+                                    <i class="bi bi-plus-circle"></i>
+                                    <span>Ajouter une SAÉ</span>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
                 <div class="row g-4 mb-4">
                 {% for sae in saes[semestre.ordreLmd] %}
                     {{ include('but/_cardSae.html.twig') }}
@@ -43,32 +69,6 @@
 {% endblock %}
 
 {% block bouton_header %}
-    {% if selectSemestre != null %}
-        {% set sem = selectSemestre %}
-    {% else %}
-        {% set sem = annee.semestres[0].id %}
-    {% endif %}
 
-    {% if is_granted('ROLE_EDITEUR') %}
-        {% if user_data.departement.typeStructure == 'type3' and parcours is defined %}
-            <a href="{{ path('formation_apc_sae_new', {semestre: sem, parcours: parcours.id}) }}" class="btn
-            btn-outline-primary
-            btn-icon btn-icon-end
-    w-100
-    w-sm-auto"
-               id="boutonAddSae">
-                <i class="bi bi-plus-circle"></i>
-                <span>Ajouter une SAÉ</span>
-            </a>
-            {% else %}
-    <a href="{{ path('formation_apc_sae_new', {semestre: sem}) }}" class="btn btn-outline-primary btn-icon btn-icon-end
-    w-100
-    w-sm-auto"
-       id="boutonAddSae">
-        <i class="bi bi-plus-circle"></i>
-        <span>Ajouter une SAÉ</span>
-    </a>
-                {% endif %}
-    {% endif %}
 {% endblock %}
 
