@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Classes\Apc\TableauCroise;
+use App\Classes\Apc\TableauPreconisation;
 use App\Classes\Tableau\Preconisation;
 use App\Classes\Tableau\Structure;
 use App\Classes\Tableau\VolumesHoraires;
@@ -9,14 +11,11 @@ use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Semestre;
-use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcParcoursNiveauRepository;
 use App\Repository\ApcParcoursRepository;
-use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
-use App\Repository\ApcSaeCompetenceRepository;
 use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\SemestreRepository;
@@ -106,7 +105,8 @@ class TableauController extends BaseController
         if ($parcours === null) {
             $semestre = $semestreRepository->findSemestre($this->getDepartement(), $parametersAsArray['semestre']);
         } else {
-            $semestre = $semestreRepository->findSemestreParcours($this->getDepartement(), $parametersAsArray['semestre'], $parcours);
+            $semestre = $semestreRepository->findSemestreParcours($this->getDepartement(),
+                $parametersAsArray['semestre'], $parcours);
         }
         if ($semestre !== null) {//todo: et vériifer lien semestre/département
 
@@ -132,7 +132,7 @@ class TableauController extends BaseController
                 case 'nbHeuresEnseignementLocale':
                     $semestre->setNbHeuresEnseignementLocale(Convert::convertToFloat($parametersAsArray['valeur']));
                     //mise à jour du pourcentage
-                    $calcul = $semestre->getNbHeuresEnseignementLocale()/ $semestre->getNbHeuresRessourceSae() * 100;
+                    $calcul = $semestre->getNbHeuresEnseignementLocale() / $semestre->getNbHeuresRessourceSae() * 100;
                     $semestre->setPourcentageAdaptationLocale(number_format(Convert::convertToFloat($calcul), 2));
                     break;
                 case 'nbHeuresEnseignementSaeLocale':
@@ -241,74 +241,20 @@ class TableauController extends BaseController
     }
 
     public function tableauSemestre(
-        ApcSaeParcoursRepository $apcSaeParcoursRepository,
-        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
-        ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
-        ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
-        ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
-        ApcNiveauRepository $apcNiveauRepository,
-        ApcSaeRepository $apcSaeRepository,
-        ApcRessourceRepository $apcRessourceRepository,
+        TableauCroise $tableauCroise,
         Semestre $semestre,
         ?ApcParcours $parcours = null
     ) {
-        if ($parcours === null) {
-            $saes = $apcSaeRepository->findBySemestre($semestre);
-            $ressources = $apcRessourceRepository->findBySemestre($semestre);
-            $niveaux = $apcNiveauRepository->findBySemestre($semestre);
-        } else {
-            $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
-            $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
-            $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
-        }
-
-        $compSae = $apcSaeCompetenceRepository->findBySemestre($semestre);
-        $compRessources = $apcRessourceCompetenceRepository->findBySemestre($semestre);
-
-        $tab = [];
-        $coefficients = [];
-        $tab['saes'] = [];
-        $tab['ressources'] = [];
-
-        foreach ($saes as $sae) {
-            $tab['saes'][$sae->getId()] = [];
-            foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
-                $tab['saes'][$sae->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
-            }
-        }
-
-        foreach ($ressources as $ressource) {
-            $tab['ressources'][$ressource->getId()] = [];
-            foreach ($ressource->getApcRessourceApprentissageCritiques() as $ac) {
-                $tab['ressources'][$ressource->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
-            }
-        }
-
-        foreach ($compSae as $comp) {
-            if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
-                $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
-                $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
-            }
-            $coefficients[$comp->getCompetence()->getId()]['saes'][$comp->getSae()->getId()] = $comp->getCoefficient();
-        }
-
-        foreach ($compRessources as $comp) {
-            if (!array_key_exists($comp->getCompetence()->getId(), $coefficients)) {
-                $coefficients[$comp->getCompetence()->getId()]['saes'] = [];
-                $coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
-            }
-            $coefficients[$comp->getCompetence()->getId()]['ressources'][$comp->getRessource()->getId()] = $comp->getCoefficient();
-        }
-
+        $tableauCroise->getDatas($semestre, $parcours);
 
         return $this->render('tableau/_grilleSemestre.html.twig',
             [
                 'semestre' => $semestre,
-                'niveaux' => $niveaux,
-                'saes' => $saes,
-                'ressources' => $ressources,
-                'tab' => $tab,
-                'coefficients' => $coefficients
+                'niveaux' => $tableauCroise->getNiveaux(),
+                'saes' => $tableauCroise->getSaes(),
+                'ressources' => $tableauCroise->getRessources(),
+                'tab' => $tableauCroise->getTab(),
+                'coefficients' => $tableauCroise->getCoefficients()
             ]);
     }
 
@@ -354,15 +300,14 @@ class TableauController extends BaseController
             $saes = $apcSaeParcoursRepository->findByAnnee($annee, $parcours);
         }
 
-        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours !== null ) {
+        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours !== null) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
         }
 
         $tSaeSemestre = [];
-        foreach ($annee->getSemestres() as $sem)
-        {
+        foreach ($annee->getSemestres() as $sem) {
             $tSaeSemestre[$sem->getOrdreLmd()] = [];
         }
         foreach ($saes as $sae) {
@@ -393,31 +338,18 @@ class TableauController extends BaseController
     }
 
     public function tableauPreconisationsSemestre(
-        ApcSaeRepository $apcSaeRepository,
-        ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
-        ApcRessourceRepository $apcRessourceRepository,
-        ApcSaeParcoursRepository $apcSaeParcoursRepository,
-        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
-        ApcNiveauRepository $apcNiveauRepository,
+       TableauPreconisation $tableauPreconisation,
         Semestre $semestre,
         ApcParcours $parcours = null,
     ) {
-        if ($parcours === null) {
-            $saes = $apcSaeRepository->findBySemestre($semestre);
-            $ressources = $apcRessourceRepository->findBySemestre($semestre);
-            $niveaux = $apcNiveauRepository->findBySemestre($semestre);
-        } else {
-            $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
-            $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
-            $niveaux = $apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
-        }
+        $tableauPreconisation->getDatas($semestre, $parcours);
 
         return $this->render('tableau/_preconisationsSemestre.html.twig',
             [
                 'semestre' => $semestre,
-                'niveaux' => $niveaux,
-                'saes' => $saes,
-                'ressources' => $ressources,
+                'niveaux' => $tableauPreconisation->getNiveaux(),
+                'saes' => $tableauPreconisation->getSaes(),
+                'ressources' => $tableauPreconisation->getRessources(),
             ]);
     }
 

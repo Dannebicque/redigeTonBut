@@ -142,7 +142,7 @@ class ExcelWriter
         }
     }
 
-    public function colorCellRange($col, $lig, $couleur): void
+    public function colorCellXY($col, $lig, $couleur): void
     {
         $cell = Coordinate::stringFromColumnIndex($col).$lig;
         $this->colorCells($cell, $couleur);

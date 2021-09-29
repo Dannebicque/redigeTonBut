@@ -292,6 +292,11 @@
                                     <span class="label">MàJ codification</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ path('export_index') }}">
+                                    <span class="label">Exporter</span>
+                                </a>
+                            </li>
 {#                            {% if not is_granted('ROLE_GT') %}#}
                                 <li>
                                     <a href="{{ path('administration_apc_referentiel_competence_export') }}">
@@ -303,7 +308,7 @@
                                         <span class="label">Sauvegarder le référentiel de formation</span>
                                     </a>
                                 </li>
-                                {# todo: possibilité d'export d'autres format ? mais pas en sauvegarde #}
+
 {#                            {% endif %}#}
                             <li>
                                 <a href="{{ path('administration_apc_referentiel_import_formation_index') }}">

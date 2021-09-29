@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Exports pour la spécialité{% endblock %}
+
+{% block content %}
+
+
+    {% for annee in user_data.annees %}
+        <section class="scroll-section" id="buttonTags">
+        <h2 class="small-title">B.U.T. {{ annee.ordre }}</h2>
+        {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
+                {% for parcours in user_data.departement.apcParcours %}
+                    <div class="col">
+                        <div class="card h-100 border-{{ parcours.couleur }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ parcours.libelle }}</h5>
+                                <p class="card-text">
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('export_ressources_annee', {annee: annee.id, parcours: parcours.id, _format:'pdf'}) }}">
+                                            <span class="label">Exporter les Ressources de l'année en PDF</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('export_ressources_annee', {annee: annee.id, parcours: parcours.id, _format:'docx'}) }}">
+                                            <span class="label">Exporter les Ressources de l'année en Word</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('export_saes_annee', {annee: annee.id, parcours: parcours.id,
+                                            _format:'pdf'}) }}">
+                                            <span class="label">Exporter les SAÉ de l'année en PDF</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('export_saes_annee', {annee: annee.id, parcours: parcours.id, _format:'docx'}) }}">
+                                            <span class="label">Exporter les SAÉ de l'année en Word</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{ path('export_tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                            <span class="label">Tableau croisé par semestre</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                            <span class="label">Volumes horaires par semestre</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('export_tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                            <span class="label">
+                                                                Préconisations par semestre
+                                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card mb-5 border-primary">
+                <div class="card-body">
+                    <ul>
+                        <li>
+                            <a href="{{ path('export_ressources_annee', {annee: annee.id, _format:'pdf'}) }}">
+                                <span class="label">Exporter les Ressources de l'année en PDF</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('export_ressources_annee', {annee: annee.id, _format:'docx'}) }}">
+                                <span class="label">Exporter les Ressources de l'année en Word</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('export_saes_annee', {annee: annee.id, _format:'pdf'}) }}">
+                                <span class="label">Exporter les SAÉ de l'année en PDF</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('export_saes_annee', {annee: annee.id, _format:'docx'}) }}">
+                                <span class="label">Exporter les SAÉ de l'année en Word</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ path('export_tableau_croise_annee', {annee: annee.id}) }}">
+                                <span class="label">Tableau croisé par semestre</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id}) }}">
+                                <span class="label">Volumes horaires par semestre</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('export_tableau_preconisations_annee', {annee: annee.id}) }}">
+                                                            <span class="label">
+                                                                Préconisations par semestre
+                                                            </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            </section>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block bouton_header %}
+
+{% endblock %}

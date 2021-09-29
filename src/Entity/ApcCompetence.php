@@ -23,6 +23,16 @@ class ApcCompetence extends BaseEntity
 {
     use LifeCycleTrait;
 
+    public const COLOREXCEl =
+        [
+            'c1' => '009C2B26',
+            'c2' => '00D07740',
+            'c3' => '00E5B94D',
+            'c4' => '00E5B94D',
+            'c5' => '002B4C76',
+            'c6' => '007F1F53',
+        ];
+
     /**
      * @ORM\Column(type="string", length=255)
      */
