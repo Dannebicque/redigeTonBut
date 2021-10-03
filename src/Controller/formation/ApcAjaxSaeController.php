@@ -9,9 +9,6 @@
 
 namespace App\Controller\formation;
 
-//use App\Classes\Matieres\SaeManager;
-//use App\Classes\Pdf\MyPDF;
-//use App\Classes\Word\MyWord;
 use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcCompetence;
@@ -251,6 +248,8 @@ class ApcAjaxSaeController extends BaseController
             'competence' => $competence->getId()
         ]);
 
+
+
         if ($acRessource !== null) {
             //on modifie
             $acRessource->setCoefficient(Convert::convertToFloat($parametersAsArray['valeur']));
@@ -261,6 +260,7 @@ class ApcAjaxSaeController extends BaseController
             $this->entityManager->persist($acRessource);
 
         }
+
         $this->entityManager->flush();
 
         return $this->json(true);

@@ -14,10 +14,6 @@ class Convert
             return 0;
         }
 
-       // if (is_float($value) || is_int($value)) {
-            return (float) $value;
-      //  }
-
-      //  return 0;
+        return (float)$value;
     }
 }

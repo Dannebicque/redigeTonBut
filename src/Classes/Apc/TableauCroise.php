@@ -62,8 +62,9 @@ class TableauCroise
             $this->niveaux = $this->apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
         }
 
-        $compSae = $this->apcSaeCompetenceRepository->findBySemestre($semestre);
-        $compRessources = $this->apcRessourceCompetenceRepository->findBySemestre($semestre);
+        //on prend tout... pour éviter les soucis avec le type 3
+        $compSae = $this->apcSaeCompetenceRepository->findByDepartement($semestre->getDepartement());
+        $compRessources = $this->apcRessourceCompetenceRepository->findByDepartement($semestre->getDepartement());
 
         $this->tab = [];
         $this->coefficients = [];

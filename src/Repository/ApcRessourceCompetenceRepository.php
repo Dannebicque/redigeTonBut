@@ -9,8 +9,10 @@
 
 namespace App\Repository;
 
+use App\Entity\ApcCompetence;
 use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceCompetence;
+use App\Entity\Departement;
 use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,6 +36,17 @@ class ApcRessourceCompetenceRepository extends ServiceEntityRepository
             ->innerJoin(ApcRessource::class, 's', 'WITH', 'c.ressource = s.id')
             ->where('s.semestre = :semestre')
             ->setParameter('semestre', $semestre->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByDepartement(Departement $departement)
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin(ApcCompetence::class, 'comp', 'WITH', 'c.competence = comp.id')
+            ->innerJoin(ApcRessource::class, 's', 'WITH', 'c.ressource = s.id')
+            ->where('comp.departement = :departement')
+            ->setParameter('departement', $departement->getId())
             ->getQuery()
             ->getResult();
     }
