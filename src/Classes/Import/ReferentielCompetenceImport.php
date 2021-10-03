@@ -515,6 +515,10 @@ class ReferentielCompetenceImport
                 }
             }
 
+            $res->setCmPreco(Convert::convertToFloat(trim($sheet->getCellByColumnAndRow(19, $ligne)->getValue())));
+            $res->setTdPpn(Convert::convertToFloat(trim($sheet->getCellByColumnAndRow(20, $ligne)->getValue())));
+            $res->setTpPreco(Convert::convertToFloat(trim($sheet->getCellByColumnAndRow(21, $ligne)->getValue())));
+
             $this->entityManager->persist($res);
             $tabRessources[$res->getCodeMatiere()] = $res;
             $ligne++;
