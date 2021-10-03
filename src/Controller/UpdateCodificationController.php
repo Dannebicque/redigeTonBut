@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\ApcParcours;
 use App\Entity\Semestre;
 use App\Repository\ApcApprentissageCritiqueRepository;
+use App\Repository\ApcRessourceParcoursRepository;
+use App\Repository\ApcRessourceRepository;
+use App\Repository\ApcSaeParcoursRepository;
+use App\Repository\ApcSaeRepository;
 use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,10 +24,20 @@ class UpdateCodificationController extends BaseController
         ]);
     }
 
-    #[Route('/ressources/{semestre}', name: 'ressources')]
-    public function ressources(Semestre $semestre): Response
+    #[Route('/ressources/{semestre}/{parcours}', name: 'ressources')]
+    public function ressources(
+        ApcRessourceRepository $apcRessourceRepository,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
+        Semestre $semestre, ApcParcours $parcours = null): Response
     {
-        foreach ($semestre->getApcRessources() as $ressource) {
+        if ($parcours === null) {
+            $ressources = $apcRessourceRepository->findBySemestre($semestre);
+        } else {
+            $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+        }
+
+
+        foreach ($ressources as $ressource) {
             $ressource->setCodeMatiere(Codification::codeRessource($ressource));
         }
 
@@ -31,10 +46,19 @@ class UpdateCodificationController extends BaseController
         return $this->redirectToRoute('update_codification_index');
     }
 
-    #[Route('/sae/{semestre}', name: 'sae')]
-    public function sae(Semestre $semestre): Response
+    #[Route('/sae/{semestre}/{parcours}', name: 'sae')]
+    public function sae(
+        ApcSaeRepository $apcSaeRepository,
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
+        Semestre $semestre, ApcParcours $parcours = null): Response
     {
-        foreach ($semestre->getApcSaes() as $sae) {
+        if ($parcours === null) {
+            $saes = $apcSaeRepository->findBySemestre($semestre);
+        } else {
+            $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+        }
+
+        foreach ($saes as $sae) {
             $sae->setCodeMatiere(Codification::codeSae($sae));
         }
 

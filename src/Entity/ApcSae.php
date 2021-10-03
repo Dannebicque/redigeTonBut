@@ -68,12 +68,12 @@ class ApcSae extends AbstractMatiere
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $exemples;
+    private ?string $exemples;
 
     /**
      * @ORM\Column(type="string", length=5, nullable=true)
      */
-    private $typeFiche;
+    private ?string $typeFiche;
 
     public function __construct()
     {

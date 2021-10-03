@@ -166,7 +166,7 @@ class Semestre extends BaseEntity
     /**
      * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="semestres")
      */
-    private $apcParcours;
+    private ?ApcParcours $apcParcours;
 
     public function __construct()
     {

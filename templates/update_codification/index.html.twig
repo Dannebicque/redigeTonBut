@@ -19,14 +19,30 @@
                 <tbody>
                 {% for semestre in semestres %}
                     <tr>
-                        <td>{{ semestre.libelle }}</td>
-                        <td><a href="{{ path('update_codification_ressources', {semestre:semestre.id}) }}" class="btn
+                        <td>{{ semestre.libelle }} {% if semestre.apcParcours != null %}<span class="badge
+                        badge-parcours-{{semestre.apcParcours.couleur }}">
+                                {{ semestre.apcParcours.libelle }}
+                            </span>{% endif %}</td>
+                        <td>
+                            {% if semestre.apcParcours != null %}
+                            <a href="{{ path('update_codification_ressources', {semestre:semestre.id, parcours:semestre.apcParcours.id }) }}"
+                               class="btn
                     btn-warning">
+                                {% else %}
+                                <a href="{{ path('update_codification_ressources', {semestre:semestre.id}) }}" class="btn
+                    btn-warning">
+                                    {% endif %}
                                 Mettre à jour
                             </a>
                         </td>
                         <td>
-                            <a href="{{ path('update_codification_sae', {semestre:semestre.id}) }}" class="btn btn-warning">
+                            {% if semestre.apcParcours != null %}
+                            <a href="{{ path('update_codification_sae', {semestre:semestre.id, parcours:semestre.apcParcours.id }) }}"
+                               class="btn
+                    btn-warning">
+                                {% else %}
+                                <a href="{{ path('update_codification_sae', {semestre:semestre.id}) }}" class="btn btn-warning">
+                                    {% endif %}
                                 Mettre à jour
                             </a>
                         </td>
