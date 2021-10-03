@@ -18,8 +18,6 @@ use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Html;
-use PhpOffice\PhpWord\SimpleType\Jc;
-use PhpOffice\PhpWord\Style\Paragraph;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -42,7 +40,7 @@ class MyWord
      */
     public function exportSae(ApcSae $apcSae)
     {
-       $templateProcessor = $this->genereWordSae($apcSae);
+        $templateProcessor = $this->genereWordSae($apcSae);
 
         $filename = 'sae_' . $apcSae->getCodeMatiere() . ' ' . $apcSae->getLibelle() . '.docx';
 
@@ -67,8 +65,9 @@ class MyWord
         $section = (new PhpWord())->addSection();
         $parseDown->setBreaksEnabled(true);
         $texte = $parseDown->text($text);
-        $texte = '<div style="text-align:justify">'.$texte.'</div>';
+        $texte = '<div style="text-align:justify">' . $texte . '</div>';
         Html::addHtml($section, $texte, false, false);
+
         return $section->getElements();
     }
 
@@ -148,21 +147,37 @@ class MyWord
         $templateProcessor->cloneBlock('descriptifblock', $nbElements, true, true);
 
         foreach ($containers as $i => $iValue) {
-            $templateProcessor->setComplexBlock('descriptif#' . ($i + 1), $iValue);
+            if ($iValue !== null) {
+                $templateProcessor->setComplexBlock('descriptif#' . ($i + 1), $iValue);
+            }
         }
 
-        $templateProcessor->setComplexValue('parcours', $parcours);
+        if ($parcours !== null) {
+            $templateProcessor->setComplexValue('parcours', $parcours);
+        }
+
         $templateProcessor->setValue('heures',
             $apcRessource->getHeuresTotales() . 'h dont ' . $apcRessource->getTpPpn() . ' h TP');
-        $templateProcessor->setComplexValue('sae', $saes);
-        $templateProcessor->setComplexValue('competences', $competences);
-        $templateProcessor->setComplexValue('apprentissages', $acs);
-        $templateProcessor->setComplexValue('prerequis', $ressources);
 
-        $texte = '<div style="text-align:justify">'.$apcRessource->getMotsCles().'</div>';
+        if ($saes !== null) {
+            $templateProcessor->setComplexValue('sae', $saes);
+        }
+        if ($competences !== null) {
+            $templateProcessor->setComplexValue('competences', $competences);
+        }
+        if ($acs !== null) {
+            $templateProcessor->setComplexValue('apprentissages', $acs);
+        }
+        if ($ressources !== null) {
+            $templateProcessor->setComplexValue('prerequis', $ressources);
+        }
+
+        $texte = '<div style="text-align:justify">' . $apcRessource->getMotsCles() . '</div>';
         $section = (new PhpWord())->addSection();
         Html::addHtml($section, $texte, false, true);
-        $templateProcessor->setComplexBlock('motscles', $section->getElement(0));
+        if ($section->getElement(0) !== null) {
+            $templateProcessor->setComplexBlock('motscles', $section->getElement(0));
+        }
 
         $templateProcessor->setValue('semestre', $apcRessource->getSemestre()->getOrdreLmd());
 
@@ -205,8 +220,12 @@ class MyWord
             }
         }
 
-        $templateProcessor->setComplexValue('parcours', $parcours);
-        $templateProcessor->setComplexValue('competences', $competences);
+        if ($parcours !== null) {
+            $templateProcessor->setComplexValue('parcours', $parcours);
+        }
+        if ($competences !== null) {
+            $templateProcessor->setComplexValue('competences', $competences);
+        }
 
         // get elements in section
         $containers = $this->prepareTexte($apcSae->getObjectifs());
@@ -214,7 +233,9 @@ class MyWord
         $templateProcessor->cloneBlock('objectifsblock', $nbElements, true, true);
 
         foreach ($containers as $i => $iValue) {
-            $templateProcessor->setComplexBlock('objectifs#' . ($i + 1), $iValue);
+            if ($iValue !== null) {
+                $templateProcessor->setComplexBlock('objectifs#' . ($i + 1), $iValue);
+            }
         }
 
         // get elements in section
@@ -223,11 +244,17 @@ class MyWord
         $templateProcessor->cloneBlock('descriptifblock', $nbElements, true, true);
 
         foreach ($containers as $i => $iValue) {
-            $templateProcessor->setComplexBlock('descriptif#' . ($i + 1), $iValue);
+            if ($iValue !== null) {
+                $templateProcessor->setComplexBlock('descriptif#' . ($i + 1), $iValue);
+            }
         }
 
-        $templateProcessor->setComplexValue('apprentissages', $acs);
-        $templateProcessor->setComplexValue('ressources', $ressources);
+        if ($acs !== null) {
+            $templateProcessor->setComplexValue('apprentissages', $acs);
+        }
+        if ($ressources !== null) {
+            $templateProcessor->setComplexValue('ressources', $ressources);
+        }
         $templateProcessor->setValue('semestre', $apcSae->getSemestre()->getOrdreLmd());
 
         return $templateProcessor;
@@ -239,8 +266,9 @@ class MyWord
 
         $filename = 'ressource_' . $apcRessource->getCodeMatiere() . ' ' . $apcRessource->getLibelle() . '.docx';
 
-        $pathToSave = $dir.$filename;
+        $pathToSave = $dir . $filename;
         $templateProcessor->saveAs($pathToSave);
+
         return $pathToSave;
     }
 
@@ -250,8 +278,9 @@ class MyWord
 
         $filename = 'sae_' . $apcSae->getCodeMatiere() . ' ' . $apcSae->getLibelle() . '.docx';
 
-        $pathToSave = $dir.$filename;
+        $pathToSave = $dir . $filename;
         $templateProcessor->saveAs($pathToSave);
+
         return $pathToSave;
     }
 }

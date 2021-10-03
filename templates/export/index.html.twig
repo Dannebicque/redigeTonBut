@@ -7,6 +7,11 @@
     <a href="{{ path('export_referentiel_competences', {departement:user_data.departement.id}) }}">
         Export PDF du référentiel de compétences au format PDF
     </a><br><br>
+    <a href="{{ path('export_referentiel_format_excel', {departement:user_data.departement.id}) }}">
+        Export Excel du référentiel de formation
+    </a> | <a href="{{ path('export_referentiel_format_word', {departement:user_data.departement.id}) }}">
+    Export complet de toutes les fiches ressources/SAE au format word
+</a><br><br>
 
     {% for annee in user_data.annees %}
         <section class="scroll-section" id="buttonTags">

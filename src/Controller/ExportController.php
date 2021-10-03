@@ -2,22 +2,38 @@
 
 namespace App\Controller;
 
+use App\Classes\Apc\ApcReferentielFormationExport;
 use App\Classes\Apc\ApcRessourcesExport;
 use App\Classes\Apc\ApcSaesExport;
 use App\Classes\Apc\TableauExport;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
+use App\Entity\Departement;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ExportController extends AbstractController
+class ExportController extends BaseController
 {
     #[Route('/export', name: 'export_index')]
     public function index(): Response
     {
         return $this->render('export/index.html.twig', [
         ]);
+    }
+
+    #[Route('/export-referentiel-formation/excel', name: 'export_referentiel_format_excel')]
+    public function exportReferentielFormationExcel(
+        ApcReferentielFormationExport $apcReferentielFormationExport): Response
+    {
+        return $apcReferentielFormationExport->export($this->getDepartement(), 'xlsx');
+    }
+
+    #[Route('/export-referentiel-formation/word', name: 'export_referentiel_format_word')]
+    public function exportReferentielFormationWord(
+        ApcReferentielFormationExport $apcReferentielFormationExport): Response
+    {
+        return $apcReferentielFormationExport->export($this->getDepartement(), 'docx');
     }
 
     #[Route('/export-ressources/{annee}.{_format}/{parcours}', name: 'export_ressources_annee')]
