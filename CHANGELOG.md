@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.7.0...v1.8.0) (2021-10-03)
+
+
+### Features
+
+* Ajout des préconistions d'heures dans l'import Excel ([d1b6cf5](https://github.com/Dannebicque/redigeTonBut/commit/d1b6cf5c493d03b4ad24aff9087d0af73b27bfd1))
+* Codification des ressources/SAE selon le parcours, lorsque spécifique ([b00e129](https://github.com/Dannebicque/redigeTonBut/commit/b00e1297ac459123227b45065103d4f7df666e36))
+* Export Excel et Word du référentiel complet ([29baae7](https://github.com/Dannebicque/redigeTonBut/commit/29baae726ae602406053f7e53a4d745be2b3224d))
+* Plusieurs départements pour les membres CPN ([a7801e2](https://github.com/Dannebicque/redigeTonBut/commit/a7801e294a4b7575f5117b36dc25a3d187874caf))
+
+
+### Bug Fixes
+
+* Correction fichier Excel ([1a08dd1](https://github.com/Dannebicque/redigeTonBut/commit/1a08dd1506d80cbed64f141316297b63a52979d5))
+* Edition avec Parcours ([d6c968e](https://github.com/Dannebicque/redigeTonBut/commit/d6c968e9c1c2b386f9ff3eeb1ae25b9a7a95077d))
+* Homepage ([67c8c14](https://github.com/Dannebicque/redigeTonBut/commit/67c8c14ae371fc43224e511b0d64c851ad676902))
+
 ## [1.7.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.6.9...v1.7.0) (2021-09-29)
 
 
