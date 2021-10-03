@@ -86,17 +86,19 @@ class ApcRessourceController extends BaseController
     }
 
     /**
-     * @Route("/{id}/edit", name="apc_ressource_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit/{parcours}", name="apc_ressource_edit", methods={"GET","POST"})
      */
     public function edit(
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
-        ApcRessource $apcRessource
+        ApcRessource $apcRessource,
+        ApcParcours $parcours = null
     ): Response {
         $this->denyAccessUnlessGranted('edit', $apcRessource);
         $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
             'departement' => $this->getDepartement(),
-            'editable' => $this->isGranted('ROLE_GT')
+            'editable' => $this->isGranted('ROLE_GT'),
+            'parcours' => $parcours
         ]);
         $form->handleRequest($request);
 
@@ -112,21 +114,40 @@ class ApcRessourceController extends BaseController
 
             if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
 
+                if ($parcours === null) {
+                    return $this->redirectToRoute('but_ressources_annee',
+                        [
+                            'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
+                            'semestre' => $apcRessource->getSemestre()->getId()
+                        ]);
+                }
                 return $this->redirectToRoute('but_ressources_annee',
                     [
                         'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
                         'semestre' => $apcRessource->getSemestre()->getId(),
-                        'parcours' => $request->query->get('parcours')
+                        'parcours' => $parcours->getId()
                     ]);
             }
 
+            if ($parcours === null) {
+                return $this->redirectToRoute('formation_apc_ressource_edit',
+                    ['id' => $apcRessource->getId()]);
+            }
             return $this->redirectToRoute('formation_apc_ressource_edit',
-                ['id' => $apcRessource->getId(),'parcours' => $request->query->get('parcours')]);
+                ['id' => $apcRessource->getId(),'parcours' => $parcours->getId()]);
+        }
+
+        if ($parcours === null) {
+            return $this->render('formation/apc_ressource/edit.html.twig', [
+                'apc_ressource' => $apcRessource,
+                'form' => $form->createView()
+            ]);
         }
 
         return $this->render('formation/apc_ressource/edit.html.twig', [
             'apc_ressource' => $apcRessource,
             'form' => $form->createView(),
+            'parcours' => $parcours->getId()
         ]);
     }
 

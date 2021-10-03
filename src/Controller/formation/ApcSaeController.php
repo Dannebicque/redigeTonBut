@@ -78,12 +78,14 @@ class ApcSaeController extends BaseController
     public function edit(
         ApcSaeAddEdit $apcSaeAddEdit,
         Request $request,
-        ApcSae $apcSae
+        ApcSae $apcSae,
+        ApcParcours $parcours = null
     ): Response {
         $this->denyAccessUnlessGranted('edit', $apcSae);
         $form = $this->createForm(ApcSaeType::class, $apcSae, [
             'departement' => $this->getDepartement(),
-            'editable' => $this->isGranted('ROLE_GT')
+            'editable' => $this->isGranted('ROLE_GT'),
+            'parcours' => $parcours
         ]);
         $form->handleRequest($request);
 
@@ -97,16 +99,39 @@ class ApcSaeController extends BaseController
             );
 
             if (null !== $request->request->get('btn_update') && null !== $apcSae->getSemestre() && null !== $apcSae->getSemestre()->getAnnee()) {
-                return $this->redirectToRoute('but_sae_annee', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId(), 'parcours' => $request->query->get('parcours')]);
+                if ($parcours === null) {
+                    return $this->redirectToRoute('but_sae_annee', [
+                        'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
+                        'semestre' => $apcSae->getSemestre()->getId(),
+
+                    ]);
+                }
+
+                return $this->redirectToRoute('but_sae_annee', [
+                    'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
+                    'semestre' => $apcSae->getSemestre()->getId(),
+                    'parcours' => $parcours->getId()
+                ]);
             }
 
+            if ($parcours === null) {
+                return $this->redirectToRoute('formation_apc_sae_edit',
+                    ['id' => $apcSae->getId()]);
+            }
             return $this->redirectToRoute('formation_apc_sae_edit',
-                ['id' => $apcSae->getId(), 'parcours' => $request->query->get('parcours')]);
+                ['id' => $apcSae->getId(), 'parcours' => $parcours->getId()]);
         }
 
+        if ($parcours === null) {
+            return $this->render('formation/apc_sae/edit.html.twig', [
+                'apc_sae' => $apcSae,
+                'form' => $form->createView()
+            ]);
+        }
         return $this->render('formation/apc_sae/edit.html.twig', [
             'apc_sae' => $apcSae,
             'form' => $form->createView(),
+            'parcours' => $parcours->getId()
         ]);
     }
 
