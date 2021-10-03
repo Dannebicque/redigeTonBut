@@ -64,9 +64,11 @@
                     <td>
                         {% if user.isCpn %}
                             <p>Secrétaire de CPN pour :
+                                {% for dpt in  user.cpnDepartements %}
                                 <span class="badge bg-info">
-                                    {{ user.departement.sigle }}
+                                    {{ dpt.sigle }}
                                 </span>
+                                {% endfor %}
                             </p>
                         {% endif %}
                         {% if user.isPacd|length > 0 %}

@@ -359,6 +359,50 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {% if user_data.user.isCpn %}
+                        <li class="mega dropdown">
+                            <a href="#ref_formation" data-href="Dashboards.html">
+                                <i class="bi bi-shuffle icon"></i>
+                                <span class="label">B.U.T.</span>
+                            </a>
+                            <ul id="interface" class="row align-items-start row-cols-2 dropdown-menu"
+                                data-popper-placement="bottom-start">
+                                <li class="dropdown col d-flex flex-column">
+                                    <a href="#tertiaires" data-href="Interface.Components.html" class="dropdown-toggle
+                                    active">
+                                        <span class="label">Tertiaires</span>
+                                    </a>
+                                    <ul id="tertiaires">
+                                        {% for specialite in user_data.user.cpnDepartements|filter(specialite =>
+                                            specialite
+                                        .typeDepartement == 'tertiaire') %}
+                                            <li class="col d-flex flex-column">
+                                                <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
+                                                    <span class="label">{{ specialite.sigle }}</span>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                <li class="dropdown col d-flex flex-column">
+                                    <a href="#Secondaires" class="dropdown-toggle">
+                                        <span class="label">Secondaires</span>
+                                    </a>
+                                    <ul id="Secondaires">
+                                        {% for specialite in user_data.user.cpnDepartements|filter(specialite =>
+                                            specialite
+                                        .typeDepartement == 'secondaire') %}
+                                            <li class="col d-flex flex-column">
+                                                <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
+                                                    <span class="label">{{ specialite.sigle }}</span>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
             <!-- Menu End -->

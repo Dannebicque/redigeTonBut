@@ -54,7 +54,16 @@ class UserType extends AbstractType
                 'expanded' => true,
                 'label' => 'Etat du compte'
             ])
-        ;
+            ->add('CpnDepartements', EntityType::class,
+                ['label' => 'Départements CPN',
+                    'required' => false,
+                    'expanded' => true,
+                    'multiple' => true,
+                    'help' => 'Uniquement pour les membres de la CPN (qui ne sont pas dans le GT)',
+                    'class' => Departement::class,
+                    'disabled' => !$options['droit_gt'],
+                    'choice_label' => 'sigle']);
+
 
         // Data transformer
         $builder->get('roles')

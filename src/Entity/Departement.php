@@ -92,6 +92,11 @@ class Departement extends BaseEntity
      */
     private $departements_enfnat;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="CpnDepartements")
+     */
+    private $cpns;
+
     public function __construct()
     {
         $this->annees = new ArrayCollection();
@@ -99,6 +104,7 @@ class Departement extends BaseEntity
         $this->apcParcours = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->departements_enfnat = new ArrayCollection();
+        $this->cpns = new ArrayCollection();
     }
 
     public function getLibelle(): ?string
@@ -382,6 +388,33 @@ class Departement extends BaseEntity
             if ($departementsEnfnat->getDepartementParent() === $this) {
                 $departementsEnfnat->setDepartementParent(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getCpns(): Collection
+    {
+        return $this->cpns;
+    }
+
+    public function addCpn(User $cpn): self
+    {
+        if (!$this->cpns->contains($cpn)) {
+            $this->cpns[] = $cpn;
+            $cpn->addCpnDepartement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCpn(User $cpn): self
+    {
+        if ($this->cpns->removeElement($cpn)) {
+            $cpn->removeCpnDepartement($this);
         }
 
         return $this;

@@ -50,7 +50,6 @@ class GoodDepartementVoter extends Voter
         }
 
 
-
         if (!$user instanceof User) {
             // the user must be logged in; if not, deny access
             return false;
@@ -92,17 +91,41 @@ class GoodDepartementVoter extends Voter
         }
 
         if ($post instanceof Departement) {
+            if ($this->security->isGranted('ROLE_CPN')) {
+                foreach ($user->getCpnDepartements() as $dpt) {
+                    if ($dpt->getId() === $post->getId()) {
+                        return true;
+                    }
+                }
+            }
+
             return $user->getDepartement()->getId() === $post->getId();
         }
 
         if ($post instanceof Annee && $post->getDepartement() !== null) {
+            if ($this->security->isGranted('ROLE_CPN')) {
+                foreach ($user->getCpnDepartements() as $dpt) {
+                    if ($dpt->getId() === $post->getDepartement()->getId()) {
+                        return true;
+                    }
+                }
+            }
+
             return $user->getDepartement()->getId() === $post->getDepartement()->getId();
         }
 
         if ($post instanceof Semestre) {
+
+            if ($this->security->isGranted('ROLE_CPN')) {
+                foreach ($user->getCpnDepartements() as $dpt) {
+                    if ($dpt->getId() === $post->getAnnee()->getDepartement()->getId()) {
+                        return true;
+                    }
+                }
+            }
+
             return $user->getDepartement()->getId() === $post->getAnnee()->getDepartement()->getId();
         }
-
 
 
         // this assumes that the Post object has a `getOwner()` method

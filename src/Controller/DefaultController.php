@@ -21,7 +21,7 @@ class DefaultController extends AbstractController
     #[Route('/change-specialite/{departement}', name: 'change_specialite')]
     public function changeSpecialite(SessionInterface $session, Departement $departement): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_GT');
+        $this->denyAccessUnlessGranted('ROLE_CPN');
 
         $session->set('departement', $departement->getId());
         return $this->redirectToRoute('homepage');

@@ -34,7 +34,7 @@ class DataUserSession
         $this->dir = $kernel->getProjectDir();
         if ($tokenStorage->getToken() !== null) {
             $this->user = $tokenStorage->getToken()->getUser();
-            if (in_array('ROLE_GT', $tokenStorage->getToken()->getRoleNames())) {
+            if (in_array('ROLE_GT', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_CPN', $tokenStorage->getToken()->getRoleNames())) {
                 if ($session->get('departement') !== null) {
                     $this->departement = $departementRepository->find($session->get('departement'));
                 } else {
@@ -84,4 +84,14 @@ class DataUserSession
 
         return $composerData['version'];
     }
+
+    /**
+     * @return string|\Stringable|\Symfony\Component\Security\Core\User\UserInterface
+     */
+    public function getUser(): UserInterface|\Stringable|string
+    {
+        return $this->user;
+    }
+
+
 }

@@ -93,6 +93,14 @@ class ReferentielVoter extends Voter
             return false;
         }
         // this assumes that the Post object has a `getOwner()` method
+        if ($this->security->isGranted('ROLE_CPN')) {
+            foreach ($user->getCpnDepartements() as $dpt) {
+                if ($dpt->getId() === $post->getDepartement()->getId()) {
+                    return true;
+                }
+            }
+        }
+
         return $user->getDepartement()->getId() === $post->getDepartement()->getId();
     }
 
@@ -104,6 +112,14 @@ class ReferentielVoter extends Voter
 
         if ($user->getDepartement() === null || $post->getDepartement() === null) {
             return false;
+        }
+
+        if ($this->security->isGranted('ROLE_CPN')) {
+            foreach ($user->getCpnDepartements() as $dpt) {
+                if ($dpt->getId() === $post->getDepartement()->getId()) {
+                    return true;
+                }
+            }
         }
         // this assumes that the Post object has a `getOwner()` method
         return $user->getDepartement()->getId() === $post->getDepartement()->getId();

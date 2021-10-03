@@ -69,8 +69,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private bool $actif = false;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Departement::class, inversedBy="cpns")
+     */
+    private $CpnDepartements;
+
     public function __construct()
     {
+        $this->CpnDepartements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -246,6 +252,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isCpn()
     {
         return in_array('ROLE_CPN', $this->getRoles(), true);
+    }
+
+    /**
+     * @return Collection|Departement[]
+     */
+    public function getCpnDepartements(): Collection
+    {
+        return $this->CpnDepartements;
+    }
+
+    public function addCpnDepartement(Departement $cpnDepartement): self
+    {
+        if (!$this->CpnDepartements->contains($cpnDepartement)) {
+            $this->CpnDepartements[] = $cpnDepartement;
+        }
+
+        return $this;
+    }
+
+    public function removeCpnDepartement(Departement $cpnDepartement): self
+    {
+        $this->CpnDepartements->removeElement($cpnDepartement);
+
+        return $this;
     }
 
 }
