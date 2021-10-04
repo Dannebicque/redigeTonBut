@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.1...v1.8.2) (2021-10-04)
+
+
+### Features
+
+* Ajout d'un ROLE CPN uniquement en lecture ([7b3e490](https://github.com/Dannebicque/redigeTonBut/commit/7b3e49029447dbc8b75c1a5c6fce6704e8c84197))
+
+
+### Bug Fixes
+
+* Code SAE ([946e066](https://github.com/Dannebicque/redigeTonBut/commit/946e0664fd945be25001c80ab6f07e04626727d4))
+
 ### [1.8.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.0...v1.8.1) (2021-10-03)
 
 
