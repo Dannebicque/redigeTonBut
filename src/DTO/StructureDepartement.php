@@ -71,7 +71,7 @@ class StructureDepartement
 
             'nbSemaines' => $this->nbSemaines,
             'totalTp' => round($this->totalTp,2),
-            'ecartTotalTp' => round(700 - $this->totalTp,2),
+            'ecartTotalTp' => round(Caracteristique::NB_HEURES_TP - $this->totalTp,2),
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
             'nbSemainesStageMax' => $this->nbSemainesStageMax,
