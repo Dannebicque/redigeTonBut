@@ -67,7 +67,7 @@ class UserImport
                 }
 
                 $role = strtoupper(trim($sheet->getCellByColumnAndRow(6, $ligne)->getValue()));
-                if (!($role === 'ROLE_PACD' || $role === 'ROLE_EDITEUR' || $role === 'ROLE_LECTEUR' || $role === 'ROLE_GT' || $role === 'ROLE_CPN')) {
+                if (!($role === 'ROLE_PACD' || $role === 'ROLE_EDITEUR' || $role === 'ROLE_LECTEUR' || $role === 'ROLE_GT' || $role === 'ROLE_CPN' || $role === 'ROLE_CPN_LECTEUR')) {
                     $role = 'ROLE_LECTEUR';
                 }
 

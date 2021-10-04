@@ -86,7 +86,7 @@ class BaseController extends AbstractController
 
     public function getDepartement(): Departement|RedirectResponse|null
     {
-        if ($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_CPN')) {
+        if ($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_CPN_LECTEUR')) {
             if ($this->session->get('departement') !== null) {
                 $this->departement = $this->dptRepository->find($this->session->get('departement'));
             } else {

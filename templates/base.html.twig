@@ -122,8 +122,8 @@
                                         <span class="label">Liste des AC</span>
                                     </a>
                                 </li>
-                                {% if is_granted('ROLE_GT') or is_granted('ROLE_CPN') or is_granted('ROLE_PACD') or
-                                    is_granted('ROLE_EDITEUR') %}
+                                {% if is_granted('ROLE_GT') or is_granted('ROLE_CPN') or is_granted('ROLE_CPN_LECTEUR')
+                                    or is_granted('ROLE_PACD') or is_granted('ROLE_EDITEUR') %}
                                     <li>
                                         <a href="{{ path('administration_departement_edit', {id: user_data.departement
                                         .id}) }}">

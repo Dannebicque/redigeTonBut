@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Departement;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,9 +22,13 @@ class DefaultController extends AbstractController
     #[Route('/change-specialite/{departement}', name: 'change_specialite')]
     public function changeSpecialite(SessionInterface $session, Departement $departement): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_CPN');
+        if ($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_CPN_LECTEUR')) {
 
-        $session->set('departement', $departement->getId());
-        return $this->redirectToRoute('homepage');
+            $session->set('departement', $departement->getId());
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        throw new Exception('Fonctionnalité interdite au regard de vos droits.');
     }
 }

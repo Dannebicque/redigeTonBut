@@ -20,7 +20,8 @@ class UserType extends AbstractType
         $choix = [
             'Editeur' => 'ROLE_EDITEUR',
             'Lecteur' => 'ROLE_LECTEUR',
-            'Secrétaire de CPN' => 'ROLE_CPN',
+            'Secrétaire de CPN (lecture/écriture)' => 'ROLE_CPN',
+            'Membre CPN (lecture)' => 'ROLE_CPN_LECTEUR',
             'PACD' => 'ROLE_PACD',
         ];
         if ($options['droit_gt'] === true) {

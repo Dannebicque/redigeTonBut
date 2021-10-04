@@ -135,7 +135,7 @@ class UserController extends BaseController
     public function show(
         User $user
     ): Response {
-        if (!($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_PACD') || $this->isGranted('ROLE_CPN'))) {
+        if (!($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_PACD') || $this->isGranted('ROLE_CPN_LECTEUR') || $this->isGranted('ROLE_CPN'))) {
             throw new AccessDeniedException('Vous ne disposez pas des droits suffisants');
         }
 

@@ -251,7 +251,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isCpn()
     {
-        return in_array('ROLE_CPN', $this->getRoles(), true);
+        return in_array('ROLE_CPN', $this->getRoles(), true) || in_array('ROLE_CPN_LECTEUR', $this->getRoles(), true);
     }
 
     /**

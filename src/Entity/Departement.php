@@ -338,7 +338,7 @@ class Departement extends BaseEntity
     public function getCpn(): ?User
     {
         foreach ($this->getUsers() as $user) {
-            if (in_array('ROLE_CPN', $user->getRoles(), true)) {
+            if (in_array('ROLE_CPN', $user->getRoles(), true) || in_array('ROLE_CPN_LECTEUR', $user->getRoles(), true)) {
                 return $user;
             }
         }

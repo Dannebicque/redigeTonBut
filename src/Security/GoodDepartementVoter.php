@@ -82,7 +82,7 @@ class GoodDepartementVoter extends Voter
 
     private function canAdd(Semestre|Annee|Departement $post, User $user): bool
     {
-        if (in_array('ROLE_LECTEUR', $user->getRoles())) {
+        if (in_array('ROLE_LECTEUR', $user->getRoles()) || in_array('ROLE_CPN_LECTEUR', $user->getRoles())) {
             return false;
         }
 
