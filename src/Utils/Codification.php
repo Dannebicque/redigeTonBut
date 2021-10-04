@@ -34,9 +34,9 @@ class Codification
         return 'UE'.$semestre->getOrdreLmd().'.'.$apcCompetence->getNumero();
     }
 
-    public static function codeSae(ApcSae $apcRessource) : string
+    public static function codeSae(ApcSae $apcSae) : string
     {
-        return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($apcRessource);
+        return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($apcSae);
     }
 
     private static function codeSurDeuxChiffres(?int $ordre)
