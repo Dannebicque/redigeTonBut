@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.5](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.4...v1.8.5) (2021-10-05)
+
+
+### Bug Fixes
+
+* Retour avec les parcours sur SAE et Ressources ([cab30e9](https://github.com/Dannebicque/redigeTonBut/commit/cab30e968a12bd14e88dcfda53f03b581799638d))
+
 ### [1.8.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.3...v1.8.4) (2021-10-05)
 
 
