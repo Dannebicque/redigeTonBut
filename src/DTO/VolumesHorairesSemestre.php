@@ -38,10 +38,10 @@ class VolumesHorairesSemestre
             $this->totalDontTpRessources += $ressource->getTpPpn();
         }
 
-        $this->vhNbHeuresEnseignementSae = $semestre->getVhNbHeuresEnseignementSae();
-        $this->vhNbHeureeEnseignementSaeRessource = $semestre->getVhNbHeuresEnseignementSaeRessource();
-        $this->vhNbHeuresDontTpSaeRessource = $semestre->getVhNbHeuresDontTpSaeRessource();
-        $this->vhNbHeuresProjetTutores = $semestre->getVhNbHeuresProjetTutore();
+        $this->vhNbHeuresEnseignementSae = $semestre->getNbHeuresEnseignementSaeLocale();
+        $this->vhNbHeureeEnseignementSaeRessource = $semestre->getNbHeuresEnseignementRessourceLocale();
+        $this->vhNbHeuresDontTpSaeRessource = $semestre->getNbHeuresTpLocale();
+        $this->vhNbHeuresProjetTutores = $semestre->getNbHeuresProjet();
 
         $this->totalAdaptationLocaleEnseignement = $this->vhNbHeuresEnseignementSae + $this->vhNbHeureeEnseignementSaeRessource;
         $this->totalAdaptationLocaleDontTp = $this->vhNbHeuresDontTpSaeRessource;

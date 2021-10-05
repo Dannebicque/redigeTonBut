@@ -32,16 +32,16 @@ class AjaxSemestreController extends BaseController
 
         switch ($type) {
             case 'vhNbHeuresEnseignementSae':
-                $semestre->setVhNbHeuresEnseignementSae($parametersAsArray['valeur']);
+                $semestre->setNbHeuresEnseignementSaeLocale($parametersAsArray['valeur']);
                 break;
             case 'vhNbHeureeEnseignementSaeRessource':
-                $semestre->setVhNbHeuresEnseignementSaeRessource($parametersAsArray['valeur']);
+                $semestre->setNbHeuresEnseignementRessourceLocale($parametersAsArray['valeur']);
                 break;
             case 'vhNbHeuresDontTpSaeRessource':
-                $semestre->setVhNbHeuresDontTpSaeRessource($parametersAsArray['valeur']);
+                $semestre->setNbHeuresTpLocale($parametersAsArray['valeur']);
                 break;
             case 'vhNbHeuresProjetTutores':
-                $semestre->setVhNbHeuresProjetTutore($parametersAsArray['valeur']);
+                $semestre->setNbHeuresProjet($parametersAsArray['valeur']);
                 break;
         }
         $this->entityManager->flush();
