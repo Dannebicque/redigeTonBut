@@ -74,7 +74,6 @@ class Codification
     private static function codeParcoursRessource(ApcRessource $apcRessource)
     {
         $nbParcours = $apcRessource->getApcRessourceParcours();
-        dump($nbParcours);
         if (count($nbParcours) === 1 && $nbParcours !== null) {
             return $apcRessource->getApcRessourceParcours()[0]->getParcours()->getCode();
         }

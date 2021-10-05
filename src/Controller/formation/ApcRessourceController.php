@@ -20,6 +20,7 @@ use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Form\ApcRessourceType;
 use App\Repository\ApcComptenceRepository;
+use App\Repository\ApcParcoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -86,15 +87,22 @@ class ApcRessourceController extends BaseController
     }
 
     /**
-     * @Route("/{id}/edit/{parcours}", name="apc_ressource_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="apc_ressource_edit", methods={"GET","POST"})
      */
     public function edit(
+        ApcParcoursRepository $apcParcoursRepository,
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
-        ApcRessource $apcRessource,
-        ApcParcours $parcours = null
+        ApcRessource $apcRessource
     ): Response {
         $this->denyAccessUnlessGranted('edit', $apcRessource);
+
+        $parc = $request->query->get('parcours');
+        $parcours= null;
+        if ($parc !== null) {
+            $parcours = $apcParcoursRepository->find($parc);
+        }
+
         $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
             'departement' => $this->getDepartement(),
             'editable' => $this->isGranted('ROLE_GT'),
@@ -103,7 +111,6 @@ class ApcRessourceController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $apcRessourceAddEdit->removeLiens($apcRessource);
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
 

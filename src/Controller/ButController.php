@@ -31,6 +31,7 @@ class ButController extends BaseController
         ]);
     }
 
+    #[Route('/ressources-parcours/{annee}', name: 'ressources_annee', requirements: ['annee' => '\d+'])]
     #[Route('/ressources-parcours/{annee}/{parcours}', name: 'ressources_annee', requirements: ['annee' => '\d+'])]
     public function ressources(
         Request $request,

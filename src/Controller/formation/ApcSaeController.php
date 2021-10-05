@@ -18,6 +18,7 @@ use App\Entity\ApcSae;
 use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Form\ApcSaeType;
+use App\Repository\ApcParcoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -76,12 +77,19 @@ class ApcSaeController extends BaseController
      * @Route("/{id}/edit", name="apc_sae_edit", methods={"GET","POST"})
      */
     public function edit(
+        ApcParcoursRepository $apcParcoursRepository,
         ApcSaeAddEdit $apcSaeAddEdit,
         Request $request,
-        ApcSae $apcSae,
-        ApcParcours $parcours = null
+        ApcSae $apcSae
     ): Response {
         $this->denyAccessUnlessGranted('edit', $apcSae);
+
+        $parc = $request->query->get('parcours');
+        $parcours= null;
+        if ($parc !== null) {
+            $parcours = $apcParcoursRepository->find($parc);
+        }
+
         $form = $this->createForm(ApcSaeType::class, $apcSae, [
             'departement' => $this->getDepartement(),
             'editable' => $this->isGranted('ROLE_GT'),
@@ -103,7 +111,6 @@ class ApcSaeController extends BaseController
                     return $this->redirectToRoute('but_sae_annee', [
                         'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
                         'semestre' => $apcSae->getSemestre()->getId(),
-
                     ]);
                 }
 
