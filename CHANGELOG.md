@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.3...v1.8.4) (2021-10-05)
+
+
+### Bug Fixes
+
+* Variables des heures dans les tableaux. ([ca87eca](https://github.com/Dannebicque/redigeTonBut/commit/ca87ecab8b45fd4fe25783e1a10de9303ab65512))
+
 ### [1.8.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.2...v1.8.3) (2021-10-04)
 
 
