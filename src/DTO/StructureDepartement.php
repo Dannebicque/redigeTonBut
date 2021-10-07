@@ -58,33 +58,40 @@ class StructureDepartement
 
     public function getMoyenneAdaptationLocale(): float
     {
-        return   $this->nbHeuresEnseignementLocale / $this->departement->getNbHeuresDiplome() * 100;
+        return $this->nbHeuresEnseignementLocale / $this->departement->getNbHeuresDiplome() * 100;
     }
 
     public function getJson(): array
     {
+        if ($this->departement->isTertiaire()) {
+            $nbHeuresTp = Tertiaire::NB_HEURES_TP;
+        } else {
+            $nbHeuresTp = Secondaire::NB_HEURES_TP;
+        }
+
+
         return [
-            'nbHeuresRessourcesSae' => round($this->nbHeuresRessourcesSae,2),
-            'totalPourcentageAdaptationLocale' => round($this->getMoyenneAdaptationLocale(),2),
-            'nbHeuresEnseignementLocale' => round($this->nbHeuresEnseignementLocale,2),
-            'totalAdaptationLocale' => round($this->totalAdaptationLocale,2),
+            'nbHeuresRessourcesSae' => round($this->nbHeuresRessourcesSae, 2),
+            'totalPourcentageAdaptationLocale' => round($this->getMoyenneAdaptationLocale(), 2),
+            'nbHeuresEnseignementLocale' => round($this->nbHeuresEnseignementLocale, 2),
+            'totalAdaptationLocale' => round($this->totalAdaptationLocale, 2),
 
             'nbSemaines' => $this->nbSemaines,
-            'totalTp' => round($this->totalTp,2),
-            'ecartTotalTp' => round(Caracteristique::NB_HEURES_TP - $this->totalTp,2),
+            'totalTp' => round($this->totalTp, 2),
+            'ecartTotalTp' => round($nbHeuresTp - $this->totalTp, 2),
             'nbSemainesConges' => $this->nbSemainesConges,
             'nbSemainesStageMin' => $this->nbSemainesStageMin,
             'nbSemainesStageMax' => $this->nbSemainesStageMax,
             'nbSemainesCoursProjet' => $this->nbSemainesCoursProjet,
-            'nbHeuresProjet' => round($this->nbHeuresProjet,2),
-            'nbHeuresCoursProjet' => round($this->nbHeuresCoursProjet,2),
+            'nbHeuresProjet' => round($this->nbHeuresProjet, 2),
+            'nbHeuresCoursProjet' => round($this->nbHeuresCoursProjet, 2),
             'nbDemiJournees' => $this->nbDemiJournees,
-            'dureeHebdo' => round($this->dureeHebdo,2),
-            'nbMoyenneHeuresDemiJournee' => round($this->nbMoyenneHeuresDemiJournee,2),
-            'nbHeuresCoursHebdo' => round($this->nbHeuresCoursHebdo,2),
-            'nbHeuresHebdoProjet' => round($this->nbHeuresHebdoProjet,2),
-            'ecart' => round($this->departement->getNbHeuresDiplome() - $this->nbHeuresRessourcesSae,2),
-            'ecartProjet' => round(Caracteristique::NB_HEURES_PROJET - $this->nbHeuresProjet,2),
+            'dureeHebdo' => round($this->dureeHebdo, 2),
+            'nbMoyenneHeuresDemiJournee' => round($this->nbMoyenneHeuresDemiJournee, 2),
+            'nbHeuresCoursHebdo' => round($this->nbHeuresCoursHebdo, 2),
+            'nbHeuresHebdoProjet' => round($this->nbHeuresHebdoProjet, 2),
+            'ecart' => round($this->departement->getNbHeuresDiplome() - $this->nbHeuresRessourcesSae, 2),
+            'ecartProjet' => round(Caracteristique::NB_HEURES_PROJET - $this->nbHeuresProjet, 2),
         ];
     }
 }
