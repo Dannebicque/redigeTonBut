@@ -1,5 +1,5 @@
 <ul class="breadcrumb pt-0">
-    <li class="breadcrumb-item"><a href="Dashboards.Default.html">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('homepage') }}">Home</a></li>
     {% for lien in liens %}
     <li class="breadcrumb-item"><a href="{{ lien.href }}">{{ lien.title }}</a></li>
     {% endfor %}
