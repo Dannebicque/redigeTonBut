@@ -36,7 +36,7 @@
 
 <h3>Objectifs et problématique professionnelle</h3>
 <p>
-    {{ apc_sae.objectifs != null ? apc_sae.objectifs|nl2br|markdown_to_html : '' }}
+    {{ apc_sae.objectifs != null ? apc_sae.objectifs|markdown_to_html : '' }}
 </p>
 
 <h3>Apprentissages critiques</h3>
@@ -60,13 +60,13 @@
 
 <h3>Descriptif générique</h3>
 <p>
-    {{ apc_sae.description != null ? apc_sae.description|nl2br|markdown_to_html : '' }}
+    {{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}
 </p>
 
 {% if not is_granted('ROLE_GT') %}
 <h3>Exemple(s) (non publié)</h3>
 <p>
-    {{ apc_sae.exemples != null ? apc_sae.exemples|nl2br|markdown_to_html : '' }}
+    {{ apc_sae.exemples != null ? apc_sae.exemples|markdown_to_html : '' }}
 </p>
 {% endif %}
 
