@@ -11,7 +11,6 @@ use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Semestre;
-use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcParcoursNiveauRepository;
 use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceParcoursRepository;
@@ -97,73 +96,75 @@ class TableauController extends BaseController
         Request $request,
         ?ApcParcours $parcours = null
     ) {
-        $parametersAsArray = [];
-        if ($content = $request->getContent()) {
-            $parametersAsArray = json_decode($content, true);
-        }
-
-        if ($parcours === null) {
-            $semestre = $semestreRepository->findSemestre($this->getDepartement(), $parametersAsArray['semestre']);
-        } else {
-            $semestre = $semestreRepository->findSemestreParcours($this->getDepartement(),
-                $parametersAsArray['semestre'], $parcours);
-        }
-        if ($semestre !== null) {//todo: et vériifer lien semestre/département
-
-            switch ($parametersAsArray['champ']) {
-                case 'nbHeuresRessourcesSae':
-                    $semestre->setNbHeuresRessourceSae(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'pourcentageAdaptationLocale':
-                    $semestre->setPourcentageAdaptationLocale(Convert::convertToFloat($parametersAsArray['valeur']));
-                    //mise à jour du volume horaire
-                    $calcul = $semestre->getNbHeuresRessourceSae() * $semestre->getPourcentageAdaptationLocale() / 100;
-                    $semestre->setNbHeuresEnseignementLocale(number_format(Convert::convertToFloat($calcul), 2));
-                    break;
-                case 'nbSemainesStageMin':
-                    $semestre->setNbSemaineStageMin(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbSemainesStageMax':
-                    $semestre->setNbSemainesStageMax(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbHeuresProjet':
-                    $semestre->setNbHeuresProjet(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbHeuresEnseignementLocale':
-                    $semestre->setNbHeuresEnseignementLocale(Convert::convertToFloat($parametersAsArray['valeur']));
-                    //mise à jour du pourcentage
-                    $calcul = $semestre->getNbHeuresEnseignementLocale() / $semestre->getNbHeuresRessourceSae() * 100;
-                    $semestre->setPourcentageAdaptationLocale(number_format(Convert::convertToFloat($calcul), 2));
-                    break;
-                case 'nbHeuresEnseignementSaeLocale':
-                    $semestre->setNbHeuresEnseignementSaeLocale(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbHeuresEnseignementRessourceLocale':
-                    $semestre->setNbHeuresEnseignementRessourceLocale(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbHeuresEnseignementRessourceNational':
-                    $semestre->setNbHeuresEnseignementRessourceNational(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbSemaines':
-                    $semestre->setNbSemaines(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbSemainesConges':
-                    $semestre->setNbSemainesConges(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbDemiJournees':
-                    $semestre->setNbDemiJournees(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbHeuresTpNational':
-                    $semestre->setNbHeuresTpNational(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
-                case 'nbHeuresTpLocale':
-                    $semestre->setNbHeuresTpLocale(Convert::convertToFloat($parametersAsArray['valeur']));
-                    break;
+        if ($this->getDepartement()->getVerouilleStructure() === false) {
+            $parametersAsArray = [];
+            if ($content = $request->getContent()) {
+                $parametersAsArray = json_decode($content, true);
             }
 
-            $this->entityManager->flush();
+            if ($parcours === null) {
+                $semestre = $semestreRepository->findSemestre($this->getDepartement(), $parametersAsArray['semestre']);
+            } else {
+                $semestre = $semestreRepository->findSemestreParcours($this->getDepartement(),
+                    $parametersAsArray['semestre'], $parcours);
+            }
+            if ($semestre !== null) {//todo: et vériifer lien semestre/département
 
-            return $this->json($parametersAsArray);
+                switch ($parametersAsArray['champ']) {
+                    case 'nbHeuresRessourcesSae':
+                        $semestre->setNbHeuresRessourceSae(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'pourcentageAdaptationLocale':
+                        $semestre->setPourcentageAdaptationLocale(Convert::convertToFloat($parametersAsArray['valeur']));
+                        //mise à jour du volume horaire
+                        $calcul = $semestre->getNbHeuresRessourceSae() * $semestre->getPourcentageAdaptationLocale() / 100;
+                        $semestre->setNbHeuresEnseignementLocale(number_format(Convert::convertToFloat($calcul), 2));
+                        break;
+                    case 'nbSemainesStageMin':
+                        $semestre->setNbSemaineStageMin(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbSemainesStageMax':
+                        $semestre->setNbSemainesStageMax(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbHeuresProjet':
+                        $semestre->setNbHeuresProjet(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbHeuresEnseignementLocale':
+                        $semestre->setNbHeuresEnseignementLocale(Convert::convertToFloat($parametersAsArray['valeur']));
+                        //mise à jour du pourcentage
+                        $calcul = $semestre->getNbHeuresEnseignementLocale() / $semestre->getNbHeuresRessourceSae() * 100;
+                        $semestre->setPourcentageAdaptationLocale(number_format(Convert::convertToFloat($calcul), 2));
+                        break;
+                    case 'nbHeuresEnseignementSaeLocale':
+                        $semestre->setNbHeuresEnseignementSaeLocale(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbHeuresEnseignementRessourceLocale':
+                        $semestre->setNbHeuresEnseignementRessourceLocale(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbHeuresEnseignementRessourceNational':
+                        $semestre->setNbHeuresEnseignementRessourceNational(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbSemaines':
+                        $semestre->setNbSemaines(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbSemainesConges':
+                        $semestre->setNbSemainesConges(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbDemiJournees':
+                        $semestre->setNbDemiJournees(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbHeuresTpNational':
+                        $semestre->setNbHeuresTpNational(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                    case 'nbHeuresTpLocale':
+                        $semestre->setNbHeuresTpLocale(Convert::convertToFloat($parametersAsArray['valeur']));
+                        break;
+                }
+
+                $this->entityManager->flush();
+
+                return $this->json($parametersAsArray);
+            }
         }
 
         return $this->json(false);
@@ -338,7 +339,7 @@ class TableauController extends BaseController
     }
 
     public function tableauPreconisationsSemestre(
-       TableauPreconisation $tableauPreconisation,
+        TableauPreconisation $tableauPreconisation,
         Semestre $semestre,
         ApcParcours $parcours = null,
     ) {

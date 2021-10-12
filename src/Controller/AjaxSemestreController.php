@@ -25,27 +25,30 @@ class AjaxSemestreController extends BaseController
         Semestre $semestre,
         string $type
     ) {
-        $parametersAsArray = [];
-        if ($content = $request->getContent()) {
-            $parametersAsArray = json_decode($content, true);
-        }
+        if ($this->getDepartement()->getVerouilleStructure() === false) {
+            $parametersAsArray = [];
+            if ($content = $request->getContent()) {
+                $parametersAsArray = json_decode($content, true);
+            }
 
-        switch ($type) {
-            case 'vhNbHeuresEnseignementSae':
-                $semestre->setNbHeuresEnseignementSaeLocale($parametersAsArray['valeur']);
-                break;
-            case 'vhNbHeureeEnseignementSaeRessource':
-                $semestre->setNbHeuresEnseignementRessourceLocale($parametersAsArray['valeur']);
-                break;
-            case 'vhNbHeuresDontTpSaeRessource':
-                $semestre->setNbHeuresTpLocale($parametersAsArray['valeur']);
-                break;
-            case 'vhNbHeuresProjetTutores':
-                $semestre->setNbHeuresProjet($parametersAsArray['valeur']);
-                break;
-        }
-        $this->entityManager->flush();
+            switch ($type) {
+                case 'vhNbHeuresEnseignementSae':
+                    $semestre->setNbHeuresEnseignementSaeLocale($parametersAsArray['valeur']);
+                    break;
+                case 'vhNbHeureeEnseignementSaeRessource':
+                    $semestre->setNbHeuresEnseignementRessourceLocale($parametersAsArray['valeur']);
+                    break;
+                case 'vhNbHeuresDontTpSaeRessource':
+                    $semestre->setNbHeuresTpLocale($parametersAsArray['valeur']);
+                    break;
+                case 'vhNbHeuresProjetTutores':
+                    $semestre->setNbHeuresProjet($parametersAsArray['valeur']);
+                    break;
+            }
+            $this->entityManager->flush();
 
-        return $this->json(true);
+            return $this->json(true);
+        }
+        return $this->json(false);
     }
 }
