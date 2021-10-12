@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.6](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.5...v1.8.6) (2021-10-12)
+
+
+### Features
+
+* Blocage des grilles de structures selon la configuration de la BDD ([4207cc0](https://github.com/Dannebicque/redigeTonBut/commit/4207cc083531825598b9ce09368ed514d8a6a3ce))
+* Blocage des grilles de structures selon la configuration de la BDD ([fa6898e](https://github.com/Dannebicque/redigeTonBut/commit/fa6898e63d80e17385287ed5b63874fc770924f7))
+
+
+### Bug Fixes
+
+* Heures de projet selon type de spécialité ([aff2c55](https://github.com/Dannebicque/redigeTonBut/commit/aff2c554bb0e91867024b8e0b3580af0af292326))
+* Lien "home" du bredcrumbs ([eb9d9c9](https://github.com/Dannebicque/redigeTonBut/commit/eb9d9c9f02c7e8501eca419e073202cd0e17bea1))
+* Problème du nl2br avec markdown ([3dd0e7b](https://github.com/Dannebicque/redigeTonBut/commit/3dd0e7b62a541b6593280520412f3cca7783a400))
+
 ### [1.8.5](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.4...v1.8.5) (2021-10-05)
 
 
