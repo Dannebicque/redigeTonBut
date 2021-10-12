@@ -26,7 +26,7 @@
                 <th>Nbre d'heures d'enseignement (ressources + SAé)</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbHeuresRessourcesSae"></span>
                         {% else %}
                             <input type="text" class="heures form-control"
@@ -54,7 +54,7 @@
                                           max 40% du volume d'enseignement</p></th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].pourcentageAdaptationLocale"></span>
                         {% else %}
                             <div class="input-group mb-3">
@@ -83,7 +83,7 @@
                 <th>Nbre d'heures d'enseignement définies localement</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbHeuresEnseignementLocale"></span>
                         {% else %}
                             <input type="text" class="heures form-control"
@@ -109,7 +109,7 @@
                 <th>Nbre heures d'enseignement SAÉ définies localement</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbHeuresEnseignementSaeLocale"></span>
                         {% else %}
                             <input type="text" class="heures form-control"
@@ -132,7 +132,7 @@
                 <th>Nbre heures d'enseignement à définir localement dans les Ressources ou les SAÉ</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbHeuresEnseignementRessourceLocale"></span>
                         {% else %}
                             <input type="text" class="heures form-control"
@@ -153,7 +153,7 @@
                 <th>Nbre heures d'enseignement des ressources définies nationalement</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbHeuresEnseignementRessourceNational"></span>
                         {% else %}
                             <input type="text" class="heures form-control"
@@ -177,7 +177,7 @@
                 <th>Nbre heures de tp définies nationalement</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbHeuresTpNational"></span>
                         {% else %}
                             <input type="text" class="heures form-control"
@@ -203,7 +203,7 @@
                 <th>Nbre heures de tp à définir localement</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbHeuresTpLocale"></span>
                         {% else %}
                             <input type="text" class="heures form-control"
@@ -225,7 +225,7 @@
                 <th>Nbre d'heures de projet tutoré</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbHeuresProjet"></span>
                         {% else %}
                             <input type="text" class="heuresProjet form-control"
@@ -271,7 +271,7 @@
                 </th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbSemainesStageMin"></span> -
                             <span x-html="donnees[{{ i }}].nbSemainesStageMax"></span>
                         {% else %}
@@ -318,7 +318,7 @@
                 <th>Nbre de semaines</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbSemaines"></span>
                         {% else %}
                             <input type="text" class="form-control"
@@ -340,7 +340,7 @@
                 <th>Nbre de semaines de congés</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbSemainesConges"></span>
                         {% else %}
                             <input type="text" class="form-control"
@@ -426,7 +426,7 @@
                 <th>Demies journées</th>
                 {% for i in 1..6 %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                             <span x-html="donnees[{{ i }}].nbDemiJournees"></span>
                         {% else %}
                             <input type="text" class="form-control"

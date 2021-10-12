@@ -75,7 +75,7 @@
                 Volume horaire des enseignements définis par l'adaptation locale
             </td>
             <td colspan="{{ saes|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                {% if is_granted('ROLE_LECTEUR') %}
+                {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                     <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"></span>
                 {% else %}
                 <input type="text" class="heures form-control"
@@ -100,7 +100,7 @@
         </tr>
         <tr>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                {% if is_granted('ROLE_LECTEUR') %}
+                {% if is_granted('ROLE_LECTEUR')  or user_data.departement.verouilleStructure == 1 %}
                     <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"></span>
                 {% else %}
                 <input type="text" class="heures form-control"
@@ -120,7 +120,7 @@
         <tr>
             <td colspan="2" class="text-center cell-jaune text-rouge fw-bold">Dont TP</td>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                {% if is_granted('ROLE_LECTEUR') %}
+                {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                     <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"></span>
                 {% else %}
                 <input type="text" class="heures form-control"
@@ -173,7 +173,7 @@
         <tr>
             <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tutoré</td>
             <td colspan="{{ saes|length }}" class="cell-gris texte-rouge fw-bold text-center">
-                {% if is_granted('ROLE_LECTEUR') %}
+                {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                     <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"></span>
                 {% else %}
                 <input type="text" class="heures form-control"

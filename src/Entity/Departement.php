@@ -97,6 +97,16 @@ class Departement extends BaseEntity
      */
     private $cpns;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $verouilleStructure;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $verouilleCompetences;
+
     public function __construct()
     {
         $this->annees = new ArrayCollection();
@@ -416,6 +426,30 @@ class Departement extends BaseEntity
         if ($this->cpns->removeElement($cpn)) {
             $cpn->removeCpnDepartement($this);
         }
+
+        return $this;
+    }
+
+    public function getVerouilleStructure(): ?bool
+    {
+        return $this->verouilleStructure;
+    }
+
+    public function setVerouilleStructure(bool $verouilleStructure): self
+    {
+        $this->verouilleStructure = $verouilleStructure;
+
+        return $this;
+    }
+
+    public function getVerouilleCompetences(): ?bool
+    {
+        return $this->verouilleCompetences;
+    }
+
+    public function setVerouilleCompetences(bool $verouilleCompetences): self
+    {
+        $this->verouilleCompetences = $verouilleCompetences;
 
         return $this;
     }
