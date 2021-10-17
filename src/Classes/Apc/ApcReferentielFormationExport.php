@@ -68,14 +68,14 @@ class ApcReferentielFormationExport
 
         foreach ($this->ressources as $ressource) {
             $fichier = $this->myWord->exportAndSaveressource($ressource, $this->dir);
-            $nomfichier = 'ressource_' . $ressource->getCodeMatiere() . ' ' . $ressource->getLibelle() . '.docx';
+            $nomfichier = 'ressource_' . $ressource->getCodeMatiere() . '.docx';
             $tabFiles[] = $fichier;
             $zip->addFile($fichier, $nomfichier);
         }
 
         foreach ($this->saes as $sae) {
             $fichier = $this->myWord->exportAndSaveSae($sae, $this->dir);
-            $nomfichier = 'sae_' . $sae->getCodeMatiere() . ' ' . $sae->getLibelle() . '.docx';
+            $nomfichier = 'sae_' . $sae->getCodeMatiere() . '.docx';
             $tabFiles[] = $fichier;
             $zip->addFile($fichier, $nomfichier);
         }

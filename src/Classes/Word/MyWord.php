@@ -17,6 +17,7 @@ use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -42,7 +43,7 @@ class MyWord
     {
         $templateProcessor = $this->genereWordSae($apcSae);
 
-        $filename = 'sae_' . $apcSae->getCodeMatiere() . ' ' . $apcSae->getLibelle() . '.docx';
+        $filename = 'sae_' . $apcSae->getCodeMatiere() . '.docx';
 
         return new StreamedResponse(
             static function() use ($templateProcessor) {
@@ -62,11 +63,14 @@ class MyWord
     private function prepareTexte($text)
     {
         $parseDown = new Parsedown();
-        $section = (new PhpWord())->addSection();
+        $phpWord = new PhpWord();
+        $phpWord->addParagraphStyle('paragraph', ['alignment' => 'justify', 'spaceAfter' => Converter::cmToTwip(2)]);
+
+        $section = $phpWord->addSection();
         $parseDown->setBreaksEnabled(true);
         $texte = $parseDown->text($text);
-        $texte = '<div style="text-align:justify">' . $texte . '</div>';
-        Html::addHtml($section, $texte, false, false);
+
+        Html::addHtml($section, $texte, false, true);
 
         return $section->getElements();
     }
@@ -81,7 +85,7 @@ class MyWord
     {
         $templateProcessor = $this->genereWord($apcRessource);
 
-        $filename = 'ressource_' . $apcRessource->getCodeMatiere() . ' ' . $apcRessource->getLibelle() . '.docx';
+        $filename = 'ressource_' . $apcRessource->getCodeMatiere() . '.docx';
 
         return new StreamedResponse(
             static function() use ($templateProcessor) {
