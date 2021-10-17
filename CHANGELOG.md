@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.8](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.7...v1.8.8) (2021-10-17)
+
+
+### Bug Fixes
+
+* Nouveau menu plus accessible. ([d9a614d](https://github.com/Dannebicque/redigeTonBut/commit/d9a614d221227a5e66b6b405f140d9884909ae0d))
+
 ### [1.8.7](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.6...v1.8.7) (2021-10-17)
 
 
