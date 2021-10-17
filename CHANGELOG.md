@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.7](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.6...v1.8.7) (2021-10-17)
+
+
+### Features
+
+* Ajout de la cible d'heure TP ([9866a7e](https://github.com/Dannebicque/redigeTonBut/commit/9866a7e4fac86b906035e914d7323ccf058e0867))
+* CRUD pour modification des AC, Situations professionnelles, et composantes essentielles, en fonction d'une période d'autorisation. ([760a482](https://github.com/Dannebicque/redigeTonBut/commit/760a4827aefa9cad7181f9d5cb9a0d6f52372247))
+* Possibilité de marquer la SAE en portfolio, génération d'un code différent. ([fd658cf](https://github.com/Dannebicque/redigeTonBut/commit/fd658cf9257c288a903d00604e0c7300b35cfb49))
+
+
+### Bug Fixes
+
+* Bug sur le tableau de vérification si pas de parcours. ([30ed633](https://github.com/Dannebicque/redigeTonBut/commit/30ed633074af428faa28f00b9bce30a6b842c7fb))
+* Erreur de colonne dans l'export des SAE ([7c0ddef](https://github.com/Dannebicque/redigeTonBut/commit/7c0ddefee634789276ee8eb58314e043007f2c34))
+* Nom des fichiers Word et format exporté. ([a0acb2c](https://github.com/Dannebicque/redigeTonBut/commit/a0acb2cb0f00e0fac2de554f985b9eb8cba7b483))
+* Ordre des ressources dans le type 3 pour les pré-requis ([a95417f](https://github.com/Dannebicque/redigeTonBut/commit/a95417f12f61783bf42595a7aac95c0d5d237fa2))
+* Tri des AC dans les listes ([44b94ad](https://github.com/Dannebicque/redigeTonBut/commit/44b94adfc771adf374d45ac4814b65d86ba1a228))
+
 ### [1.8.6](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.5...v1.8.6) (2021-10-12)
 
 
