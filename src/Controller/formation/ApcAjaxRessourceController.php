@@ -147,6 +147,7 @@ class ApcAjaxRessourceController extends BaseController
      */
     public function ajaxPrerequis(
         SemestreRepository $semestreRepository,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcRessourceRepository $apcRessourceRepository,
         Request $request
     ): Response {
@@ -167,21 +168,35 @@ class ApcAjaxRessourceController extends BaseController
                 }
             }
 
-
-            $datas = $apcRessourceRepository->findBySemestreEtPrecedent($semestre, $this->getDepartement()->getSemestres());
-
+            if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+                    $parcours = $semestre->getApcParcours();
+                    if ($parcours !== null) {
+                        $datas = $apcRessourceParcoursRepository->findBySemestreEtPrecedent($semestre, $parcours, $this->getDepartement()->getSemestres());
+                    }
+            } else {
+                $datas = $apcRessourceRepository->findBySemestreEtPrecedent($semestre, $this->getDepartement()->getSemestres());
+            }
             $t = [];
             foreach ($datas as $d) {
-                if ($ressource === null || $d->getId() !== $ressource->getId()) {
-                    $b = [];
-
-
-                    $b['id'] = $d->getId();
-                    $b['libelle'] = $d->getLibelle();
-                    $b['code'] = $d->getCodeMatiere();
-                    $b['checked'] = true === in_array($d->getId(), $tabPrerequis);
-                    $t[] = $b;
-                }
+                    if ($this->getDepartement()?->getTypeStructure() === Departement::TYPE3 && $d->getRessource() !== null) {
+                        if ($ressource === null || $d->getRessource()->getId() !== $ressource->getId()) {
+                            $b = [];
+                            $b['id'] = $d->getRessource()->getId();
+                            $b['libelle'] = $d->getRessource()->getLibelle();
+                            $b['code'] = $d->getRessource()->getCodeMatiere();
+                            $b['checked'] = true === in_array($d->getRessource()->getId(), $tabPrerequis);
+                            $t[] = $b;
+                        }
+                    } else {
+                        if ($ressource === null || $d->getId() !== $ressource->getId()) {
+                            $b = [];
+                            $b['id'] = $d->getId();
+                            $b['libelle'] = $d->getLibelle();
+                            $b['code'] = $d->getCodeMatiere();
+                            $b['checked'] = true === in_array($d->getId(), $tabPrerequis);
+                            $t[] = $b;
+                        }
+                    }
             }
 
             return $this->json($t);

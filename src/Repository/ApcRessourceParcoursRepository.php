@@ -105,4 +105,29 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
 
         return $t;
     }
+
+    public function findBySemestreEtPrecedent(Semestre $semestre, ApcParcours $parcours, array $semestres)
+    {
+        $query = $this->createQueryBuilder('r')
+            ->innerJoin(ApcRessource::class, 'a', 'WITH', 'r.ressource = a.id')
+            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = a.semestre')
+
+            ->orderBy('a.codeMatiere', 'ASC')
+            ->addOrderBy('a.semestre', 'ASC')
+            ->addOrderBy('a.libelle', 'ASC');
+
+        $i = 0;
+        foreach ($semestres as $sem) {
+            if ($sem->getOrdreLmd() <= $semestre->getOrdreLmd()) {
+                $query->orWhere('a.semestre = :semestre'.$i)
+                    ->setParameter('semestre'.$i, $sem->getId());
+                $i++;
+            }
+        }
+
+        $query->andWhere('r.parcours = :parcours')
+            ->setParameter('parcours', $parcours->getId());
+
+        return $query->getQuery()->getResult();
+    }
 }
