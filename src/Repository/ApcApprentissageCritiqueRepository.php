@@ -44,8 +44,9 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
             ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'a.niveau = n.id')
             ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'c.id = n.competence')
             ->where('c.departement = :departement')
-            ->orderBy('n.ordre', 'ASC')
-            ->addOrderBy('c.couleur', 'ASC')
+            ->orderBy('c.couleur', 'ASC')
+            ->addOrderBy('n.ordre', 'ASC')
+            ->addOrderBy('a.ordre', 'ASC')
             ->addOrderBy('a.code', 'ASC')
             ->setParameter('departement', $departement->getId());
     }
