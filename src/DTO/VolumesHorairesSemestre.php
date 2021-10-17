@@ -26,6 +26,7 @@ class VolumesHorairesSemestre
     public float $cibleNbHeureeEnseignementSaeRessource = 0;
     public float $cibleNbHeureProjet = 0;
     public float $cibleNbHeureTotal = 0;
+    private float $cibleNbHeureTpTotal = 0;
 
 
     public function __construct(Semestre $semestre, $ressources)
@@ -54,6 +55,7 @@ class VolumesHorairesSemestre
         $this->cibleNbHeureeEnseignementSaeRessource = $semestre->getNbHeuresRessourceSae();
         $this->cibleNbHeureProjet = $semestre->getNbHeuresProjet();
         $this->cibleNbHeureTotal = $this->cibleNbHeureeEnseignementSaeRessource + $this->cibleNbHeureProjet;
+        $this->cibleNbHeureTpTotal = $semestre->getNbHeuresTpLocale()+ $semestre->getNbHeuresTpNational();
 
     }
 
@@ -75,11 +77,13 @@ class VolumesHorairesSemestre
             'totalAdaptationLocaleDontTp' => $this->totalAdaptationLocaleDontTp,
             'totalEnseignements' => $this->totalEnseignements,
             'totalDontTp' => $this->totalDontTp,
+
             'totalProjetTutore' => $this->totalProjetTutore,
             "totalEnseignementProjetTutore" => $this->totalEnseignementProjetTutore,
             "cibleNbHeureeEnseignementSaeRessource" => $this->cibleNbHeureeEnseignementSaeRessource,
             "cibleNbHeureProjet" => $this->cibleNbHeureProjet,
-            "cibleNbHeureTotal" => $this->cibleNbHeureTotal
+            "cibleNbHeureTotal" => $this->cibleNbHeureTotal,
+            'cibleNbHeureTpTotal' => $this->cibleNbHeureTpTotal
         ];
     }
 

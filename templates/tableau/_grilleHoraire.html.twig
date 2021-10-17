@@ -165,7 +165,9 @@
             </td>
             <td class="cell-jaune text-rouge fw-bold text-center">
                 <span x-text="numberFormat(donnees[{{ semestre.ordreLmd }}]
-                .pourcentageTpLocalementNationalement)"></span> %</td>
+                .pourcentageTpLocalementNationalement)"></span> %<br>
+                <strong>Cible : <span x-text="donnees[{{ semestre.ordreLmd }}]
+                .cibleNbHeureTpTotal"></span></strong></td>
             <td colspan="2" class="cell-jaune text-rouge fw-bold">
                 ← pourcentage de tp défini localement et nationalement
             </td>
