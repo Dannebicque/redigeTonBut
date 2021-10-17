@@ -168,30 +168,55 @@
                             </ul>
                         </li>
                         {% for annee in user_data.annees %}
-                            <li>
+                            <li {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2
+                                %}class="mega dropdown"{% endif %}>
                                 <a href="#but{{ annee.ordre }}" data-href="{{ path('but_annee', {annee: annee.id}) }}">
                                     <i class="bi bi-calendar3 icon"></i>
-                                    <span class="label">BUT{{ annee.ordre }}</span>
+                                    <span class="label">B.U.T. {{ annee.ordre }}</span>
                                 </a>
-                                <ul id="but{{ annee.ordre }}">
+                                <ul id="but{{ annee.ordre }}" {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2
+                                %}class="row align-items-start row-cols-{{ user_data.departement.apcParcours|length + 1
+                                }} dropdown-menu" data-popper-placement="bottom-start" {% endif %}>
                                     {% if user_data.departement.typeStructure != 'type3' %}
-                                    <li>
-                                        <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
-                                            <span class="label">Ressources</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
-                                            <span class="label">SAÉ</span>
-                                        </a>
-                                    </li>
+                                        {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+                                        <li class="dropdown col d-flex flex-column">
+                                            <a href="#tronc" class="dropdown-toggle
+                                    active">
+                                                <span class="label">Tronc commun</span>
+                                            </a>
+                                            <ul id="tronc">
+                                                <li>
+                                                    <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
+                                                        <span class="label">Ressources</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
+                                                        <span class="label">SAÉ</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        {% else %}
+                                            <li>
+                                                <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
+                                                    <span class="label">Ressources</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
+                                                    <span class="label">SAÉ</span>
+                                                </a>
+                                            </li>
+                                        {% endif %}
                                     {% endif %}
 
                                     {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
                                         {% for parcours in user_data.departement.apcParcours %}
                                             <li>
                                                 <a href="#parcours{{ parcours.id }}">
-                                                    <span class="label">{{ parcours.libelle }}</span>
+                                                    <span class="label"><abbr title="{{ parcours.libelle }}">{{ parcours
+                                                            .code }}</abbr></span>
                                                 </a>
                                                 <ul id="parcours{{ parcours.id }}">
                                                     <li>
