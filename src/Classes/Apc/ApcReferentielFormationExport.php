@@ -231,7 +231,7 @@ class ApcReferentielFormationExport
 
             $parcours = '';
             foreach ($sae->getApcSaeParcours() as $apcSaeParcour) {
-                $parcours .= $apcSaeParcour->getSae()->getCodeMatiere() . ';';
+                $parcours .= $apcSaeParcour->getParcours()->getLibelle() . ';';
             }
             $this->excelWriter->writeCellName('M' . $ligne, $parcours);
 
