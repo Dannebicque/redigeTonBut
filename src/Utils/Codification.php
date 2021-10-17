@@ -36,6 +36,9 @@ class Codification
 
     public static function codeSae(ApcSae $apcSae) : string
     {
+        if ($apcSae->getPortfolio() === true) {
+            return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.PORTFOLIO';
+        }
         return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($apcSae);
     }
 
