@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    Modification de l'apprentissage critique : {{ apc_apprentissage_critique.libelle }}
+    Modification de la composante essentielle : {{ apc_composante_essentielle.libelle }}
 {% endblock %}
 
 {% block content %}
@@ -21,7 +21,7 @@
 {% block breadcrumb %}
     {{ include('composants/breadcrumb.html.twig', {liens:[
         {
-            href: path('administration_apc_referentiel_index', {departement:apc_apprentissage_critique.departement.id}),
+            href: path('administration_apc_referentiel_index', {departement:apc_composante_essentielle.departement.id}),
             title: 'Référentiel de compétences',
         },
     ]}) }}
@@ -29,10 +29,10 @@
 
 {% block bouton_header %}
     {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
-        {{ include('form/_delete_form.html.twig', {path: path('administration_apc_apprentissage_critique_delete',
-            {id: apc_apprentissage_critique.id, }), id: apc_apprentissage_critique.id}) }}
+        {{ include('form/_delete_form.html.twig', {path: path('administration_apc_composante_essentielle_delete',
+            {id: apc_composante_essentielle.id, }), id: apc_composante_essentielle.id}) }}
     {% endif %}
-    <a href="{{ path('administration_apc_referentiel_index', {departement:apc_apprentissage_critique.departement.id}) }}"
+    <a href="{{ path('administration_apc_referentiel_index', {departement:apc_composante_essentielle.departement.id}) }}"
        class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >

@@ -23,7 +23,7 @@ abstract class BaseEntity
      * @ORM\Column(type="integer")
      * @Groups({"acutalite_administration"})
      */
-    private ?int $id;
+    private ?int $id = null;
 
     public function getId(): ?int
     {

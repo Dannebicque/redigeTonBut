@@ -21,6 +21,7 @@ use App\Repository\ApcApprentissageCritiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route("/apc/apprentissage/critique")]
 class ApcApprentissageCritiqueController extends BaseController
@@ -41,6 +42,9 @@ class ApcApprentissageCritiqueController extends BaseController
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
         Departement $departement
     ): Response {
+        if ($this->getDepartement()?->getId() !== $departement->getId()) {
+            throw new AccessDeniedException();
+        }
         $acs = $apcApprentissageCritiqueRepository->findByDepartement($departement);
 
         return $this->render('competences/apc_apprentissage_critique/index.html.twig', [
@@ -49,34 +53,47 @@ class ApcApprentissageCritiqueController extends BaseController
         ]);
     }
 
-    #[Route("/new/{niveau}", name:"administration_apc_apprentissage_critique_new", methods:["GET","POST"])]
-    public function new(Request $request, ApcNiveau $niveau): Response
+    #[Route("/new/{niveau}", name: "administration_apc_apprentissage_critique_new", methods: ["GET", "POST"])]
+    public function new(Request $request, ApcApprentissageCritiqueOrdre $apcApprentissageCritiqueOrdre, ApcNiveau $niveau): Response
     {
+        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $niveau->getDepartement()?->getId()) {
+            throw new AccessDeniedException();
+        }
+
         $apcApprentissageCritique = new ApcApprentissageCritique($niveau);
         $form = $this->createForm(ApcApprentissageCritiqueType::class, $apcApprentissageCritique);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $apcApprentissageCritique->setCode('Err');
             $this->entityManager->persist($apcApprentissageCritique);
+            $this->entityManager->flush();
+            $apcApprentissageCritiqueOrdre->deplaceApprentissageCritique($apcApprentissageCritique, $apcApprentissageCritique->getOrdre());
             $this->entityManager->flush();
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique ajouté avec succès.');
 
-            return $this->redirectToRoute('administration_apc_competence_show',
-                ['id' => $niveau->getCompetence()->getId()]);
+            return $this->redirectToRoute('administration_apc_referentiel_index',
+                ['departement' => $niveau->getDepartement()?->getId()]);
         }
 
         return $this->render('competences/apc_apprentissage_critique/new.html.twig', [
             'apc_apprentissage_critique' => $apcApprentissageCritique,
-            'form'                       => $form->createView(),
-            'competence'                 => $niveau->getCompetence(),
+            'form' => $form->createView(),
+            'competence' => $niveau->getCompetence(),
+            'niveau' => $niveau
         ]);
     }
 
-    #[Route("/{id}/edit", name:"administration_apc_apprentissage_critique_edit", methods:["GET","POST"])]
-    public function edit(Request $request,
+    #[Route("/{id}/edit", name: "administration_apc_apprentissage_critique_edit", methods: ["GET", "POST"])]
+    public function edit(
+        Request $request,
         ApcApprentissageCritiqueOrdre $apcApprentissageCritiqueOrdre,
-        ApcApprentissageCritique $apcApprentissageCritique): Response
-    {
+        ApcApprentissageCritique $apcApprentissageCritique
+    ): Response {
+        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcApprentissageCritique->getDepartement()?->getId()) {
+            throw new AccessDeniedException();
+        }
+
         $ordre = $apcApprentissageCritique->getOrdre();
         $form = $this->createForm(ApcApprentissageCritiqueType::class, $apcApprentissageCritique);
         $form->handleRequest($request);
@@ -97,7 +114,7 @@ class ApcApprentissageCritiqueController extends BaseController
 
         return $this->render('competences/apc_apprentissage_critique/edit.html.twig', [
             'apc_apprentissage_critique' => $apcApprentissageCritique,
-            'form'                       => $form->createView(),
+            'form' => $form->createView(),
         ]);
     }
 
@@ -105,8 +122,13 @@ class ApcApprentissageCritiqueController extends BaseController
     public function deplace(
         Request $request,
         ApcApprentissageCritiqueOrdre $apcRessourceOrdre,
-        ApcApprentissageCritique $apcApprentissageCritique, int $position): Response
-    {
+        ApcApprentissageCritique $apcApprentissageCritique,
+        int $position
+    ): Response {
+        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcApprentissageCritique->getDepartement()?->getId()) {
+            throw new AccessDeniedException();
+        }
+
         //todo: a confirmer $this->denyAccessUnlessGranted('edit', $apcApprentissageCritique);
         $apcRessourceOrdre->deplaceApprentissageCritiquePosition($apcApprentissageCritique, $position);
 
@@ -118,8 +140,11 @@ class ApcApprentissageCritiqueController extends BaseController
     public function delete(
         Request $request,
         ApcApprentissageCritique $apcApprentissageCritique
-    ): Response
-    {
+    ): Response {
+        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcApprentissageCritique->getDepartement()?->getId()) {
+            throw new AccessDeniedException();
+        }
+
         $this->denyAccessUnlessGranted('delete', $apcApprentissageCritique);
         $departement = $apcApprentissageCritique->getDepartement()->getId();
         $id = $apcApprentissageCritique->getId();
@@ -132,19 +157,18 @@ class ApcApprentissageCritiqueController extends BaseController
                 $this->entityManager->remove($s);
             }
 
-
             $this->entityManager->remove($apcApprentissageCritique);
             $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
-                'Apprentissage critique supprimée avec succès.'
+                'Apprentissage critique supprimé avec succès.'
             );
 
             return $this->redirectToRoute('administration_apc_referentiel_index',
                 ['departement' => $departement]);
         }
 
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la ressource.');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de l\'apprentissage critique.');
 
         return $this->redirect($request->headers->get('referer'));
     }

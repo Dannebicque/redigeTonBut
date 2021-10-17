@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ApcSituationProfessionnelle index{% endblock %}
+
+{% block body %}
+    <h1>ApcSituationProfessionnelle index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Libelle</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for apc_situation_professionnelle in apc_situation_professionnelles %}
+            <tr>
+                <td>{{ apc_situation_professionnelle.id }}</td>
+                <td>{{ apc_situation_professionnelle.libelle }}</td>
+                <td>{{ apc_situation_professionnelle.created ? apc_situation_professionnelle.created|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ apc_situation_professionnelle.updated ? apc_situation_professionnelle.updated|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('apc_situation_professionnelle_show', {'id': apc_situation_professionnelle.id}) }}">show</a>
+                    <a href="{{ path('apc_situation_professionnelle_edit', {'id': apc_situation_professionnelle.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('apc_situation_professionnelle_new') }}">Create new</a>
+{% endblock %}

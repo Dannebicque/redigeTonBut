@@ -5,7 +5,8 @@
                 <div class="p-3 comp competence{{ competence.couleur }}">{{ competence.nomCourt }}</div>
             </div>
             <div class="col-2 niveau niveau{{ niveau.ordre }}{{ competence.couleur }}">
-                <div class="p-3 niveaulong">{{ competence.libelle }}
+                <div class="p-3 niveaulong">
+                    {{ competence.libelle }}
                 </div>
             </div>
             <div class="col-8">
@@ -13,9 +14,32 @@
                     <div class="p-3 niveauliste niveau{{ niveau.ordre }}{{ competence.couleur }}">
                         <ul>
                             {% for ac in niveau.apcApprentissageCritiques %}
-                                <li>{{ ac.code }} | {{ ac.libelle }}</li>
+                                <li>{{ ac.code }} | {{ ac.libelle }}
+                                    {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+                                        <a href="{{ path('administration_apc_apprentissage_critique_edit',
+                                            {id:ac.id}) }}" class="text-black text-small">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{{ path('administration_apc_apprentissage_critique_deplace',
+                                            {id:ac.id, position: -1}) }}" class="text-black text-small">
+                                            <i class="bi bi-arrow-up"></i>
+                                        </a>
+                                        <a href="{{ path('administration_apc_apprentissage_critique_deplace',
+                                            {id:ac.id, position:1}) }}" class="text-black text-small">
+                                            <i class="bi bi-arrow-down"></i>
+                                        </a>
+
+                                    {% endif %}
+                                </li>
                             {% endfor %}
                         </ul>
+                        {% if is_granted('ROLE_PACD') and user_data
+                        .departement.verouilleCompetences == false %}<br>
+                            <a href="{{ path('administration_apc_apprentissage_critique_new',
+                                {niveau:niveau.id}) }}" class="text-black text-small">
+                                <i class="bi bi-plus"></i> Ajouter un apprentissage critique
+                            </a>
+                        {% endif %}
                     </div>
                 {% endif %}
             </div>

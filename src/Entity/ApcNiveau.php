@@ -186,4 +186,9 @@ class ApcNiveau extends BaseEntity
 
         return $this->getCompetence()?->getNomCourt().' - Niveau '.$niv.'('.$this->ordre.')';
     }
+
+    public function getDepartement(): ?Departement
+    {
+        return $this->getCompetence()?->getDepartement();
+    }
 }

@@ -21,8 +21,9 @@
                                 <th>Libellé</th>
                                 <th>Compétence</th>
                                 <th>Parcours</th>
-                                <th></th>
-                                <th></th>
+                                {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+                                <th>Edition</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -39,8 +40,14 @@
                                                 </span>
                                             {% endfor %}
                                         </td>
-                                        <td></td>
-                                        <td></td>
+                                        {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+                                        <td>
+                                            <a href="{{ path('administration_apc_apprentissage_critique_edit',
+                                                {id:ac.id}) }}" class="text-black text-small">
+                                                <i class="bi bi-pencil"></i> Modifier
+                                            </a>
+                                        </td>
+                                        {% endif %}
                                     </tr>
                             {% endfor %}
                             </tbody>

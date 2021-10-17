@@ -54,4 +54,9 @@ class ApcSituationProfessionnelle extends BaseEntity
 
         return $this;
     }
+
+    public function getDepartement()
+    {
+        return $this->getCompetence()?->getDepartement();
+    }
 }

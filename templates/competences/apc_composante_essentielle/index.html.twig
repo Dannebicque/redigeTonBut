@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ApcComposanteEssentielle index{% endblock %}
+
+{% block body %}
+    <h1>ApcComposanteEssentielle index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Libelle</th>
+                <th>Ordre</th>
+                <th>Code</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for apc_composante_essentielle in apc_composante_essentielles %}
+            <tr>
+                <td>{{ apc_composante_essentielle.id }}</td>
+                <td>{{ apc_composante_essentielle.libelle }}</td>
+                <td>{{ apc_composante_essentielle.ordre }}</td>
+                <td>{{ apc_composante_essentielle.code }}</td>
+                <td>{{ apc_composante_essentielle.created ? apc_composante_essentielle.created|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ apc_composante_essentielle.updated ? apc_composante_essentielle.updated|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('apc_composante_essentielle_show', {'id': apc_composante_essentielle.id}) }}">show</a>
+                    <a href="{{ path('apc_composante_essentielle_edit', {'id': apc_composante_essentielle.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('apc_composante_essentielle_new') }}">Create new</a>
+{% endblock %}

@@ -26,32 +26,16 @@ class ApcComposanteEssentielleRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcComposanteEssentielle::class);
     }
 
-    // /**
-    //  * @return ApcComposanteEssentielle[] Returns an array of ApcComposanteEssentielle objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findOther(?int $ordreDestination, ApcComposanteEssentielle $apcComposanteEssentielle)
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+            ->where('a.ordre = :ordre')
+            ->andWhere('a.competence = :competence')
+            ->andWhere('a.id != :id')
+            ->setParameter('ordre', $ordreDestination)
+            ->setParameter('competence', $apcComposanteEssentielle->getCompetence()?->getId())
+            ->setParameter('id', $apcComposanteEssentielle->getId())
             ->getQuery()
-            ->getResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?ApcComposanteEssentielle
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

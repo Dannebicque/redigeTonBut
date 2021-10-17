@@ -2,7 +2,7 @@
     <div class="col-3 competence ">
         <div class="p-3 comp competence{{ competence.couleur }}">
             {{ competence.nomCourt }}
-            {% if is_granted('ROLE_PACD') %}
+            {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
                 <a href="{{ path('administration_apc_competence_edit', {id: competence.id}) }}" class="text-white
                 text-small"><i
                             class="bi
@@ -13,12 +13,25 @@
     <div class="col-3 competencelongue  ms-3">
         <div class="p-3 competencelongue{{ competence.couleur }}">
             {{ competence.libelle }}
+            {% if is_granted('ROLE_PACD') and user_data
+            .departement.verouilleCompetences == false %}<br>
+            <a href="{{ path('administration_apc_composante_essentielle_new',
+                {competence:competence.id}) }}" class="text-white text-small">
+                <i class="bi bi-plus"></i> Ajouter une composante essentielle
+            </a>
+            {% endif %}
         </div>
     </div>
     <div class="col-6 composantesessentielles{{ competence.couleur }}">
         <ul>
             {% for composante in competence.apcComposanteEssentielles %}
-                <li>{{ composante.code }} | {{ composante.libelle }}
+                <li>{{ composante.code }} | {{ composante.libelle }} {% if is_granted('ROLE_PACD') and user_data
+                    .departement.verouilleCompetences == false %}
+                        <a href="{{ path('administration_apc_composante_essentielle_edit',
+                            {id:composante.id}) }}" class="text-black text-small">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    {% endif %}</li>
             {% endfor %}
         </ul>
 
@@ -33,8 +46,21 @@
     <div class="col-9 ms-3 situationliste">
         <div class="p-3 situationliste{{ competence.couleur }}">
             {% for situation in competence.apcSituationProfessionnelles %}
-                <p>{{ situation.libelle }}</p>
+                <p>{{ situation.libelle }} {% if is_granted('ROLE_PACD') and user_data
+                    .departement.verouilleCompetences == false %}
+                        <a href="{{ path('administration_apc_situation_professionnelle_edit',
+                            {id:situation.id}) }}" class="text-black text-small">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    {% endif %}</p>
             {% endfor %}
+            {% if is_granted('ROLE_PACD') and user_data
+            .departement.verouilleCompetences == false %}<br>
+                <a href="{{ path('administration_apc_situation_professionnelle_new',
+                    {competence:competence.id}) }}" class="text-black text-small">
+                    <i class="bi bi-plus"></i> Ajouter une situation professionnelle
+                </a>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -63,7 +89,7 @@
                 <ul>
                     {% for ac in niveau.apcApprentissageCritiques %}
                         <li>{{ ac.code }} | {{ ac.libelle }}
-                            {% if is_granted('ROLE_PACD') %}
+                            {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
                                 <a href="{{ path('administration_apc_apprentissage_critique_edit',
                                     {id:ac.id}) }}" class="text-black text-small">
                                     <i class="bi bi-pencil"></i>
@@ -80,6 +106,13 @@
                             {% endif %}
                         </li>
                     {% endfor %}
+                    {% if is_granted('ROLE_PACD') and user_data
+                    .departement.verouilleCompetences == false %}<br>
+                        <a href="{{ path('administration_apc_apprentissage_critique_new',
+                            {niveau:niveau.id}) }}" class="text-black text-small">
+                            <i class="bi bi-plus"></i> Ajouter un apprentissage critique
+                        </a>
+                    {% endif %}
                 </ul>
             </div>
         </div>
