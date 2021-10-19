@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.9](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.8...v1.8.9) (2021-10-19)
+
+
+### Bug Fixes
+
+* Mémorisation des coefficients déjà présent. ([3917877](https://github.com/Dannebicque/redigeTonBut/commit/3917877f242b13bda2dafcbe8b534db70046696e))
+
 ### [1.8.8](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.7...v1.8.8) (2021-10-17)
 
 
