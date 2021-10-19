@@ -5,6 +5,11 @@
 // @lastUpdate 05/03/2021 11:11
 @use "sass:map";
 
+body {
+  font-family: Arial;
+  font-size: 11px;
+}
+
 $colorsApc: (
         c1:rgb(156, 43, 38),
         c2: rgb(208, 119, 64),

@@ -7,15 +7,28 @@
         table, th, td, tr {
             border: 0;
         }
+        .titre_specialite {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom:20px;
+        }
+
+        .titre_parcours {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
     </style>
     <title>PDF - Référentiel de compétences {{ departement.sigle }}</title>
 </head>
 <body>
 
 <!--Conteneur principal -->
-<div class="container-fluid" id="content"
+<div class="container-fluid" id="content">
     {% for parcour in parcours %}
-        <h2>Compétences du parcours : {{ parcour.libelle }}</h2>
+        <h1 class="titre_specialite">Référentiel de compétences : {{ departement.sigle }}</h1>
+        <h2 class="titre_parcours">Compétences du parcours : {{ parcour.libelle }}</h2>
         <div style="page-break-after: always"></div>
         {% for competence in competencesParcours[parcour.id] %}
             <div>
