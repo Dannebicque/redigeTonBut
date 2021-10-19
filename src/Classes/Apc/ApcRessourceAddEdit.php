@@ -27,6 +27,7 @@ class ApcRessourceAddEdit
     private ApcParcoursRepository $apcParcoursRepository;
     private ApcRessourceRepository $apcRessourceRepository;
     private ApcComptenceRepository $apcComptenceRepository;
+    private array $tabCoeffs;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -50,21 +51,33 @@ class ApcRessourceAddEdit
         $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
         $this->entityManager->persist($apcRessource);
 
-        $competences = $request->request->get('competences');
-        if (is_array($competences)) {
-            foreach ($competences as $idCompetence) {
-                $ac = $this->apcComptenceRepository->find($idCompetence);
-                $saeAc = new ApcRessourceCompetence($apcRessource, $ac);
-                $this->entityManager->persist($saeAc);
-            }
-        }
+        $tabAcComp = [];
 
         $acs = $request->request->get('ac');
         if (is_array($acs)) {
             foreach ($acs as $idAc) {
                 $ac = $this->apcApprentissageCritiqueRepository->find($idAc);
-                $saeAc = new ApcRessourceApprentissageCritique($apcRessource, $ac);
-                $this->entityManager->persist($saeAc);
+                if ($ac !== null) {
+                    $saeAc = new ApcRessourceApprentissageCritique($apcRessource, $ac);
+                    $this->entityManager->persist($saeAc);
+                    if (!in_array($ac->getCompetence()->getId(), $tabAcComp, true)) {
+                        $tabAcComp[] = $ac->getCompetence()->getId();
+                    }
+                }
+            }
+        }
+
+        $competences = $request->request->get('competences');
+        if (is_array($competences)) {
+            foreach ($competences as $idCompetence) {
+                if (in_array($idCompetence, $tabAcComp, true)) {
+                    $ac = $this->apcComptenceRepository->find($idCompetence);
+                    $saeAc = new ApcRessourceCompetence($apcRessource, $ac);
+                    if (array_key_exists($ac->getId(), $this->tabCoeffs)) {
+                        $saeAc->setCoefficient($this->tabCoeffs[$ac->getId()]);
+                    }
+                    $this->entityManager->persist($saeAc);
+                }
             }
         }
 
@@ -105,6 +118,8 @@ class ApcRessourceAddEdit
             $this->entityManager->remove($ac);
         }
         foreach ($apcRessource->getApcRessourceCompetences() as $ac) {
+            $this->tabCoeffs[$ac->getCompetence()->getId()] = $ac->getCoefficient();
+
             $this->entityManager->remove($ac);
 
         }
