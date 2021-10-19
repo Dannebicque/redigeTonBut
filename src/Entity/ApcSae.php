@@ -80,6 +80,11 @@ class ApcSae extends AbstractMatiere
      */
     private ?bool $portfolio = false;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private ?bool $stage = false;
+
     public function __construct()
     {
         $this->apcSaeCompetences = new ArrayCollection();
@@ -332,6 +337,18 @@ class ApcSae extends AbstractMatiere
     public function setPortfolio(bool $portfolio): self
     {
         $this->portfolio = $portfolio;
+
+        return $this;
+    }
+
+    public function getStage(): ?bool
+    {
+        return $this->stage;
+    }
+
+    public function setStage(bool $stage): self
+    {
+        $this->stage = $stage;
 
         return $this;
     }

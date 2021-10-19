@@ -41,6 +41,7 @@ class ApcSaeType extends AbstractType
             ->add('codeMatiere', TextType::class, ['label' => 'Code SAÉ',  'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
             ->add('libelle', TextType::class, ['label' => 'Nom de la SAÉ'])
             ->add('portfolio', ChoiceType::class, ['label' => 'SAÉ du portfolio', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false]])
+            ->add('stage', ChoiceType::class, ['label' => 'SAÉ du stage', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false]])
             ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre'])
             ->add('libelleCourt', TextType::class,
                 ['label' => 'Libellé court', 'required' => false, 'attr' => ['maxlength' => 25], 'help' => '25 caractères maximum, peut être utile pour Apogée'])

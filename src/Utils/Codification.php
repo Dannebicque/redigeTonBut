@@ -39,6 +39,10 @@ class Codification
         if ($apcSae->getPortfolio() === true) {
             return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.PORTFOLIO';
         }
+
+        if ($apcSae->getStage() === true) {
+            return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.STAGE';
+        }
         return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($apcSae);
     }
 
