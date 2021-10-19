@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.10](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.9...v1.8.10) (2021-10-19)
+
+
+### Features
+
+* SAE de type stage ([ab72591](https://github.com/Dannebicque/redigeTonBut/commit/ab72591f839376764791d347d3722289df407e73))
+
+
+### Bug Fixes
+
+* Amélioration du PDF du référentiel de compétences ([3cb9d44](https://github.com/Dannebicque/redigeTonBut/commit/3cb9d444f5f203d27437bae1fa30e4d63c8000d6))
+
 ### [1.8.9](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.8...v1.8.9) (2021-10-19)
 
 
