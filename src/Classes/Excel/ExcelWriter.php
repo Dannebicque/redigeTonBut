@@ -256,4 +256,16 @@ class ExcelWriter
         /**  Load $inputFileName to a Spreadsheet Object  **/
         return $reader->load($inputFileName);
     }
+
+    public function orientationCellXY(int $col, int $ligne, string $orientation)
+    {
+        $cell1 = Coordinate::stringFromColumnIndex($col).$ligne;
+        switch ($orientation)
+        {
+            case 'vertical':
+                $this->sheet->getStyle($cell1)->getAlignment()->setTextRotation(90);
+                $this->sheet->getStyle($cell1)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                break;
+        }
+    }
 }

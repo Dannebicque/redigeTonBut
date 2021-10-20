@@ -47,13 +47,17 @@ class TableauExport
             $this->excelWriter->writeCellXY(2, $ligne, 'Apprentissages critiques');
             $col = 4;
             foreach ($this->tableauCroise->getSaes() as $sae) {
-                $this->excelWriter->writeCellXY($col, $ligne, $sae->getCodeMatiere());
+                $this->excelWriter->writeCellXY($col, $ligne, $sae->getCodeMatiere(). ' - '.$sae->getLibelle());
+                $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
+
                 $col++;
             }
             $col++;
 
             foreach ($this->tableauCroise->getRessources() as $ressource) {
-                $this->excelWriter->writeCellXY($col, $ligne, $ressource->getCodeMatiere());
+                $this->excelWriter->writeCellXY($col, $ligne, $ressource->getCodeMatiere(). ' - '.$ressource->getLibelle());
+                $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
+
                 $col++;
             }
             $ligne++;
@@ -153,13 +157,15 @@ class TableauExport
             $this->excelWriter->writeCellXY(2, $ligne, 'UE');
             $col = 4;
             foreach ($this->tableauPreconisation->getSaes() as $sae) {
-                $this->excelWriter->writeCellXY($col, $ligne, $sae->getCodeMatiere());
+                $this->excelWriter->writeCellXY($col, $ligne, $sae->getCodeMatiere(). ' - '.$sae->getLibelle());
+                $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
                 $col++;
             }
             $col++;
 
             foreach ($this->tableauPreconisation->getRessources() as $ressource) {
-                $this->excelWriter->writeCellXY($col, $ligne, $ressource->getCodeMatiere());
+                $this->excelWriter->writeCellXY($col, $ligne, $ressource->getCodeMatiere(). ' - '.$ressource->getLibelle());
+                $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
                 $col++;
             }
             $this->excelWriter->writeCellXY($col, $ligne, 'ECTS');

@@ -5,7 +5,9 @@ namespace App\Classes\Apc;
 use App\Classes\Excel\ExcelWriter;
 use App\Classes\Word\MyWord;
 use App\Entity\Departement;
+use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
+use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -14,6 +16,8 @@ use ZipArchive;
 class ApcReferentielFormationExport
 {
     protected ApcRessourceRepository $apcRessourceRepository;
+    protected ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
+    protected ApcSaeParcoursRepository $apcSaeParcoursRepository;
     protected ApcSaeRepository $apcSaeRepository;
     protected MyWord $myWord;
     protected ExcelWriter $excelWriter;
@@ -26,9 +30,13 @@ class ApcReferentielFormationExport
         ApcRessourceRepository $apcRessourceRepository,
         KernelInterface $kernel,
         MyWord $myWord,
-        ExcelWriter $excelWriter
+        ExcelWriter $excelWriter,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
+        ApcSaeParcoursRepository $apcSaeParcoursRepository
     ) {
         $this->apcRessourceRepository = $apcRessourceRepository;
+        $this->apcRessourceParcoursRepository = $apcRessourceParcoursRepository;
+        $this->apcSaeParcoursRepository = $apcSaeParcoursRepository;
         $this->apcSaeRepository = $apcSaeRepository;
         $this->myWord = $myWord;
         $this->excelWriter = $excelWriter;
@@ -139,12 +147,12 @@ class ApcReferentielFormationExport
                 $tComp[$ac->getApprentissageCritique()->getCompetence()->getCouleur()][] = $ac->getApprentissageCritique()->getCode();
             }
 
-            for($i=1; $i<=6; $i++) {
+            for ($i = 1; $i <= 6; $i++) {
                 $comp = '';
-                if (array_key_exists('c'.$i, $tComp)) {
-                    $comp = implode(';', $tComp['c'.$i]);
+                if (array_key_exists('c' . $i, $tComp)) {
+                    $comp = implode(';', $tComp['c' . $i]);
                 }
-                $this->excelWriter->writeCellXY(5+$i, $ligne, $comp);
+                $this->excelWriter->writeCellXY(5 + $i, $ligne, $comp);
             }
 
             $saes = '';
@@ -215,12 +223,12 @@ class ApcReferentielFormationExport
                 $tComp[$ac->getApprentissageCritique()->getCompetence()->getCouleur()][] = $ac->getApprentissageCritique()->getCode();
             }
 
-            for($i=1; $i<=6; $i++) {
+            for ($i = 1; $i <= 6; $i++) {
                 $comp = '';
-                if (array_key_exists('c'.$i, $tComp)) {
-                    $comp = implode(';', $tComp['c'.$i]);
+                if (array_key_exists('c' . $i, $tComp)) {
+                    $comp = implode(';', $tComp['c' . $i]);
                 }
-                $this->excelWriter->writeCellXY(5+$i, $ligne, $comp);
+                $this->excelWriter->writeCellXY(5 + $i, $ligne, $comp);
             }
 
             $ressources = '';
@@ -247,5 +255,56 @@ class ApcReferentielFormationExport
 
 
         return $this->excelWriter->genereFichier('tableau_referentiel_formation' . date('YmdHis'));
+    }
+
+    public function exportSynthese(Departement $departement)
+    {
+        $this->excelWriter->nouveauFichier('');
+        $this->excelWriter->createSheet('Synthèse');
+
+        $ligne = 1;
+        foreach ($departement->getApcParcours() as $parcours) {
+            $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
+            $ligne++;
+            if ($departement->getTypeStructure() === Departement::TYPE3) {
+
+            } else {
+                /** @var \App\Entity\Semestre $semestre */
+                foreach ($departement->getSemestres() as $semestre) {
+                    $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
+                    $ligne++;
+                    $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+                    $this->excelWriter->writeCellXY(1, $ligne, 'Code');
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
+                    $this->excelWriter->writeCellXY(3, $ligne, 'Volume total');
+                    $this->excelWriter->writeCellXY(4, $ligne, 'Dont TP');
+                    $ligne++;
+                    foreach ($ressources as $ressource) {
+                        $this->excelWriter->writeCellXY(1, $ligne, $ressource->getCodeMatiere());
+                        $this->excelWriter->writeCellXY(2, $ligne, $ressource->getLibelle());
+                        $this->excelWriter->writeCellXY(3, $ligne, $ressource->getHeuresTotales());
+                        $this->excelWriter->writeCellXY(4, $ligne, $ressource->getTpPpn());
+                        $ligne++;
+                    }
+                    $saes = $this->apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+                    $this->excelWriter->writeCellXY(1, $ligne, 'Code');
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
+                    $ligne++;
+                    foreach ($saes as $sae) {
+                        $this->excelWriter->writeCellXY(1, $ligne, $sae->getCodeMatiere());
+                        $this->excelWriter->writeCellXY(2, $ligne, $sae->getLibelle());
+                        $ligne++;
+                    }
+                }
+            }
+
+
+        }
+
+
+        $this->excelWriter->getColumnsAutoSize('A', 'S');
+
+
+        return $this->excelWriter->genereFichier('tableau_referentiel_synthese_formation' . date('YmdHis'));
     }
 }
