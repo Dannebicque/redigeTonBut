@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.11](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.10...v1.8.11) (2021-10-20)
+
+
+### Features
+
+* Arrondis des pourcentages et heures d'adaptation locale ([70aa114](https://github.com/Dannebicque/redigeTonBut/commit/70aa1141bde532969ba0092c063a0190703daf39))
+* Nouveaux exports ([7d72667](https://github.com/Dannebicque/redigeTonBut/commit/7d72667833f2fc3c87a681da3f99c97a807e183f))
+
+
+### Bug Fixes
+
+* Arrondi des valeurs de l'adaptation locale ([37f2338](https://github.com/Dannebicque/redigeTonBut/commit/37f233833d53221c61f7025d7c611b491a9ebb84))
+* Mise à jour des AC/Compétences et coefficients ([99f72a6](https://github.com/Dannebicque/redigeTonBut/commit/99f72a6faac7918d2690f690b61ae0215c7c5324))
+
 ### [1.8.10](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.9...v1.8.10) (2021-10-19)
 
 
