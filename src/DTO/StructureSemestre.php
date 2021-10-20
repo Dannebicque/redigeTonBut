@@ -35,9 +35,9 @@ class StructureSemestre
     public function __construct(Semestre $semestre)
     {
         $this->nbHeuresRessourcesSae = $semestre->getNbHeuresRessourceSae();
-        $this->pourcentageAdaptationLocale = $semestre->getPourcentageAdaptationLocale();
+        $this->pourcentageAdaptationLocale = ceil($semestre->getPourcentageAdaptationLocale());
 
-        $this->nbHeuresEnseignementLocale = $semestre->getNbHeuresEnseignementLocale();
+        $this->nbHeuresEnseignementLocale = ceil($semestre->getNbHeuresEnseignementLocale());
         $this->nbHeuresEnseignementSaeLocale = $semestre->getNbHeuresEnseignementSaeLocale();
         $this->nbHeuresEnseignementRessourceLocale = $this->nbHeuresEnseignementLocale - $this->nbHeuresEnseignementSaeLocale;
         $this->nbHeuresEnseignementRessourceNational = $this->nbHeuresRessourcesSae - $this->nbHeuresEnseignementLocale;
@@ -63,8 +63,8 @@ class StructureSemestre
     {
         return [
             'nbHeuresRessourcesSae' => round($this->nbHeuresRessourcesSae, 2),
-            'pourcentageAdaptationLocale' => round($this->pourcentageAdaptationLocale, 2),
-            'nbHeuresEnseignementLocale' => round($this->nbHeuresEnseignementLocale, 2),
+            'pourcentageAdaptationLocale' => ceil($this->pourcentageAdaptationLocale),
+            'nbHeuresEnseignementLocale' => ceil($this->nbHeuresEnseignementLocale),
             'nbHeuresEnseignementSaeLocale' => round($this->nbHeuresEnseignementSaeLocale, 2),
             'nbHeuresEnseignementRessourceLocale' => round($this->nbHeuresEnseignementRessourceLocale, 2),
             'nbHeuresEnseignementRessourceNational' => round($this->nbHeuresEnseignementRessourceNational, 2),
