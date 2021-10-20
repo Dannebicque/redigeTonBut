@@ -60,18 +60,13 @@ class ApcSaeAddEdit
             }
         }
 
-        $competences = $request->request->get('competences');
-        if (is_array($competences)) {
-            foreach ($competences as $idCompetence) {
-                if (in_array($idCompetence, $tabAcComp, true)) {
-                    $ac = $this->apcComptenceRepository->find($idCompetence);
-                    $saeAc = new ApcSaeCompetence($apcSae, $ac);
-                    if (array_key_exists($ac->getId(), $this->tabCoeffs)) {
-                        $saeAc->setCoefficient($this->tabCoeffs[$ac->getId()]);
-                    }
-                    $this->entityManager->persist($saeAc);
-                }
+        foreach ($tabAcComp as $idCompetence) {
+            $ac = $this->apcComptenceRepository->find($idCompetence);
+            $saeAc = new ApcSaeCompetence($apcSae, $ac);
+            if (array_key_exists($idCompetence, $this->tabCoeffs)) {
+                $saeAc->setCoefficient($this->tabCoeffs[$idCompetence]);
             }
+            $this->entityManager->persist($saeAc);
         }
 
 

@@ -27,7 +27,7 @@ class ApcRessourceAddEdit
     private ApcParcoursRepository $apcParcoursRepository;
     private ApcRessourceRepository $apcRessourceRepository;
     private ApcComptenceRepository $apcComptenceRepository;
-    private array $tabCoeffs;
+    private array $tabCoeffs = [];
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -67,18 +67,14 @@ class ApcRessourceAddEdit
             }
         }
 
-        $competences = $request->request->get('competences');
-        if (is_array($competences)) {
-            foreach ($competences as $idCompetence) {
-                if (in_array($idCompetence, $tabAcComp, true)) {
-                    $ac = $this->apcComptenceRepository->find($idCompetence);
-                    $saeAc = new ApcRessourceCompetence($apcRessource, $ac);
-                    if (array_key_exists($ac->getId(), $this->tabCoeffs)) {
-                        $saeAc->setCoefficient($this->tabCoeffs[$ac->getId()]);
-                    }
-                    $this->entityManager->persist($saeAc);
-                }
+        foreach ($tabAcComp as $idCompetence) {
+            $ac = $this->apcComptenceRepository->find($idCompetence);
+            $saeAc = new ApcRessourceCompetence($apcRessource, $ac);
+            if (array_key_exists($idCompetence, $this->tabCoeffs)) {
+                $saeAc->setCoefficient($this->tabCoeffs[$idCompetence]);
             }
+            $this->entityManager->persist($saeAc);
+
         }
 
         $saes = $request->request->get('saes');
@@ -119,10 +115,10 @@ class ApcRessourceAddEdit
         }
         foreach ($apcRessource->getApcRessourceCompetences() as $ac) {
             $this->tabCoeffs[$ac->getCompetence()->getId()] = $ac->getCoefficient();
-
             $this->entityManager->remove($ac);
 
         }
+
         foreach ($apcRessource->getApcRessourceParcours() as $ac) {
             $this->entityManager->remove($ac);
         }
