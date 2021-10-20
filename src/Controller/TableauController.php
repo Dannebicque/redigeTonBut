@@ -115,10 +115,11 @@ class TableauController extends BaseController
                         $semestre->setNbHeuresRessourceSae(Convert::convertToFloat($parametersAsArray['valeur']));
                         break;
                     case 'pourcentageAdaptationLocale':
-                        $semestre->setPourcentageAdaptationLocale(Convert::convertToFloat($parametersAsArray['valeur']));
+                        $pourcentage = $parametersAsArray['valeur'];
+                        $semestre->setPourcentageAdaptationLocale(ceil($pourcentage));
                         //mise à jour du volume horaire
-                        $calcul = $semestre->getNbHeuresRessourceSae() * $semestre->getPourcentageAdaptationLocale() / 100;
-                        $semestre->setNbHeuresEnseignementLocale(number_format(Convert::convertToFloat($calcul), 2));
+                        $calcul = $semestre->getNbHeuresRessourceSae() * $pourcentage / 100;
+                        $semestre->setNbHeuresEnseignementLocale(ceil($calcul));
                         break;
                     case 'nbSemainesStageMin':
                         $semestre->setNbSemaineStageMin(Convert::convertToFloat($parametersAsArray['valeur']));
