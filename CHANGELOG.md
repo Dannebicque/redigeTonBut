@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.12](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.11...v1.8.12) (2021-10-26)
+
+
+### Bug Fixes
+
+* Codification des ressources/SAE ([45c8f54](https://github.com/Dannebicque/redigeTonBut/commit/45c8f540a90cce312306cfe2f811d34cba6fe25e))
+* Export SAE/Ressource, synthèse avec type 3 ([a576971](https://github.com/Dannebicque/redigeTonBut/commit/a576971411ba4502cd44b899d0e50816bf094894))
+
 ### [1.8.11](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.10...v1.8.11) (2021-10-20)
 
 
