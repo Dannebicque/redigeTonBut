@@ -267,7 +267,33 @@ class ApcReferentielFormationExport
             $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
             $ligne++;
             if ($departement->getTypeStructure() === Departement::TYPE3) {
-
+                /** @var \App\Entity\Semestre $semestre */
+                foreach ($parcours->getSemestres() as $semestre) {
+                    $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
+                    $ligne++;
+                    $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+                    $this->excelWriter->writeCellXY(1, $ligne, 'Code');
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
+                    $this->excelWriter->writeCellXY(3, $ligne, 'Volume total');
+                    $this->excelWriter->writeCellXY(4, $ligne, 'Dont TP');
+                    $ligne++;
+                    foreach ($ressources as $ressource) {
+                        $this->excelWriter->writeCellXY(1, $ligne, $ressource->getCodeMatiere());
+                        $this->excelWriter->writeCellXY(2, $ligne, $ressource->getLibelle());
+                        $this->excelWriter->writeCellXY(3, $ligne, $ressource->getHeuresTotales());
+                        $this->excelWriter->writeCellXY(4, $ligne, $ressource->getTpPpn());
+                        $ligne++;
+                    }
+                    $saes = $this->apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+                    $this->excelWriter->writeCellXY(1, $ligne, 'Code');
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
+                    $ligne++;
+                    foreach ($saes as $sae) {
+                        $this->excelWriter->writeCellXY(1, $ligne, $sae->getCodeMatiere());
+                        $this->excelWriter->writeCellXY(2, $ligne, $sae->getLibelle());
+                        $ligne++;
+                    }
+                }
             } else {
                 /** @var \App\Entity\Semestre $semestre */
                 foreach ($departement->getSemestres() as $semestre) {
