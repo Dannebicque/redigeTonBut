@@ -48,7 +48,6 @@ class ApcRessourceAddEdit
 
     public function addOrEdit(ApcRessource $apcRessource, $request)
     {
-        $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
         $this->entityManager->persist($apcRessource);
 
         $tabAcComp = [];

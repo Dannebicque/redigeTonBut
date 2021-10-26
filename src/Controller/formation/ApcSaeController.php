@@ -19,6 +19,7 @@ use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Form\ApcSaeType;
 use App\Repository\ApcParcoursRepository;
+use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -53,6 +54,7 @@ class ApcSaeController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $apcSaeAddEdit->addOrEdit($apcSae, $request);
+            $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
 
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
@@ -101,6 +103,8 @@ class ApcSaeController extends BaseController
 
             $apcSaeAddEdit->removeLiens($apcSae);
             $apcSaeAddEdit->addOrEdit($apcSae, $request);
+            $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
+
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'SAÉ modifiée avec succès.'

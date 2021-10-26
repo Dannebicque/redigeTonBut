@@ -21,6 +21,7 @@ use App\Entity\Semestre;
 use App\Form\ApcRessourceType;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcParcoursRepository;
+use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,6 +60,8 @@ class ApcRessourceController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
+            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
+
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'Ressource ajoutée avec succès.'
@@ -113,7 +116,7 @@ class ApcRessourceController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $apcRessourceAddEdit->removeLiens($apcRessource);
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
-
+            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'Ressource modifiée avec succès.'
