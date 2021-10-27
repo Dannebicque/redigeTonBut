@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.15](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.14...v1.8.15) (2021-10-27)
+
+
+### Bug Fixes
+
+* Bug Préconisation avec les types 3 ([7cb88a4](https://github.com/Dannebicque/redigeTonBut/commit/7cb88a4012628d17995e85dc198bd37ee6052b2b))
+
 ### [1.8.14](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.13...v1.8.14) (2021-10-27)
 
 
