@@ -55,7 +55,7 @@ class ApcSaeController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $apcSaeAddEdit->addOrEdit($apcSae, $request);
             $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
-
+            $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'SAÉ ajoutée avec succès.'
@@ -104,7 +104,7 @@ class ApcSaeController extends BaseController
             $apcSaeAddEdit->removeLiens($apcSae);
             $apcSaeAddEdit->addOrEdit($apcSae, $request);
             $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
-
+            $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'SAÉ modifiée avec succès.'

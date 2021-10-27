@@ -61,6 +61,7 @@ class ApcRessourceController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
             $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
+            $this->entityManager->flush();
 
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
@@ -117,6 +118,7 @@ class ApcRessourceController extends BaseController
             $apcRessourceAddEdit->removeLiens($apcRessource);
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
             $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
+            $this->entityManager->flush();
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'Ressource modifiée avec succès.'

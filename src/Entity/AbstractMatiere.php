@@ -64,7 +64,7 @@ abstract class AbstractMatiere extends BaseEntity
      * @ORM\Column(type="string", length=20)
      * @Groups({"matiere"})
      */
-    private ?string $codeMatiere;
+    private ?string $codeMatiere = '-';
 
     /**
      * @ORM\Column(type="string", length=25, nullable=true)
