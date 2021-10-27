@@ -97,7 +97,10 @@ class Structure
             for ($i = 1; $i <= 6; $i++) {
                 $sheet->getCellByColumnAndRow(2 + $i, 7)->setValue($this->donneesSemestres[$i]->nbHeuresRessourcesSae);
                 $sheet->getCellByColumnAndRow(2 + $i, 9)->setValue($this->donneesSemestres[$i]->pourcentageAdaptationLocale / 100);
+                $sheet->getCellByColumnAndRow(2 + $i, 10)->setValue($this->donneesSemestres[$i]->nbHeuresEnseignementLocale);
                 $sheet->getCellByColumnAndRow(2 + $i, 11)->setValue($this->donneesSemestres[$i]->nbHeuresEnseignementSaeLocale);
+                $sheet->getCellByColumnAndRow(2 + $i, 12)->setValue($this->donneesSemestres[$i]->nbHeuresEnseignementRessourceLocale);
+                $sheet->getCellByColumnAndRow(2 + $i, 13)->setValue($this->donneesSemestres[$i]->nbHeuresEnseignementRessourceNational);
                 $sheet->getCellByColumnAndRow(2 + $i, 14)->setValue($this->donneesSemestres[$i]->nbHeuresTpNational);
                 $sheet->getCellByColumnAndRow(2 + $i, 15)->setValue($this->donneesSemestres[$i]->nbHeuresTpLocale);
                 $sheet->getCellByColumnAndRow(2 + $i, 17)->setValue($this->donneesSemestres[$i]->nbHeuresProjet);
