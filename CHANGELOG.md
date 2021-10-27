@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.13](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.12...v1.8.13) (2021-10-27)
+
+
+### Bug Fixes
+
+* Export tableau de structure. ([fb7c041](https://github.com/Dannebicque/redigeTonBut/commit/fb7c041e3739c04a44e991652831b354a09c3dc2))
+
 ### [1.8.12](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.11...v1.8.12) (2021-10-26)
 
 
