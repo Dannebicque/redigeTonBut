@@ -8,7 +8,9 @@ use App\DTO\PreconisationSemestre;
 use App\Entity\ApcParcours;
 use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcParcoursNiveauRepository;
+use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
+use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 
 class Preconisation
@@ -28,12 +30,16 @@ class Preconisation
     public function __construct(
         ApcRessourceRepository $apcRessourceRepository,
         ApcSaeRepository $apcSaeRepository,
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcParcoursNiveauRepository $apcParcoursNiveauRepository,
         ApcNiveauRepository $apcNiveauRepository,
 
     ) {
         $this->apcRessourceRepository = $apcRessourceRepository;
         $this->apcSaeRepository = $apcSaeRepository;
+        $this->apcSaeParcoursRepository = $apcSaeParcoursRepository;
+        $this->apcRessourceParcoursRepository = $apcRessourceParcoursRepository;
         $this->apcParcoursNiveauRepository = $apcParcoursNiveauRepository;
         $this->apcNiveauRepository = $apcNiveauRepository;
     }
@@ -44,7 +50,6 @@ class Preconisation
         $this->semestres = $semestres;
         $this->apcParcours = $apcParcours;
 
-
         return $this;
     }
 
@@ -54,14 +59,17 @@ class Preconisation
         $this->donneesDepartement = new PreconisationDepartement();
         $json = [];
         foreach ($this->semestres as $semestre) {
-            $ressources = $this->apcRessourceRepository->findBySemestreAndParcours($semestre, $this->apcParcours);
-            $saes = $this->apcSaeRepository->findBySemestreAndParcours($semestre, $this->apcParcours);
             if ($this->apcParcours !== null) {
                 $competences = $this->apcParcoursNiveauRepository->findParcoursSemestreCompetence($semestre, $this->apcParcours);
+                $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->apcParcours);
+                $saes = $this->apcSaeParcoursRepository->findBySemestre($semestre, $this->apcParcours);
             } else {
                 $competences = $this->apcNiveauRepository->findBySemestreArrayCompetence($semestre);
+                $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
+                $saes = $this->apcSaeRepository->findBySemestre($semestre);
             }
-
+            dump($competences);
+            dump($ressources);
             $sem = new PreconisationSemestre($semestre, $competences, $ressources, $saes);
             $json[$semestre->getOrdreLmd()] = $sem->getJson();
             $this->donneesDepartement->addSemestre($sem);
