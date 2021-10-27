@@ -1,8 +1,28 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    Tableau Volume horaires pour le B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{%
-    endif %}
+    Tableau Volume horaires pour le B.U.T. {{ annee.ordre }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}
+
+{% endblock %}
+
+{% block bouton_header %}
+    {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+    <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm
+    btn-outline-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-download"></i>
+        <span>Export Ecel</span>
+    </a>
+    {% else %}
+    <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id}) }}" class="btn btn-sm
+    btn-outline-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-download"></i>
+        <span>Export Ecel</span>
+    </a>
+    {% endif %}
 {% endblock %}
 
 {% block content %}

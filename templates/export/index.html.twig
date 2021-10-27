@@ -28,22 +28,12 @@
                                 <h5 class="card-title">{{ parcours.libelle }}</h5>
                                 <p class="card-text">
                                 <ul>
-{#                                    <li>#}
-{#                                        <a href="{{ path('export_ressources_annee', {annee: annee.id, parcours: parcours.id, _format:'pdf'}) }}">#}
-{#                                            <span class="label">Exporter les Ressources de l'année en PDF</span>#}
-{#                                        </a>#}
-{#                                    </li>#}
                                     <li>
                                         <a href="{{ path('export_ressources_annee', {annee: annee.id, parcours: parcours.id, _format:'docx'}) }}">
                                             <span class="label">Exporter les Ressources de l'année en Word</span>
                                         </a>
                                     </li>
-{#                                    <li>#}
-{#                                        <a href="{{ path('export_saes_annee', {annee: annee.id, parcours: parcours.id,#}
-{#                                            _format:'pdf'}) }}">#}
-{#                                            <span class="label">Exporter les SAÉ de l'année en PDF</span>#}
-{#                                        </a>#}
-{#                                    </li>#}
+
                                     <li>
                                         <a href="{{ path('export_saes_annee', {annee: annee.id, parcours: parcours.id, _format:'docx'}) }}">
                                             <span class="label">Exporter les SAÉ de l'année en Word</span>
@@ -55,11 +45,11 @@
                                             <span class="label">Tableau croisé par semestre</span>
                                         </a>
                                     </li>
-{#                                    <li>#}
-{#                                        <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id, parcours: parcours.id}) }}">#}
-{#                                            <span class="label">Volumes horaires par semestre</span>#}
-{#                                        </a>#}
-{#                                    </li>#}
+                                    <li>
+                                        <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                            <span class="label">Volumes horaires par semestre</span>
+                                        </a>
+                                    </li>
                                     <li>
                                         <a href="{{ path('export_tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
                                                             <span class="label">
@@ -104,11 +94,11 @@
                                 <span class="label">Tableau croisé par semestre</span>
                             </a>
                         </li>
-{#                        <li>#}
-{#                            <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id}) }}">#}
-{#                                <span class="label">Volumes horaires par semestre</span>#}
-{#                            </a>#}
-{#                        </li>#}
+                        <li>
+                            <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id}) }}">
+                                <span class="label">Volumes horaires par semestre</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="{{ path('export_tableau_preconisations_annee', {annee: annee.id}) }}">
                                                             <span class="label">

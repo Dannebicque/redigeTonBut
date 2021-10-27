@@ -102,6 +102,13 @@ class ExcelWriter
                         $this->sheet->getCellByColumnAndRow($col,
                             $row)->getStyle()->getFont()->getColor()->setARGB('FF'.$valeur);
                         break;
+                        case 'bgcolor':
+                        if (0 === mb_strpos($valeur, '#')) {
+                            $valeur = mb_substr($valeur, 1, mb_strlen($valeur));
+                        }
+                        $this->sheet->getCellByColumnAndRow($col,
+                            $row)->getStyle()->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($valeur);
+                        break;
                     case 'font-size':
                         $this->sheet->getCellByColumnAndRow($col, $row)->getStyle()->getFont()->setSize($valeur);
                         break;
@@ -205,6 +212,13 @@ class ExcelWriter
     {
         foreach (range($depart, $fin) as $columnID) {
             $this->sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+    }
+
+    public function getColumnsAutoSizeInt(int $depart, int $fin)
+    {
+        for($columnID = $depart; $columnID <= $fin; $columnID++) {
+            $this->sheet->getColumnDimension(Coordinate::stringFromColumnIndex($columnID))->setAutoSize(true);
         }
     }
 
