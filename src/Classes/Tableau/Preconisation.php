@@ -68,8 +68,7 @@ class Preconisation
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
                 $saes = $this->apcSaeRepository->findBySemestre($semestre);
             }
-            dump($competences);
-            dump($ressources);
+
             $sem = new PreconisationSemestre($semestre, $competences, $ressources, $saes);
             $json[$semestre->getOrdreLmd()] = $sem->getJson();
             $this->donneesDepartement->addSemestre($sem);

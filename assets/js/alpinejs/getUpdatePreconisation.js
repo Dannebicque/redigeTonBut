@@ -16,52 +16,57 @@ function getUpdatePreconisation (parcours = null) {
       })
     },
     updateSae (e) {
-      fetch(Routing.generate('formation_apc_sae_coeff_update_ajax', {
-        sae: e.target.dataset.sae, competence: e
-          .target.dataset.competence
-      }), {
-        method: 'POST',
-        body: JSON.stringify({
-          valeur: e.target.value.replace(',','.')
+      if (e.target.value.trim() !== '') {
+        fetch(Routing.generate('formation_apc_sae_coeff_update_ajax', {
+          sae: e.target.dataset.sae, competence: e
+            .target.dataset.competence
+        }), {
+          method: 'POST',
+          body: JSON.stringify({
+            valeur: e.target.value.replace(',', '.')
+          })
+        }).then(async () => {
+          this.donnees = await fetch(Routing.generate('tableau_api_preconisation', {parcours: this.parcours})).then(r => {
+            return r.json()
+          })
         })
-      }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
-          return r.json()
-        })
-      })
-
+      }
     },
     updateRessource (e) {
-      fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {
-        ressource: e.target.dataset.ressource,
-        competence: e.target.dataset.competence
-      }), {
-        method: 'POST',
-        body: JSON.stringify({
-          valeur: e.target.value.replace(',','.')
+      console.log(e.target.value)
+      if (e.target.value.trim() !== '') {
+        fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {
+          ressource: e.target.dataset.ressource,
+          competence: e.target.dataset.competence
+        }), {
+          method: 'POST',
+          body: JSON.stringify({
+            valeur: e.target.value.replace(',', '.')
+          })
+        }).then(async () => {
+          this.donnees = await fetch(Routing.generate('tableau_api_preconisation', {parcours: this.parcours})).then(r => {
+            return r.json()
+          })
         })
-      }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
-          return r.json()
-        })
-      })
+      }
 
     },
     updateCompetence (e) {
-      fetch(Routing.generate('administration_apc_competence_update_ects', {
-        semestre: e.target.dataset.semestre,
-        competence: e.target.dataset.competence
-      }), {
-        method: 'POST',
-        body: JSON.stringify({
-          valeur: e.target.value
+      if (e.target.value.trim() !== '') {
+        fetch(Routing.generate('administration_apc_competence_update_ects', {
+          semestre: e.target.dataset.semestre,
+          competence: e.target.dataset.competence
+        }), {
+          method: 'POST',
+          body: JSON.stringify({
+            valeur: e.target.value
+          })
+        }).then(async () => {
+          this.donnees = await fetch(Routing.generate('tableau_api_preconisation', {parcours: this.parcours})).then(r => {
+            return r.json()
+          })
         })
-      }).then(async () => {
-        this.donnees = await fetch(Routing.generate('tableau_api_preconisation',{parcours: this.parcours})).then(r => {
-          return r.json()
-        })
-      })
-
+      }
     },
     updateHeuresSae (e) {
       fetch(Routing.generate('formation_apc_sae_heure_update_ajax', {
