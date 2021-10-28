@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.16](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.15...v1.8.16) (2021-10-28)
+
+
+### Bug Fixes
+
+* Codification ([af309c2](https://github.com/Dannebicque/redigeTonBut/commit/af309c29c96fa3be4712466fa3680e710169f2f3))
+* Tableau de préconisation ([d9e2a32](https://github.com/Dannebicque/redigeTonBut/commit/d9e2a323785675ec0aed78c65033d56c3f98807d))
+
 ### [1.8.15](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.14...v1.8.15) (2021-10-27)
 
 
