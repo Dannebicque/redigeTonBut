@@ -89,6 +89,7 @@ class ApcSaeAddEdit
                 $this->entityManager->persist($saeRes);
             }
         }
+
         $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
 
         $this->entityManager->flush();

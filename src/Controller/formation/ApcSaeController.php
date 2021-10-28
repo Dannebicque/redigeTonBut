@@ -15,6 +15,7 @@ use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
+use App\Entity\ApcSaeParcours;
 use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Form\ApcSaeType;
@@ -54,8 +55,7 @@ class ApcSaeController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $apcSaeAddEdit->addOrEdit($apcSae, $request);
-            $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
-            $this->entityManager->flush();
+
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'SAÉ ajoutée avec succès.'
@@ -103,8 +103,7 @@ class ApcSaeController extends BaseController
 
             $apcSaeAddEdit->removeLiens($apcSae);
             $apcSaeAddEdit->addOrEdit($apcSae, $request);
-            $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
-            $this->entityManager->flush();
+
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'SAÉ modifiée avec succès.'

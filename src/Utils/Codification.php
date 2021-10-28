@@ -73,6 +73,7 @@ class Codification
     private static function codeParcoursSae(ApcSae $apcSae)
     {
         $nbParcours = $apcSae->getApcSaeParcours();
+
         if (count($nbParcours) === 1 && $nbParcours !== null) {
             return $apcSae->getApcSaeParcours()[0]->getParcours()->getCode();
         }

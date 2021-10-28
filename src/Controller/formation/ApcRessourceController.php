@@ -15,6 +15,7 @@ use App\Classes\Apc\ApcRessourceOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
+use App\Entity\ApcRessourceParcours;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Entity\Semestre;
@@ -36,7 +37,6 @@ class ApcRessourceController extends BaseController
         "POST"
     ])]
     public function new(
-        ApcComptenceRepository $apcComptenceRepository,
         ApcRessourceOrdre $apcRessourceOrdre,
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
@@ -60,8 +60,6 @@ class ApcRessourceController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
-            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
-            $this->entityManager->flush();
 
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
@@ -117,8 +115,7 @@ class ApcRessourceController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $apcRessourceAddEdit->removeLiens($apcRessource);
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
-            $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
-            $this->entityManager->flush();
+
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
                 'Ressource modifiée avec succès.'
