@@ -69,7 +69,6 @@ class TableauExport
             foreach ($this->tableauCroise->getSaes() as $sae) {
                 $this->excelWriter->writeCellXY($col, $ligne, $sae->getCodeMatiere() . ' - ' . $sae->getLibelle());
                 $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
-
                 $col++;
             }
             $col++;
@@ -181,17 +180,24 @@ class TableauExport
             $col = 2;
             $ligne = 2;
             $this->excelWriter->writeCellXY($col, 1, 'SAE', ['style' => 'HORIZONTAL_CENTER']);
-            $this->excelWriter->mergeCellsCaR($col, 1, $col + count($saes)-1, 1);
+            $nbSaes = count($saes);
+            $nbRessources = count($ressources);
 
-            foreach ($saes as $sae) {
-                $this->excelWriter->writeCellXY($col, $ligne, $sae->getDisplay(), ['bgcolor' => 'ebb71a']);
-                $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
+            if ($nbSaes > 0) {
+                $this->excelWriter->mergeCellsCaR($col, 1, $col + $nbSaes - 1, 1);
+                foreach ($saes as $sae) {
+                    $this->excelWriter->writeCellXY($col, $ligne, $sae->getDisplay(), ['bgcolor' => 'ebb71a']);
+                    $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
+                    $col++;
+                }
+                $this->excelWriter->writeCellXY(2, $ligne + 1, '', ['bgcolor' => 'ebb71a']);
+                $this->excelWriter->mergeCellsCaR(2, $ligne + 1, 2 + $nbSaes - 1, $ligne + 1);
+                $this->excelWriter->writeCellXY(2, $ligne + 2, '', ['bgcolor' => 'ebb71a']);
+                $this->excelWriter->mergeCellsCaR(2, $ligne + 2, 2 + $nbSaes - 1, $ligne + 2);
+            } else {
                 $col++;
             }
-            $this->excelWriter->writeCellXY(2, $ligne+1, '',['bgcolor' => 'ebb71a']);
-            $this->excelWriter->mergeCellsCaR(2, $ligne+1, 2 + count($saes)-1, $ligne+1);
-            $this->excelWriter->writeCellXY(2, $ligne+2, '',['bgcolor' => 'ebb71a']);
-            $this->excelWriter->mergeCellsCaR(2, $ligne+2, 2 + count($saes)-1, $ligne+2);
+
 
             $this->excelWriter->writeCellXY($col, 1, 'Ressources', ['style' => 'HORIZONTAL_CENTER']);
            // $this->excelWriter->mergeCellsCaR(count($saes), 1, count($saes) + count($ressources)-1, 1);
@@ -224,8 +230,10 @@ class TableauExport
             $this->excelWriter->mergeCellsCaR(1, $ligne, 1, $ligne+1);
             $this->excelWriter->writeCellXY($col, $ligne,
                 $donnees[$semestre->getOrdreLmd()]['vhNbHeuresEnseignementSae'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->mergeCellsCaR($col, $ligne, $col + count($saes)-1, $ligne);
-            $this->excelWriter->mergeCellsCaR($col + count($saes), $ligne, $colonneTotal-1, $ligne);
+            if ($nbSaes > 0) {
+                $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes-1, $ligne);
+                $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
+            }
             $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleEnseignement'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
             $this->excelWriter->mergeCellsCaR($colonneTotal, $ligne, $colonneTotal, $ligne+1);
             $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, number_format($donnees[$semestre->getOrdreLmd()]['pourcentageAdaptationLocaleCalcule'],2), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
@@ -259,9 +267,12 @@ class TableauExport
             $ligne++;
             $this->excelWriter->writeCellXY(1, $ligne, 'Volume horaire projet tuteuré');
             $this->excelWriter->writeCellXY($col, $ligne, $donnees[$semestre->getOrdreLmd()]['vhNbHeuresProjetTutores'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'CED4D7']);
-            $this->excelWriter->mergeCellsCaR($col, $ligne, $col + count($saes)-1, $ligne);
-            $this->excelWriter->writeCellXY($col + count($saes), $ligne, '', ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'CED4D7']);
-            $this->excelWriter->mergeCellsCaR($col + count($saes), $ligne, $colonneTotal-1, $ligne);
+            if ($nbSaes > 0) {
+                $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
+                $this->excelWriter->writeCellXY($col + $nbSaes, $ligne, '',
+                    ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
+                $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
+            }
             $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalProjetTutore'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'CED4D7']);
             $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, $semestre->getNbHeuresProjet(), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
             $this->excelWriter->writeCellXY($colonneTotal+2, $ligne, 'rappel volume de projet tutoré issu du tableau global des 6 semestres', ['style' => 'HORIZONTAL_LEFT','bgcolor' => 'ebb71a']);
