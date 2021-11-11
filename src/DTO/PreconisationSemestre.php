@@ -85,17 +85,16 @@ class PreconisationSemestre
 
                     $this->tRessources[$ressource->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
                     $this->tRessources[$ressource->getId()]['total'] += $comp->getCoefficient();
-                    $this->tCompetences[$comp->getCompetence()->getId()]['total'] += $comp->getCoefficient();
-                    $this->tCompetences[$comp->getCompetence()->getId()]['ressource'] += $comp->getCoefficient();
+                    $this->tCompetences[$comp->getCompetence()->getId()]['total'] += (float)$comp->getCoefficient();
+                    $this->tCompetences[$comp->getCompetence()->getId()]['ressource'] += (float)$comp->getCoefficient();
                 }
             }
         }
 
-        foreach ($competences as $competence) {
 
-            if ($this->tCompetences[$competence->getId()]['total'] != 0) {
-                $this->tCompetences[$competence->getId()]['rapport'] = number_format($this->tCompetences[$competence->getId()]['sae'] / $this->tCompetences[$competence->getId()]['total'],
-                    2);
+        foreach ($competences as $competence) {
+            if ($this->tCompetences[$competence->getId()]['total'] !== 0.0) {
+                $this->tCompetences[$competence->getId()]['rapport'] = (float)$this->tCompetences[$competence->getId()]['sae'] / (float)$this->tCompetences[$competence->getId()]['total'];
             }
         }
 

@@ -123,16 +123,15 @@ function getUpdatePreconisation (parcours = null) {
       return ''
     },
     afficheTotalEcts (tableau, libelle) {
+      console.log(this.numberFormat(tableau[libelle]))
       if (libelle in tableau) {
-        return this.numberFormat(tableau[libelle])
+        return tableau[libelle]
       }
       return ''
     },
     afficheValeurTotal (tableau, id, cle = 'total') {
       if (id in tableau) {
-
         return this.numberFormat(tableau[id][cle])
-
       }
       return ''
     },
