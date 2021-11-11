@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.19](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.18...v1.8.19) (2021-11-11)
+
+
+### Bug Fixes
+
+* Rapport sur les préconnisations ne s'affichaient pas ([b627a0a](https://github.com/Dannebicque/redigeTonBut/commit/b627a0abe1bfba315c0a14eaf2bc96b7e8f19e09))
+
 ### [1.8.18](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.17...v1.8.18) (2021-11-11)
 
 
