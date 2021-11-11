@@ -65,7 +65,7 @@ class ApcRessourcesExport
         foreach ($this->ressources as $key => $ressources) {
             foreach ($ressources as $ressource) {
                 $fichier = $this->myWord->exportAndSaveressource($ressource, $this->dir);
-                $nomfichier = 'ressource_' . $ressource->getCodeMatiere() . ' ' . $ressource->getLibelle() . '.docx';
+                $nomfichier = 'ressource_' . $ressource->getCodeMatiere() . '.docx';
                 $tabFiles[] = $fichier;
                 $zip->addFile($fichier, $nomfichier);
             }
@@ -74,7 +74,9 @@ class ApcRessourcesExport
         $zip->close();
 
         foreach ($tabFiles as $file) {
-            unlink($file);
+            if (file_exists($file)) {
+                unlink($file);
+            }
         }
 
 

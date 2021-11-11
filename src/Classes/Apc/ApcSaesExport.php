@@ -45,7 +45,6 @@ class ApcSaesExport
         switch ($_format) {
             case 'docx':
                 return $this->exportZipWord();
-                break;
             case 'pdf':
                 break;
 
@@ -67,7 +66,7 @@ class ApcSaesExport
         foreach ($this->saes as $key => $saes) {
             foreach ($saes as $sae) {
                 $fichier = $this->myWord->exportAndSaveSae($sae, $this->dir);
-                $nomfichier = 'sae_' . $sae->getCodeMatiere() . ' ' . $sae->getLibelle() . '.docx';
+                $nomfichier = 'sae_' . $sae->getCodeMatiere() . '.docx';
                 $tabFiles[] = $fichier;
                 $zip->addFile($fichier, $nomfichier);
             }
@@ -76,7 +75,9 @@ class ApcSaesExport
         $zip->close();
 
         foreach ($tabFiles as $file) {
-            unlink($file);
+            if (file_exists($file)) {
+                unlink($file);
+            }
         }
 
 

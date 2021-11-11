@@ -268,7 +268,7 @@ class MyWord
     {
         $templateProcessor = $this->genereWord($apcRessource);
 
-        $filename = 'ressource_' . $apcRessource->getCodeMatiere() . ' ' . $apcRessource->getLibelle() . '.docx';
+        $filename = 'ressource_' . $apcRessource->getCodeMatiere() . '.docx';
 
         $pathToSave = $dir . $filename;
         $templateProcessor->saveAs($pathToSave);
@@ -280,7 +280,7 @@ class MyWord
     {
         $templateProcessor = $this->genereWordSae($apcSae);
 
-        $filename = 'sae_' . $apcSae->getCodeMatiere() . ' ' . $apcSae->getLibelle() . '.docx';
+        $filename = 'sae_' . $apcSae->getCodeMatiere() . '.docx';
 
         $pathToSave = $dir . $filename;
         $templateProcessor->saveAs($pathToSave);
