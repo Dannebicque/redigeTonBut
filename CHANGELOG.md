@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.18](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.17...v1.8.18) (2021-11-11)
+
+
+### Features
+
+* Fiches en adaptation locale. Non publiées. Harmonisations des couleurs des éléments non publiés ([b816502](https://github.com/Dannebicque/redigeTonBut/commit/b8165028b8e4e2d2080b479181722e64dfa59538))
+
+
+### Bug Fixes
+
+* Export des fichiers au format Zip. Problème de nommage avec les caractères spéciaux ([3ccf7ff](https://github.com/Dannebicque/redigeTonBut/commit/3ccf7ff8e1e051704ce0985160d9c8cadf746627))
+* Mise à jour page d'acceuil ([64c95e1](https://github.com/Dannebicque/redigeTonBut/commit/64c95e14480e0bc48d160b40a64e434f8b207c48))
+
 ### [1.8.17](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.16...v1.8.17) (2021-10-28)
 
 
