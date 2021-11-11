@@ -71,9 +71,9 @@ class ApcRessource extends AbstractMatiere
     private Collection $apcRessources;
 
     /**
-     * @ORM\Column(type="string", length=5, nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $typeFiche;
+    private bool $ficheAdaptationLocale = false;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -358,14 +358,14 @@ class ApcRessource extends AbstractMatiere
         return $this->getSemestre()?->getAnnee()?->getDepartement();
     }
 
-    public function getTypeFiche(): ?string
+    public function getFicheAdaptationLocale(): ?bool
     {
-        return $this->typeFiche;
+        return $this->ficheAdaptationLocale;
     }
 
-    public function setTypeFiche(?string $typeFiche): self
+    public function setficheAdaptationLocale(?bool $ficheAdaptationLocale): self
     {
-        $this->typeFiche = $typeFiche;
+        $this->ficheAdaptationLocale = $ficheAdaptationLocale;
 
         return $this;
     }

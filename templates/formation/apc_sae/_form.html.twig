@@ -15,11 +15,14 @@
                 <div class="col-sm-3">
                     {{ form_row(form.libelleCourt) }}
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     {{ form_row(form.portfolio) }}
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     {{ form_row(form.stage) }}
+                </div>
+                <div class="col-sm-4 bg-warning text-white">
+                    {{ form_row(form.ficheAdaptationLocale) }}
                 </div>
             </div>
         </div>
@@ -28,7 +31,7 @@
 
 <section>
     <h2 class="small-title">Préconisation de répartition (non publié)</h2>
-    <div class="card mb-5 bg-secondary text-white">
+    <div class="card mb-5 bg-warning text-white">
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-4">
@@ -190,7 +193,7 @@
 
 <section>
     <h2 class="small-title">Exemple(s) pour la SAÉ (non publié)</h2>
-    <div class="card mb-5 bg-secondary text-white">
+    <div class="card mb-5 bg-warning text-white">
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-12">

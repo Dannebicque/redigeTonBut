@@ -1,6 +1,5 @@
 <div class="col-md-4 col-sm-12">
-    <div class="card">
-
+    <div class="card {% if ressource.ficheAdaptationLocale == true %}bg-warning text-white{% endif %}">
         <div class="card-body">
             <h4 class="card-title">{{ sae.display }}
                 <span class="badge badge-primary">{{ sae
@@ -43,7 +42,9 @@
                     <span class="d-none d-xxl-inline-block">Dupliquer</span>
                 </a>
                 <a href="{{ path('formation_apc_sae_edit',
-                    {'id': sae.id, parcours: parcours != null ? parcours.id : null}) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
+                    {'id': sae.id, parcours: parcours != null ? parcours.id : null}) }}" class="btn btn-sm btn-icon
+                    btn-icon-start {% if sae.ficheAdaptationLocale == true
+                %} btn-outline-dark text-white{% else %} btn-outline-warning{% endif %} ms-1" type="button">
                     <i class="bi-pencil-square"></i>
                     <span class="d-none d-xxl-inline-block">Modifier</span>
                 </a>

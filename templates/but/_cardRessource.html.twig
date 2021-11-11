@@ -1,5 +1,5 @@
 <div class="col-md-4 col-sm-12">
-    <div class="card">
+    <div class="card {% if ressource.ficheAdaptationLocale == true %}bg-warning text-white{% endif %}">
         <div class="card-body">
             <h4 class="card-title">{{ ressource.display }}</h4>
             <p class="card-subtitle mb-3 text-alternate">{{ ressource.motsCles }}</p>
@@ -65,7 +65,8 @@
                 </a>
                 <a href="{{ path('formation_apc_ressource_edit',
                     {'id': ressource.id, parcours: parcours != null ? parcours.id : null }) }}" class="btn btn-sm
-                    btn-icon btn-icon-start btn-outline-warning ms-1" type="button">
+                    btn-icon btn-icon-start ms-1 {% if ressource.ficheAdaptationLocale == true
+                %} btn-outline-dark text-white{% else %} btn-outline-warning{% endif %}" type="button">
                     <i class="bi-pencil-square"></i>
                     <span class="d-none d-xxl-inline-block">Modifier</span>
                 </a>

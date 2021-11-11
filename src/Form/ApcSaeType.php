@@ -39,6 +39,7 @@ class ApcSaeType extends AbstractType
 
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code SAÉ',  'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
+            ->add('ficheAdaptationLocale', ChoiceType::class, ['label' => 'Fiche d\'adaptation locale ?', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false,], 'attr' => ['class' => 'text-white'], 'label_attr' => ['class' => 'text-white'],'help' => 'Si la fiche est de l\'adaptation locale, elle ne sera pas prise en compte dans les tableaux et simplement affichées aux collègues', 'help_attr' => ['class' => 'text-white']])
             ->add('libelle', TextType::class, ['label' => 'Nom de la SAÉ'])
             ->add('portfolio', ChoiceType::class, ['label' => 'SAÉ du portfolio', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false]])
             ->add('stage', ChoiceType::class, ['label' => 'SAÉ du stage', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false]])

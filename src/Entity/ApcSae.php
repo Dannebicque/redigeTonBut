@@ -71,9 +71,9 @@ class ApcSae extends AbstractMatiere
     private ?string $exemples;
 
     /**
-     * @ORM\Column(type="string", length=5, nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private ?string $typeFiche;
+    private ?bool $ficheAdaptationLocale = false;
 
     /**
      * @ORM\Column(type="boolean")
@@ -317,14 +317,14 @@ class ApcSae extends AbstractMatiere
         return $this;
     }
 
-    public function getTypeFiche(): ?string
+    public function getFicheAdaptationLocale(): ?bool
     {
-        return $this->typeFiche;
+        return $this->ficheAdaptationLocale;
     }
 
-    public function setTypeFiche(?string $typeFiche): self
+    public function setFicheAdaptationLocale(?bool $ficheAdaptationLocale): self
     {
-        $this->typeFiche = $typeFiche;
+        $this->ficheAdaptationLocale = $ficheAdaptationLocale;
 
         return $this;
     }

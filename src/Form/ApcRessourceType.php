@@ -18,6 +18,7 @@ use App\Repository\ApcComptenceRepository;
 use App\Repository\SemestreRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -39,6 +40,7 @@ class ApcRessourceType extends AbstractType
 
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code Ressource', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
+            ->add('ficheAdaptationLocale', ChoiceType::class, ['label' => 'Fiche d\'adaptation locale ?', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false,], 'attr' => ['class' => 'text-white'], 'label_attr' => ['class' => 'text-white'],'help' => 'Si la fiche est de l\'adaptation locale, elle ne sera pas prise en compte dans les tableaux et simplement affichées aux collègues', 'help_attr' => ['class' => 'text-white']])
             ->add('libelle', TextType::class, ['label' => 'Libellé'])
             ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre'])
             ->add('libelleCourt', TextType::class, ['label' => 'Libellé court', 'attr' => ['maxlength' => 25], 'required' => false,

@@ -48,6 +48,7 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
             ->innerJoin(Semestre::class, 'se', 'WITH', 's.semestre = se.id')
             ->where('p.parcours = :parcours')
             ->andWhere('se.ordreLmd = :semestre')
+            ->andWhere('s.ficheAdaptationLocale = false')
             ->setParameter('parcours', $parcours->getId())
             ->setParameter('semestre', $semestre->getOrdreLmd())
             ->orderBy('s.ordre', 'ASC')
@@ -71,6 +72,7 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = a.semestre')
             ->where('p.parcours = :parcours')
             ->andWhere('s.annee = :annee')
+            ->andWhere('a.ficheAdaptationLocale = false')
             ->setParameter('parcours', $parcours->getId())
             ->setParameter('annee', $annee->getId())
             ->orderBy('a.ordre', 'ASC')
@@ -111,7 +113,6 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('r')
             ->innerJoin(ApcRessource::class, 'a', 'WITH', 'r.ressource = a.id')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = a.semestre')
-
             ->orderBy('a.codeMatiere', 'ASC')
             ->addOrderBy('a.semestre', 'ASC')
             ->addOrderBy('a.libelle', 'ASC');

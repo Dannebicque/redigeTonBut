@@ -3,7 +3,13 @@
 {% block header %}{{ apc_ressource.display }}{% endblock %}
 
 {% block content %}
-    <div class="card">
+    {% if apc_ressource.ficheAdaptationLocale == true %}
+    <div class="alert alert-warning mb-2">Fiche d'adaptation locale. Non publiée et non prise en compte dans les
+                                     tableaux.</div>
+    {% endif %}
+
+    <div class="card {% if apc_ressource.ficheAdaptationLocale == true
+    %} bg-warning text-white{% endif %}">
         <div class="card-body">
             {{ include('formation/apc_ressource/_detail.html.twig') }}
         </div>
