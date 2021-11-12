@@ -94,7 +94,7 @@ class ApcRessourceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->where('s.annee = :annee')
-            ->andWhere('r.ficheAdaptationLocale = false')
+           // ->andWhere('r.ficheAdaptationLocale = false')
             ->setParameter('annee', $annee->getId())
             ->orderBy('r.semestre', 'ASC')
             ->addOrderBy('r.ordre', 'ASC')

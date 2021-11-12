@@ -5,8 +5,6 @@ namespace App\Classes\Apc;
 use App\Classes\Word\MyWord;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
-use App\Repository\ApcRessourceParcoursRepository;
-use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,11 +62,14 @@ class ApcSaesExport
         $tabFiles = [];
 
         foreach ($this->saes as $key => $saes) {
+            /** @var \App\Entity\ApcSae $sae */
             foreach ($saes as $sae) {
-                $fichier = $this->myWord->exportAndSaveSae($sae, $this->dir);
-                $nomfichier = 'sae_' . $sae->getCodeMatiere() . '.docx';
-                $tabFiles[] = $fichier;
-                $zip->addFile($fichier, $nomfichier);
+                if ($sae->getFicheAdaptationLocale() === false) {
+                    $fichier = $this->myWord->exportAndSaveSae($sae, $this->dir);
+                    $nomfichier = 'sae_' . $sae->getCodeMatiere() . '.docx';
+                    $tabFiles[] = $fichier;
+                    $zip->addFile($fichier, $nomfichier);
+                }
             }
         }
 

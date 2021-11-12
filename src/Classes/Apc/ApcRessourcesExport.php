@@ -63,11 +63,14 @@ class ApcRessourcesExport
         $tabFiles = [];
 
         foreach ($this->ressources as $key => $ressources) {
+            /** @var \App\Entity\ApcRessource $ressource */
             foreach ($ressources as $ressource) {
-                $fichier = $this->myWord->exportAndSaveressource($ressource, $this->dir);
-                $nomfichier = 'ressource_' . $ressource->getCodeMatiere() . '.docx';
-                $tabFiles[] = $fichier;
-                $zip->addFile($fichier, $nomfichier);
+                if ($ressource->getFicheAdaptationLocale() === false) {
+                    $fichier = $this->myWord->exportAndSaveressource($ressource, $this->dir);
+                    $nomfichier = 'ressource_' . $ressource->getCodeMatiere() . '.docx';
+                    $tabFiles[] = $fichier;
+                    $zip->addFile($fichier, $nomfichier);
+                }
             }
         }
 

@@ -72,7 +72,7 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = a.semestre')
             ->where('p.parcours = :parcours')
             ->andWhere('s.annee = :annee')
-            ->andWhere('a.ficheAdaptationLocale = false')
+           // ->andWhere('a.ficheAdaptationLocale = false')
             ->setParameter('parcours', $parcours->getId())
             ->setParameter('annee', $annee->getId())
             ->orderBy('a.ordre', 'ASC')

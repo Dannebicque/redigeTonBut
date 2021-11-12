@@ -88,7 +88,7 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
             ->innerJoin(ApcSae::class, 'a', 'WITH', 'p.sae = a.id')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = a.semestre')
             ->where('p.parcours = :parcours')
-            ->andWhere('a.ficheAdaptationLocale = false')
+           // ->andWhere('a.ficheAdaptationLocale = false')
             ->andWhere('s.annee = :annee')
             ->setParameter('parcours', $parcours->getId())
             ->setParameter('annee', $annee->getId())
