@@ -8,7 +8,7 @@
             {% for sae in saes %}
                 <th>
                     <p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p><br>
-                    {% if not is_granted('ROLE_LECTEUR') %}
+                    {% if not is_granted('ROLE_LECTEUR') and user_data.departement.verouilleCroise == false %}
                         <a class="btn btn-secondary"
                            title="Déplacer vers la gauche la SAÉ"
                            {% if sae.ordre == 1 %}disabled{% endif %}
@@ -27,7 +27,7 @@
                 </th>
             {% endfor %}
             <th>
-                {% if not is_granted('ROLE_LECTEUR') %}
+                {% if not is_granted('ROLE_LECTEUR') and user_data.departement.verouilleCroise == false %}
                     <a class="btn btn-secondary"
                        style="padding:0 8px; font-size:0.7em"
                        title="Ajouter une SAÉ au semestre"
@@ -38,7 +38,7 @@
             {% for ressource in ressources %}
                 <th>
                     <p data-bs-toggle="tooltip" title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</p><br>
-                    {% if not is_granted('ROLE_LECTEUR') %}
+                    {% if not is_granted('ROLE_LECTEUR') and user_data.departement.verouilleCroise == false %}
                         <a class="btn btn-secondary" style="padding:0 8px; font-size:0.7em"
                            {% if ressource.ordre == 1 %}disabled{% endif %}
                            title="Déplacer vers la gauche la ressource"
@@ -55,7 +55,7 @@
                 </th>
             {% endfor %}
             <th>
-                {% if not is_granted('ROLE_LECTEUR') %}
+                {% if not is_granted('ROLE_LECTEUR') and user_data.departement.verouilleCroise == false %}
                     <a class="btn btn-secondary"
                        style="padding:0 8px; font-size:0.7em"
                        title="Ajouter une ressource au semestre"
@@ -87,6 +87,7 @@
                                 {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}X{% endif %}
                             {% else %}
                                 <input type="checkbox"
+                                       {% if user_data.departement.verouilleCroise == true %}disabled{% endif %}
                                        data-sae="{{ sae.id }}"
                                        data-ac="{{ ac.id }}"
                                        class="changeAcSae"
@@ -102,6 +103,7 @@
                                     defined %}X{% endif %}
                             {% else %}
                                 <input type="checkbox"
+                                       {% if user_data.departement.verouilleCroise == true %}disabled{% endif %}
                                        data-ressource="{{ ressource.id }}"
                                        data-ac="{{ ac.id }}"
                                        {% if is_granted('ROLE_LECTEUR') %}disabled{% endif %}
@@ -124,6 +126,7 @@
                         {% else %}
                             <input type="text" class="form-control changeCoeffSae"
                                    style="min-width: 50px"
+                                   {% if user_data.departement.verouilleCroise == true %}disabled{% endif %}
                                    data-sae="{{ sae.id }}"
                                    data-competence="{{ niveau.competence.id }}"
                                     {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
@@ -145,6 +148,7 @@
                         {% else %}
                             <input type="text"
                                    style="min-width: 50px"
+                                   {% if user_data.departement.verouilleCroise == true %}disabled{% endif %}
                                    data-ressource="{{ ressource.id }}"
                                    data-competence="{{ niveau.competence.id }}"
                                    class="form-control changeCoeffRessource"

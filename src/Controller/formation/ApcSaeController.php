@@ -38,41 +38,51 @@ class ApcSaeController extends BaseController
         Semestre $semestre = null,
         ApcParcours $parcours = null
     ): Response {
-        $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
-        $apcSae = new ApcSae();
+        if ($this->getDepartement()->getVerouilleCroise() === false) {
+            $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
+            $apcSae = new ApcSae();
 
-        if ($semestre !== null) {
-            $apcSae->setSemestre($semestre);
-            $apcSae->setOrdre($apcSaeOrdre->getOrdreSuivant($semestre));
-        }
-
-        $form = $this->createForm(ApcSaeType::class, $apcSae, [
-            'departement' => $this->getDepartement(),
-            'editable' => $this->isGranted('ROLE_GT'),
-            'parcours' => $parcours
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $apcSaeAddEdit->addOrEdit($apcSae, $request);
-
-            $this->addFlashBag(
-                Constantes::FLASHBAG_SUCCESS,
-                'SAÉ ajoutée avec succès.'
-            );
-
-            if ($parcours !== null) {
-                return $this->redirectToRoute('but_sae_annee',
-                    ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId(), 'parcours' => $parcours->getId() ]);
+            if ($semestre !== null) {
+                $apcSae->setSemestre($semestre);
+                $apcSae->setOrdre($apcSaeOrdre->getOrdreSuivant($semestre));
             }
 
-            return $this->redirectToRoute('but_sae_annee', ['annee' => $apcSae->getSemestre()->getAnnee()->getId(), 'semestre' => $apcSae->getSemestre()->getId()]);
-        }
+            $form = $this->createForm(ApcSaeType::class, $apcSae, [
+                'departement' => $this->getDepartement(),
+                'editable' => $this->isGranted('ROLE_GT'),
+                'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
+                'parcours' => $parcours
+            ]);
+            $form->handleRequest($request);
 
-        return $this->render('formation/apc_sae/new.html.twig', [
-            'apc_sae' => $apcSae,
-            'form' => $form->createView(),
-        ]);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $apcSaeAddEdit->addOrEdit($apcSae, $request);
+
+                $this->addFlashBag(
+                    Constantes::FLASHBAG_SUCCESS,
+                    'SAÉ ajoutée avec succès.'
+                );
+
+                if ($parcours !== null) {
+                    return $this->redirectToRoute('but_sae_annee',
+                        [
+                            'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
+                            'semestre' => $apcSae->getSemestre()->getId(),
+                            'parcours' => $parcours->getId()
+                        ]);
+                }
+
+                return $this->redirectToRoute('but_sae_annee', [
+                    'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
+                    'semestre' => $apcSae->getSemestre()->getId()
+                ]);
+            }
+
+            return $this->render('formation/apc_sae/new.html.twig', [
+                'apc_sae' => $apcSae,
+                'form' => $form->createView(),
+            ]);
+        }
     }
 
     /**
@@ -95,6 +105,7 @@ class ApcSaeController extends BaseController
         $form = $this->createForm(ApcSaeType::class, $apcSae, [
             'departement' => $this->getDepartement(),
             'editable' => $this->isGranted('ROLE_GT'),
+            'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
             'parcours' => $parcours
         ]);
         $form->handleRequest($request);

@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-10">&nbsp;</div>
                     <div class="col-2">
-                        {% if is_granted('ROLE_EDITEUR') %}
+                        {% if is_granted('ROLE_EDITEUR') and user_data.departement.verouilleCroise == false %}
                             {% if user_data.departement.typeStructure == 'type3' and parcours is defined %}
                                 <a href="{{ path('formation_apc_sae_new', {semestre: semestre.id, parcours: parcours.id}) }}" class="btn
             btn-outline-primary

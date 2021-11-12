@@ -35,12 +35,14 @@
             </div>
             {% if  is_granted('ROLE_EDITEUR') %}
             <div class="col-12 d-flex align-items-center justify-content-md-end">
+                {% if user_data.departement.verouilleCroise == false %}
                 <a href="{{ path('formation_apc_sae_duplicate',
                     {'id': sae.id, parcours: parcours != null ? parcours.id : null}) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info ms-1"
                    type="button">
                     <i class="bi-files"></i>
                     <span class="d-none d-xxl-inline-block">Dupliquer</span>
                 </a>
+                {% endif %}
                 <a href="{{ path('formation_apc_sae_edit',
                     {'id': sae.id, parcours: parcours != null ? parcours.id : null}) }}" class="btn btn-sm btn-icon
                     btn-icon-start {% if sae.ficheAdaptationLocale == true
@@ -48,7 +50,7 @@
                     <i class="bi-pencil-square"></i>
                     <span class="d-none d-xxl-inline-block">Modifier</span>
                 </a>
-                {% if  is_granted('ROLE_PACD') %}
+                {% if  is_granted('ROLE_PACD') and user_data.departement.verouilleCroise == false %}
                     {{ include('form/_delete_form.html.twig', {path: path('formation_apc_sae_delete',
                         {id: sae.id, }), id: sae.id}) }}
                 {% endif %}

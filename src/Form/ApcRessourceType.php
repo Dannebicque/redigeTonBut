@@ -29,6 +29,7 @@ class ApcRessourceType extends AbstractType
 {
     protected ?Departement $departement;
     protected bool $editable;
+    protected bool $verouille_croise;
     protected ?ApcParcours $parcours;
 
 
@@ -37,14 +38,15 @@ class ApcRessourceType extends AbstractType
         $this->departement = $options['departement'];
         $this->editable = !$options['editable'];
         $this->parcours = $options['parcours'];
+        $this->verouille_croise = $options['verouille_croise'];
 
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code Ressource', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
             ->add('ficheAdaptationLocale', ChoiceType::class, ['label' => 'Fiche d\'adaptation locale ?', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false,], 'attr' => ['class' => 'text-white'], 'label_attr' => ['class' => 'text-white'],'help' => 'Si la fiche est de l\'adaptation locale, elle ne sera pas prise en compte dans les tableaux et simplement affichées aux collègues', 'help_attr' => ['class' => 'text-white']])
-            ->add('libelle', TextType::class, ['label' => 'Libellé'])
-            ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre'])
+            ->add('libelle', TextType::class, ['label' => 'Libellé', 'disabled' => $this->verouille_croise])
+            ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre', 'disabled' => $this->verouille_croise,])
             ->add('libelleCourt', TextType::class, ['label' => 'Libellé court', 'attr' => ['maxlength' => 25], 'required' => false,
-                'help' => '25 caractères maximum, utile pour Apogée'])
+                'help' => '25 caractères maximum, utile pour Apogée', 'disabled' => $this->verouille_croise])
             ->add('description', TextareaType::class,
                 [
                     'attr' => ['rows' => 20],
@@ -80,7 +82,7 @@ class ApcRessourceType extends AbstractType
 
             ->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
-                'required' => true,
+                'required' => true, 'disabled' => $this->verouille_croise,
                 'choice_label' => 'display',
                 'attr' => ['x-model'=> 'semestre', '@change' => 'changeSemestre'],
                 'query_builder' => function(SemestreRepository $semestreRepository) {
@@ -98,6 +100,7 @@ class ApcRessourceType extends AbstractType
             'data_class' => ApcRessource::class,
             'departement' => null,
             'editable' => null,
+            'verouille_croise' => null,
             'parcours' => null,
         ]);
     }

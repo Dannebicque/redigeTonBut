@@ -30,22 +30,24 @@ class ApcSaeType extends AbstractType
     protected ?Departement $departement;
     protected ?ApcParcours $parcours;
     private bool $editable;
+    private bool $verouille_croise;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->departement = $options['departement'];
         $this->editable = !$options['editable'];
+        $this->verouille_croise = !$options['verouille_croise'];
         $this->parcours = $options['parcours'];
 
         $builder
             ->add('codeMatiere', TextType::class, ['label' => 'Code SAÉ',  'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
             ->add('ficheAdaptationLocale', ChoiceType::class, ['label' => 'Fiche d\'adaptation locale ?', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false,], 'attr' => ['class' => 'text-white'], 'label_attr' => ['class' => 'text-white'],'help' => 'Si la fiche est de l\'adaptation locale, elle ne sera pas prise en compte dans les tableaux et simplement affichées aux collègues', 'help_attr' => ['class' => 'text-white']])
-            ->add('libelle', TextType::class, ['label' => 'Nom de la SAÉ'])
-            ->add('portfolio', ChoiceType::class, ['label' => 'SAÉ du portfolio', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false]])
-            ->add('stage', ChoiceType::class, ['label' => 'SAÉ du stage', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false]])
-            ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre'])
+            ->add('libelle', TextType::class, ['label' => 'Nom de la SAÉ', 'disabled' => $this->verouille_croise])
+            ->add('portfolio', ChoiceType::class, ['label' => 'SAÉ du portfolio', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false], 'disabled' => $this->verouille_croise])
+            ->add('stage', ChoiceType::class, ['label' => 'SAÉ du stage', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false], 'disabled' => $this->verouille_croise])
+            ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre', 'disabled' => $this->verouille_croise])
             ->add('libelleCourt', TextType::class,
-                ['label' => 'Libellé court', 'required' => false, 'attr' => ['maxlength' => 25], 'help' => '25 caractères maximum, peut être utile pour Apogée'])
+                ['label' => 'Libellé court', 'required' => false, 'attr' => ['maxlength' => 25], 'help' => '25 caractères maximum, peut être utile pour Apogée', 'disabled' => $this->verouille_croise])
             ->add('description', TextareaType::class,
                 [
                     'attr' => ['rows' => 20],
@@ -111,6 +113,7 @@ class ApcSaeType extends AbstractType
             'data_class' => ApcSae::class,
             'departement' => null,
             'editable' => null,
+            'verouille_croise' => null,
             'parcours' => null,
         ]);
     }

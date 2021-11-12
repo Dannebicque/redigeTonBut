@@ -100,12 +100,17 @@ class Departement extends BaseEntity
     /**
      * @ORM\Column(type="boolean")
      */
-    private $verouilleStructure;
+    private bool $verouilleStructure;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $verouilleCompetences;
+    private bool $verouilleCompetences;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $verouilleCroise;
 
     public function __construct()
     {
@@ -450,6 +455,18 @@ class Departement extends BaseEntity
     public function setVerouilleCompetences(bool $verouilleCompetences): self
     {
         $this->verouilleCompetences = $verouilleCompetences;
+
+        return $this;
+    }
+
+    public function getVerouilleCroise(): ?bool
+    {
+        return $this->verouilleCroise;
+    }
+
+    public function setVerouilleCroise(bool $verouilleCroise): self
+    {
+        $this->verouilleCroise = $verouilleCroise;
 
         return $this;
     }

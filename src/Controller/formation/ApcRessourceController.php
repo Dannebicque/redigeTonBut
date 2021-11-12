@@ -43,49 +43,52 @@ class ApcRessourceController extends BaseController
         Semestre $semestre = null,
         ApcParcours $parcours = null
     ): Response {
-        $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
-        $apcRessource = new ApcRessource();
+        if ($this->getDepartement()->getVerouilleCroise() === false) {
+            $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
+            $apcRessource = new ApcRessource();
 
-        if ($semestre !== null) {
-            $apcRessource->setSemestre($semestre);
-            $apcRessource->setOrdre($apcRessourceOrdre->getOrdreSuivant($semestre));
-        }
+            if ($semestre !== null) {
+                $apcRessource->setSemestre($semestre);
+                $apcRessource->setOrdre($apcRessourceOrdre->getOrdreSuivant($semestre));
+            }
 
-        $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
-            'departement' => $this->getDepartement(),
-            'editable' => $this->isGranted('ROLE_GT'),
-            'parcours' => $parcours
-        ]);
-        $form->handleRequest($request);
+            $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
+                'departement' => $this->getDepartement(),
+                'editable' => $this->isGranted('ROLE_GT'),
+                'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
+                'parcours' => $parcours
+            ]);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
 
-            $this->addFlashBag(
-                Constantes::FLASHBAG_SUCCESS,
-                'Ressource ajoutée avec succès.'
-            );
+                $this->addFlashBag(
+                    Constantes::FLASHBAG_SUCCESS,
+                    'Ressource ajoutée avec succès.'
+                );
 
-            if ($parcours !== null) {
+                if ($parcours !== null) {
+                    return $this->redirectToRoute('but_ressources_annee',
+                        [
+                            'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
+                            'semestre' => $apcRessource->getSemestre()->getId(),
+                            'parcours' => $parcours->getId()
+                        ]);
+                }
+
                 return $this->redirectToRoute('but_ressources_annee',
                     [
                         'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
-                        'semestre' => $apcRessource->getSemestre()->getId(),
-                        'parcours' => $parcours->getId()
+                        'semestre' => $apcRessource->getSemestre()->getId()
                     ]);
             }
 
-            return $this->redirectToRoute('but_ressources_annee',
-                [
-                    'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
-                    'semestre' => $apcRessource->getSemestre()->getId()
-                ]);
+            return $this->render('formation/apc_ressource/new.html.twig', [
+                'apc_ressource' => $apcRessource,
+                'form' => $form->createView(),
+            ]);
         }
-
-        return $this->render('formation/apc_ressource/new.html.twig', [
-            'apc_ressource' => $apcRessource,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**
@@ -108,6 +111,7 @@ class ApcRessourceController extends BaseController
         $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
             'departement' => $this->getDepartement(),
             'editable' => $this->isGranted('ROLE_GT'),
+            'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
             'parcours' => $parcours
         ]);
         $form->handleRequest($request);

@@ -51,7 +51,7 @@
             <i class="bi-pencil-square"></i>
             <span>Modifier</span>
         </a>
-        {% if is_granted('ROLE_PACD') %}
+        {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCroise == false %}
             {{ include('form/_delete_form.html.twig', {path: path('formation_apc_ressource_delete',
                 {id: apc_ressource.id, }), id: apc_ressource.id}) }}
         {% endif %}
