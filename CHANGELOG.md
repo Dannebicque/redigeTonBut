@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.21](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.20...v1.8.21) (2021-11-12)
+
+
+### Bug Fixes
+
+* Affichage des ressources et SAE AL ([08db352](https://github.com/Dannebicque/redigeTonBut/commit/08db3529232c5d36146c2704534bd2289be613f1))
+
 ### [1.8.20](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.19...v1.8.20) (2021-11-12)
 
 
