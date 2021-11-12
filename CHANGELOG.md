@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.20](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.19...v1.8.20) (2021-11-12)
+
+
+### Features
+
+* Blocage du tableau croisé. ([263ddb0](https://github.com/Dannebicque/redigeTonBut/commit/263ddb0ea993f473cbe9a727f446f13206f57764))
+
 ### [1.8.19](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.18...v1.8.19) (2021-11-11)
 
 
