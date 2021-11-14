@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.22](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.21...v1.8.22) (2021-11-14)
+
+
+### Bug Fixes
+
+* Bug sur le blocage des tableaux pour les SAE ([2044e0e](https://github.com/Dannebicque/redigeTonBut/commit/2044e0e609925b53f51175bb516449a17dab632d))
+* Génération du bon code des SAE ou ressources ([8b031af](https://github.com/Dannebicque/redigeTonBut/commit/8b031af708bb0e5d5709d9a262c2c4e57b8a54e4))
+
 ### [1.8.21](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.20...v1.8.21) (2021-11-12)
 
 
