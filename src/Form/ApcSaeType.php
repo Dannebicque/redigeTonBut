@@ -36,7 +36,7 @@ class ApcSaeType extends AbstractType
     {
         $this->departement = $options['departement'];
         $this->editable = !$options['editable'];
-        $this->verouille_croise = !$options['verouille_croise'];
+        $this->verouille_croise = $options['verouille_croise'];
         $this->parcours = $options['parcours'];
 
         $builder
