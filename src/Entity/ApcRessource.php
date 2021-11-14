@@ -51,7 +51,7 @@ class ApcRessource extends AbstractMatiere
     private Collection $apcSaeRessources;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="ressource", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="ressource", cascade={"persist","remove"}, fetch="EAGER")
      */
     private Collection $apcRessourceParcours;
 

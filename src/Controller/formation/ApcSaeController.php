@@ -18,12 +18,14 @@ use App\Entity\ApcSae;
 use App\Entity\ApcSaeParcours;
 use App\Entity\Constantes;
 use App\Entity\Semestre;
+use App\Event\SaeEvent;
 use App\Form\ApcSaeType;
 use App\Repository\ApcParcoursRepository;
 use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @Route("/formation/sae", name="formation_")
@@ -32,6 +34,7 @@ class ApcSaeController extends BaseController
 {
     #[Route('/new/{semestre}/{parcours}', name: 'apc_sae_new', options: ['expose' => true], methods: ['GET', 'POST'])]
     public function new(
+        EventDispatcherInterface $eventDispatcher,
         ApcSaeOrdre $apcSaeOrdre,
         ApcSaeAddEdit $apcSaeAddEdit,
         Request $request,
@@ -57,6 +60,9 @@ class ApcSaeController extends BaseController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $apcSaeAddEdit->addOrEdit($apcSae, $request);
+
+                $saeEvent = new SaeEvent($apcSae);
+                $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
 
                 $this->addFlashBag(
                     Constantes::FLASHBAG_SUCCESS,
@@ -89,13 +95,13 @@ class ApcSaeController extends BaseController
      * @Route("/{id}/edit", name="apc_sae_edit", methods={"GET","POST"})
      */
     public function edit(
+        EventDispatcherInterface $eventDispatcher,
         ApcParcoursRepository $apcParcoursRepository,
         ApcSaeAddEdit $apcSaeAddEdit,
         Request $request,
         ApcSae $apcSae
     ): Response {
         $this->denyAccessUnlessGranted('edit', $apcSae);
-
         $parc = $request->query->get('parcours');
         $parcours= null;
         if ($parc !== null) {
@@ -119,6 +125,10 @@ class ApcSaeController extends BaseController
                 Constantes::FLASHBAG_SUCCESS,
                 'SAÉ modifiée avec succès.'
             );
+
+            $saeEvent = new SaeEvent($apcSae);
+            $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
+
 
             if (null !== $request->request->get('btn_update') && null !== $apcSae->getSemestre() && null !== $apcSae->getSemestre()->getAnnee()) {
                 if ($parcours === null) {

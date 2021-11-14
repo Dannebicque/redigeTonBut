@@ -131,4 +131,14 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
+
+    public function findSaeWithParcours(int $id)
+    {
+        return $this->createQueryBuilder('s')
+            ->innerJoin(ApcRessource::class, 'a', 'WITH', 's.ressource = a.id')
+            ->where('a.id = :ressource')
+            ->setParameter('ressource', $id)
+            ->getQuery()
+            ->getResult();
+    }
 }

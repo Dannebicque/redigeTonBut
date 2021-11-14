@@ -12,10 +12,9 @@ use App\Entity\Semestre;
 
 class Codification
 {
-    public static function codeRessource(ApcRessource $apcRessource) : string
+    public static function codeRessource(ApcRessource $apcRessource, $parcours) : string
     {
-
-        return 'R'.$apcRessource->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcRessource->getOrdre()).self::codeParcoursRessource($apcRessource);
+        return 'R'.$apcRessource->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcRessource->getOrdre()).self::codeParcoursRessource($parcours);
     }
 
     public static function codeComposanteEssentielle(ApcComposanteEssentielle $apcComposanteEssentielle) : string
@@ -34,7 +33,7 @@ class Codification
         return 'UE'.$semestre->getOrdreLmd().'.'.$apcCompetence->getNumero();
     }
 
-    public static function codeSae(ApcSae $apcSae) : string
+    public static function codeSae(ApcSae $apcSae, $parcours) : string
     {
         if ($apcSae->getPortfolio() === true) {
             return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.PORTFOLIO';
@@ -43,7 +42,7 @@ class Codification
         if ($apcSae->getStage() === true) {
             return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.STAGE';
         }
-        return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($apcSae);
+        return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($parcours);
     }
 
     private static function codeSurDeuxChiffres(?int $ordre)
@@ -70,20 +69,17 @@ class Codification
         }
     }
 
-    private static function codeParcoursSae(ApcSae $apcSae)
+    private static function codeParcoursSae($parcours)
     {
-        $nbParcours = $apcSae->getApcSaeParcours();
-
-        if (count($nbParcours) === 1 && $nbParcours !== null) {
-            return $apcSae->getApcSaeParcours()[0]->getParcours()->getCode();
+        if (count($parcours) === 1 && $parcours !== null) {
+            return $parcours[0]->getParcours()->getCode();
         }
     }
 
-    private static function codeParcoursRessource(ApcRessource $apcRessource)
+    private static function codeParcoursRessource($parcours)
     {
-        $nbParcours = $apcRessource->getApcRessourceParcours();
-        if (count($nbParcours) === 1 && $nbParcours !== null) {
-            return $apcRessource->getApcRessourceParcours()[0]->getParcours()->getCode();
+        if (count($parcours) === 1 && $parcours !== null) {
+            return $parcours[0]->getParcours()->getCode();
         }
     }
 

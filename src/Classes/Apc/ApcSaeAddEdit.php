@@ -90,7 +90,7 @@ class ApcSaeAddEdit
             }
         }
 
-        $apcSae->setCodeMatiere(Codification::codeSae($apcSae));
+        //$apcSae->setCodeMatiere(Codification::codeSae($apcSae));
 
         $this->entityManager->flush();
     }

@@ -103,7 +103,7 @@ class ApcRessourceAddEdit
                 }
             }
         }
-        $apcRessource->setCodeMatiere(Codification::codeRessource($apcRessource));
+
         $this->entityManager->flush();
     }
 

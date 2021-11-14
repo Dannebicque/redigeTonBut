@@ -51,7 +51,7 @@ class ApcSae extends AbstractMatiere
     private Collection $apcSaeApprentissageCritiques;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="sae", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="sae", cascade={"persist","remove"}, fetch="EAGER")
      */
     private Collection $apcSaeParcours;
 

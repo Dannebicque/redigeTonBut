@@ -19,6 +19,8 @@ use App\Entity\ApcRessourceParcours;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Event\RessourceEvent;
+use App\Event\SaeEvent;
 use App\Form\ApcRessourceType;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcParcoursRepository;
@@ -26,6 +28,7 @@ use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @Route("/formation/ressource", name="formation_")
@@ -37,6 +40,7 @@ class ApcRessourceController extends BaseController
         "POST"
     ])]
     public function new(
+        EventDispatcherInterface $eventDispatcher,
         ApcRessourceOrdre $apcRessourceOrdre,
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
@@ -62,6 +66,9 @@ class ApcRessourceController extends BaseController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
+
+                $ressourceEvent = new RessourceEvent($apcRessource);
+                $eventDispatcher->dispatch($ressourceEvent, RessourceEvent::UPDATE_CODIFICATION);
 
                 $this->addFlashBag(
                     Constantes::FLASHBAG_SUCCESS,
@@ -95,6 +102,7 @@ class ApcRessourceController extends BaseController
      * @Route("/{id}/edit", name="apc_ressource_edit", methods={"GET","POST"})
      */
     public function edit(
+        EventDispatcherInterface $eventDispatcher,
         ApcParcoursRepository $apcParcoursRepository,
         ApcRessourceAddEdit $apcRessourceAddEdit,
         Request $request,
@@ -119,6 +127,9 @@ class ApcRessourceController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $apcRessourceAddEdit->removeLiens($apcRessource);
             $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
+
+            $ressourceEvent = new RessourceEvent($apcRessource);
+            $eventDispatcher->dispatch($ressourceEvent, RessourceEvent::UPDATE_CODIFICATION);
 
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,
