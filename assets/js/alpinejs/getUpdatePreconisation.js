@@ -10,7 +10,6 @@ function getUpdatePreconisation (parcours = null) {
       6: {competences: {}, ressources: {}, saes: {}, semestre: {}}
     },
     async init () {
-      console.log(this.parcours)
       this.donnees = await fetch(Routing.generate('tableau_api_preconisation', {parcours: this.parcours})).then(r => {
         return r.json()
       })
@@ -33,7 +32,6 @@ function getUpdatePreconisation (parcours = null) {
       }
     },
     updateRessource (e) {
-      console.log(e.target.value)
       if (e.target.value.trim() !== '') {
         fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {
           ressource: e.target.dataset.ressource,
@@ -123,7 +121,6 @@ function getUpdatePreconisation (parcours = null) {
       return ''
     },
     afficheTotalEcts (tableau, libelle) {
-      console.log(this.numberFormat(tableau[libelle]))
       if (libelle in tableau) {
         return tableau[libelle]
       }
