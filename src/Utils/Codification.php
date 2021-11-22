@@ -36,11 +36,11 @@ class Codification
     public static function codeSae(ApcSae $apcSae, $parcours) : string
     {
         if ($apcSae->getPortfolio() === true) {
-            return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.PORTFOLIO';
+            return 'PORTFOLIO';
         }
 
         if ($apcSae->getStage() === true) {
-            return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.STAGE';
+            return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.STAGE'.'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($parcours);
         }
         return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($parcours);
     }
