@@ -169,7 +169,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getNom(): ?string
     {
-        return $this->nom;
+        return mb_strtoupper($this->nom);
     }
 
     public function setNom(string $nom): self
@@ -181,7 +181,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPrenom(): ?string
     {
-        return $this->prenom;
+        return ucwords(mb_strtolower($this->prenom));
     }
 
     public function setPrenom(string $prenom): self

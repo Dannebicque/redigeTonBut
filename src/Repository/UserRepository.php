@@ -24,7 +24,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findAll()
     {
-        return $this->findBy([], ['nom'=> 'ASC', 'prenom' => 'ASC']);
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.departement', 'd')
+            ->orderBy('d.libelle', 'ASC')
+            ->addOrderBy('u.nom', 'ASC')
+            ->addOrderBy('u.prenom', 'ASC')
+            ->getQuery()
+            ->getResult();
+
     }
 
     /**
