@@ -38,7 +38,7 @@ class UpdateCodificationController extends BaseController
 
 
         foreach ($ressources as $ressource) {
-            $ressource->setCodeMatiere(Codification::codeRessource($ressource));
+            $ressource->setCodeMatiere(Codification::codeRessource($ressource, $ressource->getApcRessourceParcours()));
         }
 
         $this->entityManager->flush();
@@ -59,7 +59,7 @@ class UpdateCodificationController extends BaseController
         }
 
         foreach ($saes as $sae) {
-            $sae->setCodeMatiere(Codification::codeSae($sae));
+            $sae->setCodeMatiere(Codification::codeSae($sae, $sae->getApcSaeParcours()));
         }
 
         $this->entityManager->flush();
