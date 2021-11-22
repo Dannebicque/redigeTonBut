@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.25](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.24...v1.8.25) (2021-11-22)
+
+
+### Bug Fixes
+
+* Codification corrgée avec le nouveau code du portfolio ([a5c3c8a](https://github.com/Dannebicque/redigeTonBut/commit/a5c3c8af481e763ed61bab4247a0c447b9e4517d))
+* Codification globale + nouveau code Portfolio et stage ([bf9f045](https://github.com/Dannebicque/redigeTonBut/commit/bf9f0451af8f5833ac4db81ebb93ae43293a53d8))
+* Liste des utilisateurs ([d0c504c](https://github.com/Dannebicque/redigeTonBut/commit/d0c504c5dc1232a1c1e2b087f792efba178bb0db))
+* menu en responsive ([d79f82d](https://github.com/Dannebicque/redigeTonBut/commit/d79f82d9b21691aa443ca24bfcf25f73cbf7c603))
+* problème de sauvegarde si le tableau croisé est bloqué. ([c29dcf4](https://github.com/Dannebicque/redigeTonBut/commit/c29dcf44cb76954144321e7a7f7993a1b1b83423))
+
 ### [1.8.24](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.23...v1.8.24) (2021-11-16)
 
 ### [1.8.23](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.22...v1.8.23) (2021-11-16)
