@@ -155,7 +155,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#tableaux" data-href="Dashboards.html">
+                            <a href="#tableaux" data-href="tableaux">
                                 <i class="bi bi-table icon"></i>
                                 <span class="label">Tableaux</span>
                             </a>
@@ -284,7 +284,7 @@
                         {% endfor %}
                     {% endif %}
                     <li>
-                        <a href="#admin" data-href="Dashboards.html">
+                        <a href="#admin" data-href="admin">
                             <i class="bi bi-gear icon"></i>
                             <span class="label">Admin.</span>
                         </a>
@@ -344,15 +344,14 @@
                     </li>
                     {% if is_granted('ROLE_GT') %}
                         <li class="mega dropdown">
-                            <a href="#ref_formation" data-href="Dashboards.html">
+                            <a href="#ref_formation" data-href="ref_formation">
                                 <i class="bi bi-shuffle icon"></i>
                                 <span class="label">B.U.T.</span>
                             </a>
-                            <ul id="interface" class="row align-items-start row-cols-2 dropdown-menu"
+                            <ul id="ref_formation" class="row align-items-start row-cols-2 dropdown-menu"
                                 data-popper-placement="bottom-start">
                                 <li class="dropdown col d-flex flex-column">
-                                    <a href="#tertiaires" data-href="Interface.Components.html" class="dropdown-toggle
-                                    active">
+                                    <a href="#tertiaires" data-href="tertiaires" class="dropdown-toggle">
                                         <span class="label">Tertiaires</span>
                                     </a>
                                     <ul id="tertiaires">
@@ -367,7 +366,7 @@
                                     </ul>
                                 </li>
                                 <li class="dropdown col d-flex flex-column">
-                                    <a href="#Secondaires" class="dropdown-toggle">
+                                    <a href="#Secondaires" class="dropdown-toggle" data-href="Secondaires">
                                         <span class="label">Secondaires</span>
                                     </a>
                                     <ul id="Secondaires">
@@ -386,15 +385,14 @@
                     {% endif %}
                     {% if user_data.user.isCpn %}
                         <li class="mega dropdown">
-                            <a href="#ref_formation" data-href="Dashboards.html">
+                            <a href="#ref_formation" data-href="ref_formation">
                                 <i class="bi bi-shuffle icon"></i>
                                 <span class="label">B.U.T.</span>
                             </a>
-                            <ul id="interface" class="row align-items-start row-cols-2 dropdown-menu"
+                            <ul id="ref_formation" class="row align-items-start row-cols-2 dropdown-menu"
                                 data-popper-placement="bottom-start">
                                 <li class="dropdown col d-flex flex-column">
-                                    <a href="#tertiaires" data-href="Interface.Components.html" class="dropdown-toggle
-                                    active">
+                                    <a href="#tertiaires" data-href="tertiaires" class="dropdown-toggle">
                                         <span class="label">Tertiaires</span>
                                     </a>
                                     <ul id="tertiaires">
@@ -410,7 +408,7 @@
                                     </ul>
                                 </li>
                                 <li class="dropdown col d-flex flex-column">
-                                    <a href="#Secondaires" class="dropdown-toggle">
+                                    <a href="#Secondaires" class="dropdown-toggle" data-href="Secondaires">
                                         <span class="label">Secondaires</span>
                                     </a>
                                     <ul id="Secondaires">
