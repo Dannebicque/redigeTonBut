@@ -59,7 +59,7 @@ class ApcSaeController extends BaseController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $apcSaeAddEdit->addOrEdit($apcSae, $request);
+                $apcSaeAddEdit->addOrEdit($apcSae, $request,$this->getDepartement()->getVerouilleCroise());
 
                 $saeEvent = new SaeEvent($apcSae);
                 $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
@@ -118,8 +118,8 @@ class ApcSaeController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $apcSaeAddEdit->removeLiens($apcSae);
-            $apcSaeAddEdit->addOrEdit($apcSae, $request);
+            $apcSaeAddEdit->removeLiens($apcSae,$this->getDepartement()->getVerouilleCroise());
+            $apcSaeAddEdit->addOrEdit($apcSae, $request,$this->getDepartement()->getVerouilleCroise());
 
             $this->addFlashBag(
                 Constantes::FLASHBAG_SUCCESS,

@@ -13,7 +13,6 @@ use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceRepository;
-use App\Utils\Codification;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ApcSaeAddEdit
@@ -41,32 +40,34 @@ class ApcSaeAddEdit
     }
 
 
-    public function addOrEdit(ApcSae $apcSae, $request)
+    public function addOrEdit(ApcSae $apcSae, $request, $verouille = false)
     {
         $this->entityManager->persist($apcSae);
         $tabAcComp = [];
-        //sauvegarde des AC
-        $acs = $request->request->get('ac');
-        if (is_array($acs)) {
-            foreach ($acs as $idAc) {
-                $ac = $this->apcApprentissageCritiqueRepository->find($idAc);
-                if ($ac !== null) {
-                    $saeAc = new ApcSaeApprentissageCritique($apcSae, $ac);
-                    $this->entityManager->persist($saeAc);
-                    if (!in_array($ac->getCompetence()->getId(), $tabAcComp, true)) {
-                        $tabAcComp[] = $ac->getCompetence()->getId();
+        if ($verouille === false) {
+            //sauvegarde des AC
+            $acs = $request->request->get('ac');
+            if (is_array($acs)) {
+                foreach ($acs as $idAc) {
+                    $ac = $this->apcApprentissageCritiqueRepository->find($idAc);
+                    if ($ac !== null) {
+                        $saeAc = new ApcSaeApprentissageCritique($apcSae, $ac);
+                        $this->entityManager->persist($saeAc);
+                        if (!in_array($ac->getCompetence()->getId(), $tabAcComp, true)) {
+                            $tabAcComp[] = $ac->getCompetence()->getId();
+                        }
                     }
                 }
             }
-        }
 
-        foreach ($tabAcComp as $idCompetence) {
-            $ac = $this->apcComptenceRepository->find($idCompetence);
-            $saeAc = new ApcSaeCompetence($apcSae, $ac);
-            if (array_key_exists($idCompetence, $this->tabCoeffs)) {
-                $saeAc->setCoefficient($this->tabCoeffs[$idCompetence]);
+            foreach ($tabAcComp as $idCompetence) {
+                $ac = $this->apcComptenceRepository->find($idCompetence);
+                $saeAc = new ApcSaeCompetence($apcSae, $ac);
+                if (array_key_exists($idCompetence, $this->tabCoeffs)) {
+                    $saeAc->setCoefficient($this->tabCoeffs[$idCompetence]);
+                }
+                $this->entityManager->persist($saeAc);
             }
-            $this->entityManager->persist($saeAc);
         }
 
 
@@ -95,17 +96,20 @@ class ApcSaeAddEdit
         $this->entityManager->flush();
     }
 
-    public function removeLiens(ApcSae $apcSae)
+    public function removeLiens(ApcSae $apcSae, $verouille = false)
     {
 //on supprimer ceux présent
-        foreach ($apcSae->getApcSaeApprentissageCritiques() as $ac) {
-            $this->entityManager->remove($ac);
+        if ($verouille === false) {
+            foreach ($apcSae->getApcSaeApprentissageCritiques() as $ac) {
+                $this->entityManager->remove($ac);
+            }
+
+            foreach ($apcSae->getApcSaeCompetences() as $ac) {
+                $this->tabCoeffs[$ac->getCompetence()->getId()] = $ac->getCoefficient();
+                $this->entityManager->remove($ac);
+            }
         }
 
-        foreach ($apcSae->getApcSaeCompetences() as $ac) {
-            $this->tabCoeffs[$ac->getCompetence()->getId()] = $ac->getCoefficient();
-            $this->entityManager->remove($ac);
-        }
         foreach ($apcSae->getApcSaeParcours() as $ac) {
             $this->entityManager->remove($ac);
         }

@@ -65,7 +65,7 @@ class ApcRessourceController extends BaseController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
+                $apcRessourceAddEdit->addOrEdit($apcRessource, $request, $this->getDepartement()->getVerouilleCroise());
 
                 $ressourceEvent = new RessourceEvent($apcRessource);
                 $eventDispatcher->dispatch($ressourceEvent, RessourceEvent::UPDATE_CODIFICATION);
@@ -125,8 +125,8 @@ class ApcRessourceController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $apcRessourceAddEdit->removeLiens($apcRessource);
-            $apcRessourceAddEdit->addOrEdit($apcRessource, $request);
+            $apcRessourceAddEdit->removeLiens($apcRessource,$this->getDepartement()->getVerouilleCroise());
+            $apcRessourceAddEdit->addOrEdit($apcRessource, $request, $this->getDepartement()->getVerouilleCroise());
 
             $ressourceEvent = new RessourceEvent($apcRessource);
             $eventDispatcher->dispatch($ressourceEvent, RessourceEvent::UPDATE_CODIFICATION);
