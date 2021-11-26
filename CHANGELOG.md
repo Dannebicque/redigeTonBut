@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.26](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.25...v1.8.26) (2021-11-26)
+
+
+### Bug Fixes
+
+* Codification du stage. ([ab9c9a9](https://github.com/Dannebicque/redigeTonBut/commit/ab9c9a94fc6cf9b7af609e3bc6ab2406b4516df1))
+* Doublons avec la partie exemple des SAE ([8dd231a](https://github.com/Dannebicque/redigeTonBut/commit/8dd231a9c403cc21f029afacc5eb7ce6ff4564b2))
+* Ordre des ressources/SAE dans les fiches et export Word ([bbffec2](https://github.com/Dannebicque/redigeTonBut/commit/bbffec2c78964ae11826042062792ba7b9b509be))
+* Suppression de l'affichage de validation global des SAE d'adaptation locale ([9e7dfc1](https://github.com/Dannebicque/redigeTonBut/commit/9e7dfc1383f870befbbe3e92205adfb16fdab3b4))
+* Titre sur les colonnes. ([d289532](https://github.com/Dannebicque/redigeTonBut/commit/d2895325c211a5e093d63379505bb37326bdba5b))
+* typ ([f7ea9b7](https://github.com/Dannebicque/redigeTonBut/commit/f7ea9b7aacf3cf3fc4cdeb1a1fcc976298a8865a))
+
 ### [1.8.25](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.24...v1.8.25) (2021-11-22)
 
 
