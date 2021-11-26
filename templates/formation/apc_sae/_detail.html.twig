@@ -63,10 +63,3 @@
     {{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}
 </p>
 
-{% if not is_granted('ROLE_GT') %}
-<h3>Exemple(s) (non publié)</h3>
-<p>
-    {{ apc_sae.exemples != null ? apc_sae.exemples|markdown_to_html : '' }}
-</p>
-{% endif %}
-
