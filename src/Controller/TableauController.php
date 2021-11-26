@@ -313,7 +313,9 @@ class TableauController extends BaseController
             $tSaeSemestre[$sem->getOrdreLmd()] = [];
         }
         foreach ($saes as $sae) {
-            $tSaeSemestre[$sae->getSemestre()->getOrdreLmd()][] = $sae;
+            if ($sae->getFicheAdaptationLocale() === false) {
+                $tSaeSemestre[$sae->getSemestre()->getOrdreLmd()][] = $sae;
+            }
         }
 
         $tab = [];
@@ -321,10 +323,12 @@ class TableauController extends BaseController
         $tab['acs'] = [];
 
         foreach ($saes as $sae) {
-            $tab['saes'][$sae->getId()] = [];
-            foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
-                $tab['saes'][$sae->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
-                $tab['acs'][$ac->getApprentissageCritique()->getId()] = 'ok';
+            if ($sae->getFicheAdaptationLocale() === false) {
+                $tab['saes'][$sae->getId()] = [];
+                foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
+                    $tab['saes'][$sae->getId()][$ac->getApprentissageCritique()->getId()] = $ac;
+                    $tab['acs'][$ac->getApprentissageCritique()->getId()] = 'ok';
+                }
             }
         }
 
