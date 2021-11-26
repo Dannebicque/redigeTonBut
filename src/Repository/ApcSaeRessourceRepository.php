@@ -9,6 +9,8 @@
 
 namespace App\Repository;
 
+use App\Entity\ApcRessource;
+use App\Entity\ApcSae;
 use App\Entity\ApcSaeRessource;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -58,5 +60,27 @@ class ApcSaeRessourceRepository extends ServiceEntityRepository
         }
 
         return $t;
+    }
+
+    public function findRessourcesBySae(ApcSae $apcSae)
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin(ApcRessource::class, 'r', 'WITH', 'a.ressource = r.id')
+            ->where('a.sae = :id')
+            ->setParameter('id', $apcSae->getId())
+            ->orderBy('r.ordre', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findSaesByRessource(ApcRessource $apcRessource)
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin(ApcSae::class, 'r', 'WITH', 'a.sae = r.id')
+            ->where('a.ressource = :id')
+            ->setParameter('id', $apcRessource->getId())
+            ->orderBy('r.ordre', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

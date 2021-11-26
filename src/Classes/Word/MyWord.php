@@ -11,6 +11,7 @@ namespace App\Classes\Word;
 
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
+use App\Repository\ApcSaeRessourceRepository;
 use Parsedown;
 use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Exception\CopyFileException;
@@ -26,11 +27,15 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class MyWord
 {
     private string $dir;
+    private ApcSaeRessourceRepository $apcSaeRessourceRepository;
 
-    public function __construct(KernelInterface $kernel)
+    public function __construct(
+        ApcSaeRessourceRepository $apcSaeRessourceRepository,
+        KernelInterface $kernel)
     {
         $this->dir = $kernel->getProjectDir() . '/public/word/';
         Settings::setOutputEscapingEnabled(true);
+        $this->apcSaeRessourceRepository = $apcSaeRessourceRepository;
     }
 
     /**
@@ -124,7 +129,8 @@ class MyWord
         }
 
         $saes = new TextRun();
-        foreach ($apcRessource->getApcSaeRessources() as $ac) {
+        $listeSaes = $this->apcSaeRessourceRepository->findSaeBysRessource($apcRessource);
+        foreach ($listeSaes as $ac) {
             if (null !== $ac->getRessource()) {
                 $saes->addText('- ' . $ac->getSae()->getCodeMatiere() . ' : ' . $ac->getSae()->getLibelle());
                 $saes->addTextBreak();
@@ -208,7 +214,8 @@ class MyWord
         }
 
         $ressources = new TextRun();
-        foreach ($apcSae->getApcSaeRessources() as $ac) {
+        $listeRessources = $this->apcSaeRessourceRepository->findRessourcesBySae($apcSae);
+        foreach ($listeRessources as $ac) {
             if (null !== $ac->getRessource()) {
                 $ressources->addText('- ' . $ac->getRessource()->getCodeMatiere() . ' : ' . $ac->getRessource()->getLibelle());
                 $ressources->addTextBreak();

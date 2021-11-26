@@ -66,8 +66,7 @@
 
 <h3>SAÉ concernées</h3>
 <p>
-    {% for sae in apc_ressource.apcSaeRessources|filter(sae => sae.sae !=
-        null) %}
+    {% for sae in saes %}
         <span class="badge bg-primary"
               data-provide="tooltip"
               title="{{ sae.sae.libelle }}"

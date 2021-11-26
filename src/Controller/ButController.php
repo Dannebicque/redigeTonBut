@@ -12,6 +12,7 @@ use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
+use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,21 +92,24 @@ class ButController extends BaseController
 
     #[Route("/fiche-ressource/{apcRessource}", name:"fiche_ressource")]
     public function ficheRessource(
+        ApcSaeRessourceRepository $apcSaeRessourceRepository,
         ApcRessource $apcRessource
     ): Response {
 //Todo: vérifier que la ressource ou l'nnée est bien dans la spécialité du connecté (si changement d'id dans l'URL)
         return $this->render('but/ficheRessource.html.twig', [
             'apc_ressource' => $apcRessource,
+            'saes' => $apcSaeRessourceRepository->findSaesByRessource($apcRessource)
         ]);
     }
 
     #[Route('/fiche-sae/{apcSae}', name: 'fiche_sae')]
     public function ficheSae(
+        ApcSaeRessourceRepository $apcSaeRessourceRepository,
         ApcSae $apcSae
     ): Response {
-//Todo: vérifier que la ressource ou l'nnée est bien dans la spécialité du connecté (si changement d'id dans l'URL)
         return $this->render('but/ficheSae.html.twig', [
             'apc_sae' => $apcSae,
+            'ressources' => $apcSaeRessourceRepository->findRessourcesBySae($apcSae)
         ]);
     }
 }
