@@ -13,10 +13,18 @@
         </tr>
         <tr>
             {% for sae in saes %}
-                <td class="cell-jaune">{{ sae.codeMatiere }}</td>
+                <td class="cell-jaune">
+                    <p data-bs-toggle="tooltip" title="{{ sae.libelle }}">
+                        {{ sae.codeMatiere }}
+                    </p>
+                </td>
             {% endfor %}
             {% for ressource in ressources %}
-                <td class="cell-bleu">{{ ressource.codeMatiere }}</td>
+                <td class="cell-bleu">
+                    <p data-bs-toggle="tooltip" title="{{ sae.libelle }}">
+                    {{ ressource.codeMatiere }}
+                    </p>
+                </td>
             {% endfor %}
         </tr>
         <tr>
@@ -28,13 +36,13 @@
                     {% if is_granted('ROLE_LECTEUR') %}
                         <span x-html="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
                     {% else %}
-                    <input type="text" class="heures form-control"
-                           data-type="heures_totales"
-                           data-ressource="{{ ressource.id }}"
-                           style="min-width: 50px"
-                           :value="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
-                           @blur="updateHeuresRessource"
-                    />
+                        <input type="text" class="heures form-control"
+                               data-type="heures_totales"
+                               data-ressource="{{ ressource.id }}"
+                               style="min-width: 50px"
+                               :value="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
+                               @blur="updateHeuresRessource"
+                        />
                     {% endif %}
                 </td>
             {% endfor %}
@@ -49,17 +57,17 @@
             <td class="text-center cell-jaune-pale" colspan="2">Dont TP</td>
             {% for ressource in ressources %}
                 <td class="text-rouge text-center">
-                {% if is_granted('ROLE_LECTEUR') %}
-                    <span x-html="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
-            {% else %}
-                    <input type="text" class="heures form-control"
-                           data-type="heures_tp"
-                           data-ressource="{{ ressource.id }}"
-                           style="min-width: 50px"
-                           :value="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
-                           @blur="updateHeuresRessource"
-                    />
-                {% endif %}
+                    {% if is_granted('ROLE_LECTEUR') %}
+                        <span x-html="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
+                    {% else %}
+                        <input type="text" class="heures form-control"
+                               data-type="heures_tp"
+                               data-ressource="{{ ressource.id }}"
+                               style="min-width: 50px"
+                               :value="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
+                               @blur="updateHeuresRessource"
+                        />
+                    {% endif %}
                 </td>
             {% endfor %}
             <td class="text-rouge fw-bold text-center">
@@ -67,7 +75,8 @@
             </td>
             <td class="text-rouge text-center fw-bold">
                 <span x-text="numberFormat(donnees[{{ semestre.ordreLmd }}].pourcentageTpNational)"></span>
-                 %</td>
+                %
+            </td>
             <td colspan="2" class="cell-jaune text-rouge">← pourcentage de TP défini nationalement</td>
         </tr>
         <tr>
@@ -78,13 +87,13 @@
                 {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                     <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"></span>
                 {% else %}
-                <input type="text" class="heures form-control"
-                       data-field="vhNbHeuresEnseignementSae"
-                       data-semestre="{{ semestre.id }}"
-                       style="min-width: 50px"
-                       x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"
-                       @blur="updateSemestre"
-                />
+                    <input type="text" class="heures form-control"
+                           data-field="vhNbHeuresEnseignementSae"
+                           data-semestre="{{ semestre.id }}"
+                           style="min-width: 50px"
+                           x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"
+                           @blur="updateSemestre"
+                    />
                 {% endif %}
             </td>
             <td colspan="{{ ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">&nbsp;</td>
@@ -94,7 +103,8 @@
             <td class="text-center cell-jaune text-rouge fw-bold">
                 <span x-text="numberFormat(donnees[{{ semestre.ordreLmd }}].pourcentageAdaptationLocaleCalcule)
 "></span>
-                %</td>
+                %
+            </td>
             <td colspan="2" class="cell-jaune text-rouge">← Pourcentage d'adaptation locale (calculé)
             </td>
         </tr>
@@ -103,18 +113,19 @@
                 {% if is_granted('ROLE_LECTEUR')  or user_data.departement.verouilleStructure == 1 %}
                     <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"></span>
                 {% else %}
-                <input type="text" class="heures form-control"
-                       data-field="vhNbHeureeEnseignementSaeRessource"
-                       data-semestre="{{ semestre.id }}"
-                       style="min-width: 50px"
-                       x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"
-                       @blur="updateSemestre"
-                />
+                    <input type="text" class="heures form-control"
+                           data-field="vhNbHeureeEnseignementSaeRessource"
+                           data-semestre="{{ semestre.id }}"
+                           style="min-width: 50px"
+                           x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"
+                           @blur="updateSemestre"
+                    />
                 {% endif %}
             </td>
             <td colspan="2" class="text-end cell-jaune">rappel tableau global 6 semestres →</td>
             <td class="text-center cell-jaune">
-                {{ semestre.pourcentageAdaptationLocale }} %</td>
+                {{ semestre.pourcentageAdaptationLocale }} %
+            </td>
         </tr>
 
         <tr>
@@ -123,13 +134,13 @@
                 {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                     <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"></span>
                 {% else %}
-                <input type="text" class="heures form-control"
-                       data-field="vhNbHeuresDontTpSaeRessource"
-                       data-semestre="{{ semestre.id }}"
-                       style="min-width: 50px"
-                       x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"
-                       @blur="updateSemestre"
-                />
+                    <input type="text" class="heures form-control"
+                           data-field="vhNbHeuresDontTpSaeRessource"
+                           data-semestre="{{ semestre.id }}"
+                           style="min-width: 50px"
+                           x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"
+                           @blur="updateSemestre"
+                    />
                 {% endif %}
             </td>
             <td class="text-center cell-jaune text-rouge fw-bold">
@@ -137,7 +148,8 @@
             </td>
             <td class="text-center cell-jaune text-rouge fw-bold">
                 <span x-text="numberFormat(donnees[{{ semestre.ordreLmd }}].pourcentageTpLocalement)"></span>
-                %</td>
+                %
+            </td>
             <td colspan="2" class="cell-jaune text-rouge">← pourcentage de TP défini localement</td>
         </tr>
         <tr>
@@ -178,13 +190,13 @@
                 {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 %}
                     <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"></span>
                 {% else %}
-                <input type="text" class="heures form-control"
-                       data-field="vhNbHeuresProjetTutores"
-                       data-semestre="{{ semestre.id }}"
-                       style="min-width: 50px"
-                       x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"
-                       @blur="updateSemestre"
-                />
+                    <input type="text" class="heures form-control"
+                           data-field="vhNbHeuresProjetTutores"
+                           data-semestre="{{ semestre.id }}"
+                           style="min-width: 50px"
+                           x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"
+                           @blur="updateSemestre"
+                    />
                 {% endif %}
             </td>
             <td colspan="{{ ressources|length }}" class="cell-gris texte-rouge fw-bold">

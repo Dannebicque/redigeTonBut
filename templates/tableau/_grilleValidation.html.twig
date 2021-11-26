@@ -17,7 +17,9 @@
             {% for semestre in semestres %}
                 {% for sae in tSaeSemestre[semestre.ordreLmd] %}
                     {% set taille = taille + 1 %}
-                    <th><p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p></th>
+                    <th>
+                        <p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p>
+                    </th>
                 {% endfor %}
                 <th>&nbsp;</th>
             {% endfor %}
