@@ -40,7 +40,7 @@ class Codification
         }
 
         if ($apcSae->getStage() === true) {
-            return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.STAGE'.'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($parcours);
+            return 'STAGE'.self::codeParcoursSae($parcours);
         }
         return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre()).self::codeParcoursSae($parcours);
     }
