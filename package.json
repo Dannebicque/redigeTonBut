@@ -15,7 +15,7 @@
     "author": "David Annebicque",
     "name": "orebut",
     "private": true,
-    "version": "1.8.26",
+    "version": "1.8.27",
     "auto-changelog": {
         "template": "keepachangelog",
         "unreleased": true,
