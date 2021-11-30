@@ -129,7 +129,7 @@ class MyWord
         }
 
         $saes = new TextRun();
-        $listeSaes = $this->apcSaeRessourceRepository->findSaeBysRessource($apcRessource);
+        $listeSaes = $this->apcSaeRessourceRepository->findSaesByRessource($apcRessource);
         foreach ($listeSaes as $ac) {
             if (null !== $ac->getRessource()) {
                 $saes->addText('- ' . $ac->getSae()->getCodeMatiere() . ' : ' . $ac->getSae()->getLibelle());
