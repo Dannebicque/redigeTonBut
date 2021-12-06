@@ -200,24 +200,29 @@ class TableauExport
 
 
             $this->excelWriter->writeCellXY($col, 1, 'Ressources', ['style' => 'HORIZONTAL_CENTER']);
-           // $this->excelWriter->mergeCellsCaR(count($saes), 1, count($saes) + count($ressources)-1, 1);
+            // $this->excelWriter->mergeCellsCaR(count($saes), 1, count($saes) + count($ressources)-1, 1);
             foreach ($ressources as $ressource) {
-                $this->excelWriter->writeCellXY($col, $ligne, $ressource->getDisplay(),['bgcolor' => '9ec5fe']);
+                $this->excelWriter->writeCellXY($col, $ligne, $ressource->getDisplay(), ['bgcolor' => '9ec5fe']);
                 $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
-                $this->excelWriter->writeCellXY($col, $ligne + 1, $ressource->getHeuresTotales(), ['style' => 'HORIZONTAL_CENTER',]);
-                $this->excelWriter->writeCellXY($col, $ligne + 2, $ressource->getTpPpn(), ['style' => 'HORIZONTAL_CENTER']);
+                $this->excelWriter->writeCellXY($col, $ligne + 1, $ressource->getHeuresTotales(),
+                    ['style' => 'HORIZONTAL_CENTER',]);
+                $this->excelWriter->writeCellXY($col, $ligne + 2, $ressource->getTpPpn(),
+                    ['style' => 'HORIZONTAL_CENTER']);
                 $col++;
             }
             $colonneTotal = $col;
             $this->excelWriter->writeCellXY($colonneTotal, $ligne, 'Total');
             $this->excelWriter->writeCellXY($colonneTotal, $ligne + 1,
-                $donnees[$semestre->getOrdreLmd()]['totalEnseignementRessources'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
+                $donnees[$semestre->getOrdreLmd()]['totalEnseignementRessources'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
             $this->excelWriter->writeCellXY($colonneTotal, $ligne + 2,
-                $donnees[$semestre->getOrdreLmd()]['totalDontTpRessources'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+1, $ligne + 2,
-                number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpNational'],2), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+2, $ligne + 2,
-                'pourcentage de TP défini nationalement', ['style' => 'HORIZONTAL_LEFT','bgcolor' => 'ebb71a']);
+                $donnees[$semestre->getOrdreLmd()]['totalDontTpRessources'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne + 2,
+                number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpNational'], 2),
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne + 2,
+                'pourcentage de TP défini nationalement', ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
 
             $ligne++;
             $col = 2;
@@ -227,62 +232,103 @@ class TableauExport
             $ligne++;
             $this->excelWriter->writeCellXY(1, $ligne,
                 'Volume horaire des enseignements à définir en adaptation locale');
-            $this->excelWriter->mergeCellsCaR(1, $ligne, 1, $ligne+1);
+            $this->excelWriter->mergeCellsCaR(1, $ligne, 1, $ligne + 1);
             $this->excelWriter->writeCellXY($col, $ligne,
-                $donnees[$semestre->getOrdreLmd()]['vhNbHeuresEnseignementSae'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
+                $donnees[$semestre->getOrdreLmd()]['vhNbHeuresEnseignementSae'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
             if ($nbSaes > 0) {
-                $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes-1, $ligne);
+                $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
                 $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
             }
-            $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleEnseignement'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->mergeCellsCaR($colonneTotal, $ligne, $colonneTotal, $ligne+1);
-            $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, number_format($donnees[$semestre->getOrdreLmd()]['pourcentageAdaptationLocaleCalcule'],2), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+2, $ligne, 'Pourcentage d\'adaptation locale (calculé)', ['style' => 'HORIZONTAL_LEFT','bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+                $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleEnseignement'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->mergeCellsCaR($colonneTotal, $ligne, $colonneTotal, $ligne + 1);
+            $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+                number_format($donnees[$semestre->getOrdreLmd()]['pourcentageAdaptationLocaleCalcule'], 2),
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne, 'Pourcentage d\'adaptation locale (calculé)',
+                ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
             $ligne++;
             $this->excelWriter->writeCellXY($col, $ligne,
-                $donnees[$semestre->getOrdreLmd()]['vhNbHeureeEnseignementSaeRessource'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal-1, $ligne);
-            $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, 'Rappel',['style' => 'HORIZONTAL_RIGHT','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+2, $ligne, number_format($semestre->getPourcentageAdaptationLocale(),2) .'%',['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
+                $donnees[$semestre->getOrdreLmd()]['vhNbHeureeEnseignementSaeRessource'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+            $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, 'Rappel',
+                ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+                number_format($semestre->getPourcentageAdaptationLocale(), 2) . '%',
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
             $ligne++;
             $this->excelWriter->writeCellXY(1, $ligne, 'Dont TP');
             $this->excelWriter->writeCellXY($col, $ligne,
-                $donnees[$semestre->getOrdreLmd()]['vhNbHeuresDontTpSaeRessource'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal-1, $ligne);
-            $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleDontTp'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpLocalement'],2), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+2, $ligne, 'pourcentage de TP défini localement', ['style' => 'HORIZONTAL_LEFT','bgcolor' => 'ebb71a']);
+                $donnees[$semestre->getOrdreLmd()]['vhNbHeuresDontTpSaeRessource'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+            $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+                $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleDontTp'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+                number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpLocalement'], 2),
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne, 'pourcentage de TP défini localement',
+                ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
             $ligne++;
-            $this->excelWriter->writeCellXY($col, $ligne, 'Volume horaire total des enseignements (calculé)', ['style' => 'HORIZONTAL_RIGHT','bgcolor' => '75b798']);
-            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal-1, $ligne);
-            $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalEnseignements'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => '75b798']);
-            $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, $semestre->getNbHeuresRessourceSae(), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+2, $ligne, 'rappel volume total d\'enseignement issu du tableau global des 6 semestres', ['style' => 'HORIZONTAL_LEFT','bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($col, $ligne, 'Volume horaire total des enseignements (calculé)',
+                ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+            $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+                $donnees[$semestre->getOrdreLmd()]['totalEnseignements'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+            $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresRessourceSae(),
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+                'rappel volume total d\'enseignement issu du tableau global des 6 semestres',
+                ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
             $ligne++;
-            $this->excelWriter->writeCellXY($col, $ligne, 'Dont TP', ['style' => 'HORIZONTAL_RIGHT','bgcolor' => '75b798']);
-            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal-1, $ligne);
-            $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalDontTp'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => '75b798']);
-            $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpLocalementNationalement'],2), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+2, $ligne, 'pourcentage de tp défini localement et nationalement', ['style' => 'HORIZONTAL_LEFT','bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($col, $ligne, 'Dont TP',
+                ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+            $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalDontTp'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+            $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+                number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpLocalementNationalement'], 2),
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+                'pourcentage de tp défini localement et nationalement',
+                ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
             $ligne++;
             $this->excelWriter->writeCellXY(1, $ligne, 'Volume horaire projet tuteuré');
-            $this->excelWriter->writeCellXY($col, $ligne, $donnees[$semestre->getOrdreLmd()]['vhNbHeuresProjetTutores'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'CED4D7']);
+            $this->excelWriter->writeCellXY($col, $ligne, $donnees[$semestre->getOrdreLmd()]['vhNbHeuresProjetTutores'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
             if ($nbSaes > 0) {
                 $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
                 $this->excelWriter->writeCellXY($col + $nbSaes, $ligne, '',
                     ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
                 $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
             }
-            $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalProjetTutore'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'CED4D7']);
-            $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, $semestre->getNbHeuresProjet(), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+2, $ligne, 'rappel volume de projet tutoré issu du tableau global des 6 semestres', ['style' => 'HORIZONTAL_LEFT','bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+                $donnees[$semestre->getOrdreLmd()]['totalProjetTutore'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
+            $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresProjet(),
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+                'rappel volume de projet tutoré issu du tableau global des 6 semestres',
+                ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
             $ligne++;
-            $this->excelWriter->writeCellXY($col, $ligne, 'Volume horaire total des enseignements avec projet tuteuré', ['style' => 'HORIZONTAL_RIGHT','bgcolor' => '75b798']);
-            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal-1, $ligne);
-            $this->excelWriter->writeCellXY($colonneTotal, $ligne, $donnees[$semestre->getOrdreLmd()]['totalEnseignementProjetTutore'], ['style' => 'HORIZONTAL_CENTER','bgcolor' => '75b798']);
-            $this->excelWriter->writeCellXY($colonneTotal+1, $ligne, $semestre->getNbHeuresRessourceSae()+$semestre->getNbHeuresProjet(), ['style' => 'HORIZONTAL_CENTER','bgcolor' => 'ebb71a']);
-            $this->excelWriter->writeCellXY($colonneTotal+2, $ligne, 'rappel volume total enseignement + projet tutoré issu du tableau global 6 semestres', ['style' => 'HORIZONTAL_LEFT','bgcolor' => 'ebb71a']);
-            $this->excelWriter->getColumnsAutoSizeInt(1,$colonneTotal+2);
+            $this->excelWriter->writeCellXY($col, $ligne, 'Volume horaire total des enseignements avec projet tuteuré',
+                ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+            $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+                $donnees[$semestre->getOrdreLmd()]['totalEnseignementProjetTutore'],
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+            $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+                $semestre->getNbHeuresRessourceSae() + $semestre->getNbHeuresProjet(),
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+                'rappel volume total enseignement + projet tutoré issu du tableau global 6 semestres',
+                ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+            $this->excelWriter->getColumnsAutoSizeInt(1, $colonneTotal + 2);
         }
 
         return $this->excelWriter->genereFichier('tableau_horaire_BUT' . $annee->getOrdre());
@@ -434,5 +480,516 @@ class TableauExport
 
 
         return $this->excelWriter->genereFichier('tableau_preconisation_BUT' . $annee->getOrdre());
+    }
+
+    public function exportTableauCroiseVolumeHoraire(Departement $departement)
+    {
+        $this->excelWriter->nouveauFichier('');
+        foreach ($departement->getAnnees() as $annee) {
+
+            $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
+            if ($annee->getOrdre() > 1 || $departement->getTypeStructure() === Departement::TYPE3) {
+                $parcours = $departement->getApcParcours();
+            }
+
+            foreach ($semestres as $semestre) {
+                //-----------------------------
+                //table croisé
+                //-----------------------------
+                $this->excelWriter->createSheet('S' . $semestre->getOrdreLmd());
+                $ligne = 2;
+                if ($annee->getOrdre() > 1 || $departement->getTypeStructure() === Departement::TYPE3) {
+                    foreach ($parcours as $parcour) {
+                        $ligne = $this->afficheParcours($ligne, $parcour, $semestre, $semestres);
+                        $ligne++;
+                        $ligne++;
+                    }
+                } else {
+                    $this->affichePasParcours($ligne, $semestre, $semestres);
+                }
+            }
+
+        }
+
+        return $this->excelWriter->genereFichier('tableau_croise__volumes_horaires_' . $departement->getSigle());
+    }
+
+    private function afficheParcours($ligne, $parcours, $semestre, $semestres)
+    {
+        $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
+$ligne++;
+        $this->tableauCroise->getDatas($semestre, $parcours);
+        $this->excelWriter->writeCellXY(1, $ligne, 'Compétences');
+        $this->excelWriter->writeCellXY(2, $ligne, 'Apprentissages critiques');
+        $col = 3;
+        foreach ($this->tableauCroise->getSaes() as $sae) {
+            $this->excelWriter->writeCellXY($col, $ligne,
+                $sae->getCodeMatiere() . ' - ' . $sae->getLibelle());
+            $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
+            $col++;
+        }
+
+
+        foreach ($this->tableauCroise->getRessources() as $ressource) {
+            $this->excelWriter->writeCellXY($col, $ligne,
+                $ressource->getCodeMatiere() . ' - ' . $ressource->getLibelle());
+            $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
+
+            $col++;
+        }
+        $ligne++;
+        $col = 3;
+
+        foreach ($this->tableauCroise->getNiveaux() as $niveau) {
+            $this->excelWriter->writeCellXY(1, $ligne, $niveau->getCompetence()->getNomCourt());
+            $this->excelWriter->colorCellXY(1, $ligne,
+                ApcCompetence::COLOREXCEl[$niveau->getCompetence()->getCouleur()]);
+            $this->excelWriter->mergeCellsCaR(1, $ligne, 1,
+                $ligne + count($niveau->getApcApprentissageCritiques()));
+
+
+            foreach ($niveau->getApcApprentissageCritiques() as $ac) {
+                $this->excelWriter->writeCellXY(2, $ligne, $ac->getCode() . ' - ' . $ac->getLibelle());
+                $this->excelWriter->colorCellXY(2, $ligne,
+                    ApcCompetence::COLOREXCEl[$niveau->getCompetence()->getCouleur()]);
+                foreach ($this->tableauCroise->getSaes() as $sae) {
+                    if (array_key_exists($sae->getId(),
+                            $this->tableauCroise->getTab()['saes']) && array_key_exists($ac->getId(),
+                            $this->tableauCroise->getTab()['saes'][$sae->getId()])) {
+                        $this->excelWriter->writeCellXY($col, $ligne, 'X');
+                    }
+                    $col++;
+                }
+
+                foreach ($this->tableauCroise->getRessources() as $ressource) {
+                    if (array_key_exists($ressource->getId(),
+                            $this->tableauCroise->getTab()['ressources']) && array_key_exists($ac->getId(),
+                            $this->tableauCroise->getTab()['ressources'][$ressource->getId()])) {
+                        $this->excelWriter->writeCellXY($col, $ligne, 'X');
+                    }
+                    $col++;
+                }
+                $ligne++;
+                $col = 3;
+            }
+
+            $this->excelWriter->writeCellXY(2, $ligne, 'Coefficients');
+            foreach ($this->tableauCroise->getSaes() as $sae) {
+                if (array_key_exists($niveau->getCompetence()->getId(),
+                        $this->tableauCroise->getCoefficients()) && array_key_exists($sae->getId(),
+                        $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['saes'])) {
+                    $this->excelWriter->writeCellXY($col, $ligne,
+                        $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['saes'][$sae->getId()]);
+                } else {
+                    $this->excelWriter->writeCellXY($col, $ligne, 0);
+                }
+                $col++;
+            }
+            //  $col++;
+
+            foreach ($this->tableauCroise->getRessources() as $ressource) {
+                if (array_key_exists($niveau->getCompetence()->getId(),
+                        $this->tableauCroise->getCoefficients()) && array_key_exists($ressource->getId(),
+                        $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['ressources'])) {
+                    $this->excelWriter->writeCellXY($col, $ligne,
+                        $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['ressources'][$ressource->getId()]);
+                } else {
+                    $this->excelWriter->writeCellXY($col, $ligne, 0);
+                }
+                $col++;
+            }
+            $ligne++;
+            $this->excelWriter->getColumnsAutoSizeInt(1, $col);
+        }
+        $ligne++;
+        //-------------------------
+        // TABLEAU VOLUMES HORAIRES
+        //-------------------------
+        $donnees = $this->volumesHoraires->setSemestres($semestres, $parcours)->getDataJson();
+        $col = 3;
+        $nbSaes = count($this->tableauCroise->getSaes());
+
+        if ($nbSaes > 0) {
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
+            $this->excelWriter->writeCellXY(3, $ligne + 1, '', ['bgcolor' => 'ebb71a']);
+            $this->excelWriter->mergeCellsCaR(3, $ligne + 1, 3 + $nbSaes - 1, $ligne + 1);
+            $this->excelWriter->writeCellXY(3, $ligne + 2, '', ['bgcolor' => 'ebb71a']);
+            $this->excelWriter->mergeCellsCaR(3, $ligne + 2, 3 + $nbSaes - 1, $ligne + 2);
+        } else {
+            $col++;
+        }
+
+        foreach ($this->tableauCroise->getRessources() as $ressource) {
+
+            $this->excelWriter->writeCellXY($col, $ligne + 1, $ressource->getHeuresTotales(),
+                ['style' => 'HORIZONTAL_CENTER',]);
+            $this->excelWriter->writeCellXY($col, $ligne + 2, $ressource->getTpPpn(),
+                ['style' => 'HORIZONTAL_CENTER']);
+            $col++;
+        }
+        $colonneTotal = $col;
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne + 1,
+            $donnees[$semestre->getOrdreLmd()]['totalEnseignementRessources'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne + 2,
+            $donnees[$semestre->getOrdreLmd()]['totalDontTpRessources'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne + 2,
+            number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpNational'], 2),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne + 2,
+            'pourcentage de TP défini nationalement',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+
+        $ligne++;
+        $col = 3;
+        $this->excelWriter->writeCellXY(2, $ligne,
+            'Volume horaire des enseignements définis nationalement');
+        $ligne++;
+        $this->excelWriter->writeCellXY(2, $ligne, 'Dont TP');
+        $ligne++;
+        $this->excelWriter->writeCellXY(2, $ligne,
+            'Volume horaire des enseignements à définir en adaptation locale');
+        $this->excelWriter->mergeCellsCaR(2, $ligne, 2, $ligne + 1);
+        $this->excelWriter->writeCellXY($col, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['vhNbHeuresEnseignementSae'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        if ($nbSaes > 0) {
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
+            $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
+        }
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleEnseignement'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->mergeCellsCaR($colonneTotal, $ligne, $colonneTotal, $ligne + 1);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+            number_format($donnees[$semestre->getOrdreLmd()]['pourcentageAdaptationLocaleCalcule'], 2),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'Pourcentage d\'adaptation locale (calculé)',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY($col, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['vhNbHeureeEnseignementSaeRessource'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, 'Rappel',
+            ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            number_format($semestre->getPourcentageAdaptationLocale(), 2) . '%',
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY(2, $ligne, 'Dont TP');
+        $this->excelWriter->writeCellXY($col, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['vhNbHeuresDontTpSaeRessource'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleDontTp'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+            number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpLocalement'], 2),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne, 'pourcentage de TP défini localement',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY($col, $ligne, 'Volume horaire total des enseignements (calculé)',
+            ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalEnseignements'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresRessourceSae(),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'rappel volume total d\'enseignement issu du tableau global des 6 semestres',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY($col, $ligne, 'Dont TP',
+            ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalDontTp'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+            number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpLocalementNationalement'], 2),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'pourcentage de tp défini localement et nationalement',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY(2, $ligne, 'Volume horaire projet tuteuré');
+        $this->excelWriter->writeCellXY($col, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['vhNbHeuresProjetTutores'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
+        if ($nbSaes > 0) {
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
+            $this->excelWriter->writeCellXY($col + $nbSaes, $ligne, '',
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
+            $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
+        }
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalProjetTutore'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresProjet(),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'rappel volume de projet tutoré issu du tableau global des 6 semestres',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY($col, $ligne,
+            'Volume horaire total des enseignements avec projet tuteuré',
+            ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalEnseignementProjetTutore'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+            $semestre->getNbHeuresRessourceSae() + $semestre->getNbHeuresProjet(),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'rappel volume total enseignement + projet tutoré issu du tableau global 6 semestres',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->getColumnsAutoSizeInt(1, $colonneTotal + 2);
+
+        return $ligne;
+    }
+
+    private function affichePasParcours($ligne, $semestre, $semestres)
+    {
+        $this->tableauCroise->getDatas($semestre);
+        $this->excelWriter->writeCellXY(1, $ligne, 'Compétences');
+        $this->excelWriter->writeCellXY(2, $ligne, 'Apprentissages critiques');
+        $col = 3;
+        foreach ($this->tableauCroise->getSaes() as $sae) {
+            $this->excelWriter->writeCellXY($col, $ligne,
+                $sae->getCodeMatiere() . ' - ' . $sae->getLibelle());
+            $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
+            $col++;
+        }
+
+
+        foreach ($this->tableauCroise->getRessources() as $ressource) {
+            $this->excelWriter->writeCellXY($col, $ligne,
+                $ressource->getCodeMatiere() . ' - ' . $ressource->getLibelle());
+            $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
+
+            $col++;
+        }
+        $ligne++;
+        $col = 3;
+
+        foreach ($this->tableauCroise->getNiveaux() as $niveau) {
+            $this->excelWriter->writeCellXY(1, $ligne, $niveau->getCompetence()->getNomCourt());
+            $this->excelWriter->colorCellXY(1, $ligne,
+                ApcCompetence::COLOREXCEl[$niveau->getCompetence()->getCouleur()]);
+            $this->excelWriter->mergeCellsCaR(1, $ligne, 1,
+                $ligne + count($niveau->getApcApprentissageCritiques()));
+
+
+            foreach ($niveau->getApcApprentissageCritiques() as $ac) {
+                $this->excelWriter->writeCellXY(2, $ligne, $ac->getCode() . ' - ' . $ac->getLibelle());
+                $this->excelWriter->colorCellXY(2, $ligne,
+                    ApcCompetence::COLOREXCEl[$niveau->getCompetence()->getCouleur()]);
+                foreach ($this->tableauCroise->getSaes() as $sae) {
+                    if (array_key_exists($sae->getId(),
+                            $this->tableauCroise->getTab()['saes']) && array_key_exists($ac->getId(),
+                            $this->tableauCroise->getTab()['saes'][$sae->getId()])) {
+                        $this->excelWriter->writeCellXY($col, $ligne, 'X');
+                    }
+                    $col++;
+                }
+
+                foreach ($this->tableauCroise->getRessources() as $ressource) {
+                    if (array_key_exists($ressource->getId(),
+                            $this->tableauCroise->getTab()['ressources']) && array_key_exists($ac->getId(),
+                            $this->tableauCroise->getTab()['ressources'][$ressource->getId()])) {
+                        $this->excelWriter->writeCellXY($col, $ligne, 'X');
+                    }
+                    $col++;
+                }
+                $ligne++;
+                $col = 3;
+            }
+
+            $this->excelWriter->writeCellXY(2, $ligne, 'Coefficients');
+            foreach ($this->tableauCroise->getSaes() as $sae) {
+                if (array_key_exists($niveau->getCompetence()->getId(),
+                        $this->tableauCroise->getCoefficients()) && array_key_exists($sae->getId(),
+                        $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['saes'])) {
+                    $this->excelWriter->writeCellXY($col, $ligne,
+                        $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['saes'][$sae->getId()]);
+                } else {
+                    $this->excelWriter->writeCellXY($col, $ligne, 0);
+                }
+                $col++;
+            }
+
+            foreach ($this->tableauCroise->getRessources() as $ressource) {
+                if (array_key_exists($niveau->getCompetence()->getId(),
+                        $this->tableauCroise->getCoefficients()) && array_key_exists($ressource->getId(),
+                        $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['ressources'])) {
+                    $this->excelWriter->writeCellXY($col, $ligne,
+                        $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['ressources'][$ressource->getId()]);
+                } else {
+                    $this->excelWriter->writeCellXY($col, $ligne, 0);
+                }
+                $col++;
+            }
+            $ligne++;
+            $this->excelWriter->getColumnsAutoSizeInt(1, $col);
+        }
+        $ligne++;
+        //-------------------------
+        // TABLEAU VOLUMES HORAIRES
+        //-------------------------
+        $donnees = $this->volumesHoraires->setSemestres($semestres)->getDataJson();
+        $col = 3;
+        $nbSaes = count($this->tableauCroise->getSaes());
+
+        if ($nbSaes > 0) {
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
+            $this->excelWriter->writeCellXY(3, $ligne + 1, '', ['bgcolor' => 'ebb71a']);
+            $this->excelWriter->mergeCellsCaR(3, $ligne + 1, 3 + $nbSaes - 1, $ligne + 1);
+            $this->excelWriter->writeCellXY(3, $ligne + 2, '', ['bgcolor' => 'ebb71a']);
+            $this->excelWriter->mergeCellsCaR(3, $ligne + 2, 3 + $nbSaes - 1, $ligne + 2);
+        } else {
+            $col++;
+        }
+
+        foreach ($this->tableauCroise->getRessources() as $ressource) {
+
+            $this->excelWriter->writeCellXY($col, $ligne + 1, $ressource->getHeuresTotales(),
+                ['style' => 'HORIZONTAL_CENTER',]);
+            $this->excelWriter->writeCellXY($col, $ligne + 2, $ressource->getTpPpn(),
+                ['style' => 'HORIZONTAL_CENTER']);
+            $col++;
+        }
+        $colonneTotal = $col;
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne + 1,
+            $donnees[$semestre->getOrdreLmd()]['totalEnseignementRessources'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne + 2,
+            $donnees[$semestre->getOrdreLmd()]['totalDontTpRessources'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne + 2,
+            number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpNational'], 2),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne + 2,
+            'pourcentage de TP défini nationalement',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+
+        $ligne++;
+        $col = 3;
+        $this->excelWriter->writeCellXY(2, $ligne,
+            'Volume horaire des enseignements définis nationalement');
+        $ligne++;
+        $this->excelWriter->writeCellXY(2, $ligne, 'Dont TP');
+        $ligne++;
+        $this->excelWriter->writeCellXY(2, $ligne,
+            'Volume horaire des enseignements à définir en adaptation locale');
+        $this->excelWriter->mergeCellsCaR(2, $ligne, 2, $ligne + 1);
+        $this->excelWriter->writeCellXY($col, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['vhNbHeuresEnseignementSae'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        if ($nbSaes > 0) {
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
+            $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
+        }
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleEnseignement'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->mergeCellsCaR($colonneTotal, $ligne, $colonneTotal, $ligne + 1);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+            number_format($donnees[$semestre->getOrdreLmd()]['pourcentageAdaptationLocaleCalcule'], 2),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'Pourcentage d\'adaptation locale (calculé)',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY($col, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['vhNbHeureeEnseignementSaeRessource'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, 'Rappel',
+            ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            number_format($semestre->getPourcentageAdaptationLocale(), 2) . '%',
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY(2, $ligne, 'Dont TP');
+        $this->excelWriter->writeCellXY($col, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['vhNbHeuresDontTpSaeRessource'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleDontTp'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+            number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpLocalement'], 2),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne, 'pourcentage de TP défini localement',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY($col, $ligne, 'Volume horaire total des enseignements (calculé)',
+            ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalEnseignements'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresRessourceSae(),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'rappel volume total d\'enseignement issu du tableau global des 6 semestres',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY($col, $ligne, 'Dont TP',
+            ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalDontTp'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+            number_format($donnees[$semestre->getOrdreLmd()]['pourcentageTpLocalementNationalement'], 2),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'pourcentage de tp défini localement et nationalement',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY(2, $ligne, 'Volume horaire projet tuteuré');
+        $this->excelWriter->writeCellXY($col, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['vhNbHeuresProjetTutores'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
+        if ($nbSaes > 0) {
+            $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
+            $this->excelWriter->writeCellXY($col + $nbSaes, $ligne, '',
+                ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
+            $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
+        }
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalProjetTutore'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresProjet(),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'rappel volume de projet tutoré issu du tableau global des 6 semestres',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $ligne++;
+        $this->excelWriter->writeCellXY($col, $ligne,
+            'Volume horaire total des enseignements avec projet tuteuré',
+            ['style' => 'HORIZONTAL_RIGHT', 'bgcolor' => '75b798']);
+        $this->excelWriter->mergeCellsCaR($col, $ligne, $colonneTotal - 1, $ligne);
+        $this->excelWriter->writeCellXY($colonneTotal, $ligne,
+            $donnees[$semestre->getOrdreLmd()]['totalEnseignementProjetTutore'],
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => '75b798']);
+        $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne,
+            $semestre->getNbHeuresRessourceSae() + $semestre->getNbHeuresProjet(),
+            ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
+            'rappel volume total enseignement + projet tutoré issu du tableau global 6 semestres',
+            ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
+        $this->excelWriter->getColumnsAutoSizeInt(1, $colonneTotal + 2);
+
+        return $ligne;
     }
 }

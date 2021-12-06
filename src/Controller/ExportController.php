@@ -66,6 +66,15 @@ class ExportController extends BaseController
         return $tableauExport->exportTableauCroise($annee, $parcours);
     }
 
+    #[Route('/export-tableau-croise-volumes-horaires/{departement}', name: 'export_tableau_croise_et_volume_horaire')]
+    public function exportTableauCroiseVolumesHoraires(
+        TableauExport $tableauExport,
+        Departement $departement): Response
+    {
+        //todo: faire par parcours?
+        return $tableauExport->exportTableauCroiseVolumeHoraire($departement);
+    }
+
     #[Route('/export-tableau-horaire/{annee}/{parcours}', name: 'export_tableau_horaire_annee')]
     public function exportTableauHoraire(TableauExport $tableauExport,Annee $annee, ?ApcParcours $parcours = null): Response
     {
