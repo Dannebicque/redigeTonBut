@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    {# todo: Bouton export ? #}
-
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
         {% for semestre in semestres %}
             <li class="nav-item" role="presentation">
@@ -12,6 +10,15 @@
                    href="#semestre_{{ semestre.id }}"
                    role="tab"
                    aria-selected="true">{{ semestre.libelle }}</a>
+            </li>
+        {% endfor %}
+        {% for semestre in semestres %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link changeSemestreRessources" data-bs-toggle="tab"
+                   data-semestre="{{ semestre.id }}"
+                   href="#semestre_{{ semestre.id }}_tableau"
+                   role="tab"
+                   aria-selected="true">{{ semestre.libelle }} (tableau)</a>
             </li>
         {% endfor %}
     </ul>
@@ -52,6 +59,44 @@
                     {% for ressource in ressources[semestre.ordreLmd] %}
                         {{ include('but/_cardRessource.html.twig') }}
                     {% endfor %}
+                </div>
+            </div>
+            <div class="tab-pane" id="semestre_{{ semestre.id }}_tableau" role="tabpanel">
+                <div class="row">
+                   <table class="table">
+                       <thead>
+                       <tr>
+                           <th rowspan="2">Code</th>
+                           <th rowspan="2">Libelle</th>
+                           <th colspan="2">PN Officiel</th>
+                           <th colspan="3">Préconisation ACD</th>
+                       </tr>
+                       <tr>
+
+                           <th>CM/TD</th>
+                           <th>TP</th>
+
+                           <th class="bg-warning">CM</th>
+                           <th class="bg-warning">TD</th>
+                           <th class="bg-warning">TP</th>
+
+
+                       </tr>
+                       </thead>
+                       <tbody>
+                       {% for ressource in ressources[semestre.ordreLmd] %}
+                       <tr>
+                           <td>{{ ressource.codeMatiere }}</td>
+                           <td>{{ ressource.libelle }}</td>
+                           <td>{{ ressource.heuresTotales }}</td>
+                           <td>{{ ressource.tpPpn }}</td>
+                           <td class="bg-warning">{{ ressource.cmPreco }}</td>
+                           <td class="bg-warning">{{ ressource.tdPreco }}</td>
+                           <td class="bg-warning">{{ ressource.tpPreco }}</td>
+                       </tr>
+                       {% endfor %}
+                       </tbody>
+                   </table>
                 </div>
             </div>
         {% endfor %}

@@ -13,6 +13,15 @@
                    aria-selected="true">{{ semestre.libelle }}</a>
             </li>
         {% endfor %}
+        {% for semestre in semestres %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link changeSemestreSae"
+                   data-bs-toggle="tab"
+                   data-semestre="{{ semestre.id }}"
+                   href="#semestre_{{ semestre.id }}_tableau" role="tab"
+                   aria-selected="true">{{ semestre.libelle }} (tableau)</a>
+            </li>
+        {% endfor %}
     </ul>
     <div class="tab-content">
         {% for semestre in semestres %}
@@ -49,6 +58,35 @@
                 {% for sae in saes[semestre.ordreLmd] %}
                     {{ include('but/_cardSae.html.twig') }}
                 {% endfor %}
+                </div>
+            </div>
+            <div class="tab-pane" id="semestre_{{ semestre.id }}_tableau" role="tabpanel">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th rowspan="2">Code</th>
+                            <th rowspan="2">Libelle</th>
+                            <th colspan="4">Préconisation ACD</th>
+                        </tr>
+                        <tr>
+                            <th class="bg-warning">CM/TD</th>
+                            <th class="bg-warning">TP</th>
+                            <th class="bg-warning">Ptut</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for sae in saes[semestre.ordreLmd] %}
+                            <tr>
+                                <td>{{ sae.codeMatiere }}</td>
+                                <td>{{ sae.libelle }}</td>
+                                <td class="bg-warning">{{ sae.heuresTotales }}</td>
+                                <td class="bg-warning">{{ sae.tpPpn }}</td>
+                                <td class="bg-warning">{{ sae.projetPpn }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         {% endfor %}
