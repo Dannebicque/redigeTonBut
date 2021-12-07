@@ -79,8 +79,6 @@ class Preconisation
             $this->donneesDepartement->addSemestre($sem);
         }
 
-        // $json['departement'] = $this->donneesDepartement->getJson();
-        dump($json);
         return $json;
     }
 
