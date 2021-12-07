@@ -5,7 +5,7 @@
                         type_structure="{{ departement.typeStructure }}"
                         type_departement="{{ departement.typeDepartement }}"
                         version="{{ departement.dateVersionCompetence != null ? departement
-                        .dateVersionCompetence|format('Y-m-d H:i:s') : '-' }}"
+                        .dateVersionCompetence|date('Y-m-d H:i:s') : '-' }}"
 >
     <competences>
         {% for competence in competences %}
