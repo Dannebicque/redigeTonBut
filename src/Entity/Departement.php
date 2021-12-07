@@ -10,6 +10,8 @@
 namespace App\Entity;
 
 use App\Entity\Traits\LifeCycleTrait;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -111,6 +113,18 @@ class Departement extends BaseEntity
      * @ORM\Column(type="boolean")
      */
     private bool $verouilleCroise;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private ?DateTime $dateVersionCompetence;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private ?DateTime $dateVersionFormation;
+
+
 
     public function __construct()
     {
@@ -467,6 +481,30 @@ class Departement extends BaseEntity
     public function setVerouilleCroise(bool $verouilleCroise): self
     {
         $this->verouilleCroise = $verouilleCroise;
+
+        return $this;
+    }
+
+    public function getDateVersionCompetence(): ?DateTimeInterface
+    {
+        return $this->dateVersionCompetence;
+    }
+
+    public function setDateVersionCompetence(?DateTimeInterface $dateVersionCompetence): self
+    {
+        $this->dateVersionCompetence = $dateVersionCompetence;
+
+        return $this;
+    }
+
+    public function getDateVersionFormation(): ?DateTimeInterface
+    {
+        return $this->dateVersionFormation;
+    }
+
+    public function setDateVersionFormation(?DateTimeInterface $dateVersionFormation): self
+    {
+        $this->dateVersionFormation = $dateVersionFormation;
 
         return $this;
     }
