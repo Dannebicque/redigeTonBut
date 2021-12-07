@@ -342,4 +342,9 @@ class ApcCompetence extends BaseEntity
 
         return $this;
     }
+
+    public function getCleUnique(): string
+    {
+        return md5($this->libelle);
+    }
 }
