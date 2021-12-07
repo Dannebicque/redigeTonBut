@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.28](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.27...v1.8.28) (2021-12-07)
+
+
+### Features
+
+* Affichage de l'AL dans le tableau de préconisation ([66e5c3d](https://github.com/Dannebicque/redigeTonBut/commit/66e5c3dda8d329525b686b397b443688d54ad5c3))
+* Afficher/Masquer AL dans le tableau croisé ([72dfad9](https://github.com/Dannebicque/redigeTonBut/commit/72dfad9038dfab68e8c8ebae5a8b9dbc3caa7246))
+* Ajout d'une date de version ([2fa75e5](https://github.com/Dannebicque/redigeTonBut/commit/2fa75e571324cd5a165bafdb4c1f8bd0b04736b7))
+* Export détaillé pour les ACD en tableau, par parcours et semestre ([db55df1](https://github.com/Dannebicque/redigeTonBut/commit/db55df11a30df6902e55ac033e27d157ad569280))
+* Nouveau format d'export ([dcfba51](https://github.com/Dannebicque/redigeTonBut/commit/dcfba5123b043ed9f9fa465fede4d9daa8fa2e94))
+* Tableau heures ressources/SAE ([9c49c31](https://github.com/Dannebicque/redigeTonBut/commit/9c49c311225b8c50797ec5c346004948556e0c73))
+
+
+### Bug Fixes
+
+* Amélioration de l'export XML du référentiel de compétences ([8811bd1](https://github.com/Dannebicque/redigeTonBut/commit/8811bd10e40893d57110e8ffe7b7b25132e42498))
+
 ### [1.8.27](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.26...v1.8.27) (2021-11-30)
 
 
