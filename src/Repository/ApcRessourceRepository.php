@@ -34,16 +34,12 @@ class ApcRessourceRepository extends ServiceEntityRepository
 
     public function findBySemestre(Semestre $semestre)
     {
-        return $this->createQueryBuilder('r')
-            ->where('r.semestre = :semestre')
-            ->andWhere('r.ficheAdaptationLocale = false')
-            //->andWhere('s.ppn_actif = m.ppn')
-            ->setParameter('semestre', $semestre->getId())
-            ->orderBy('r.ordre', 'ASC')
-            ->addOrderBy('r.codeMatiere', 'ASC')
-            ->addOrderBy('r.libelle', 'ASC')
-            ->getQuery()
-            ->getResult();
+        return $this->getBySemestre($semestre, false);
+    }
+
+    public function findBySemestreAl(Semestre $semestre)
+    {
+        return $this->getBySemestre($semestre, true);
     }
 
     public function search(?string $search)
@@ -131,31 +127,11 @@ class ApcRessourceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')
             ->select('MAX(r.ordre) as ordreMax')
             ->where('r.semestre = :semestre')
-            //->andWhere('s.ppn_actif = m.ppn')
             ->setParameter('semestre', $semestre->getId())
             ->getQuery()
             ->getScalarResult();
     }
 
-//    public function findBySemestreAndParcours(Semestre $semestre, ?ApcParcours $apcParcours = null)
-//    {
-//        if ($apcParcours !== null) {
-//            return $this->createQueryBuilder('r')
-//                ->innerJoin(ApcRessourceParcours::class, 'p', 'WITH', 'r.id = p.ressource')
-//                ->where('r.semestre = :semestre')
-//                ->andWhere('r.ficheAdaptationLocale = false')
-//                ->andWhere('p.parcours = :parcours')
-//                ->setParameter('semestre', $semestre->getId())
-//                ->setParameter('parcours', $apcParcours->getId())
-//                ->orderBy('r.ordre', 'ASC')
-//                ->addOrderBy('r.codeMatiere', 'ASC')
-//                ->addOrderBy('r.libelle', 'ASC')
-//                ->getQuery()
-//                ->getResult();
-//        }
-//
-//        return $this->findBySemestre($semestre);
-//    }
 
     public function findByDepartementArray(Departement $departement)
     {
@@ -166,5 +142,20 @@ class ApcRessourceRepository extends ServiceEntityRepository
         }
 
         return $tab;
+    }
+
+
+    private function getBySemestre(Semestre $semestre, bool $al): mixed
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.semestre = :semestre')
+            ->andWhere('r.ficheAdaptationLocale = :al')
+            ->setParameter('semestre', $semestre->getId())
+            ->setParameter('al', $al)
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

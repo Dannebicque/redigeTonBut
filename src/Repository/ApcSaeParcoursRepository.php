@@ -41,26 +41,12 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
 
     public function findBySemestre(Semestre $semestre, ApcParcours $parcours)
     {
-        $req = $this->createQueryBuilder('p')
-            ->innerJoin(ApcSae::class, 's', 'WITH', 'p.sae = s.id')
-            ->innerJoin(Semestre::class, 'se', 'WITH', 's.semestre = se.id')
-            ->where('p.parcours = :parcours')
-            ->andWhere('se.ordreLmd = :semestre')
-            ->andWhere('s.ficheAdaptationLocale = false')
-            ->setParameter('parcours', $parcours->getId())
-            ->setParameter('semestre', $semestre->getOrdreLmd())
-            ->orderBy('s.ordre', 'ASC')
-            ->addOrderBy('s.codeMatiere', 'ASC')
-            ->getQuery()
-            ->getResult();
+        return $this->getBySemestre($parcours, $semestre, false);
+    }
 
-        $t = [];
-
-        foreach ($req as $r) {
-            $t[] = $r->getSae();
-        }
-
-        return $t;
+    public function findBySemestreAl(Semestre $semestre, ApcParcours $parcours)
+    {
+        return $this->getBySemestre($parcours, $semestre, true);
     }
 
     public function findByAnneeArray(Annee $annee, ApcParcours $parcours)
@@ -114,6 +100,37 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
             ->setParameter('sae', $id)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param \App\Entity\ApcParcours $parcours
+     * @param \App\Entity\Semestre    $semestre
+     *
+     * @return array
+     */
+    private function getBySemestre(ApcParcours $parcours, Semestre $semestre, bool $al): array
+    {
+        $req = $this->createQueryBuilder('p')
+            ->innerJoin(ApcSae::class, 's', 'WITH', 'p.sae = s.id')
+            ->innerJoin(Semestre::class, 'se', 'WITH', 's.semestre = se.id')
+            ->where('p.parcours = :parcours')
+            ->andWhere('se.ordreLmd = :semestre')
+            ->andWhere('s.ficheAdaptationLocale = :al')
+            ->setParameter('parcours', $parcours->getId())
+            ->setParameter('al', $al)
+            ->setParameter('semestre', $semestre->getOrdreLmd())
+            ->orderBy('s.ordre', 'ASC')
+            ->addOrderBy('s.codeMatiere', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $t = [];
+
+        foreach ($req as $r) {
+            $t[] = $r->getSae();
+        }
+
+        return $t;
     }
 
 }

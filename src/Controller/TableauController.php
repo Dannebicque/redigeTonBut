@@ -254,7 +254,9 @@ class TableauController extends BaseController
                 'semestre' => $semestre,
                 'niveaux' => $tableauCroise->getNiveaux(),
                 'saes' => $tableauCroise->getSaes(),
+                'saesAl' => $tableauCroise->getSaesAl(),
                 'ressources' => $tableauCroise->getRessources(),
+                'ressourcesAl' => $tableauCroise->getRessourcesAl(),
                 'tab' => $tableauCroise->getTab(),
                 'coefficients' => $tableauCroise->getCoefficients()
             ]);

@@ -10,11 +10,8 @@
 namespace App\Repository;
 
 use App\Entity\Annee;
-use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
-use App\Entity\ApcSaeParcours;
 use App\Entity\Departement;
-use App\Entity\Diplome;
 use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,15 +31,12 @@ class ApcSaeRepository extends ServiceEntityRepository
 
     public function findBySemestre(Semestre $semestre)
     {
-        return $this->createQueryBuilder('r')
-            ->where('r.semestre = :semestre')
-            ->andWhere('r.ficheAdaptationLocale = false')
-            ->setParameter('semestre', $semestre->getId())
-            ->orderBy('r.ordre', 'ASC')
-            ->addOrderBy('r.codeMatiere', 'ASC')
-            ->addOrderBy('r.libelle', 'ASC')
-            ->getQuery()
-            ->getResult();
+        return $this->getBySemestre($semestre, false);
+    }
+
+    public function findBySemestreAL(Semestre $semestre)
+    {
+        return $this->getBySemestre($semestre, true);
     }
 
     public function search(?string $search)
@@ -98,13 +92,11 @@ class ApcSaeRepository extends ServiceEntityRepository
         $query = $this->findByAnnee($annee);
 
         $t = [];
-        foreach ($annee->getSemestres() as $semestre)
-        {
+        foreach ($annee->getSemestres() as $semestre) {
             $t[$semestre->getOrdreLmd()] = [];
         }
 
-        foreach ($query as $res)
-        {
+        foreach ($query as $res) {
             $t[$res->getSemestre()->getOrdreLmd()][] = $res;
         }
 
@@ -116,7 +108,7 @@ class ApcSaeRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->where('s.annee = :annee')
-           // ->andWhere('r.ficheAdaptationLocale = false')
+            // ->andWhere('r.ficheAdaptationLocale = false')
             ->setParameter('annee', $annee->getId())
             ->orderBy('r.semestre', 'ASC')
             ->addOrderBy('r.ordre', 'ASC')
@@ -136,22 +128,17 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getScalarResult();
     }
 
-//    public function findBySemestreAndParcours(mixed $semestre, ?ApcParcours $apcParcours)
-//    {
-//        if ($apcParcours !== null) {
-//            return $this->createQueryBuilder('r')
-//                ->innerJoin(ApcSaeParcours::class, 'p', 'WITH', 'r.id = p.sae')
-//                ->where('r.semestre = :semestre')
-//                ->andWhere('p.parcours = :parcours')
-//                ->setParameter('semestre', $semestre->getId())
-//                ->setParameter('parcours', $apcParcours->getId())
-//                ->orderBy('r.ordre', 'ASC')
-//                ->addOrderBy('r.codeMatiere', 'ASC')
-//                ->addOrderBy('r.libelle', 'ASC')
-//                ->getQuery()
-//                ->getResult();
-//        }
-//
-//        return $this->findBySemestre($semestre);
-//    }
+    private function getBySemestre(Semestre $semestre, bool $al): mixed
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.semestre = :semestre')
+            ->andWhere('r.ficheAdaptationLocale = :al')
+            ->setParameter('al', $al)
+            ->setParameter('semestre', $semestre->getId())
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

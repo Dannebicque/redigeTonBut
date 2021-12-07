@@ -43,12 +43,22 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
 
     public function findBySemestre(Semestre $semestre, ApcParcours $parcours)
     {
+        return $this->getBySemestre($semestre, $parcours, false);
+    }
+
+    public function findBySemestreAl(Semestre $semestre, ApcParcours $parcours)
+    {
+        return $this->getBySemestre($semestre, $parcours, true);
+    }
+
+    private function getBySemestre(Semestre $semestre, ApcParcours $parcours, bool $al) {
         $req = $this->createQueryBuilder('p')
             ->innerJoin(ApcRessource::class, 's', 'WITH', 'p.ressource = s.id')
             ->innerJoin(Semestre::class, 'se', 'WITH', 's.semestre = se.id')
             ->where('p.parcours = :parcours')
             ->andWhere('se.ordreLmd = :semestre')
-            ->andWhere('s.ficheAdaptationLocale = false')
+            ->andWhere('s.ficheAdaptationLocale = :al')
+            ->setParameter('al',$al)
             ->setParameter('parcours', $parcours->getId())
             ->setParameter('semestre', $semestre->getOrdreLmd())
             ->orderBy('s.ordre', 'ASC')

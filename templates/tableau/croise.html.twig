@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block bouton_header %}
+{#    {% if not is_granted('ROLE_GT') %}#}
+    <button class="btn btn-outline-info" id="showAdaptationLocale">Afficher Adaptation Locale</button>
+{#    {% endif %}#}
     {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
     <a href="{{ path('export_tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm
     btn-outline-success
@@ -63,6 +66,17 @@ et/ou libellé. #}
 
         document.querySelectorAll('.changeAcSae').forEach((elem) => {
           elem.addEventListener('change', changeAcSae)
+        })
+
+        document.getElementById('showAdaptationLocale').addEventListener('click', (btn) => {
+          if (btn.currentTarget.innerText === "Afficher Adaptation Locale") {
+            btn.currentTarget.innerText = "Masquer Adaptation Locale";
+          } else {
+            btn.currentTarget.innerText = "Afficher Adaptation Locale";
+          }
+          document.querySelectorAll('.adaptationLocale').forEach((elem) => {
+            elem.classList.toggle('d-none')
+          })
         })
 
         document.querySelectorAll('.changeAcRessource').forEach((elem) => {
