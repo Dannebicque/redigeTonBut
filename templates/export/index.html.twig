@@ -14,7 +14,10 @@
 </a><br><br>
     <a href="{{ path('export_referentiel_synthese_format_excel', {departement:user_data.departement.id}) }}">
         Synthèse des ressources et SAE / parcours / semestre (avec volumes horaires)
-    </a><br><br>
+    </a> &nbsp;&nbsp;<a href="{{ path('export_referentiel_synthese_format_excel_acd', {departement:user_data.departement
+.id}) }}">
+    VERSION ACD : Synthèse des ressources et SAE / parcours / semestre (avec volumes horaires)
+</a><br><br>
     <a href="{{ path('export_tableau_croise_et_volume_horaire', {departement:user_data.departement.id}) }}">
         Export du tableau croisé cumulé avec le tableau des volumes horaires / semestre
     </a><br><br>
@@ -71,21 +74,21 @@
             <div class="card mb-5 border-primary">
                 <div class="card-body">
                     <ul>
-{#                        <li>#}
-{#                            <a href="{{ path('export_ressources_annee', {annee: annee.id, _format:'pdf'}) }}">#}
-{#                                <span class="label">Exporter les Ressources de l'année en PDF</span>#}
-{#                            </a>#}
-{#                        </li>#}
+                        {#                        <li> #}
+                        {#                            <a href="{{ path('export_ressources_annee', {annee: annee.id, _format:'pdf'}) }}"> #}
+                        {#                                <span class="label">Exporter les Ressources de l'année en PDF</span> #}
+                        {#                            </a> #}
+                        {#                        </li> #}
                         <li>
                             <a href="{{ path('export_ressources_annee', {annee: annee.id, _format:'docx'}) }}">
                                 <span class="label">Exporter les Ressources de l'année en Word</span>
                             </a>
                         </li>
-{#                        <li>#}
-{#                            <a href="{{ path('export_saes_annee', {annee: annee.id, _format:'pdf'}) }}">#}
-{#                                <span class="label">Exporter les SAÉ de l'année en PDF</span>#}
-{#                            </a>#}
-{#                        </li>#}
+                        {#                        <li> #}
+                        {#                            <a href="{{ path('export_saes_annee', {annee: annee.id, _format:'pdf'}) }}"> #}
+                        {#                                <span class="label">Exporter les SAÉ de l'année en PDF</span> #}
+                        {#                            </a> #}
+                        {#                        </li> #}
                         <li>
                             <a href="{{ path('export_saes_annee', {annee: annee.id, _format:'docx'}) }}">
                                 <span class="label">Exporter les SAÉ de l'année en Word</span>

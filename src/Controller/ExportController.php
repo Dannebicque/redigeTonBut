@@ -36,6 +36,14 @@ class ExportController extends BaseController
         return $apcReferentielFormationExport->exportSynthese($this->getDepartement());
     }
 
+    #[Route('/export-synthese-referentiel-formation/acd/excel', name: 'export_referentiel_synthese_format_excel_acd')]
+    public function exportReferentielSyntheseFormationAcdExcel(
+        ApcReferentielFormationExport $apcReferentielFormationExport): Response
+    {
+        return $apcReferentielFormationExport->exportSyntheseAcd($this->getDepartement());
+    }
+
+
     #[Route('/export-referentiel-formation/word', name: 'export_referentiel_format_word')]
     public function exportReferentielFormationWord(
         ApcReferentielFormationExport $apcReferentielFormationExport): Response

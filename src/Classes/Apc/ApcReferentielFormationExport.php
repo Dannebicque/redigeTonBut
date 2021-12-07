@@ -299,6 +299,57 @@ class ApcReferentielFormationExport
                 foreach ($departement->getSemestres() as $semestre) {
                     $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
                     $ligne++;
+                    if ($semestre->getAnnee()->getOrdre() > 1) {
+                        $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+                        $saes = $this->apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+                    } else {
+                        $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
+                        $saes = $this->apcSaeRepository->findBySemestre($semestre);
+                    }
+                    $this->excelWriter->writeCellXY(1, $ligne, 'Code');
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
+                    $this->excelWriter->writeCellXY(3, $ligne, 'Volume total');
+                    $this->excelWriter->writeCellXY(4, $ligne, 'Dont TP');
+                    $ligne++;
+                    foreach ($ressources as $ressource) {
+                        $this->excelWriter->writeCellXY(1, $ligne, $ressource->getCodeMatiere());
+                        $this->excelWriter->writeCellXY(2, $ligne, $ressource->getLibelle());
+                        $this->excelWriter->writeCellXY(3, $ligne, $ressource->getHeuresTotales());
+                        $this->excelWriter->writeCellXY(4, $ligne, $ressource->getTpPpn());
+                        $ligne++;
+                    }
+
+                    $this->excelWriter->writeCellXY(1, $ligne, 'Code');
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
+                    $ligne++;
+                    foreach ($saes as $sae) {
+                        $this->excelWriter->writeCellXY(1, $ligne, $sae->getCodeMatiere());
+                        $this->excelWriter->writeCellXY(2, $ligne, $sae->getLibelle());
+                        $ligne++;
+                    }
+                }
+            }
+        }
+
+        $this->excelWriter->getColumnsAutoSize('A', 'S');
+
+        return $this->excelWriter->genereFichier('tableau_referentiel_synthese_formation' . date('YmdHis'));
+    }
+
+    public function exportSyntheseAcd(Departement $departement)
+    {
+        $this->excelWriter->nouveauFichier('');
+        $this->excelWriter->createSheet('Synthèse');
+
+        $ligne = 1;
+        foreach ($departement->getApcParcours() as $parcours) {
+            $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
+            $ligne++;
+            if ($departement->getTypeStructure() === Departement::TYPE3) {
+                /** @var \App\Entity\Semestre $semestre */
+                foreach ($parcours->getSemestres() as $semestre) {
+                    $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
+                    $ligne++;
                     $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
                     $this->excelWriter->writeCellXY(1, $ligne, 'Code');
                     $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
@@ -322,14 +373,60 @@ class ApcReferentielFormationExport
                         $ligne++;
                     }
                 }
+            } else {
+                /** @var \App\Entity\Semestre $semestre */
+                foreach ($departement->getSemestres() as $semestre) {
+                    $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
+                    $ligne++;
+                    if ($semestre->getAnnee()->getOrdre() > 1) {
+                        $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+                        $saes = $this->apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+                    } else {
+                        $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
+                        $saes = $this->apcSaeRepository->findBySemestre($semestre);
+                    }
+                    $this->excelWriter->writeCellXY(1, $ligne, 'Code');
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
+                    $this->excelWriter->writeCellXY(3, $ligne, 'Libellé Court');
+                    $this->excelWriter->writeCellXY(4, $ligne, 'Volume total');
+                    $this->excelWriter->writeCellXY(5, $ligne, 'Dont TP');
+                    $this->excelWriter->writeCellXY(7, $ligne, 'Préco CM');
+                    $this->excelWriter->writeCellXY(8, $ligne, 'Préco TD');
+                    $this->excelWriter->writeCellXY(9, $ligne, 'Préco TP');
+                    $ligne++;
+                    foreach ($ressources as $ressource) {
+                        $this->excelWriter->writeCellXY(1, $ligne, $ressource->getCodeMatiere());
+                        $this->excelWriter->writeCellXY(2, $ligne, $ressource->getLibelle());
+                        $this->excelWriter->writeCellXY(3, $ligne, $ressource->getLibelleCourt());
+                        $this->excelWriter->writeCellXY(4, $ligne, $ressource->getHeuresTotales());
+                        $this->excelWriter->writeCellXY(5, $ligne, $ressource->getTpPpn());
+                        $this->excelWriter->writeCellXY(7, $ligne, $ressource->getCmPreco());
+                        $this->excelWriter->writeCellXY(8, $ligne, $ressource->getTdPreco());
+                        $this->excelWriter->writeCellXY(9, $ligne, $ressource->getTpPreco());
+                        $ligne++;
+                    }
+
+                    $this->excelWriter->writeCellXY(1, $ligne, 'Code');
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
+                    $this->excelWriter->writeCellXY(3, $ligne, 'Libellé Court');
+                    $this->excelWriter->writeCellXY(7, $ligne, 'Préco CM/TD');
+                    $this->excelWriter->writeCellXY(9, $ligne, 'Préco TP');
+                    $this->excelWriter->writeCellXY(10, $ligne, 'Préco Ptut');
+                    $ligne++;
+                    foreach ($saes as $sae) {
+                        $this->excelWriter->writeCellXY(1, $ligne, $sae->getCodeMatiere());
+                        $this->excelWriter->writeCellXY(2, $ligne, $sae->getLibelle());
+                        $this->excelWriter->writeCellXY(3, $ligne, $sae->getLibelleCourt());
+                        $this->excelWriter->writeCellXY(7, $ligne, $sae->getHeuresTotales());
+                        $this->excelWriter->writeCellXY(9, $ligne, $sae->getTpPpn());
+                        $this->excelWriter->writeCellXY(10, $ligne, $sae->getProjetPpn());
+                        $ligne++;
+                    }
+                }
             }
-
-
         }
 
-
         $this->excelWriter->getColumnsAutoSize('A', 'S');
-
 
         return $this->excelWriter->genereFichier('tableau_referentiel_synthese_formation' . date('YmdHis'));
     }

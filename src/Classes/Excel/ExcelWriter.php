@@ -49,7 +49,7 @@ class ExcelWriter
 
     }
 
-    public function writeCellXY(int $col, int $row, string $value, array $options = []): void
+    public function writeCellXY(int $col, int $row, ?string $value = '', array $options = []): void
     {
         $this->sheet->setCellValueByColumnAndRow($col, $row, $value);
         //traiter les options
