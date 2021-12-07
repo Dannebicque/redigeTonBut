@@ -8,15 +8,27 @@
             {% for sae in saes %}
                 <th><p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p></th>
             {% endfor %}
+            {% for sae in saesAl %}
+                <th class="bg-warning adaptationLocale d-none">
+                    <p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p>
+                </th>
+            {% endfor %}
 
             <th>&nbsp;</th>
             {% for ressource in ressources %}
                 <th><p data-bs-toggle="tooltip" title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</p></th>
             {% endfor %}
+            {% for ressource in ressourcesAl %}
+                <th class="bg-warning adaptationLocale d-none">
+                    <p data-bs-toggle="tooltip" title="{{ ressource.libelle }}">{{ ressource.codeMatiere }}</p>
+                </th>
+            {% endfor %}
             <th>&nbsp;</th>
             <th>ECTS</th>
             <th>Coefficients / UE</th>
             <th>Rapport coeffs SAÉ / coeffs UE</th>
+            <th class="bg-warning adaptationLocale d-none">Coefficients / UE</th>
+            <th class="bg-warning adaptationLocale d-none">Rapport coeffs SAÉ / coeffs UE</th>
         </tr>
         </thead>
         <tbody>
@@ -44,6 +56,21 @@
                         {% endif %}
                     </td>
                 {% endfor %}
+                {% for sae in saesAl %}
+                    <td class="text-center bg-warning adaptationLocale d-none">
+                        {% if is_granted('ROLE_LECTEUR') %}
+                            <span  x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saesAl, {{ sae.id
+                            }}, {{ niveau.competence.id }})"></span>
+                        {% else %}
+                            <input type="text" class="form-control"
+                                   @blur="updateSae"
+                                   data-sae="{{ sae.id }}"
+                                   data-competence="{{ niveau.competence.id }}"
+                                   x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saesAl, {{
+                                   sae.id }}, {{ niveau.competence.id }})">
+                        {% endif %}
+                    </td>
+                {% endfor %}
 
                 <th>&nbsp;</th>
                 {% for ressource in ressources %}
@@ -59,6 +86,23 @@
                                    data-ressource="{{ ressource.id }}"
                                    data-competence="{{ niveau.competence.id }}"
                                    x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id }}, {{ niveau.competence.id }})">
+                        {% endif %}
+                    </td>
+                {% endfor %}
+                {% for ressource in ressourcesAl %}
+                    <td  class="text-center bg-warning adaptationLocale d-none">
+                        {% if is_granted('ROLE_LECTEUR') %}
+                            <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
+                            .ressourcesAl,
+{{ ressource.id }}, {{ niveau.competence.id }})"></span>
+                        {% else %}
+                            <input type="text" class="form-control"
+                                   @blur="updateRessource"
+                                   style="min-width: 50px"
+                                   data-ressource="{{ ressource.id }}"
+                                   data-competence="{{ niveau.competence.id }}"
+                                   x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
+                                   .ressourcesAl, {{ ressource.id }}, {{ niveau.competence.id }})">
                         {% endif %}
                     </td>
                 {% endfor %}
@@ -84,6 +128,15 @@
                     x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
                 'rapport')
 "></td>
+                <td x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id
+                }}, 'totalAl')"
+                    class="text-center bg-warning adaptationLocale d-none"
+                ></td>
+                <td class="text-center bg-warning adaptationLocale d-none"
+                    x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id
+                    }},
+                'rapportAl')
+"></td>
             </tr>
         {% endfor %}
 
@@ -95,11 +148,20 @@
                     x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }})">Tot
                 </td>
             {% endfor %}
-
+            {% for sae in saesAl %}
+                <td class="text-center  bg-warning adaptationLocale d-none"
+                    x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].saesAl, {{ sae.id }})">Tot
+                </td>
+            {% endfor %}
             <th>&nbsp;</th>
             {% for ressource in ressources %}
                 <td class="text-center"
                     x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id }})">Tot
+                </td>
+            {% endfor %}
+            {% for ressource in ressourcesAl %}
+                <td class="text-center bg-warning adaptationLocale d-none"
+                    x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].ressourcesAl, {{ ressource.id }})">Tot
                 </td>
             {% endfor %}
             <td></td>

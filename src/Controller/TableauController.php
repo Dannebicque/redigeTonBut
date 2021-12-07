@@ -357,7 +357,9 @@ class TableauController extends BaseController
                 'semestre' => $semestre,
                 'niveaux' => $tableauPreconisation->getNiveaux(),
                 'saes' => $tableauPreconisation->getSaes(),
+                'saesAl' => $tableauPreconisation->getSaesAl(),
                 'ressources' => $tableauPreconisation->getRessources(),
+                'ressourcesAl' => $tableauPreconisation->getRessourcesAl(),
             ]);
     }
 

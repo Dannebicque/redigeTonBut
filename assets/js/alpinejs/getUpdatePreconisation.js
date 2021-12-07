@@ -2,12 +2,12 @@ function getUpdatePreconisation (parcours = null) {
   return {
     parcours: parcours,
     donnees: {
-      1: {competences: {}, ressources: {}, saes: {}, semestre: {}},
-      2: {competences: {}, ressources: {}, saes: {}, semestre: {}},
-      3: {competences: {}, ressources: {}, saes: {}, semestre: {}},
-      4: {competences: {}, ressources: {}, saes: {}, semestre: {}},
-      5: {competences: {}, ressources: {}, saes: {}, semestre: {}},
-      6: {competences: {}, ressources: {}, saes: {}, semestre: {}}
+      1: {competences: {}, ressources: {}, saes: {},ressourcesAl: {}, saesAl: {}, semestre: {}},
+      2: {competences: {}, ressources: {}, saes: {},ressourcesAl: {}, saesAl: {}, semestre: {}},
+      3: {competences: {}, ressources: {}, saes: {},ressourcesAl: {}, saesAl: {}, semestre: {}},
+      4: {competences: {}, ressources: {}, saes: {},ressourcesAl: {}, saesAl: {}, semestre: {}},
+      5: {competences: {}, ressources: {}, saes: {},ressourcesAl: {}, saesAl: {}, semestre: {}},
+      6: {competences: {}, ressources: {}, saes: {},ressourcesAl: {}, saesAl: {}, semestre: {}}
     },
     async init () {
       this.donnees = await fetch(Routing.generate('tableau_api_preconisation', {parcours: this.parcours})).then(r => {

@@ -23,7 +23,9 @@ class TableauPreconisation
     protected Preconisation $preconisation;
 
     private mixed $saes;
+    private mixed $saesAl;
     private mixed $ressources;
+    private mixed $ressourcesAl;
     private mixed $niveaux;
 
     public function getSaes(): mixed
@@ -34,6 +36,16 @@ class TableauPreconisation
     public function getRessources(): mixed
     {
         return $this->ressources;
+    }
+
+    public function getSaesAl(): mixed
+    {
+        return $this->saesAl;
+    }
+
+    public function getRessourcesAl(): mixed
+    {
+        return $this->ressourcesAl;
     }
 
     public function getNiveaux(): mixed
@@ -63,11 +75,15 @@ class TableauPreconisation
     {
         if ($parcours === null) {
             $this->saes = $this->apcSaeRepository->findBySemestre($semestre);
+            $this->saesAl = $this->apcSaeRepository->findBySemestreAl($semestre);
             $this->ressources = $this->apcRessourceRepository->findBySemestre($semestre);
+            $this->ressourcesAl = $this->apcRessourceRepository->findBySemestreAl($semestre);
             $this->niveaux = $this->apcNiveauRepository->findBySemestre($semestre);
         } else {
             $this->saes = $this->apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+            $this->saesAl = $this->apcSaeParcoursRepository->findBySemestreAl($semestre, $parcours);
             $this->ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+            $this->ressourcesAl = $this->apcRessourceParcoursRepository->findBySemestreAl($semestre, $parcours);
             $this->niveaux = $this->apcParcoursNiveauRepository->findBySemestre($semestre, $parcours);
         }
     }

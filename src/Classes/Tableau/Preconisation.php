@@ -62,20 +62,25 @@ class Preconisation
             if ($this->apcParcours !== null) {
                 $competences = $this->apcParcoursNiveauRepository->findParcoursSemestreCompetence($semestre, $this->apcParcours);
                 $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->apcParcours);
+                $ressourcesAl = $this->apcRessourceParcoursRepository->findBySemestreAl($semestre, $this->apcParcours);
                 $saes = $this->apcSaeParcoursRepository->findBySemestre($semestre, $this->apcParcours);
+                $saesAl = $this->apcSaeParcoursRepository->findBySemestreAl($semestre, $this->apcParcours);
             } else {
                 $competences = $this->apcNiveauRepository->findBySemestreArrayCompetence($semestre);
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
+                $ressourcesAl = $this->apcRessourceRepository->findBySemestreAl($semestre);
                 $saes = $this->apcSaeRepository->findBySemestre($semestre);
+                $saesAl = $this->apcSaeRepository->findBySemestreAl($semestre);
             }
 
-            $sem = new PreconisationSemestre($semestre, $competences, $ressources, $saes);
+            $sem = new PreconisationSemestre($semestre, $competences, $ressources, $saes, $ressourcesAl, $saesAl);
+
             $json[$semestre->getOrdreLmd()] = $sem->getJson();
             $this->donneesDepartement->addSemestre($sem);
         }
 
         // $json['departement'] = $this->donneesDepartement->getJson();
-
+        dump($json);
         return $json;
     }
 
