@@ -62,27 +62,27 @@
             </div>
             <div class="tab-pane" id="semestre_{{ semestre.id }}_tableau" role="tabpanel">
                 <div class="row">
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                         <tr>
                             <th rowspan="2">Code</th>
                             <th rowspan="2">Libelle</th>
-                            <th colspan="4">Préconisation ACD</th>
+                            <th colspan="3" class="text-center">Préconisation ACD</th>
                         </tr>
                         <tr>
-                            <th class="bg-warning">CM/TD</th>
-                            <th class="bg-warning">TP</th>
-                            <th class="bg-warning">Ptut</th>
+                            <th class="bg-warning text-center">CM/TD</th>
+                            <th class="bg-warning text-center">TP</th>
+                            <th class="bg-warning text-center">Ptut</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for sae in saes[semestre.ordreLmd] %}
-                            <tr>
-                                <td>{{ sae.codeMatiere }}</td>
-                                <td>{{ sae.libelle }}</td>
-                                <td class="bg-warning">{{ sae.heuresTotales }}</td>
-                                <td class="bg-warning">{{ sae.tpPpn }}</td>
-                                <td class="bg-warning">{{ sae.projetPpn }}</td>
+                            <tr {% if sae.ficheAdaptationLocale == true %}class="bg-warning text-white"{% endif %}>
+                                <td style="width:20%">{{ sae.codeMatiere }}</td>
+                                <td style="width:50%">{{ sae.libelle }}</td>
+                                <td class="bg-warning text-center" style="width:10%">{{ sae.heuresTotales }}</td>
+                                <td class="bg-warning text-center" style="width:10%">{{ sae.tpPpn }}</td>
+                                <td class="bg-warning text-center" style="width:10%">{{ sae.projetPpn }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
