@@ -164,9 +164,11 @@ class ExcelWriter
 
     public function borderCellsRange($col1, $lig1, $col2, $lig2): void
     {
-        $cell1 = Coordinate::stringFromColumnIndex($col1).$lig1;
-        $cell2 = Coordinate::stringFromColumnIndex($col2).$lig2;
-        $this->borderCells($cell1.':'.$cell2);
+        if ($col1 < $col2) {
+            $cell1 = Coordinate::stringFromColumnIndex($col1) . $lig1;
+            $cell2 = Coordinate::stringFromColumnIndex($col2) . $lig2;
+            $this->borderCells($cell1 . ':' . $cell2);
+        }
     }
 
     public function borderCells($cells): void
@@ -186,9 +188,11 @@ class ExcelWriter
 
     public function mergeCellsCaR($col1, $lig1, $col2, $lig2): void
     {
-        $cell1 = Coordinate::stringFromColumnIndex($col1).$lig1;
-        $cell2 = Coordinate::stringFromColumnIndex($col2).$lig2;
-        $this->mergeCells($cell1.':'.$cell2);
+        if ($col1 < $col2) {
+            $cell1 = Coordinate::stringFromColumnIndex($col1) . $lig1;
+            $cell2 = Coordinate::stringFromColumnIndex($col2) . $lig2;
+            $this->mergeCells($cell1 . ':' . $cell2);
+        }
     }
 
     public function mergeCells($cells): void
