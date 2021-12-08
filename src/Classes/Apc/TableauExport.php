@@ -616,7 +616,7 @@ $ligne++;
             $this->excelWriter->mergeCellsCaR(3, $ligne + 1, 3 + $nbSaes - 1, $ligne + 1);
             $this->excelWriter->writeCellXY(3, $ligne + 2, '', ['bgcolor' => 'ebb71a']);
             $this->excelWriter->mergeCellsCaR(3, $ligne + 2, 3 + $nbSaes - 1, $ligne + 2);
-            $col++;
+            $col+=$nbSaes;
         } else {
             $col++;
         }
@@ -856,7 +856,7 @@ $ligne++;
             $this->excelWriter->mergeCellsCaR(3, $ligne + 1, 3 + $nbSaes - 1, $ligne + 1);
             $this->excelWriter->writeCellXY(3, $ligne + 2, '', ['bgcolor' => 'ebb71a']);
             $this->excelWriter->mergeCellsCaR(3, $ligne + 2, 3 + $nbSaes - 1, $ligne + 2);
-            $col++;
+            $col+=$nbSaes;
         } else {
             $col++;
         }
