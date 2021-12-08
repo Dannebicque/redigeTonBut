@@ -600,6 +600,7 @@ $ligne++;
             }
             $ligne++;
             $this->excelWriter->getColumnsAutoSizeInt(1, $col);
+            $col = 3;
         }
         $ligne++;
         //-------------------------
@@ -838,6 +839,7 @@ $ligne++;
             }
             $ligne++;
             $this->excelWriter->getColumnsAutoSizeInt(1, $col);
+            $col = 3;
         }
         $ligne++;
         //-------------------------
