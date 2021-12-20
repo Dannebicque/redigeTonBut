@@ -409,7 +409,7 @@ class ApcReferentielFormationExport
                     $this->excelWriter->writeCellXY(1, $ligne, 'Code');
                     $this->excelWriter->writeCellXY(2, $ligne, 'Libellé');
                     $this->excelWriter->writeCellXY(3, $ligne, 'Libellé Court');
-                    $this->excelWriter->writeCellXY(7, $ligne, 'Préco CM/TD');
+                    $this->excelWriter->writeCellXY(7, $ligne, 'Préco Volume total');
                     $this->excelWriter->writeCellXY(9, $ligne, 'Préco TP');
                     $this->excelWriter->writeCellXY(10, $ligne, 'Préco Ptut');
                     $ligne++;
