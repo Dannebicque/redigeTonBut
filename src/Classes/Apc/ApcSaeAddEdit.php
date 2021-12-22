@@ -68,19 +68,21 @@ class ApcSaeAddEdit
                 }
                 $this->entityManager->persist($saeAc);
             }
-        }
 
-
-        $parcours = $request->request->get('parcours');
-        if (is_array($parcours)) {
-            foreach ($parcours as $idParcours) {
-                $parc = $this->apcParcoursRepository->find($idParcours);
-                if ($parc !== null) {
-                    $saeAc = new ApcSaeParcours($apcSae, $parc);
-                    $this->entityManager->persist($saeAc);
+            $parcours = $request->request->get('parcours');
+            if (is_array($parcours)) {
+                foreach ($parcours as $idParcours) {
+                    $parc = $this->apcParcoursRepository->find($idParcours);
+                    if ($parc !== null) {
+                        $saeAc = new ApcSaeParcours($apcSae, $parc);
+                        $this->entityManager->persist($saeAc);
+                    }
                 }
             }
         }
+
+
+
 
         $acs = $request->request->get('ressources');
         if (is_array($acs)) {
@@ -108,11 +110,13 @@ class ApcSaeAddEdit
                 $this->tabCoeffs[$ac->getCompetence()->getId()] = $ac->getCoefficient();
                 $this->entityManager->remove($ac);
             }
+
+            foreach ($apcSae->getApcSaeParcours() as $ac) {
+                $this->entityManager->remove($ac);
+            }
         }
 
-        foreach ($apcSae->getApcSaeParcours() as $ac) {
-            $this->entityManager->remove($ac);
-        }
+
         foreach ($apcSae->getApcSaeRessources() as $ac) {
             $this->entityManager->remove($ac);
         }

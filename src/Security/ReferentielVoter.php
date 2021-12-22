@@ -93,7 +93,7 @@ class ReferentielVoter extends Voter
             return false;
         }
         // this assumes that the Post object has a `getOwner()` method
-        if ($this->security->isGranted('ROLE_CPN')) {
+        if (in_array('ROLE_CPN', $user->getRoles())) {
             foreach ($user->getCpnDepartements() as $dpt) {
                 if ($dpt->getId() === $post->getDepartement()->getId()) {
                     return true;
@@ -114,7 +114,7 @@ class ReferentielVoter extends Voter
             return false;
         }
 
-        if ($this->security->isGranted('ROLE_CPN')) {
+        if (in_array('ROLE_CPN', $user->getRoles())) {
             foreach ($user->getCpnDepartements() as $dpt) {
                 if ($dpt->getId() === $post->getDepartement()->getId()) {
                     return true;
