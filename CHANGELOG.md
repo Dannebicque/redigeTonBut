@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.29](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.28...v1.8.29) (2021-12-22)
+
+
+### Features
+
+* Export détaillé pour les ACD en tableau, par parcours et semestre ([d6f93f8](https://github.com/Dannebicque/redigeTonBut/commit/d6f93f812280f92c0de3b18cb5c6fe22d3860190))
+
+
+### Bug Fixes
+
+* Export Excel ([6d14fd1](https://github.com/Dannebicque/redigeTonBut/commit/6d14fd1d9dc2b06b76192ea01a1865da679732d1))
+* Export Excel ([aab8ce7](https://github.com/Dannebicque/redigeTonBut/commit/aab8ce7a298d0c469459a94d080371c54a930ab8))
+* Export Excel ([9d8480a](https://github.com/Dannebicque/redigeTonBut/commit/9d8480ac29c44010edf80e60e25970189630e9a7))
+* Export Excel ([2ee3374](https://github.com/Dannebicque/redigeTonBut/commit/2ee337481b1a1a07d3917f182ffb570e1423315f))
+* Format date XML ([139736b](https://github.com/Dannebicque/redigeTonBut/commit/139736bf1392135433b0c68e2c09d5ed80edf5ff))
+* Mise en page tableaux SAES/ressources ([a23eb98](https://github.com/Dannebicque/redigeTonBut/commit/a23eb983d149e7ea21dce8844e854e6f66674f64))
+* Modification lorsque le tableau AC est bloqué ([9328a78](https://github.com/Dannebicque/redigeTonBut/commit/9328a7885b592024fa552f0782e6f7b95a1b4644))
+* Typos ([b4f2aea](https://github.com/Dannebicque/redigeTonBut/commit/b4f2aea035c24618fd595c38e654c4c874866d67))
+* Typos ([8c0add7](https://github.com/Dannebicque/redigeTonBut/commit/8c0add78c58c146279521182e37913e615d931aa))
+* Typos ([42ed797](https://github.com/Dannebicque/redigeTonBut/commit/42ed79753e519a1b8addcd3a050abce280b0900f))
+* Typos ([3140e62](https://github.com/Dannebicque/redigeTonBut/commit/3140e6256560bf918f0a300b9c2b9c54f8584245))
+* Typos ([39e3694](https://github.com/Dannebicque/redigeTonBut/commit/39e36942f255fb6b9021b1d6297c4cfd0eeaa4d4))
+
 ### [1.8.28](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.27...v1.8.28) (2021-12-07)
 
 
