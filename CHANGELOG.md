@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.30](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.29...v1.8.30) (2022-01-03)
+
+
+### Bug Fixes
+
+* Indentation fichier XML ([bb7789b](https://github.com/Dannebicque/redigeTonBut/commit/bb7789ba18afbe11c286ac50371d383bac40186f))
+
 ### [1.8.29](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.28...v1.8.29) (2021-12-22)
 
 
