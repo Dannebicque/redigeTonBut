@@ -47,7 +47,7 @@
                 {% for niveau in parcour.apcParcoursNiveaux|filter(niveau => ((not (niveau.niveau.annee is
                     defined) and (niveau.niveau.ordre == annee)) or ( (niveau.niveau.annee is
                     defined) and (niveau.niveau.annee != null and niveau.niveau.annee.ordre == annee)))) %}
-                <competence niveau="{{ niveau.niveau.ordre }}" id="{{ competence.cleUnique }}"/>
+                <competence niveau="{{ niveau.niveau.ordre }}" id="{{ niveau.niveau.competence.cleUnique }}"/>
                 {% endfor %}
             </annee>
             {% endfor %}
