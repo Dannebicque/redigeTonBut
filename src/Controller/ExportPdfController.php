@@ -9,6 +9,7 @@ use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use DateTime;
+use Endroid\Pdf\Builder\PdfBuilder;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ExportPdfController extends BaseController
 {
     #[Route('/export/pdf/{parcours}', name: 'export_pdf')]
-    public function index(Pdf $knpSnappyPdf,
+    public function index(
+        PdfBuilder $pdfBuilder,
         ApcSaeRepository $apcSaeRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
@@ -50,22 +52,51 @@ class ExportPdfController extends BaseController
             'parcours' => $parcours,
         ]);
 
-        $header = $this->renderView( 'export_pdf/_header.html.twig', ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
-        $footer = $this->renderView( 'export_pdf/_footer.html.twig' );
+        $pdfBuilder
+            ->setHeader([
+                'template' => 'export_pdf/_header.html.twig',
+                'cache_key' => 'header',
+                'parameters' => ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]
+            ])
+            ->setFooter([
+                'template' => 'export_pdf/_footer.html.twig',
+                'cache_key' => 'footer',
+            ])
+            ->setContent([
+                'template' => 'formation/export-referentiel.html.twig',
+                'cache_key' => 'content',
+                'parameters' => [
+                    'allParcours' => $this->getDepartement()->getApcParcours(),
+                    'departement' => $this->getDepartement(),
+                    'semestres' => $semestres,
+                    'saes' => $saes,
+                    'ressources' => $ressources,
+                    'parcours' => $parcours,
+                ]
+            ])
+            ->setOptions([
 
-        return new PdfResponse(
-            $knpSnappyPdf->getOutputFromHtml($html,
+            ])
+        ;
 
-                [
-                    'header-html' => $header,
-                    'footer-html' => $footer,
-//                    'footer-left' => 'Document genere automatiquement depuis OReBUT '.$day->format('d/m/Y H:i'),
-//                    'footer-right' => '[page] / [topage]',
-//                    'footer-center' => '',
-//                    'header-left' => 'Diffusion restreinte. Document non officiel.',
-//                    'header-right' => 'B.U.T. '.$this->getDepartement()->getSigle(),
-            ]),
-            $name
-        );
+        $pdf = $pdfBuilder->getPdf();
+
+
+// Or output directly
+        header('Content-type: application/pdf');
+        echo $pdf->generate();
+
+//        $header = $this->renderView( 'export_pdf/_header.html.twig', ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
+//        $footer = $this->renderView( 'export_pdf/_footer.html.twig' );
+//
+//        return new PdfResponse(
+//            $knpSnappyPdf->getOutputFromHtml($html,
+//
+//                [
+//                    'header-html' => $header,
+//                    'footer-html' => $footer,
+//            ]),
+//            $name
+//        );
     }
 }

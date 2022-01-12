@@ -60,7 +60,7 @@
                 <div class="card h-100 border-{{ parcours.couleur }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ parcours.libelle }}</h5>
-                        <a href="{{ path('export_pdf', {parcours:parcours.id}) }}">
+                        <a href="{{ path('export_pdf', {parcours:parcours.id}) }}" target="_blank">
                             Export d'une pré-version du PN pour le parcours
                             {{ parcours.libelle }}
                         </a>
