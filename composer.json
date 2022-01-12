@@ -23,7 +23,6 @@
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
-        "endroid/pdf": "^1.4",
         "erusev/parsedown": "^1.7",
         "friendsofsymfony/jsrouting-bundle": "^2.7",
         "knplabs/knp-snappy-bundle": "^1.8",
