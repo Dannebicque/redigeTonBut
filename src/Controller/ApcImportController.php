@@ -77,7 +77,7 @@ class ApcImportController extends BaseController
                 }
 
 
-                $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xlsx']);
+                $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xlsx', 'xml']);
                 $diplomeImport->import($this->getDepartement(), $fichier, 'formation');
                 unlink($fichier);
                 $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Maquette importée avec succès');

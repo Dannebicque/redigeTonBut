@@ -413,11 +413,11 @@ class ReferentielCompetenceImport
 
         foreach ($tSem as $sem) {
             foreach ($sem->getApcRessources() as $ressource) {
-                $ressource->setCodeMatiere(Codification::codeRessource($ressource));
+                $ressource->setCodeMatiere(Codification::codeRessource($ressource, $ressource->getApcParcours()));
             }
 
             foreach ($sem->getApcSaes() as $sae) {
-                $sae->setCodeMatiere(Codification::codeSae($sae));
+                $sae->setCodeMatiere(Codification::codeSae($sae, $sae->getApcParcours()));
             }
         }
 
