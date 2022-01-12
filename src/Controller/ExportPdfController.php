@@ -41,7 +41,7 @@ class ExportPdfController extends BaseController
 
         $day = new DateTime('now');
         $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_'.$parcours->getCode().'_'.$day->format('dmYHis').'.pdf';
-        $html = $this->render('formation/export-referentiel.html.twig', [
+        $html = $this->renderView('formation/export-referentiel.html.twig', [
             'allParcours' => $this->getDepartement()->getApcParcours(),
             'departement' => $this->getDepartement(),
             'semestres' => $semestres,
