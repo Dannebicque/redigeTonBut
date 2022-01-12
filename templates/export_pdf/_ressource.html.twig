@@ -1,0 +1,69 @@
+<h1>{{ ressource.codeMatiere }} {{ ressource.libelle|raw }}</h1>
+
+<table style="width:100%; border: 1px solid black;">
+    <tr>
+        <td style="width:50%; border: 1px solid black;">
+            <ul>
+            {% if ressource.apcRessourceParcours|length == 0 %}
+                {#  donc tous les parcours #}
+
+                {% for parcours in allParcours %}
+                <li>{{ parcours.libelle }}</li>
+                {% endfor %}
+
+            {% else %}
+                {% for parcours in ressource.apcRessourceParcours %}
+                    <li>{{ parcours.parcours.libelle }}</li>
+                {% endfor %}
+            {% endif %}
+            </ul>
+        </td>
+        <td style="width:50%; border: 1px solid black;">Semestre {{ semestre.ordreLmd }}</td>
+    </tr>
+    <tr>
+        <td style="width:50%; border: 1px solid black; padding: 3px">
+            {{ ressource.codeMatiere }} {{ ressource.libelle|raw }}
+        </td>
+        <td style="width:50%; border: 1px solid black; padding: 3px">
+            Volume horaire défini nationalement {{ ressource.heuresTotales }}h dont {{ ressource.tpPpn }}h TP
+        </td>
+    </tr>
+</table>
+
+<h2>Compétences ciblées</h2>
+<ul>
+{% for competence in ressource.apcRessourceCompetences|filter(competence => competence.competence != null) %}
+    <li>{{ competence.competence.libelle|raw }}</li>
+{% endfor %}
+</ul>
+
+<h2>Apprentissages critiques</h2>
+
+<ul>
+{% for ac in ressource.apcRessourceApprentissageCritiques|filter(ac => ac.apprentissageCritique != null) %}
+    <li>{{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|raw }}</li>
+{% endfor %}
+</ul>
+
+<h2>SAÉ concernées</h2>
+
+<ul>
+{% for sae in ressource.apcSaeRessources|filter(sae => sae.sae != null) %}
+    <li>{{ sae.sae.codeMatiere }} | {{ sae.sae.libelle|raw }}</li>
+{% endfor %}
+</ul>
+
+<h2>Descriptif</h2>
+<p>{{ ressource.description != null ? ressource.description|nl2br|raw : '' }}</p>
+
+<h2>Prérequis</h2>
+
+<ul>
+{% for prerequis in ressource.ressourcesPreRequises %}
+    <li>{{ prerequis.codeMatiere }} | {{ prerequis.libelle|raw }}</li>
+{% endfor %}
+</ul>
+
+
+<h2>Mots clés</h2>
+<p>{{ ressource.motscles|raw }}</p>

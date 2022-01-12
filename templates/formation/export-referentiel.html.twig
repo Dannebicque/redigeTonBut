@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Export du référentiel de formation du B.U.T. {{ departement.sigle }}</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 11px;
+            line-height: 1.1em;
+        }
+    </style>
+</head>
+<body>
+<h1 style="margin-top:15px">{{ departement.libelle }}</h1>
+<h2>Parcours {{ parcours.libelle }}</h2>
+<div style="page-break-after: always"></div>
+
+{% for semestre in semestres %}
+<h3>{{ semestre.libelle }}</h3>
+<div style="page-break-after: always"></div>
+
+{% for sae in saes[semestre.id] %}
+    {{ include('export_pdf/_sae.html.twig') }}
+    <div style="page-break-after: always"></div>
+{% endfor %}
+
+{% for ressource in ressources[semestre.id] %}
+    {{ include('export_pdf/_ressource.html.twig') }}
+    <div style="page-break-after: always"></div>
+{% endfor %}
+{% endfor %}
+</div>
+</body>
+</html>

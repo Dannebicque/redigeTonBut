@@ -1,0 +1,64 @@
+<h1 style="margin-top:15px">SAÉ {{ sae.codeMatiere }} {{ sae.libelle|raw }}</h1>
+
+<table style="width:100%; border: 1px solid black;">
+    <tr>
+        <td style="width:50%; border: 1px solid black;">
+            <ul>
+                {% if sae.apcSaeParcours|length == 0 %}
+                    {#  donc tous les parcours #}
+
+                    {% for parcours in allParcours %}
+                        <li>{{ parcours.libelle }}</li>
+                    {% endfor %}
+
+                {% else %}
+                    {% for parcours in sae.apcSaeParcours %}
+                        <li>{{ parcours.parcours.libelle }}</li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </td>
+        <td style="width:50%; border: 1px solid black;">Semestre {{ semestre.ordreLmd }}</td>
+    </tr>
+    <tr>
+        <td style="width:50%; border: 1px solid black; padding: 3px">
+            {{ sae.codeMatiere }} {{ sae.libelle|raw }}
+        </td>
+        <td style="width:50%; border: 1px solid black; padding: 3px">
+            Volume horaire défini localement
+        </td>
+    </tr>
+</table>
+
+<h2>Compétences ciblées</h2>
+
+<ul>
+{% for competence in sae.apcSaeCompetences|filter(competence => competence.competence != null) %}
+    <li>{{ competence.competence.libelle|raw }}</li>
+{% endfor %}
+</ul>
+
+<h2>Objectifs et problématique professionnelle</h2>
+
+<p>{{ sae.objectifs != null ? sae.objectifs|nl2br|raw : '' }}</p>
+
+<h2>Apprentissages critiques</h2>
+
+<ul>
+{% for ac in sae.apcSaeApprentissageCritiques|filter(ac => ac.apprentissageCritique != null) %}
+    <li>{{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|raw }}</li>
+{% endfor %}
+</ul>
+
+<h2>Ressources mobilisées et combinées</h2>
+
+<ul>
+{% for ressource in sae.apcSaeRessources %}
+    <li>{{ ressource.ressource.display|raw }}</li>
+{% endfor %}
+</ul>
+
+<h2>Descriptif générique</h2>
+
+<p>{{ sae.description != null ? sae.description|nl2br|raw : '' }}</p>
+

@@ -6,6 +6,7 @@
     <p>Bienvenue sur ORéBUT, Outil de Rédaction des B.U.T.</p>
     <div class="alert alert-info mb-3">
         <ul>
+            <li>12/01/2022 : Export de "pré-version" du PN, par parcours.</li>
             <li>07/12/2021 : Affichage dans les tableaux des ressources ou SAE d'adaptation locales. Affichage en
                 "tableau" des ressources ou SAE. Nouveaux exports</li>
             <li>11/11/2021 : Harmonisation des couleurs sur les éléments non publiés (adaptation locale => Orange). Possibilité d'ajouter des fiches SAE/Ressources en AL, non publiées et prises en comptes dans les tableaux officiels.
@@ -51,6 +52,24 @@
         </strong>
     </div>
 
+<section class="scroll-section mb-2" id="export">
+    <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
+        {% for parcours in user_data.departement.apcParcours %}
+            <div class="col">
+                <div class="card h-100 border-{{ parcours.couleur }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ parcours.libelle }}</h5>
+                        <a href="{{ path('export_pdf', {parcours:parcours.id}) }}">
+                            Export d'une pré-version du PN pour le parcours
+                            {{ parcours.libelle }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
     {% for annee in user_data.annees %}
         <section class="scroll-section" id="buttonTags">
         <h2 class="small-title">B.U.T. {{ annee.ordre }}</h2>
