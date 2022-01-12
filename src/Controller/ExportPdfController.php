@@ -54,12 +54,12 @@ class ExportPdfController extends BaseController
         $footer = $this->renderView( 'export_pdf/_footer.html.twig' );
 
         return new PdfResponse(
-            $knpSnappyPdf->getOutputFromHtml($html,
-
-                [
-                    'header-html' => $header,
-                    'footer-html' => $footer,
-            ]),
+            $knpSnappyPdf->getOutputFromHtml($html
+//                [
+//                    'header-html' => $header,
+//                    'footer-html' => $footer,
+//            ]
+            ),
             $name
         );
     }
