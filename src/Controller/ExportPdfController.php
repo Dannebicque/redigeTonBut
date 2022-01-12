@@ -55,9 +55,13 @@ class ExportPdfController extends BaseController
 
         return new PdfResponse(
             $knpSnappyPdf->getOutputFromHtml($html,
+
                 [
-                'header-html' => $header,
-                'footer-html' => $footer,
+                    'footer-left' => 'Document genere automatiquement depuis OReBUT '.$day->format('d/m/Y H:i'),
+                    'footer-right' => '[page] / [topage]',
+                    'footer-center' => '',
+                    'header-left' => 'Diffusion restreinte. Document non officiel.',
+                    'header-right' => 'B.U.T. '.$this->getDepartement()->getSigle(),
             ]),
             $name
         );
