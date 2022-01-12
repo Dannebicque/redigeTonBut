@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.30...v1.9.0) (2022-01-12)
+
+
+### Features
+
+* Export PDF du référentiel de formation ([b048d60](https://github.com/Dannebicque/redigeTonBut/commit/b048d602ae20d3f74bd74c73d44a377d39c77257))
+
+
+### Bug Fixes
+
+* Import fichier XML Référentiel de formation ([6072ad2](https://github.com/Dannebicque/redigeTonBut/commit/6072ad244abbe6cb1cbe95854339514e4b2cdcbc))
+* Indentation fichier XML ([0fa40a2](https://github.com/Dannebicque/redigeTonBut/commit/0fa40a23d4f2635df1b27329b743f698cd10cf8b))
+
 ### [1.8.30](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.29...v1.8.30) (2022-01-03)
 
 
