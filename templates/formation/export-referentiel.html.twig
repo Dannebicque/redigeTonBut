@@ -7,10 +7,22 @@
     <title>Export du référentiel de formation du B.U.T. {{ departement.sigle }}</title>
     <style>
         body {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 11px;
+            font-family: 'Open Sans', Arial, sans-serif;
+            font-size: 12px;
             line-height: 1.1em;
         }
+        ul {
+            list-style-type: none;
+        }
+        li:before {
+            content: '- ';
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
     </style>
 </head>
 <body>
