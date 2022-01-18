@@ -45,7 +45,7 @@
                     {% for semestre in semestres %}
                         {% for sae in tSaeSemestre[semestre.ordreLmd] %}
                             <td class="text-center">
-                                {% if is_granted('ROLE_LECTEUR') %}
+                                {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                                     {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}X{% endif %}
                                 {% else %}
                                     <input type="checkbox"
