@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.9.0...v1.10.0) (2022-01-18)
+
+
+### Features
+
+* [Blocage] Blocage du PN pour relecture GT ([db203a0](https://github.com/Dannebicque/redigeTonBut/commit/db203a007c3021a378aca0e51f68719de5c84f37))
+* [PDF] En-tête ([2152fd3](https://github.com/Dannebicque/redigeTonBut/commit/2152fd32ae6d8429cf29b431d82d7ab0b94916a1))
+* [PDF] En-tête ([3f5a7a2](https://github.com/Dannebicque/redigeTonBut/commit/3f5a7a297d11fb2ff949aa8e5f12111fe8937097))
+* Export PDF du référentiel de formation ([f353b6b](https://github.com/Dannebicque/redigeTonBut/commit/f353b6bcae948aa158e9fb04be778616093bfa70))
+* Export PDF du référentiel de formation ([facdf52](https://github.com/Dannebicque/redigeTonBut/commit/facdf52a280bfe908b2ee0c2b2eca5bcc7c46c4b))
+* Export PDF du référentiel de formation ([60572c7](https://github.com/Dannebicque/redigeTonBut/commit/60572c7ed89f7117396611afe557ee2e2193f2d7))
+* Export PDF du référentiel de formation ([60b6eeb](https://github.com/Dannebicque/redigeTonBut/commit/60b6eeb61e20a9fc3d450eaa840f5cc3682d1ee3))
+* Export PDF du référentiel de formation ([47f1c8c](https://github.com/Dannebicque/redigeTonBut/commit/47f1c8ccd67adc4255e74f03d0d6d695e14c9153))
+* Export PDF du référentiel de formation ([ab4847e](https://github.com/Dannebicque/redigeTonBut/commit/ab4847efae5868108881d0c39b9be0b36acbbaab))
+* PdfEndroid ([74f4a71](https://github.com/Dannebicque/redigeTonBut/commit/74f4a71ba362c5ad47beb1f5623897edabaafedf))
+* PdfEndroid ([1c570b1](https://github.com/Dannebicque/redigeTonBut/commit/1c570b1aafc041e2465178ae1d8051ab9304ce6c))
+* PdfEndroid ([4938645](https://github.com/Dannebicque/redigeTonBut/commit/49386458e242b7036e08e13ffa79d58f805cd24e))
+
 ## [1.9.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.8.30...v1.9.0) (2022-01-12)
 
 
