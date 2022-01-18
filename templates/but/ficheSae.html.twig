@@ -5,20 +5,20 @@
 {% block content %}
     {% if apc_sae.ficheAdaptationLocale == true %}
         <div class="alert alert-warning mb-2">Fiche d'adaptation locale. Non publiée et non prise en compte dans les
-                                              tableaux.</div>
+                                              tableaux.
+        </div>
     {% endif %}
-    <div class="card mb-5 {% if apc_sae.ficheAdaptationLocale == true
-    %} bg-warning text-white{% endif %}">
+    <div class="card mb-5 {% if apc_sae.ficheAdaptationLocale == true %} bg-warning text-white{% endif %}">
         <div class="card-body">
             {{ include('formation/apc_sae/_detail.html.twig') }}
         </div>
     </div>
-{% if not is_granted('ROLE_GT') %}
-    <div class="card bg-warning text-white">
-        <div class="card-body ">
-            {{ include('formation/apc_sae/_preconisation.html.twig') }}
+    {% if not is_granted('ROLE_GT') %}
+        <div class="card bg-warning text-white">
+            <div class="card-body ">
+                {{ include('formation/apc_sae/_preconisation.html.twig') }}
+            </div>
         </div>
-    </div>
     {% endif %}
 {% endblock %}
 
@@ -40,7 +40,7 @@
     <a href="{{ path('but_sae_annee', {annee: apc_sae.semestre.annee.id, semestre: apc_sae
     .semestre.id}) }}" class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-       >
+    >
         <i class="bi-arrow-left-circle"></i>
         <span>Retour</span>
     </a>
@@ -50,17 +50,18 @@
         <i class="bi-download"></i>
         <span>Export Word</span>
     </a>
-
-    {% if  is_granted('ROLE_EDITEUR') %}
-        <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-sm btn-outline-warning
+    {% if user_data.departement.pnBloque == false %}
+        {% if  is_granted('ROLE_EDITEUR') %}
+            <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-sm btn-outline-warning
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-           >
-            <i class="bi-pencil-square"></i>
-            <span>Modifier</span>
-        </a>
-        {% if  is_granted('ROLE_PACD') and user_data.departement.verouilleCroise == false %}
-            {{ include('form/_delete_form.html.twig', {path: path('formation_apc_ressource_delete',
-                {id: apc_sae.id, }), id: apc_sae.id}) }}
+            >
+                <i class="bi-pencil-square"></i>
+                <span>Modifier</span>
+            </a>
+            {% if  is_granted('ROLE_PACD') and user_data.departement.verouilleCroise == false %}
+                {{ include('form/_delete_form.html.twig', {path: path('formation_apc_ressource_delete',
+                    {id: apc_sae.id, }), id: apc_sae.id}) }}
+            {% endif %}
         {% endif %}
     {% endif %}
 {% endblock %}

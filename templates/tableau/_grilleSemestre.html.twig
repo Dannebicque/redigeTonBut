@@ -124,7 +124,7 @@
                     <th>&nbsp;</th>
                     {% for sae in saes %}
                         <td class="text-center">
-                            {% if is_granted('ROLE_LECTEUR') %}
+                            {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                                 {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}X{% endif %}
                             {% else %}
                                 <input type="checkbox"
@@ -138,7 +138,7 @@
                     {% endfor %}
                     {% for sae in saesAl %}
                         <td class="text-center bg-warning text-white adaptationLocale d-none">
-                            {% if is_granted('ROLE_LECTEUR') %}
+                            {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                                 {% if tab.saesAl[sae.id] is defined and tab.saesAl[sae.id][ac.id] is defined %}X{% endif %}
                             {% else %}
                                 <input type="checkbox"
@@ -153,7 +153,7 @@
                     <th>&nbsp;</th>
                     {% for ressource in ressources %}
                         <td class="text-center">
-                            {% if is_granted('ROLE_LECTEUR') %}
+                            {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                                 {% if tab.ressources[ressource.id] is defined and tab.ressources[ressource.id][ac.id] is
                                     defined %}X{% endif %}
                             {% else %}
@@ -169,7 +169,7 @@
                     {% endfor %}
                     {% for ressource in ressourcesAl %}
                         <td class="text-center bg-warning text-white adaptationLocale d-none">
-                            {% if is_granted('ROLE_LECTEUR') %}
+                            {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                                 {% if tab.ressourcesAl[ressource.id] is defined and tab.ressourcesAl[ressource.id][ac.id] is
                                     defined %}X{% endif %}
                             {% else %}
@@ -190,7 +190,7 @@
                 <th>&nbsp;</th>
                 {% for sae in saes %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                             {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence.id].saes[sae.id] is defined %}
                                 {{ coefficients[niveau.competence.id].saes[sae.id] }}
                             {% endif %}
@@ -210,7 +210,7 @@
                 {% endfor %}
                 {% for sae in saesAl %}
                     <td class="text-center bg-warning text-white adaptationLocale d-none">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                             {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence.id].saesAl[sae.id] is defined %}
                                 {{ coefficients[niveau.competence.id].saesAl[sae.id] }}
                             {% endif %}
@@ -231,7 +231,7 @@
                 <th>&nbsp;</th>
                 {% for ressource in ressources %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                             {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
                             .id].ressources[ressource.id] is defined %}
                                 {{ coefficients[niveau.competence.id].ressources[ressource.id] }}
@@ -253,7 +253,7 @@
                 {% endfor %}
                 {% for ressource in ressourcesAl %}
                     <td class="text-center bg-warning text-white adaptationLocale d-none">
-                        {% if is_granted('ROLE_LECTEUR') %}
+                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
                             {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
                             .id].ressourcesAl[ressource.id] is defined %}
                                 {{ coefficients[niveau.competence.id].ressourcesAl[ressource.id] }}

@@ -15,16 +15,11 @@ use App\Classes\Apc\ApcRessourceOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
-use App\Entity\ApcRessourceParcours;
 use App\Entity\Constantes;
-use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Event\RessourceEvent;
-use App\Event\SaeEvent;
 use App\Form\ApcRessourceType;
-use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcParcoursRepository;
-use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -96,6 +91,8 @@ class ApcRessourceController extends BaseController
                 'form' => $form->createView(),
             ]);
         }
+        return $this->redirectToRoute('homepage');
+
     }
 
     /**
@@ -108,71 +105,78 @@ class ApcRessourceController extends BaseController
         Request $request,
         ApcRessource $apcRessource
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $apcRessource);
+        if ($this->getDepartement()->getPnBloque() === false) {
 
-        $parc = $request->query->get('parcours');
-        $parcours= null;
-        if ($parc !== null) {
-            $parcours = $apcParcoursRepository->find($parc);
-        }
+            $this->denyAccessUnlessGranted('edit', $apcRessource);
 
-        $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
-            'departement' => $this->getDepartement(),
-            'editable' => $this->isGranted('ROLE_GT'),
-            'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
-            'parcours' => $parcours
-        ]);
-        $form->handleRequest($request);
+            $parc = $request->query->get('parcours');
+            $parcours = null;
+            if ($parc !== null) {
+                $parcours = $apcParcoursRepository->find($parc);
+            }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $apcRessourceAddEdit->removeLiens($apcRessource,$this->getDepartement()->getVerouilleCroise());
-            $apcRessourceAddEdit->addOrEdit($apcRessource, $request, $this->getDepartement()->getVerouilleCroise());
+            $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
+                'departement' => $this->getDepartement(),
+                'editable' => $this->isGranted('ROLE_GT'),
+                'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
+                'parcours' => $parcours
+            ]);
+            $form->handleRequest($request);
 
-            $ressourceEvent = new RessourceEvent($apcRessource);
-            $eventDispatcher->dispatch($ressourceEvent, RessourceEvent::UPDATE_CODIFICATION);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $apcRessourceAddEdit->removeLiens($apcRessource, $this->getDepartement()->getVerouilleCroise());
+                $apcRessourceAddEdit->addOrEdit($apcRessource, $request, $this->getDepartement()->getVerouilleCroise());
 
-            $this->addFlashBag(
-                Constantes::FLASHBAG_SUCCESS,
-                'Ressource modifiée avec succès.'
-            );
+                $ressourceEvent = new RessourceEvent($apcRessource);
+                $eventDispatcher->dispatch($ressourceEvent, RessourceEvent::UPDATE_CODIFICATION);
 
-            if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
+                $this->addFlashBag(
+                    Constantes::FLASHBAG_SUCCESS,
+                    'Ressource modifiée avec succès.'
+                );
 
-                if ($parcours === null) {
+                if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
+
+                    if ($parcours === null) {
+                        return $this->redirectToRoute('but_ressources_annee',
+                            [
+                                'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
+                                'semestre' => $apcRessource->getSemestre()->getId()
+                            ]);
+                    }
+
                     return $this->redirectToRoute('but_ressources_annee',
                         [
                             'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
-                            'semestre' => $apcRessource->getSemestre()->getId()
+                            'semestre' => $apcRessource->getSemestre()->getId(),
+                            'parcours' => $parcours->getId()
                         ]);
                 }
-                return $this->redirectToRoute('but_ressources_annee',
-                    [
-                        'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
-                        'semestre' => $apcRessource->getSemestre()->getId(),
-                        'parcours' => $parcours->getId()
-                    ]);
+
+                if ($parcours === null) {
+                    return $this->redirectToRoute('formation_apc_ressource_edit',
+                        ['id' => $apcRessource->getId()]);
+                }
+
+                return $this->redirectToRoute('formation_apc_ressource_edit',
+                    ['id' => $apcRessource->getId(), 'parcours' => $parcours->getId()]);
             }
 
             if ($parcours === null) {
-                return $this->redirectToRoute('formation_apc_ressource_edit',
-                    ['id' => $apcRessource->getId()]);
+                return $this->render('formation/apc_ressource/edit.html.twig', [
+                    'apc_ressource' => $apcRessource,
+                    'form' => $form->createView()
+                ]);
             }
-            return $this->redirectToRoute('formation_apc_ressource_edit',
-                ['id' => $apcRessource->getId(),'parcours' => $parcours->getId()]);
-        }
 
-        if ($parcours === null) {
             return $this->render('formation/apc_ressource/edit.html.twig', [
                 'apc_ressource' => $apcRessource,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'parcours' => $parcours->getId()
             ]);
         }
+        return $this->redirectToRoute('homepage');
 
-        return $this->render('formation/apc_ressource/edit.html.twig', [
-            'apc_ressource' => $apcRessource,
-            'form' => $form->createView(),
-            'parcours' => $parcours->getId()
-        ]);
     }
 
     /**
@@ -180,27 +184,32 @@ class ApcRessourceController extends BaseController
      */
     public function delete(Request $request, ApcRessource $apcRessource): Response
     {
-        $this->denyAccessUnlessGranted('delete', $apcRessource);
-        $id = $apcRessource->getId();
-        if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
-            $semestre = $apcRessource->getSemestre();
-            $this->entityManager->remove($apcRessource);
-            $this->entityManager->flush();
-            $this->addFlashBag(
-                Constantes::FLASHBAG_SUCCESS,
-                'Ressource supprimée avec succès.'
-            );
+        if ($this->getDepartement()->getPnBloque() === false) {
 
-            return $this->redirectToRoute('but_ressources_annee', [
-                'annee' => $semestre->getAnnee()->getId(),
-                'semestre' => $semestre->getId(),
-                'parcours' => $request->query->get('parcours')
-            ]);
+            $this->denyAccessUnlessGranted('delete', $apcRessource);
+            $id = $apcRessource->getId();
+            if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+                $semestre = $apcRessource->getSemestre();
+                $this->entityManager->remove($apcRessource);
+                $this->entityManager->flush();
+                $this->addFlashBag(
+                    Constantes::FLASHBAG_SUCCESS,
+                    'Ressource supprimée avec succès.'
+                );
+
+                return $this->redirectToRoute('but_ressources_annee', [
+                    'annee' => $semestre->getAnnee()->getId(),
+                    'semestre' => $semestre->getId(),
+                    'parcours' => $request->query->get('parcours')
+                ]);
+            }
+
+            $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la ressource.');
+
+            return $this->redirect($request->headers->get('referer'));
         }
+        return $this->redirectToRoute('homepage');
 
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la ressource.');
-
-        return $this->redirect($request->headers->get('referer'));
     }
 
     /**
@@ -210,11 +219,15 @@ class ApcRessourceController extends BaseController
         ApcRessourceAddEdit $apcRessourceAddEdit,
         ApcRessource $apcRessource
     ): Response {
-        $this->denyAccessUnlessGranted('duplicate', $apcRessource);
-        $newApcRessource = $apcRessourceAddEdit->duplique($apcRessource);
-        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Ressource dupliquée avec succès.');
+        if ($this->getDepartement()->getPnBloque() === false) {
 
-        return $this->redirectToRoute('formation_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
+            $this->denyAccessUnlessGranted('duplicate', $apcRessource);
+            $newApcRessource = $apcRessourceAddEdit->duplique($apcRessource);
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Ressource dupliquée avec succès.');
+
+            return $this->redirectToRoute('formation_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
+        }
+        return $this->redirectToRoute('homepage');
     }
 
     /**
@@ -226,10 +239,11 @@ class ApcRessourceController extends BaseController
         ApcRessource $apcRessource,
         int $position
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $apcRessource);
-        $apcRessourceOrdre->deplaceRessource($apcRessource, $position);
-
-        return $this->redirect($request->headers->get('referer'));
-
+        if ($this->getDepartement()->getPnBloque() === false) {
+            $this->denyAccessUnlessGranted('edit', $apcRessource);
+            $apcRessourceOrdre->deplaceRessource($apcRessource, $position);
+            return $this->redirect($request->headers->get('referer'));
+        }
+        return $this->redirectToRoute('homepage');
     }
 }

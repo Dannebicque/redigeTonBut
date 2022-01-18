@@ -15,13 +15,11 @@ use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
-use App\Entity\ApcSaeParcours;
 use App\Entity\Constantes;
 use App\Entity\Semestre;
 use App\Event\SaeEvent;
 use App\Form\ApcSaeType;
 use App\Repository\ApcParcoursRepository;
-use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,7 +57,7 @@ class ApcSaeController extends BaseController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $apcSaeAddEdit->addOrEdit($apcSae, $request,$this->getDepartement()->getVerouilleCroise());
+                $apcSaeAddEdit->addOrEdit($apcSae, $request, $this->getDepartement()->getVerouilleCroise());
 
                 $saeEvent = new SaeEvent($apcSae);
                 $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
@@ -89,6 +87,8 @@ class ApcSaeController extends BaseController
                 'form' => $form->createView(),
             ]);
         }
+        return $this->redirectToRoute('homepage');
+
     }
 
     /**
@@ -101,69 +101,76 @@ class ApcSaeController extends BaseController
         Request $request,
         ApcSae $apcSae
     ): Response {
-        $this->denyAccessUnlessGranted('edit', $apcSae);
-        $parc = $request->query->get('parcours');
-        $parcours= null;
-        if ($parc !== null) {
-            $parcours = $apcParcoursRepository->find($parc);
-        }
+        if ($this->getDepartement()->getPnBloque() === false) {
 
-        $form = $this->createForm(ApcSaeType::class, $apcSae, [
-            'departement' => $this->getDepartement(),
-            'editable' => $this->isGranted('ROLE_GT'),
-            'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
-            'parcours' => $parcours
-        ]);
-        $form->handleRequest($request);
+            $this->denyAccessUnlessGranted('edit', $apcSae);
+            $parc = $request->query->get('parcours');
+            $parcours = null;
+            if ($parc !== null) {
+                $parcours = $apcParcoursRepository->find($parc);
+            }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+            $form = $this->createForm(ApcSaeType::class, $apcSae, [
+                'departement' => $this->getDepartement(),
+                'editable' => $this->isGranted('ROLE_GT'),
+                'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
+                'parcours' => $parcours
+            ]);
+            $form->handleRequest($request);
 
-            $apcSaeAddEdit->removeLiens($apcSae,$this->getDepartement()->getVerouilleCroise());
-            $apcSaeAddEdit->addOrEdit($apcSae, $request,$this->getDepartement()->getVerouilleCroise());
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->addFlashBag(
-                Constantes::FLASHBAG_SUCCESS,
-                'SAÉ modifiée avec succès.'
-            );
+                $apcSaeAddEdit->removeLiens($apcSae, $this->getDepartement()->getVerouilleCroise());
+                $apcSaeAddEdit->addOrEdit($apcSae, $request, $this->getDepartement()->getVerouilleCroise());
 
-            $saeEvent = new SaeEvent($apcSae);
-            $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
+                $this->addFlashBag(
+                    Constantes::FLASHBAG_SUCCESS,
+                    'SAÉ modifiée avec succès.'
+                );
+
+                $saeEvent = new SaeEvent($apcSae);
+                $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
 
 
-            if (null !== $request->request->get('btn_update') && null !== $apcSae->getSemestre() && null !== $apcSae->getSemestre()->getAnnee()) {
-                if ($parcours === null) {
+                if (null !== $request->request->get('btn_update') && null !== $apcSae->getSemestre() && null !== $apcSae->getSemestre()->getAnnee()) {
+                    if ($parcours === null) {
+                        return $this->redirectToRoute('but_sae_annee', [
+                            'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
+                            'semestre' => $apcSae->getSemestre()->getId(),
+                        ]);
+                    }
+
                     return $this->redirectToRoute('but_sae_annee', [
                         'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
                         'semestre' => $apcSae->getSemestre()->getId(),
+                        'parcours' => $parcours->getId()
                     ]);
                 }
 
-                return $this->redirectToRoute('but_sae_annee', [
-                    'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
-                    'semestre' => $apcSae->getSemestre()->getId(),
-                    'parcours' => $parcours->getId()
-                ]);
+                if ($parcours === null) {
+                    return $this->redirectToRoute('formation_apc_sae_edit',
+                        ['id' => $apcSae->getId()]);
+                }
+
+                return $this->redirectToRoute('formation_apc_sae_edit',
+                    ['id' => $apcSae->getId(), 'parcours' => $parcours->getId()]);
             }
 
             if ($parcours === null) {
-                return $this->redirectToRoute('formation_apc_sae_edit',
-                    ['id' => $apcSae->getId()]);
+                return $this->render('formation/apc_sae/edit.html.twig', [
+                    'apc_sae' => $apcSae,
+                    'form' => $form->createView()
+                ]);
             }
-            return $this->redirectToRoute('formation_apc_sae_edit',
-                ['id' => $apcSae->getId(), 'parcours' => $parcours->getId()]);
-        }
 
-        if ($parcours === null) {
             return $this->render('formation/apc_sae/edit.html.twig', [
                 'apc_sae' => $apcSae,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'parcours' => $parcours->getId()
             ]);
         }
-        return $this->render('formation/apc_sae/edit.html.twig', [
-            'apc_sae' => $apcSae,
-            'form' => $form->createView(),
-            'parcours' => $parcours->getId()
-        ]);
+        return $this->redirectToRoute('homepage');
+
     }
 
     /**
@@ -171,23 +178,32 @@ class ApcSaeController extends BaseController
      */
     public function delete(Request $request, ApcSae $apcSae): Response
     {
-        $this->denyAccessUnlessGranted('delete', $apcSae);
-        $id = $apcSae->getId();
-        if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
-            $semestre = $apcSae->getSemestre();
-            $this->entityManager->remove($apcSae);
-            $this->entityManager->flush();
-            $this->addFlashBag(
-                Constantes::FLASHBAG_SUCCESS,
-                'SAÉ supprimée avec succès.'
-            );
+        if ($this->getDepartement()->getPnBloque() === false) {
 
-            return $this->redirectToRoute('but_sae_annee', ['annee' => $semestre->getAnnee()->getId(), 'semestre' => $semestre->getId(), 'parcours' => $request->query->get('parcours') ]);
+            $this->denyAccessUnlessGranted('delete', $apcSae);
+            $id = $apcSae->getId();
+            if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+                $semestre = $apcSae->getSemestre();
+                $this->entityManager->remove($apcSae);
+                $this->entityManager->flush();
+                $this->addFlashBag(
+                    Constantes::FLASHBAG_SUCCESS,
+                    'SAÉ supprimée avec succès.'
+                );
+
+                return $this->redirectToRoute('but_sae_annee', [
+                    'annee' => $semestre->getAnnee()->getId(),
+                    'semestre' => $semestre->getId(),
+                    'parcours' => $request->query->get('parcours')
+                ]);
+            }
+
+            $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la SAÉ.');
+
+            return $this->redirect($request->headers->get('referer'));
         }
+        return $this->redirectToRoute('homepage');
 
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de la SAÉ.');
-
-        return $this->redirect($request->headers->get('referer'));
     }
 
     /**
@@ -195,13 +211,18 @@ class ApcSaeController extends BaseController
      */
     public function duplicate(
         ApcSaeAddEdit $addEdit,
-        ApcSae $apcSae): Response
-    {
-        $this->denyAccessUnlessGranted('edit', $apcSae);
-        $newApcSae = $addEdit->duplique($apcSae);
-        $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'SAÉ dupliquée avec succès.');
+        ApcSae $apcSae
+    ): Response {
+        if ($this->getDepartement()->getPnBloque() === false) {
 
-        return $this->redirectToRoute('formation_apc_sae_edit', ['id' => $newApcSae->getId()]);
+            $this->denyAccessUnlessGranted('edit', $apcSae);
+            $newApcSae = $addEdit->duplique($apcSae);
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'SAÉ dupliquée avec succès.');
+
+            return $this->redirectToRoute('formation_apc_sae_edit', ['id' => $newApcSae->getId()]);
+        }
+        return $this->redirectToRoute('homepage');
+
     }
 
     /**
@@ -210,11 +231,16 @@ class ApcSaeController extends BaseController
     public function deplace(
         Request $request,
         ApcSaeOrdre $apcSaeOrdre,
-        ApcSae $apcSae, int $position): Response
-    {
-        $apcSaeOrdre->deplaceSae($apcSae, $position);
+        ApcSae $apcSae,
+        int $position
+    ): Response {
+        if ($this->getDepartement()->getPnBloque() === false) {
 
-        return $this->redirect($request->headers->get('referer'));
+            $apcSaeOrdre->deplaceSae($apcSae, $position);
+            return $this->redirect($request->headers->get('referer'));
+
+        }
+        return $this->redirectToRoute('homepage');
 
     }
 }

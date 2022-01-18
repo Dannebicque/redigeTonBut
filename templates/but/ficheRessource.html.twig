@@ -4,12 +4,12 @@
 
 {% block content %}
     {% if apc_ressource.ficheAdaptationLocale == true %}
-    <div class="alert alert-warning mb-2">Fiche d'adaptation locale. Non publiée et non prise en compte dans les
-                                     tableaux.</div>
+        <div class="alert alert-warning mb-2">Fiche d'adaptation locale. Non publiée et non prise en compte dans les
+                                              tableaux.
+        </div>
     {% endif %}
 
-    <div class="card {% if apc_ressource.ficheAdaptationLocale == true
-    %} bg-warning text-white{% endif %}">
+    <div class="card {% if apc_ressource.ficheAdaptationLocale == true %} bg-warning text-white{% endif %}">
         <div class="card-body">
             {{ include('formation/apc_ressource/_detail.html.twig') }}
         </div>
@@ -24,7 +24,7 @@
         },
         {
             href: path('but_ressources_annee', {annee: apc_ressource.semestre.annee.id, semestre: apc_ressource
-            .semestre.id}),
+        .semestre.id}),
             title: 'Les ressources',
         },
     ]}) }}
@@ -44,16 +44,19 @@
         <i class="bi-download"></i>
         <span>Export Word</span>
     </a>
-    {% if  is_granted('ROLE_EDITEUR') %}
-        <a href="{{ path('formation_apc_ressource_edit', {id:apc_ressource.id}) }}"
-           class="btn btn-sm btn-outline-warning btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-           id="dashboardTourButton">
-            <i class="bi-pencil-square"></i>
-            <span>Modifier</span>
-        </a>
-        {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCroise == false %}
-            {{ include('form/_delete_form.html.twig', {path: path('formation_apc_ressource_delete',
-                {id: apc_ressource.id, }), id: apc_ressource.id}) }}
+    {% if user_data.departement.pnBloque == false %}
+
+        {% if  is_granted('ROLE_EDITEUR') %}
+            <a href="{{ path('formation_apc_ressource_edit', {id:apc_ressource.id}) }}"
+               class="btn btn-sm btn-outline-warning btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+               id="dashboardTourButton">
+                <i class="bi-pencil-square"></i>
+                <span>Modifier</span>
+            </a>
+            {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCroise == false %}
+                {{ include('form/_delete_form.html.twig', {path: path('formation_apc_ressource_delete',
+                    {id: apc_ressource.id, }), id: apc_ressource.id}) }}
+            {% endif %}
         {% endif %}
     {% endif %}
 {% endblock %}

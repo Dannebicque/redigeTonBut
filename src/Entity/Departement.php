@@ -124,6 +124,11 @@ class Departement extends BaseEntity
      */
     private ?DateTime $dateVersionFormation;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $pn_bloque;
+
 
 
     public function __construct()
@@ -505,6 +510,18 @@ class Departement extends BaseEntity
     public function setDateVersionFormation(?DateTimeInterface $dateVersionFormation): self
     {
         $this->dateVersionFormation = $dateVersionFormation;
+
+        return $this;
+    }
+
+    public function getPnBloque(): ?bool
+    {
+        return $this->pn_bloque;
+    }
+
+    public function setPnBloque(bool $pn_bloque): self
+    {
+        $this->pn_bloque = $pn_bloque;
 
         return $this;
     }
