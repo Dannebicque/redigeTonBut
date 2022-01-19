@@ -282,6 +282,8 @@ class ReferentielCompetenceImport
         $tParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByDepartementArray($this->departement);
         $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findOneByDepartementArray($this->departement);
         $tSem = [];
+        dump($tParcours);
+
         foreach ($xml->semestre as $sem) {
 
             $semestre = $this->entityManager->getRepository(Semestre::class)->findOneByDepartementEtNumero($this->departement,
@@ -337,8 +339,8 @@ class ReferentielCompetenceImport
                     }
 
                     //parcours
-                    if ($ressource->listeParcours !== null && $ressource->listeParcours->parcours !== null) {
-                        foreach ($ressource->listeParcours->parcours as $parcours) {
+                    if ($ressource->liste_parcours !== null && $ressource->liste_parcours->parcours !== null) {
+                        foreach ($ressource->liste_parcours->parcours as $parcours) {
                             if (array_key_exists(trim((string)$parcours), $tParcours)) {
                                 $rac = new ApcRessourceParcours($ar, $tParcours[trim((string)$parcours)]);
                                 $this->entityManager->persist($rac);
@@ -381,7 +383,7 @@ class ReferentielCompetenceImport
                         }
                     }
                     //Ressources
-                    if ($sae->ressources !== null) {
+                    if ($sae->ressources !== null && $sae->ressources->ressource !== null) {
                         foreach ($sae->ressources->ressource as $comp) {
                             if (array_key_exists(trim((string)$comp), $tRessources)) {
                                 $rac = new ApcSaeRessource($ar, $tRessources[trim((string)$comp)]);
@@ -389,10 +391,10 @@ class ReferentielCompetenceImport
                             }
                         }
                     }
-
                     //Parcours
-                    if ($sae->listeParcours !== null && $sae->listeParcours->parcours) {
-                        foreach ($sae->listeParcours->parcours as $parcours) {
+                    if ($sae->liste_parcours !== null && $sae->liste_parcours->parcours) {
+                        foreach ($sae->liste_parcours->parcours as $parcours) {
+                            dump($parcours);
                             if (array_key_exists(trim((string)$parcours), $tParcours)) {
                                 $rac = new ApcSaeParcours($ar, $tParcours[trim((string)$parcours)]);
                                 $this->entityManager->persist($rac);
@@ -413,11 +415,11 @@ class ReferentielCompetenceImport
 
         foreach ($tSem as $sem) {
             foreach ($sem->getApcRessources() as $ressource) {
-                $ressource->setCodeMatiere(Codification::codeRessource($ressource, $ressource->getApcParcours()));
+                $ressource->setCodeMatiere(Codification::codeRessource($ressource, $ressource->getApcRessourceParcours()));
             }
 
             foreach ($sem->getApcSaes() as $sae) {
-                $sae->setCodeMatiere(Codification::codeSae($sae, $sae->getApcParcours()));
+                $sae->setCodeMatiere(Codification::codeSae($sae, $sae->getApcSaeParcours()));
             }
         }
 

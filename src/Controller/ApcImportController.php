@@ -34,7 +34,6 @@ class ApcImportController extends BaseController
 
         if ($request->isMethod('POST')) {
             if (null !== $this->getDepartement()) {
-                if ($request->request->get('effaceExiste') === 'oui') {
                     //effacer
                     $ressources = $apcRessourceRepository->findByDepartement($this->getDepartement());
                     foreach ($ressources as $res) {
@@ -74,8 +73,6 @@ class ApcImportController extends BaseController
                         $this->entityManager->remove($sae);
                     }
                     $this->entityManager->flush();
-                }
-
 
                 $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xlsx', 'xml']);
                 $diplomeImport->import($this->getDepartement(), $fichier, 'formation');
