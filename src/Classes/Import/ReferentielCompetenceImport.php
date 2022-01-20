@@ -282,7 +282,6 @@ class ReferentielCompetenceImport
         $tParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByDepartementArray($this->departement);
         $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findOneByDepartementArray($this->departement);
         $tSem = [];
-        dump($tParcours);
 
         foreach ($xml->semestre as $sem) {
 
@@ -394,7 +393,6 @@ class ReferentielCompetenceImport
                     //Parcours
                     if ($sae->liste_parcours !== null && $sae->liste_parcours->parcours) {
                         foreach ($sae->liste_parcours->parcours as $parcours) {
-                            dump($parcours);
                             if (array_key_exists(trim((string)$parcours), $tParcours)) {
                                 $rac = new ApcSaeParcours($ar, $tParcours[trim((string)$parcours)]);
                                 $this->entityManager->persist($rac);
