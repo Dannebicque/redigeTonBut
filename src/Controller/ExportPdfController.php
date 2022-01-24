@@ -57,7 +57,7 @@ class ExportPdfController extends BaseController
             $knpSnappyPdf->getOutputFromHtml($html,
                 [
                     'header-html' => $header,
-                    'footer-html' => $footer,
+//                    'footer-html' => $footer,
             ]
             ),
             $name
