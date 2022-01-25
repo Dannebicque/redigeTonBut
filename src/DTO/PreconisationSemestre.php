@@ -45,7 +45,6 @@ class PreconisationSemestre
             if (array_key_exists($apc->getCompetence()->getId(), $this->tCompetences)) {
                 if ($parcours !== null && $semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
                     //On est donc en S3->S6, hors type 3. Donc on peut différencier les ECTS
-                    dump($apc->getEctsParcours());
                     $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getEctsParcours() !== null ? $apc->getEctsParcours()[$parcours->getId()] : 0;
                     $this->tSemestre['nb_ects'] += $apc->getEctsParcours() !== null ? $apc->getEctsParcours()[$parcours->getId()] : 0;
                 } else {

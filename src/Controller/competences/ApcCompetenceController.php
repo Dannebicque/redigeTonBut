@@ -85,9 +85,7 @@ class ApcCompetenceController extends BaseController
             //on modifie
             if ($semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $parcours !== null) {
                 $tab = $apcCompSemetre->getEctsParcours();
-                dump($tab);
                 $tab[$parcours->getId()] = Convert::convertToFloat($parametersAsArray['valeur']);
-                dump($tab);
                 $apcCompSemetre->setEctsParcours($tab);
             } else {
                 $apcCompSemetre->setECTS(Convert::convertToFloat($parametersAsArray['valeur']));
