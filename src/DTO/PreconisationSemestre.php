@@ -4,6 +4,8 @@
 namespace App\DTO;
 
 
+use App\Entity\ApcParcours;
+use App\Entity\Departement;
 use App\Entity\Semestre;
 
 class PreconisationSemestre
@@ -15,7 +17,7 @@ class PreconisationSemestre
     private array $tSaesAl = [];
     private array $tSemestre = [];
 
-    public function __construct(Semestre $semestre, array $competences, array $ressources, array $saes, array $ressourcesAl, array $saesAl)
+    public function __construct(Semestre $semestre, array $competences, array $ressources, array $saes, array $ressourcesAl, array $saesAl, ?ApcParcours $parcours = null)
     {
         $this->tSemestre['total_hors_projet'] = 0;
         $this->tSemestre['dont_tp'] = 0;
@@ -41,8 +43,16 @@ class PreconisationSemestre
 
         foreach ($semestre->getApcCompetenceSemestres() as $apc) {
             if (array_key_exists($apc->getCompetence()->getId(), $this->tCompetences)) {
-                $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getECTS();
-                $this->tSemestre['nb_ects'] += $apc->getECTS();
+                if ($parcours !== null && $semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+                    //On est donc en S3->S6, hors type 3. Donc on peut différencier les ECTS
+                    dump($apc->getEctsParcours());
+                    $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getEctsParcours() !== null ? $apc->getEctsParcours()[$parcours->getId()] : 0;
+                    $this->tSemestre['nb_ects'] += $apc->getEctsParcours() !== null ? $apc->getEctsParcours()[$parcours->getId()] : 0;
+                } else {
+                    //si type 3 ou S1/S2 on reste sur ECTS unique.
+                    $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getECTS();
+                    $this->tSemestre['nb_ects'] += $apc->getECTS();
+                }
             }
         }
 

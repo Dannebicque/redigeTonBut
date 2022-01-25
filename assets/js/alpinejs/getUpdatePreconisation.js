@@ -57,7 +57,8 @@ function getUpdatePreconisation (parcours = null) {
         }), {
           method: 'POST',
           body: JSON.stringify({
-            valeur: e.target.value
+            valeur: e.target.value,
+            parcours: this.parcours
           })
         }).then(async () => {
           this.donnees = await fetch(Routing.generate('tableau_api_preconisation', {parcours: this.parcours})).then(r => {

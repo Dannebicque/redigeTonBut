@@ -32,6 +32,11 @@ class ApcCompetenceSemestre
      */
     private $ECTS;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $ectsParcours = "";
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class ApcCompetenceSemestre
     public function setECTS(float $ECTS): self
     {
         $this->ECTS = $ECTS;
+
+        return $this;
+    }
+
+    public function getEctsParcours(): ?array
+    {
+        return json_decode($this->ectsParcours, true);
+    }
+
+    public function setEctsParcours(array $ectsParcours): self
+    {
+        $this->ectsParcours = json_encode($ectsParcours);
 
         return $this;
     }

@@ -14,9 +14,11 @@ use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcCompetenceSemestre;
 use App\Entity\Constantes;
+use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Form\ApcCompetenceType;
 use App\Repository\ApcCompetenceSemestreRepository;
+use App\Repository\ApcParcoursRepository;
 use App\Utils\Convert;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,6 +64,7 @@ class ApcCompetenceController extends BaseController
 
     #[Route("/{semestre}/{competence}/update_ects_ajax", name:"administration_apc_competence_update_ects", methods:["POST"], options:["expose"=>true])]
     public function updateEcts(
+        ApcParcoursRepository $apcParcoursRepository,
         ApcCompetenceSemestreRepository $apcCompetenceSemestreRepository,
         Request $request, Semestre $semestre, ApcCompetence $competence) {
         $parametersAsArray = [];
@@ -72,15 +75,38 @@ class ApcCompetenceController extends BaseController
         //regarde si déjà existant
         $apcCompSemetre = $apcCompetenceSemestreRepository->findOneBy(['semestre' => $semestre->getId(), 'competence' => $competence->getId()]);
 
+        if (array_key_exists('parcours', $parametersAsArray)) {
+            $parcours = $apcParcoursRepository->find($parametersAsArray['parcours']);
+        } else {
+            $parcours = null;
+        }
+
         if ($apcCompSemetre !== null) {
             //on modifie
-            $apcCompSemetre->setECTS(Convert::convertToFloat($parametersAsArray['valeur']));
+            if ($semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $parcours !== null) {
+                $tab = $apcCompSemetre->getEctsParcours();
+                dump($tab);
+                $tab[$parcours->getId()] = Convert::convertToFloat($parametersAsArray['valeur']);
+                dump($tab);
+                $apcCompSemetre->setEctsParcours($tab);
+            } else {
+                $apcCompSemetre->setECTS(Convert::convertToFloat($parametersAsArray['valeur']));
+            }
         } else {
             //on ajoute
             $apcCompSemetre = new ApcCompetenceSemestre();
             $apcCompSemetre->setSemestre($semestre);
             $apcCompSemetre->setCompetence($competence);
-            $apcCompSemetre->setECTS($parametersAsArray['valeur']);
+            if ($semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $parcours !== null) {
+                foreach ($semestre->getDepartement()->getApcParcours() as $parc) {
+                    $tab[$parc->getId()] = 0;
+                }
+                $apcCompSemetre->setECTS(0);
+                $tab[$parcours->getId()] = Convert::convertToFloat($parametersAsArray['valeur']);
+                $apcCompSemetre->setEctsParcours($tab);
+            } else {
+                $apcCompSemetre->setECTS(Convert::convertToFloat($parametersAsArray['valeur']));
+            }
             $this->entityManager->persist($apcCompSemetre);
         }
         $this->entityManager->flush();
