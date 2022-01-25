@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.0...v1.10.1) (2022-01-25)
+
+
+### Features
+
+* [Blocage] Blocage du PN pour relecture GT ([c146394](https://github.com/Dannebicque/redigeTonBut/commit/c146394d3397c2355a2a2ee97cb2695e1a4ad395))
+* [Code] Nouvelle codification ([cbd0fa3](https://github.com/Dannebicque/redigeTonBut/commit/cbd0fa3b36de7942d939ce56f63d59668037f1de))
+* [ECTS] Possibilité de différencier les ECTS selon les parcours sur les types 1 et types 2 ([635346f](https://github.com/Dannebicque/redigeTonBut/commit/635346f7094d9630aa3e22dde3507507eb10044a))
+* [Ref. Competences] Export des référentiels de compétences ([87f7fa7](https://github.com/Dannebicque/redigeTonBut/commit/87f7fa7c843eba9d5291c3edd1d9b793771e322b))
+
+
+### Bug Fixes
+
+* [Export PDF] Le footer pose soucis pour l'export de GB??? ([48ffdf6](https://github.com/Dannebicque/redigeTonBut/commit/48ffdf6b9d313122a9d0edfb45beb92424cfa211))
+* [Import XML] Correctifs import XML ([1e56ff2](https://github.com/Dannebicque/redigeTonBut/commit/1e56ff2103bad61f94507c57eb3d5a505535fba4))
+* [Import XML] Correctifs import XML ([f92fe8a](https://github.com/Dannebicque/redigeTonBut/commit/f92fe8a108c4294ceecb2906a50053e62158442f))
+
 ## [1.10.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.9.0...v1.10.0) (2022-01-18)
 
 
