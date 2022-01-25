@@ -1,0 +1,11 @@
+{% extends 'pdf/basepdf.html.twig' %}
+
+{% block titre %}Parcours {{ parcours.libelle }} | {{ departement.libelle }}{% endblock %}
+
+{% block content %}
+    <div style="position:relative; top:300px">
+        <h1>Référentil de compétences</h1>
+        <h2 class="titre_specialite">Référentiel de compétences du B.U.T. {{ departement.libelle }}</h2>
+        <h3 class="titre_parcours">Parcours {{ parcours.libelle }}</h3>
+    </div>
+{% endblock %}

@@ -6,8 +6,12 @@
 @use "sass:map";
 
 body {
-  font-family: Arial;
+  font-family: "Open Sans", Arial, ans-serif;
   font-size: 11px;
+}
+
+.niveau {
+  font-size: 18px;
 }
 
 $colorsApc: (
@@ -20,12 +24,12 @@ $colorsApc: (
 );
 
 $colorsParcours: (
-        p1:rgb(96,125,139),
-        p2: rgb(255,64,129),
-        p3: rgb(81,45,168),
-        p4: rgb(121,85,72),
-        p5: rgb(0,150,136),
-        p6: rgb(48,63,159)
+        p1:rgb(96, 125, 139),
+        p2: rgb(255, 64, 129),
+        p3: rgb(81, 45, 168),
+        p4: rgb(121, 85, 72),
+        p5: rgb(0, 150, 136),
+        p6: rgb(48, 63, 159)
 );
 
 $colorsApcLight: (
@@ -127,6 +131,7 @@ $colorsApcMedium: (
     background-color: $color-value;
     color: white;
     height: 100%;
+    font-size: 24px;
   }
 
   th.bg_#{$color-key} {
@@ -171,10 +176,31 @@ $colorsApcMedium: (
 ul {
   list-style-type: none;
 }
+
 li:before {
   content: '- ';
 }
 
 li {
   margin-left: -20px;
+}
+
+.header {
+  width: 100%;
+}
+
+.header-4 {
+  float: left;
+  width: 40%;
+}
+
+.header-8 {
+  float: left;
+  width: 60%;
+}
+
+.hr-header {
+  clear: both;
+  border: 3px solid black;
+  margin-bottom: 10px;
 }

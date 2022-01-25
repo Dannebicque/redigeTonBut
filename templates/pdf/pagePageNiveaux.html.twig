@@ -1,0 +1,65 @@
+{% extends 'pdf/basepdf.html.twig' %}
+
+{% block titre %}
+    Les niveaux de développement des compétences | Parcours {{ parcours.libelle }} | {{ departement.libelle }}
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <div class="header-4">
+            <h1>
+                Les niveaux de développement des compétences
+            </h1>
+        </div>
+        <div class="header-8">
+            <h2>B.U.T. {{ departement.libelle }}</h2>
+            <h2>Parcours {{ parcours.libelle }}</h2>
+        </div>
+    </div>
+    <hr class="hr-header">
+    <table style="width:100%">
+        <tr>
+            {% for competence in competences %}
+                <td class="competence{{ competence.couleur }}" style="
+                height: 50px;
+                width: {{ width }}%;
+                        padding:4px;
+                vertical-align: middle;
+                text-align: center">
+                    {{ competence.nomCourt }}
+                </td>
+                {% if not loop.last %}
+                    <td style="width: 10px">&nbsp;</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        <tr>
+            <td colspan="{{ (competences|length * 2) - 1 }}">&nbsp;</td>
+        </tr>
+        {% for i in 1..3 %}
+            <tr>
+                {% for competence in competences %}
+                    {% if parcoursNiveaux[parcours.id][competence.id][i] is defined %}
+                        <td class="niveau niveau{{ i }}{{ competence.couleur }}"
+                            style="height: 200px; width: {{ width }}%; vertical-align: middle; text-align: center; padding:4px">
+                            {{ parcoursNiveaux[parcours.id][competence.id][i].libelle }}
+                        </td>
+                    {% else %}
+                        <td class=""
+                            style="height: 200px; width: {{ width }}%; vertical-align: middle; text-align: center;
+                                    padding:4px">
+                            &nbsp;
+                        </td>
+                    {% endif %}
+                    {% if not loop.last %}
+                        <td style="width: 10px">&nbsp;</td>
+                    {% endif %}
+
+                {% endfor %}
+            </tr>
+            <tr>
+                <td colspan="{{ (competences|length * 2) - 1 }}">&nbsp;</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

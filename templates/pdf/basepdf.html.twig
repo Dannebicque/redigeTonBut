@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        {{ include('pdf/stylepdf.css.twig') }}
+    </style>
+    <title>{% block titre %}{% endblock %}</title>
+</head>
+<body>
+
+<!--Conteneur principal -->
+<div class="container-fluid" id="content">
+    {% block content %}{% endblock %}
+</div><!-- fin conteneur principal-->
+
+</body>
+</html>
+

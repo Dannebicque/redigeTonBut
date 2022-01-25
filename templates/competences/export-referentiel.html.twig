@@ -2,23 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{  absolute_url(asset('build/app-pdf.css')) }}">
     <style>
-        table, th, td, tr {
-            border: 0;
-        }
-        .titre_specialite {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom:20px;
-        }
-
-        .titre_parcours {
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-        }
+        {{ include('pdf/stylepdf.css.twig') }}
     </style>
     <title>PDF - Référentiel de compétences {{ departement.sigle }}</title>
 </head>
