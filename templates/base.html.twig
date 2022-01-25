@@ -290,11 +290,11 @@
                         </a>
                         <ul id="admin">
                             {% if is_granted('ROLE_GT') %}
-                                <li>
-                                    <a href="{{ path('administration_apc_referentiel_import') }}">
-                                        <span class="label">Importer des référentiels</span>
-                                    </a>
-                                </li>
+{#                                <li>#}
+{#                                    <a href="{{ path('administration_apc_referentiel_import') }}">#}
+{#                                        <span class="label">Importer des référentiels</span>#}
+{#                                    </a>#}
+{#                                </li>#}
                                 <li>
                                     <a href="{{ path('administration_apc_referentiel_export') }}">
                                         <span class="label">Exporter</span>
@@ -335,11 +335,11 @@
                                 </li>
 
 {#                            {% endif %}#}
-                            <li>
-                                <a href="{{ path('administration_apc_referentiel_import_formation_index') }}">
-                                    <span class="label">Importer le référentiel de formation</span>
-                                </a>
-                            </li>
+{#                            <li>#}
+{#                                <a href="{{ path('administration_apc_referentiel_import_formation_index') }}">#}
+{#                                    <span class="label">Importer le référentiel de formation</span>#}
+{#                                </a>#}
+{#                            </li>#}
                         </ul>
                     </li>
                     {% if is_granted('ROLE_GT') %}
