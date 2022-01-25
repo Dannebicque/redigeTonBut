@@ -69,12 +69,12 @@ class UpdateCodificationCommand extends Command
             foreach ($departement->getSemestres() as $semestre) {
                foreach ($semestre->getApcRessources() as $r)
                {
-                   $r->setCodeMatiere(Codification::codeRessource($r));
+                   $r->setCodeMatiere(Codification::codeRessource($r, $r->getApcRessourceParcours()));
                }
 
                 foreach ($semestre->getApcSaes() as $r)
                 {
-                    $r->setCodeMatiere(Codification::codeSae($r));
+                    $r->setCodeMatiere(Codification::codeSae($r, $r->getApcSaeParcours()));
                 }
            }
             $this->entityManager->flush();
