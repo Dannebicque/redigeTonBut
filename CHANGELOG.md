@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.1...v1.10.2) (2022-01-26)
+
+
+### Features
+
+* [PPP] Ajout du PPP dans les programmes ([81abb11](https://github.com/Dannebicque/redigeTonBut/commit/81abb112b8ff38251c812892a5f3fad0e4064f3a))
+* [PPP] Ajout du PPP dans les programmes ([2225320](https://github.com/Dannebicque/redigeTonBut/commit/222532097f191cef68fa37f2b7e6efad2b430f23))
+
+
+### Bug Fixes
+
+* [ECTS] typo ([0e768de](https://github.com/Dannebicque/redigeTonBut/commit/0e768de2882b6789963783197a8f436f6ca8cdf7))
+* Suppression des imports ([2983488](https://github.com/Dannebicque/redigeTonBut/commit/2983488692621101c44b422513abed521d9971ee))
+
 ### [1.10.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.0...v1.10.1) (2022-01-25)
 
 
