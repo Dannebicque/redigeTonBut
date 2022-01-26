@@ -56,8 +56,7 @@ class UpdatePppCommand extends Command
                 }
                 $description = $ressource->getDescription();
                 $ressource->setDescription($ppp . "\r\n \r\n". $description);
-                $io->text($ressource->getDescription());
-                //$this->entityManager->flush();
+                $this->entityManager->flush();
                 $io->success(sprintf('Ressource %s mise à jour',
                     $ressource->getCodeMatiere() . ' ' . $ressource->getLibelle()));
             }
