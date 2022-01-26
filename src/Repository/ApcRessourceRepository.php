@@ -158,4 +158,19 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findPPP()
+    {
+        return $this->createQueryBuilder('res')
+            ->where('res.libelle LIKE :t1')
+            ->andWhere('res.libelle LIKE :t2')
+            ->andWhere('res.libelle LIKE :t3')
+            ->orWhere('res.libelle LIKE :t4')
+            ->setParameter('t1', '%rofessionnel%')
+            ->setParameter('t2', '%rojet%')
+            ->setParameter('t3', '%ersonnel%')
+            ->setParameter('t4', '%PPP%')
+            ->getQuery()
+            ->getResult();
+    }
 }
