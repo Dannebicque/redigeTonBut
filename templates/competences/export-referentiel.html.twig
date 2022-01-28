@@ -12,12 +12,20 @@
 <!--Conteneur principal -->
 <div class="container-fluid" id="content">
     {% for parcour in parcours %}
-        <h1 class="titre_specialite">Référentiel de compétences : {{ departement.sigle }}</h1>
-        <h2 class="titre_parcours">Compétences du parcours : {{ parcour.libelle }}</h2>
+        {{ include('pdf/pageDeGardeParcours.html.twig', {parcours: parcour}) }}
+        <div style="page-break-after: always"></div>
+        {{ include('pdf/pageCompetencesComposantes.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
+        <div style="page-break-after: always"></div>
+        {{ include('pdf/pageSituationProfessionnelles.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
+        <div style="page-break-after: always"></div>
+        {% set width = (100 / competencesParcours[parcour.id]|length)-2 %}
+        {{ include('pdf/pagePageNiveaux.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id],
+            width:width
+        }) }}
         <div style="page-break-after: always"></div>
         {% for competence in competencesParcours[parcour.id] %}
             <div>
-                {{ include('competences/_competence_pdf.html.twig') }}
+                {{ include('pdf/pageCompetence.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
             </div>
             <div style="page-break-after: always"></div>
         {% endfor %}

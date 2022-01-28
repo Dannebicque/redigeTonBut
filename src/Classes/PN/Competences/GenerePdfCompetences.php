@@ -7,6 +7,7 @@ use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Environment;
 
@@ -27,11 +28,14 @@ class GenerePdfCompetences
 
     ) {
         $this->dir = $kernel->getProjectDir() . '/public/ref-competences/';
+        $this->filesystem = new Filesystem();
+
     }
 
     public function generePdfCompetencesParPage(Departement $departement): void
     {
         $this->departement = $departement;
+        $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe()) ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe());
         $this->getDataReferentiel();
 
         foreach ($this->departement->getApcParcours() as $parcours) {
@@ -57,10 +61,11 @@ class GenerePdfCompetences
      */
     public function generePdfCompetencesComplet(Departement $departement): void
     {
+        $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe()) ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe());
+
         $this->departement = $departement;
         $this->getDataReferentiel();
-
-        $name = 'referentiel-competence-' . $departement->getSigle() . '.pdf';
+        $name = 'referentiel-competences-' . $departement->getSigle() . '.pdf';
         $html = $this->twig->render('competences/export-referentiel.html.twig', [
             'competencesParcours' => $this->competencesParcours,
             'departement' => $departement,

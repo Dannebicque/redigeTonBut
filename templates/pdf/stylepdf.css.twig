@@ -1,5 +1,5 @@
 body {
-  font-family: "Open Sans", Arial, ans-serif;
+  font-family: Arial, sans-serif;
   font-size: 11px;
 }
 
@@ -507,4 +507,53 @@ hr.hr-header {
   border: 4px solid black;
   margin-top: 4px;
   margin-bottom: 10px;
+}
+
+table.table {
+  width:100%;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.table th, .table tr,.table td {
+  border: 1px solid black;
+  padding:2px;
+}
+
+table.table > th {
+  background-color: #cccccc;
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+th.vertical{
+  height:200px;
+}
+
+td.vertical{
+  height: 200px;
+  text-align: inherit;
+}
+
+div.vertical {
+  {#text-align: inherit;#}
+  {#-ms-transform: rotate(-90deg); /* IE 9 */#}
+  {#-webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */#}
+  {#transform: rotate(-90deg);#}
+  {#padding-bottom:0px;#}
+  {#max-width:100px;#}
+  text-align: inherit;
+  padding-bottom:0px;
+  width: 50px;
+  writing-mode: vertical-rl;
 }

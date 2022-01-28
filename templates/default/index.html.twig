@@ -6,6 +6,11 @@
     <p>Bienvenue sur ORéBUT, Outil de Rédaction des B.U.T.</p>
     <div class="alert alert-info mb-3">
         <ul>
+            {% if user_data.departement != null %}
+            <li>28/01/2022 : Récupération du référentiel de compétences dans le format PN officiel. (<a href="{{
+                asset('ref-competences/'~user_data.departement.numeroAnnexe~'/referentiel-competences-'~user_data
+                    .departement.sigle~'.pdf') }}" target="_blank">Télécharger le fichier</a>)</li>
+            {% endif %}
             <li>23/01/2022 : Possibilité de différencier les ECTS selon les parcours pour les Type 1 et 2 à partir du
                 semestre 3.  </li>
             <li>12/01/2022 : Export de "pré-version" du PN, par parcours.</li>
@@ -54,6 +59,7 @@
         </strong>
     </div>
 
+    {% if user_data.departement != null %}
 <section class="scroll-section mb-2" id="export">
     <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
@@ -72,6 +78,7 @@
         {% endfor %}
     </div>
 </section>
+    {% endif %}
     {% for annee in user_data.annees %}
         <section class="scroll-section" id="buttonTags">
         <h2 class="small-title">B.U.T. {{ annee.ordre }}</h2>
