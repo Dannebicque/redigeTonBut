@@ -1,73 +1,187 @@
-\documentclass[10pt]{/Users/davidannebicque/htdocs/redigeTonBut/public/latex/class/pnclasse}
+\documentclass{PN-BUT}
+%% Fichier généré le {{ 'now'|date('d/m/Y H:i') }}
+%% on définit le pied de pages ici car le nom de la mention est présent
+\pagestyle{fancy}
+\usepackage{tabularx}
+\usepackage{pdflscape} %% éventuellement \usepackage{pdflscape}
+\fancyhead[L,C,R]{}
+\fancyfoot[C]{}
+\fancyfoot[L]{\textcopyright Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation - 2022 -
+http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|latex_purge|raw }}}
+\fancyfoot[R]{\thepage}
 
 \begin{document}
-    "Ce document pr\'esente le programme national du B.U.T {{ departement.sigle }} et compl\`ete l'annexe 1 de
-    l'arr\^ete\' relatif aux programmes nationaux de la licence professionnelle-bachelor universitaire de technologie"
+    \newgeometry{margin=0in} %pour enlever les marges dans la page de titre
+    \thispagestyle{empty}
+    \begin{titlepage}
+        \vspace{2cm}
+        ~
+        \begin{center}
+            \includegraphics[width=20cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}
+        \end{center}
+    \end{titlepage}
+
+    \restoregeometry
+    \mapagevide
 
     \tableofcontents
-
-    {{ departement.textePresentation }}
-
-
-    \section{Référentiel d’évaluation}
-    Texte pr\'e-rempli
+    \newpage
 
 
-    \section{Référentiel de formation}
-    Cadre g\'en\'eral :
-    \begin{itemize}
-        \item L'alternance
-        \item Les situations d'apprentissage et d'\'evaluation
-        \item La d\'emarche portfolio
-        \item Le PPP
-    \end{itemize}
-    Texte pr\'e-rempli
+    \part{La formation B.U.T. {{ departement.libelle|latex_purge|raw }} et ses parcours}
+
+    Ce document présente le programme national du B.U.T {{ departement.libelle|latex_purge|raw }} et complète l'annexe 1 de l'arrêté relatif aux programmes nationaux de la licence professionnelle- bachelor universitaire de technologie.
+
+    \section{Objectifs de la formation}
+    {{ departement.textePresentation|latex_purge|raw }}
+    %% Affiche le S1/S2 si c'est un type 1 ou 2
+
+
+    \part{Référentiel de compétences}
+    \newpage
+    {{ include('latex/_referentiel_competence.tex.twig') }}
+    \newpage
+
+ \part{Référentiel de formation}
+   \chapter{Cadre général}
+                Le diplôme de B.U.T {{departement.sigle}} , quand il est préparé́ en alternance, s’appuie sur le même référentiel de compétences et sur le même référentiel de formation mais le volume horaire global de chaque semestre sera réduit de 15\% en première année, de 15\% en deuxième année, et de 15\% en troisième année.{# todo: gérer le porucentage d'alterance... Ou est utilisé le texte des parcours ??? #}
+
+                \section{Les situations d’apprentissage et d’évaluation}
+                Les SAÉ permettent l’évaluation en situation de la compétence. Cette évaluation est menée en correspondance avec l’ensemble des éléments structurants le référentiel, et s’appuie sur la démarche portfolio, à savoir une démarche de réflexion et de démonstration portée par l’étudiant lui-même.
+                Parce qu’elle répond à une problématique que l’on retrouve en milieu professionnel, une SAÉ est une tâche authentique.
+
+                En tant qu’ensemble d’actions, la SAÉ nécessite de la part de l’étudiant le choix, la mobilisation et la combinaison de ressources pertinentes et cohérentes avec les objectifs ciblés.
+                L’enjeu d’une SAÉ est ainsi multiple :
+                \begin{itemize}
+                    \item Participer au développement de la compétence ;
+                    \item Soutenir l’apprentissage et la maîtrise des ressources ;
+                    \item Intégrer l’autoévaluation par l’étudiant ;
+                    \item Permettre une individualisation des apprentissages.
+                \end{itemize}
+
+                Au cours des différents semestres de formation, l’étudiant sera confronté à plusieurs SAÉ qui lui permettront de développer et de mettre en œuvre chaque niveau de compétence ciblé dans le respect des composantes essentielles du référentiel de compétences et en cohérence avec les apprentissages critiques.
+
+                Les SAÉ peuvent mobiliser des heures issues des 1800 ou 2000 heures de formation et des 600 heures de projet. Les SAÉ prennent la forme de dispositifs pédagogiques variés, individuels ou collectifs, organisés dans un cadre universitaire ou extérieur, tels que des ateliers, des études, des challenges, des séminaires, des immersions au sein d’un environnement professionnel, des stages, etc.
+
+                \section{La démarche portfolio}
+
+                Nommé parfois portefeuille de compétences ou passeport professionnel, le portfolio est un point de connexion entre le monde universitaire et le monde socio-économique. En cela, il répond à l’ensemble des dimensions de la professionnalisation de l’étudiant : de sa formation à son devenir en tant que professionnel.
+
+                Le portfolio soutient donc le développement des compétences et l’individualisation du parcours de formation.
+
+                Plus spécifiquement, le portfolio offre la possibilité pour l’étudiant d’engager une démarche de démonstration, de progression, d’évaluation et de valorisation des compétences qu’il acquiert tout au long de son cursus.
+
+                Quels qu’en soient la forme, l’outil ou le support, le portfolio a pour objectif de permettre à l’étudiant d’adopter une posture réflexive et critique vis-à-vis des compétences acquises ou en voie d’acquisition. Au sein du portfolio, l’étudiant documente et argumente sa trajectoire de développement en mobilisant et analysant des traces, et ainsi en apportant des preuves issues de l’ensemble de ses mises en situation professionnelle (SAÉ).
+
+                La démarche portfolio est un processus continu d’autoévaluation qui nécessite un accompagnement par l’ensemble des acteurs de l’équipe pédagogique. L’étudiant est guidé pour comprendre les éléments du référentiel de compétences, ses modalités d’appropriation, les mises en situation correspondantes et les critères d’évaluation.
+
+                \section{Le projet personnel et professionnel}
+                Présent à chaque semestre de la formation et en lien avec les réflexions de l’équipe pédagogique, le projet personnel et professionnel est un élément structurant qui permet à l’étudiant d’être l’acteur de sa formation, d’en comprendre et de s’en approprier les contenus, les objectifs et les compétences ciblées. Il assure également un accompagnement de l’étudiant dans sa propre définition d’une stratégie personnelle et dans la construction de son identité professionnelle, en cohérence avec les métiers et les situations professionnelles couverts par la spécialité “Métiers du Multimédia et de l’Internet” et les parcours associés. Enfin, le PPP prépare l’étudiant à évoluer tout au long de sa vie professionnelle, en lui fournissant des méthodes d’analyse et d’adaptation aux évolutions de la société, des métiers et des compétences.
+
+                Par sa dimension personnelle, le PPP vise à :
+                \begin{itemize}
+                    \item Induire chez l’étudiant un questionnement sur son projet et son parcours de formation ;
+                    \item Lui donner les moyens d’intégrer les codes du monde professionnel et socio-économique ;
+                    \item L’aider à se définir et à se positionner ;
+                    \item Le guider dans son évolution et son devenir ;
+                    \item Développer sa capacité d’adaptation.
+                \end{itemize}
+
+                Au plan professionnel, le PPP permet :
+                \begin{itemize}
+                    \item Une meilleure appréhension des objectifs de la formation, du référentiel de compétences et du
+                    référentiel de formation ;
+                    \item Une connaissance exhaustive des métiers et perspectives professionnelles spécifiques à la
+                    spécialité et ses parcours ;
+                    \item L’usage contextualisé des méthodes et des outils en lien avec la démarche de recrutement,
+                    notamment dans le cadre d’une recherche de contrat d’alternance ou de stage ;
+                    \item La construction d’une identité professionnelle au travers des expériences de mise en situation professionnelle vécues pendant la formation.
+                \end{itemize}
+
+                Parce qu’ils participent tous deux à la professionnalisation de l’étudiant et en cela sont en dialogue, le PPP et la démarche portfolio ne doivent pourtant être confondus. Le PPP répond davantage à un objectif d’accompagnement qui dépasse le seul cadre des compétences à acquérir, alors que la démarche portfolio répond fondamentalement à des enjeux d’évaluation des compétences.
+      \newpage
+   \chapter{Structure du diplôme}
+
+ %% Tableau structurel
+  \begin{center}
+  %%si type 1 ou 2
+        \includegraphics[width=20cm]{../tableaux/{{ departement.numeroAnnexe }}/tableau-structure.pdf}
+    \end{center}
+    \newpage
+
+    %%
+    %% Partie commune BUT1 si type 1 ou 2.
+    {% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
+        {{ include('latex/_referentiel_formation_but_1.tex.twig') }}
+    {% endif %}
+
     {% for parcours in departement.apcParcours %}
 
-    \subsection{ {{ parcours.libelle }} }
+%%
+%% on commence un parcours
+%%
+                \newgeometry{margin=0in} %pour enlever les marges dans la page de titre
+                \thispagestyle{empty}
+                \begin{titlepage}
+                    \vspace{2cm}
+                    ~
+                    \begin{center}
+                        \includegraphics[width=20cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}
+                    \end{center}
+                \end{titlepage}
 
-    \subsubsection{Présentation du parcours}
-    \begin{itemize}
-        \item Objectifs du parcours, m\'etiers et secteurs d'activit\'es vis\'ees, compe\'etences vise\'ees.
-        \item Dispositions particuli\`eres professions r\`eglement\'ees, certifications spe\'eciales,
-        \item TP s\'ecurit\'e
-    \item \end{itemize}
-    {{ parcours.textePresentation }}
+                \restoregeometry
+                \mapagevide
+                \newpage
 
-    \subsubsection{Référentiel de compétences et d’activités}
-    -- Tableau de comp\'etence du parcours...
+                \chapter{Parcours : {{ parcours.libelle|latex_purge|raw }}}
+                \dominitoc
+{{ parcours.textePresentation|latex_purge|raw }}
+                \newpage
 
-    \subsubsection{Référentiel de formation}
+{% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
+    {% for semestre in departement.semestres|filter(semestre => semestre.ordreLmd > 2) %}
+        \section{Semestre {{semestre.ordreLmd}}}
+         \subsection{Tableau croisé}
+     \begin{center}
+        \includegraphics[width=20cm]{../tableaux/{{ departement.numeroAnnexe }}/tableau-croise-{{ semestre.id }}-{{
+        parcours.id }}.pdf}
+    \end{center}
+    \newpage
+        \subsection{SAÉ}
 
-    \paragraph{Tableau de volume}
-    Tableau des volumes horaires sur les 6 semestres : contient \% d'adaptation locale
-
-    \paragraph{Adaptation locale}
-    L'adaptation locale : explications et/ou possibilit\'es d'\'ecriture par les d\'epartements(r\'epartition ou rajout de
-    ressources et SA\'E) validation CFVU
-    -- pr\'e-rempli --
-
-    \paragraph{Tableau croisant les compétences, les SAÉ, les ressources}
-
-    \paragraph{Fiches SAÉ et Ressources}
-
-    //sommaire \newline
-    {% for semestre in departement.semestres %}
-
-    \subparagraph{Semestre {{ semestre.ordreLmd }} }
-
-    Fiches SA\'E semestre 1+ fiche portfolio Fiches ressources semestre 1 + fiche PPP+ fiche portfolio.
-    Dans chaque fiche, les comp\'etences le niveau de la comp\'etence et les apprentissages critiques sont \'ecrits en entier
-    Fiches SAE\'E semestre 2+ fiche portfolio Fiches ressources semestre+ fiche PPP (m\^eme si identique \`a celle du S1)
-    {% for sae in semestre.apcSaes %}
+        {% for sae in saes[semestre.id][parcours.id] %}
         {{ include('latex/sae.tex.twig') }}
-    \newpage
-    {% endfor %}
-    {% for ressource in semestre.apcRessources %}
-        {{ include('latex/ressource.tex.twig') }}
-    \newpage
-    {% endfor %}
+        \newpage
+        {% endfor %}
 
-{% endfor %}
-{% endfor %}
+        \subsection{Ressources}
+        {% for ressource in ressources[semestre.id][parcours.id] %}
+        {{ include('latex/ressource.tex.twig') }}
+        \newpage
+        {% endfor %}
+
+    {% endfor %}
+{% else %}
+    {% for semestre in departement.semestres %}
+        \section{Semestre {{semestre.ordreLmd}}}
+        \subsection{SAÉ}
+
+        {% for sae in saes[semestre.id][parcours.id] %}
+            {{ include('latex/sae.tex.twig') }}
+            \newpage
+        {% endfor %}
+
+        \subsection{Ressources}
+        {% for ressource in ressources[semestre.id][parcours.id] %}
+            {{ include('latex/ressource.tex.twig') }}
+            \newpage
+        {% endfor %}
+
+        {% endfor %}
+{% endif %}
+{% endfor %}{# parcours #}
+
+
+
 \end{document}

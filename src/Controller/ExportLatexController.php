@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Classes\Apc\ApcStructure;
 use App\Classes\Latex\GenereFile;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,15 +14,16 @@ class ExportLatexController extends BaseController
 {
     #[Route('/export/latex', name: 'export_latex')]
     public function index(
+        ApcStructure $apcStructure,
         KernelInterface $kernel,
         Environment $environment
     ): Response {
-        $file = new GenereFile($environment, $kernel->getProjectDir() . '/public/latex/', $this->getDepartement());
+        $file = new GenereFile($apcStructure, $environment, $kernel->getProjectDir() . '/public/latex/', $this->getDepartement());
         $fichierLatex = $file->genereFile();
 
         $output = $kernel->getProjectDir() . '/public/pdf/';
         $cle = new DateTime('now');
-        $name = 'PN-BUT-' . $this->getDepartement()->getSigle() . '-' . $cle->format('dmY-Hi');
+        $name = 'PN-BUT-' . $this->getDepartement()->getSigle(); // . '-' . $cle->format('dmY-Hi');
         exec('/Library/TeX/texbin/pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
 
         $response = new Response(file_get_contents($output . $name . '.pdf'));

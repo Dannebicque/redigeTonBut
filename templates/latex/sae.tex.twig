@@ -1,18 +1,52 @@
-\begin{table}[]
-    \begin{tabular}{ll}
-        Parcours (\`a cocher dans la liste sur le formulaire) & Semestre {{ semestre.ordreLmd }} \\
-        SA\'E{{ semestre.ordreLmd }}.{{ sae.ordre }} {{ sae.libelle}}                              & Volume horaire
-        d\'efini localement
-    \end{tabular}
-\end{table}
+\subsubsection{SA\'E {{ sae.codeMatiere }} : {{ sae.libelle|latex_purge|raw }}}
+
+\begin{tabular}{|m{5cm}|m{19cm}|}
+\hline
+    Semestre {{ semestre.ordreLmd }} & Volume horaire défini localement \\
+\hline
+\end{tabular}
 
 \textbf{Compétences ciblées}
 
+{% for competence in sae.apcSaeCompetences %}
+{% if loop.first %}
+\begin{itemize}
+{% endif %}
+    \item {{ competence.competence.libelle|latex_purge|raw }}
+{% if loop.last %}
+\end{itemize}
+{% endif %}
+{% endfor %}
+
 \textbf{Objectifs et problématique professionnelle}
+
+{{ sae.objectifs != null ? sae.objectifs|latex_purge|raw : '' }}
 
 \textbf{Apprentissages critiques}
 
+{% for ac in sae.apcSaeApprentissageCritiques %}
+ {% if loop.first %}
+\begin{itemize}
+{% endif %}
+   \item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
+{% if loop.last %}
+\end{itemize}
+{% endif %}
+{% endfor %}
+
 \textbf{Ressources mobilisées et combinées}
 
+{% for ressource in sae.apcSaeRessources %}
+{% if loop.first %}
+\begin{itemize}
+{% endif %}
+    \item {{ ressource.ressource.display|latex_purge|raw }}
+{% if loop.last %}
+\end{itemize}
+{% endif %}
+{% endfor %}
+
 \textbf{Descriptif générique}
+
+{{ sae.description != null ? sae.description|latex_purge|raw : '' }}
 

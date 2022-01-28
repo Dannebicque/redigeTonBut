@@ -133,4 +133,27 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
         return $t;
     }
 
+    public function findBySemestreArray(Semestre $semestre, ApcParcours $parcours)
+    {
+        $req = $this->createQueryBuilder('p')
+            ->innerJoin(ApcSae::class, 'a', 'WITH', 'p.sae = a.id')
+            ->where('p.parcours = :parcours')
+            ->andWhere('a.ficheAdaptationLocale = false')
+            ->andWhere('a.semestre = :semestre')
+            ->setParameter('parcours', $parcours->getId())
+            ->setParameter('semestre', $semestre->getId())
+            ->orderBy('a.ordre', 'ASC')
+            ->addOrderBy('a.codeMatiere', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $t = [];
+
+        foreach ($req as $r) {
+            $t[] = $r->getSae();
+        }
+
+        return $t;
+    }
+
 }

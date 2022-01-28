@@ -173,4 +173,17 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findBySemestreArray(Semestre $semestre)
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.semestre = :semestre')
+            ->andWhere('r.ficheAdaptationLocale = false')
+            ->setParameter('semestre', $semestre->getId())
+            ->addOrderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

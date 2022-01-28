@@ -1,0 +1,104 @@
+{% extends 'pdf/basepdf.html.twig' %}
+
+{% block titre %}
+    Tableau Croisé semestre {{ semestre.ordreLmd }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}| {{ departement.libelle }}
+{% endblock %}
+
+{% block content %}
+    <h1>Tableau coirsé pour le B.U.T {{ departement.libelle }}, semestre {{ semestre.ordreLmd }}</h1>
+    {% if parcours != null %}
+        <h2>Pour le parcours : {{ parcours.libelle }}</h2>
+    {% endif %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>AC</th>
+            {% for sae in saes %}
+                <th class="vertical">
+                    <div class="vertical">
+                        {{ sae.codeMatiere }} {{ sae.libelle }}
+                    </div>
+                </th>
+            {% endfor %}
+
+            {% for ressource in ressources %}
+                <th class="vertical">
+                    <div class="vertical">
+                        {{ ressource.codeMatiere }} {{ ressource.libelle }}
+                    </div>
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for niveau in niveaux %}
+            <tr>
+                <td rowspan="{{ niveau.apcApprentissageCritiques|length+1 }}" class="bg_{{ niveau.competence
+                .couleur }} vertical">
+                    <div class="vertical">
+                        {{ niveau.competence.nomCourt }}
+                    </div>
+                </td>
+            </tr>
+
+            {% for ac in niveau.apcApprentissageCritiques %}
+                <tr>
+                    <td class="bg_{{ niveau.competence.couleur }}">
+                        <p data-bs-toggle="tooltip" title="{{ ac.libelle }}">{{ ac.code }}</p>
+                    </td>
+                    {% for sae in saes %}
+                        <td class="text-center">
+                            {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}X{% endif %}
+                        </td>
+                    {% endfor %}
+
+                    {% for ressource in ressources %}
+                        <td class="text-center">
+                            {% if tab.ressources[ressource.id] is defined and tab.ressources[ressource.id][ac.id] is
+                                defined %}X{% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="{{ ressources|length + saes|length + 2 }}"></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <th colspan="2">Volume total</th>
+            <td colspan="{{ saes|length }}" class="text-center">&nbsp;</td>
+            {% for ressource in ressources %}
+                <td class="text-center">
+                    {{ ressource.heuresTotales }}
+                </td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th colspan="2">Dont TP</th>
+            <td colspan="{{ saes|length }}" class="text-center">&nbsp;</td>
+            {% for ressource in ressources %}
+                <td class="text-center">
+                    {{ ressource.tpPpn }}
+                </td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th colspan="2">Adap.</th>
+            <td colspan="{{ saes|length }}" class="text-center">xx</td>
+            <td class="text-center" colspan="{{ ressources|length }}">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2">Adap.</th>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center">xx</td>
+        </tr>
+        <tr>
+            <th colspan="2">Dont TP</th>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center">xx</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

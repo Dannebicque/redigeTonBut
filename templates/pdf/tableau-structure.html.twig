@@ -1,0 +1,160 @@
+{% extends 'pdf/basepdf.html.twig' %}
+
+{% block titre %}
+    Tableau structure complet | {{ departement.libelle }}
+{% endblock %}
+
+{% block content %}
+    <h1>Tableau de structure pour le B.U.T {{ departement.libelle }}</h1>
+    {% if parcours != null %}
+    <h2>Pour le parcours : {{ parcours.libelle }}</h2>
+    {% endif %}
+    <table class="table table-bordered table-sm">
+        <thead>
+        <tr>
+            <th>Semestres</th>
+            {% for i in 1..6 %}
+                <th class="w-10 text-center">S{{ i }}</th>
+            {% endfor %}
+            <th class="text-center">TOTAL</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="lignepubliee">
+            <th class="text-left">Nbre d'heures d'enseignement (ressources + SAé)</th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresRessourcesSae }}
+                </td>
+            {% endfor %}
+            <td class="text-center">
+                {{ donnees.departement.nbHeuresRessourcesSae }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="8">&nbsp;</td>
+        </tr>
+        <tr class="lignepubliee">
+            <th class="text-left">Dont % d'adaptation locale<br>
+                <p class="text-small">max 667 h (secondaire) 600h (tertaire) sur 3 ans<br>
+                                      max 40% du volume d'enseignement</p></th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].pourcentageAdaptationLocale }}
+                </td>
+            {% endfor %}
+            <td class="text-center">
+                {{ donnees.departement.totalPourcentageAdaptationLocale }}
+            </td>
+        </tr>
+
+        <tr class="lignepubliee">
+            <th class="text-left">Nbre d'heures d'enseignement définies localement</th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresEnseignementLocale }}
+                </td>
+            {% endfor %}
+            <td class="text-center">
+                {{ donnees.departement.totalAdaptationLocale }}
+            </td>
+        </tr>
+        <tr class="lignepubliee">
+            <th class="text-left">Nbre heures d'enseignement SAÉ définies localement</th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresEnseignementSaeLocale }}
+                </td>
+            {% endfor %}
+            <td>
+            </td>
+        </tr>
+        <tr class="lignepubliee">
+            <th class="text-left">Nbre heures d'enseignement à définir localement dans les Ressources ou les SAÉ</th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresEnseignementRessourceLocale }}
+                </td>
+            {% endfor %}
+            <td></td>
+        </tr>
+
+        <tr class="lignepubliee">
+            <th class="text-left">Nbre heures d'enseignement des ressources définies nationalement</th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresEnseignementRessourceNational }}
+                </td>
+            {% endfor %}
+            <td>
+            </td>
+        </tr>
+
+        <tr>
+            <th class="text-left">Nbre heures de tp définies nationalement</th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresTpNational }}
+                </td>
+            {% endfor %}
+            <td rowspan="2" class="text-center">
+                {{ donnees.departement.totalTp }}
+            </td>
+        </tr>
+        <tr>
+            <th class="text-left">Nbre heures de tp à définir localement</th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresTpLocale }}
+                </td>
+            {% endfor %}
+        </tr>
+
+        <tr>
+            <td colspan="8">&nbsp;</td>
+        </tr>
+        <tr class="lignepubliee">
+            <th class="text-left">Nbre d'heures de projet tutoré</th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresProjet }}
+                </td>
+            {% endfor %}
+            <td class="text-center">
+                {{ donnees.departement.nbHeuresProjet }}
+            </td>
+        </tr>
+        <tr class="lignepubliee">
+            <th scope="row" class="text-left">Nbre heures de projet/année min 150 h / max 250h</th>
+            {% for i in range(1, 6, 2) %}
+                <td class="text-center" colspan="2">
+                    {{ donnees[i].nbHeuresProjet + donnees[i + 1].nbHeuresProjet }}
+                </td>
+            {% endfor %}
+            <td class="text-center">
+            {{ donnees.departement.nbHeuresProjet }}
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="8">&nbsp;</td>
+        </tr>
+        <tr class="lignepubliee">
+            <th class="text-left">Nbre de semaines de stage<br>
+                <p class="text-small"> 8 à 12 semaines BUT 1&2<br>
+                                       12 à 16 semaines BUT 3</p>
+            </th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbSemainesStageMin }} -
+                    {{ donnees[i].nbSemainesStageMax }}
+                </td>
+            {% endfor %}
+            <td class="text-center">
+                {{ donnees.departement.nbSemainesStageMin }} -
+                {{ donnees.departement.nbSemainesStageMax }}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

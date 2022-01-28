@@ -1,21 +1,64 @@
-\begin{table}[]
-    \begin{tabular}{ll}
-        Parcours (\`a cocher dans la liste sur le formulaire) & Semestre {{ semestre.ordreLmd }} \\
-        R{{ semestre.ordreLmd }}.{{ressource.ordre}} {{ ressource.libelle }}                           & VVolume
-        horaire
-        d\'efini nationalement {{ ressource.heuresTotales }}h dont {{ ressource.tpPpn}}h TP
-    \end{tabular}
-\end{table}
+\subsubsection{Ressource {{ ressource.codeMatiere }} : {{ ressource.libelle|latex_purge|raw }}}
 
-\textbf{Compétences ciblées}
+\begin{tabular}{|m{5cm}|m{19cm}|}
+\hline
+    Semestre {{ semestre.ordreLmd }}  & Volume horaire défini nationalement {{ ressource.heuresTotales }}h dont {{
+       ressource.tpPpn}}h TP \\
+\hline
+\end{tabular}
 
-\textbf{Apprentissages critiques}
+\textbf{Compétences ciblées} \newline
 
-\textbf{SAÉ concernées}
 
-\textbf{Descriptif}
+{% for competence in ressource.apcRessourceCompetences %}
+{% if loop.first %}
+\begin{itemize}
+{% endif %}
+    \item {{ competence.competence.libelle|latex_purge|raw }}
+{% if loop.last %}
+\end{itemize}
+{% endif %}
+{% endfor %}
 
-\textbf{Prérequis (à cocher dans la liste sur le formulaire)}
+\textbf{Apprentissages critiques} \newline
 
-\textbf{Mots clés}
+{% for ac in ressource.apcRessourceApprentissageCritiques %}
+{% if loop.first %}
+\begin{itemize}
+{% endif %}
+    \item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
+{% if loop.last %}
+\end{itemize}
+{% endif %}
+{% endfor %}
 
+\textbf{SAÉ concernées} \newline
+
+{% for sae in ressource.apcSaeRessources %}
+{% if loop.first %}
+\begin{itemize}
+{% endif %}
+    \item {{ sae.sae.codeMatiere }} | {{ sae.sae.libelle|latex_purge|raw }}
+{% if loop.last %}
+\end{itemize}
+{% endif %}
+{% endfor %}
+
+\textbf{Descriptif} \newline
+{{ ressource.description != null ? ressource.description|latex_purge|raw : '' }}
+
+\textbf{Prérequis} \newline
+
+{% for prerequis in ressource.ressourcesPreRequises %}
+{% if loop.first %}
+\begin{itemize}
+{% endif %}
+    \item {{ prerequis.codeMatiere }} | {{ prerequis.libelle|latex_purge|raw }}
+{% if loop.last %}
+\end{itemize}
+{% endif %}
+{% endfor %}
+
+
+\textbf{Mots clés} \newline
+{{ ressource.motscles|latex_purge|keyWordsLatex|raw }}
