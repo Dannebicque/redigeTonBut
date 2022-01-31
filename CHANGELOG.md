@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.2...v1.10.3) (2022-01-31)
+
+
+### Features
+
+* [Ref. compétences] Export PDF complet du référentiel de compétences ([e4ae143](https://github.com/Dannebicque/redigeTonBut/commit/e4ae14379e1a09989009e12ee66e8584b63af9b4))
+* [Ref. formation] Première version du référentiel de formation en latex ([110751b](https://github.com/Dannebicque/redigeTonBut/commit/110751badb911059af3f37c498532dc39646f1d4))
+
+
+### Bug Fixes
+
+* [Competence] Référentiel de compétence, blocage du parcours ([9a6061f](https://github.com/Dannebicque/redigeTonBut/commit/9a6061fe7158dc123dc7864254b498437c9f5b63))
+
 ### [1.10.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.1...v1.10.2) (2022-01-26)
 
 
