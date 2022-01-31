@@ -8,6 +8,7 @@ use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
+use App\Repository\SemestreRepository;
 use DateTime;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
@@ -18,13 +19,19 @@ class ExportPdfController extends BaseController
 {
     #[Route('/export/pdf/{parcours}', name: 'export_pdf')]
     public function index(Pdf $knpSnappyPdf,
+        SemestreRepository $semestreRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcRessourceRepository $apcRessourceRepository,
         ApcParcours $parcours): Response
     {
-        $semestres = $this->getDepartement()->getSemestres();
+        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3)
+        {
+            $semestres = $semestreRepository->findByParcours($parcours);
+        } else {
+            $semestres = $this->getDepartement()->getSemestres();
+        }
 
         $ressources = [];
         $saes = [];
