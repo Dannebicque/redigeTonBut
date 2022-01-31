@@ -21,7 +21,7 @@ class ApcParcoursType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('libelle', TextType::class, ['label' => 'Libellé long'])
+            ->add('libelle', TextType::class, ['label' => 'Libellé long', 'disabled' => $options['referentiel_bloque']])
             ->add('code', TextType::class, ['label' => 'Code/Sigle'])
             ->add('textePresentation', TextareaType::class,
                 ['label' => 'Texte descriptif du parcours',
@@ -44,6 +44,7 @@ class ApcParcoursType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ApcParcours::class,
+            'referentiel_bloque'=> false
         ]);
     }
 }

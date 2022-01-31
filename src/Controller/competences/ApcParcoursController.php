@@ -26,7 +26,9 @@ class ApcParcoursController extends BaseController
         Request $request,
         ApcParcours $apcParcour
     ): Response {
-        $form = $this->createForm(ApcParcoursType::class, $apcParcour);
+        $form = $this->createForm(ApcParcoursType::class, $apcParcour, [
+            'referentiel_bloque' => $this->getDepartement()->getVerouilleCompetences()
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
