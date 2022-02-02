@@ -87,25 +87,25 @@ class ApcController extends BaseController
         );
     }
 
-//    #[Route("/import", name:"administration_apc_referentiel_import", methods:["GET","POST"])]
-//    public function import(
-//        DepartementRepository $departementRepository,
-//        MyUpload $myUpload,
-//        ReferentielCompetenceImport $diplomeImport,
-//        Request $request
-//    ): Response {
-//        if ($request->isMethod('POST')) {
-//            if (null !== $this->getDepartement()) {
-//                $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xml', 'xlsx']);
-//                $diplomeImport->import($this->getDepartement(), $fichier, $request->request->get('typeFichier'));
-//                unlink($fichier);
-//                $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Maquette importée avec succès');
-//            }
-//
-//        }
-//
-//        return $this->render('import_referentiel/index.html.twig', [
-//            'departements' => $departementRepository->findAll(),
-//        ]);
-//    }
+    #[Route("/import", name:"administration_apc_referentiel_import", methods:["GET","POST"])]
+    public function import(
+        DepartementRepository $departementRepository,
+        MyUpload $myUpload,
+        ReferentielCompetenceImport $diplomeImport,
+        Request $request
+    ): Response {
+        if ($request->isMethod('POST')) {
+            if (null !== $this->getDepartement()) {
+                $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xml', 'xlsx']);
+                $diplomeImport->import($this->getDepartement(), $fichier, $request->request->get('typeFichier'));
+                unlink($fichier);
+                $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Maquette importée avec succès');
+            }
+
+        }
+
+        return $this->render('import_referentiel/index.html.twig', [
+            'departements' => $departementRepository->findAll(),
+        ]);
+    }
 }

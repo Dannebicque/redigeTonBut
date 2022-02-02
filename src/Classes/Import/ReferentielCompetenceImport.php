@@ -293,6 +293,8 @@ class ReferentielCompetenceImport
                 $tRessources = [];
                 $tabPrerequis = [];
                 foreach ($sem->ressources->ressource as $ressource) {
+
+
                     $ar = new ApcRessource();
                     $ar->setSemestre($semestre);
                     $ar->setOrdre((int)$ressource['ordre']);
@@ -300,7 +302,7 @@ class ReferentielCompetenceImport
                     $ar->setHeuresTotales($ressource['heuresCMTD']);
                     $ar->setTpPpn($ressource['heuresTP']);
                     $ar->setDescription((string)$ressource->description);
-                    $ar->setMotsCles((string)$ressource->motsCles);
+                    $ar->setMotsCles((string)$ressource->{'mots-cles'});
                     $ar->setCodeMatiere((string)$ressource['code']);
                     //$ar->setCodeMatiere(Codification::codeRessource($ar)); -- todo: renommer le semestre à posteriori
                     $this->entityManager->persist($ar);
@@ -328,7 +330,7 @@ class ReferentielCompetenceImport
                     }
 
                     //prerequis
-                    if ($ressource->prerequis !== null && $ressource->prerequis->ressource !== null) {
+                    if ($ressource->prerequis !== null) {
                         foreach ($ressource->prerequis->ressource as $r) {
                             if (!array_key_exists($ar->getCodeMatiere(), $tabPrerequis)) {
                                 $tabPrerequis[$ar->getCodeMatiere()] = [];
@@ -336,7 +338,6 @@ class ReferentielCompetenceImport
                             $tabPrerequis[$ar->getCodeMatiere()][] = (string)$r; //on sauvegarde et on trairera à la fin des ressources;
                         }
                     }
-
                     //parcours
                     if ($ressource->liste_parcours !== null && $ressource->liste_parcours->parcours !== null) {
                         foreach ($ressource->liste_parcours->parcours as $parcours) {
