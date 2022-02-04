@@ -19,6 +19,7 @@
         ul {
             list-style-type: none;
         }
+
         li:before {
             content: '- ';
         }
@@ -32,23 +33,27 @@
 </head>
 <body>
 <h1 style="margin-top:15px">{{ departement.libelle }}</h1>
-<h2>Parcours {{ parcours.libelle }}</h2>
-<div style="page-break-after: always"></div>
+{% if parcours is defined %}
+    <h2>Parcours {{ parcours.libelle }}</h2>
+    <div style="page-break-after: always"></div>
+{% endif %}
 
 {% for semestre in semestres %}
-<h3>{{ semestre.libelle }}</h3>
-<div style="page-break-after: always"></div>
-
-{% for sae in saes[semestre.id] %}
-    {{ include('export_pdf/_sae.html.twig') }}
+    <h3>{{ semestre.libelle }}</h3>
     <div style="page-break-after: always"></div>
+
+    {% if saes is defined %}
+        {% for sae in saes[semestre.id] %}
+            {{ include('export_pdf/_sae.html.twig') }}
+            <div style="page-break-after: always"></div>
+        {% endfor %}
+    {% endif %}
+
+    {% for ressource in ressources[semestre.id] %}
+        {{ include('export_pdf/_ressource.html.twig') }}
+        <div style="page-break-after: always"></div>
+    {% endfor %}
 {% endfor %}
 
-{% for ressource in ressources[semestre.id] %}
-    {{ include('export_pdf/_ressource.html.twig') }}
-    <div style="page-break-after: always"></div>
-{% endfor %}
-{% endfor %}
-</div>
 </body>
 </html>

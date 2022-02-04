@@ -290,11 +290,11 @@
                         </a>
                         <ul id="admin">
                             {% if is_granted('ROLE_GT') %}
-                                <li>
-                                    <a href="{{ path('administration_apc_referentiel_import') }}">
-                                        <span class="label">Importer des référentiels</span>
-                                    </a>
-                                </li>
+{#                                <li>#}
+{#                                    <a href="{{ path('administration_apc_referentiel_import') }}">#}
+{#                                        <span class="label">Importer des référentiels</span>#}
+{#                                    </a>#}
+{#                                </li>#}
                                 <li>
                                     <a href="{{ path('administration_apc_referentiel_export') }}">
                                         <span class="label">Exporter</span>

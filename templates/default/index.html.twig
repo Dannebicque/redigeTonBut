@@ -62,6 +62,14 @@
     {% if user_data.departement != null %}
 <section class="scroll-section mb-2" id="export">
     <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
+    {% if user_data.departement.typeStructure != 'type3' %}
+    <a href="{{ path('export_pdf_tronc_commun') }}" target="_blank">
+        Export d'une pré-version du PN pour le tronc commun
+    </a>
+    <a href="{{ path('export_pdf_parcours') }}" target="_blank">
+        Export d'une pré-version du PN pour les parcours
+    </a>
+        {% endif %}
     <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
         {% for parcours in user_data.departement.apcParcours %}
             <div class="col">

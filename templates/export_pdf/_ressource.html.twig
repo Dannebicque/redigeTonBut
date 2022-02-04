@@ -22,7 +22,7 @@
     </tr>
     <tr>
         <td style="width:50%; border: 1px solid black; padding: 3px">
-            {{ ressource.codeMatiere }} {{ ressource.libelle|raw }}
+            {{ ressource.codeMatiere }} | {{ ressource.libelle|raw }}
         </td>
         <td style="width:50%; border: 1px solid black; padding: 3px">
             Volume horaire défini nationalement {{ ressource.heuresTotales }}h dont {{ ressource.tpPpn }}h TP
@@ -66,4 +66,4 @@
 
 
 <h2>Mots clés</h2>
-<p>{{ ressource.motscles|raw }}</p>
+<p>{{ ressource.motscles|keyWordsLatex|raw }}</p>

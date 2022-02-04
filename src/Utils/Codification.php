@@ -42,7 +42,7 @@ class Codification
         if ($apcSae->getStage() === true) {
             return 'STAGE'.self::codeParcoursSae($parcours);
         }
-        return 'SAE'.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).self::codeSurDeuxChiffres($apcSae->getOrdre());
+        return 'SAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).self::codeSurDeuxChiffres($apcSae->getOrdre());
     }
 
     private static function codeSurDeuxChiffres(?int $ordre)

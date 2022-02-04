@@ -7,8 +7,8 @@
 </head>
 <body>
 <div style="border-bottom: 2px solid black">
-    <p>Référentiel de formation. B.U.T. {{ sigle }}, parcours {{ parcours }}. Document non officiel. Limiter la
-       diffusion.</p>
+    <p>Référentiel de formation. B.U.T. {{ sigle }}{% if parcours is defined %}, parcours {{ parcours }}{% endif %}.
+       Document non officiel. Limiter la diffusion.</p>
 </div>
 <div style="margin-bottom: 10px">&nbsp;</div>
 </body>

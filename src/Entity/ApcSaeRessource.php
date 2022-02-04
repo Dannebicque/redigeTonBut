@@ -23,11 +23,13 @@ class ApcSaeRessource extends BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcSae::class, inversedBy="apcSaeRessources")
+     * @ORM\OrderBy({"libelle" = "ASC"})
      */
     private ?ApcSae $sae;
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcRessource::class, inversedBy="apcSaeRessources")
+     * @ORM\OrderBy({"libelle" = "ASC"})
      */
     private ?ApcRessource $ressource;
 
