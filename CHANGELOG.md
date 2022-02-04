@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.10.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.3...v1.10.4) (2022-02-04)
+
+
+### Features
+
+* [Competence] Commande pour actualiser les codes ([63edd4a](https://github.com/Dannebicque/redigeTonBut/commit/63edd4ac25d5245ddb8ab714e452bdd2bdf37952))
+* [Export PDF] EXPORT TRONC COMMUN OU PARCOURS ([e77ab44](https://github.com/Dannebicque/redigeTonBut/commit/e77ab446293379fc350c5995657ca7baa6ddb95c))
+* [Export PDF] Génération PN pour type 3 ([57ab068](https://github.com/Dannebicque/redigeTonBut/commit/57ab068093857dc74d61bcf698766ad0fe86001f))
+* [Import] Import XML pour RT ([c664eda](https://github.com/Dannebicque/redigeTonBut/commit/c664edaabb3ba5265958d97644b15493669a236c))
+* [Ressources/SAE] Liens ([f446786](https://github.com/Dannebicque/redigeTonBut/commit/f4467867ec3b0328ace26a514f0e47cb4cf1fd5b))
+* [Ressources/SAE] Liens ([28290cc](https://github.com/Dannebicque/redigeTonBut/commit/28290ccbc4d27bbc57b4da9bc1fdf4876684a022))
+* [Script] Génération des référentiels de coméptences ([9b9bc3d](https://github.com/Dannebicque/redigeTonBut/commit/9b9bc3d8646618c4213466e63160b0194488f72e))
+
+
+### Bug Fixes
+
+* [Competence] compétences sur le bon niveau ([6f79f63](https://github.com/Dannebicque/redigeTonBut/commit/6f79f63418547cbc8c3747ca5af5dccf9fde569c))
+
 ### [1.10.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.2...v1.10.3) (2022-01-31)
 
 
