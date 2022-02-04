@@ -72,22 +72,28 @@
                            <th colspan="3" class="text-center">Préconisation ACD</th>
                        </tr>
                        <tr>
-
                            <th class="text-center">Heures Totales</th>
                            <th class="text-center">Dont TP</th>
-
                            <th class="bg-warning text-center">CM</th>
                            <th class="bg-warning text-center">TD</th>
                            <th class="bg-warning text-center">TP</th>
-
-
                        </tr>
                        </thead>
                        <tbody>
                        {% for ressource in ressources[semestre.ordreLmd] %}
                        <tr {% if ressource.ficheAdaptationLocale == true %}class="bg-warning text-white"{% endif %}>
-                           <td style="width:15%">{{ ressource.codeMatiere }}</td>
-                           <td  style="width:35%">{{ ressource.libelle }}</td>
+                           <td style="width:15%">
+                               <a href="{{ path('but_fiche_ressource',
+                                   {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null }) }}" target="_blank">
+                                   {{ ressource.codeMatiere }}
+                               </a>
+                           </td>
+                           <td  style="width:35%">
+                               <a href="{{ path('but_fiche_ressource',
+                                   {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null }) }}" target="_blank">
+                                   {{ ressource.libelle }}
+                               </a>
+                           </td>
                            <td  style="width:10%" class="text-center">{{ ressource.heuresTotales }}</td>
                            <td  style="width:10%" class="text-center"> {{ ressource.tpPpn }}</td>
                            <td class="bg-warning text-center"  style="width:10%">{{ ressource.cmPreco }}</td>

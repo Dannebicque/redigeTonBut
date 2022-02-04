@@ -78,8 +78,18 @@
                         <tbody>
                         {% for sae in saes[semestre.ordreLmd] %}
                             <tr {% if sae.ficheAdaptationLocale == true %}class="bg-warning text-white"{% endif %}>
-                                <td style="width:20%">{{ sae.codeMatiere }}</td>
-                                <td style="width:50%">{{ sae.libelle }}</td>
+                                <td style="width:20%">
+                                    <a href="{{ path('but_fiche_sae',
+                                        {'apcSae': sae.id, parcours: parcours != null ? parcours.id : null}) }}" target="_blank">
+                                    {{ sae.codeMatiere }}
+                                    </a>
+                                </td>
+                                <td style="width:50%">
+                                    <a href="{{ path('but_fiche_sae',
+                                        {'apcSae': sae.id, parcours: parcours != null ? parcours.id : null}) }}" target="_blank">
+                                    {{ sae.libelle }}
+                                    </a>
+                                </td>
                                 <td class="bg-warning text-center" style="width:10%">{{ sae.heuresTotales }}</td>
                                 <td class="bg-warning text-center" style="width:10%">{{ sae.tpPpn }}</td>
                                 <td class="bg-warning text-center" style="width:10%">{{ sae.projetPpn }}</td>
