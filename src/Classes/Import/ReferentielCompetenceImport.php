@@ -282,7 +282,8 @@ class ReferentielCompetenceImport
         $tParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByDepartementArray($this->departement);
         $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findOneByDepartementArray($this->departement);
         $tSem = [];
-
+        $tRessources = [];
+        $tabPrerequis = [];
         foreach ($xml->semestre as $sem) {
 
             $semestre = $this->entityManager->getRepository(Semestre::class)->findOneByDepartementEtNumero($this->departement,
@@ -290,21 +291,23 @@ class ReferentielCompetenceImport
 
             if (null !== $semestre) {
                 $tSem[] = $semestre;
-                $tRessources = [];
-                $tabPrerequis = [];
+
+
                 foreach ($sem->ressources->ressource as $ressource) {
 
 
                     $ar = new ApcRessource();
                     $ar->setSemestre($semestre);
                     $ar->setOrdre((int)$ressource['ordre']);
+                    $ar->setCmPreco((float)$ressource['heuresCM']);
+                    $ar->setTdPreco((float)$ressource['heuresTD']);
+                    $ar->setTpPreco((float)$ressource['heuresTP']);
                     $ar->setLibelle($ressource->titre);
                     $ar->setHeuresTotales($ressource['heuresCMTD']);
-                    $ar->setTpPpn($ressource['heuresTP']);
-                    $ar->setDescription((string)$ressource->description);
+                    $ar->setTpPpn((float)$ressource['heuresTP']);
+                    $ar->setDescription(str_replace("\n", "   \r\n", $ressource->description));
                     $ar->setMotsCles((string)$ressource->{'mots-cles'});
                     $ar->setCodeMatiere((string)$ressource['code']);
-                    //$ar->setCodeMatiere(Codification::codeRessource($ar)); -- todo: renommer le semestre à posteriori
                     $this->entityManager->persist($ar);
                     $tRessources[$ar->getCodeMatiere()] = $ar;
 
@@ -335,7 +338,7 @@ class ReferentielCompetenceImport
                             if (!array_key_exists($ar->getCodeMatiere(), $tabPrerequis)) {
                                 $tabPrerequis[$ar->getCodeMatiere()] = [];
                             }
-                            $tabPrerequis[$ar->getCodeMatiere()][] = (string)$r; //on sauvegarde et on trairera à la fin des ressources;
+                            $tabPrerequis[$ar->getCodeMatiere()][] = trim($r); //on sauvegarde et on trairera à la fin des ressources;
                         }
                     }
                     //parcours
@@ -354,9 +357,13 @@ class ReferentielCompetenceImport
                     $ar = new ApcSae();
                     $ar->setSemestre($semestre);
                     $ar->setLibelle($sae->titre);
+                    $ar->setHeuresTotales((float)$sae['heuresEncadrees']);
+                    $ar->setTpPpn((float)$sae['heuresTP']);
+                    $ar->setProjetPpn((float)$sae['heuresPTUT']);
                     $ar->setOrdre((int)$sae['ordre']);
-                    $ar->setDescription((string)$sae->description);
-                    $ar->setObjectifs((string)$sae->objectifs);
+                    $ar->setDescription(str_replace("\n", "   \r\n", $sae->description));
+                    $ar->setExemples(str_replace("\n", "   \r\n", $sae->exemples));
+                    $ar->setObjectifs(str_replace("\n", "   \r\n", $sae->objectifs));
                     $ar->setCodeMatiere((string)$sae['code']);
                     //$ar->setCodeMatiere(Codification::codeSae($ar));
 
@@ -401,20 +408,21 @@ class ReferentielCompetenceImport
                         }
                     }
                 }
-                foreach ($tabPrerequis as $key => $tpr) {
-                    foreach ($tpr as $r) {
-                        if (array_key_exists($r, $tRessources) && array_key_exists($key, $tRessources)) {
-                            $tRessources[$key]->addRessourcesPreRequise($tRessources[$r]);
-                            $tRessources[$r]->addApcRessource($tRessources[$key]);
-                        }
-                    }
+            }
+        }
+
+        foreach ($tabPrerequis as $key => $tpr) {
+            foreach ($tpr as $r) {
+                if (array_key_exists($r, $tRessources) && array_key_exists($key, $tRessources)) {
+                    $tRessources[$key]->addRessourcesPreRequise($tRessources[$r]);
                 }
             }
         }
 
         foreach ($tSem as $sem) {
             foreach ($sem->getApcRessources() as $ressource) {
-                $ressource->setCodeMatiere(Codification::codeRessource($ressource, $ressource->getApcRessourceParcours()));
+                $ressource->setCodeMatiere(Codification::codeRessource($ressource,
+                    $ressource->getApcRessourceParcours()));
             }
 
             foreach ($sem->getApcSaes() as $sae) {
@@ -423,6 +431,8 @@ class ReferentielCompetenceImport
         }
 
         $this->entityManager->flush();
+
+
     }
 
     private function openExcelFile()
@@ -458,7 +468,7 @@ class ReferentielCompetenceImport
             for ($i = 1; $i <= 6; $i++) {
                 if ($sheet->getCellByColumnAndRow(5 + $i, $ligne)->getValue() !== null) {
                     //compétence
-                    $acResComp = new ApcRessourceCompetence($res, $tCompetences['c'.$i]);
+                    $acResComp = new ApcRessourceCompetence($res, $tCompetences['c' . $i]);
                     $this->entityManager->persist($acResComp);
 
                     $acs = explode(';', $sheet->getCellByColumnAndRow(5 + $i, $ligne)->getValue());
@@ -542,7 +552,7 @@ class ReferentielCompetenceImport
             for ($i = 1; $i <= 6; $i++) {
                 if ($sheet->getCellByColumnAndRow(5 + $i, $ligne)->getValue() !== null) {
                     //compétence
-                    $acSaeComp = new ApcSaeCompetence($sae, $tCompetences['c'.$i]);
+                    $acSaeComp = new ApcSaeCompetence($sae, $tCompetences['c' . $i]);
                     $this->entityManager->persist($acSaeComp);
 
                     $acs = explode(';', $sheet->getCellByColumnAndRow(5 + $i, $ligne)->getValue());
@@ -589,7 +599,10 @@ class ReferentielCompetenceImport
                 foreach ($ressources as $ressource) {
                     $ressource = trim($ressource);
                     if (array_key_exists($ressource, $tabRessources)) {
-                        $sr = $this->entityManager->getRepository(ApcSaeRessource::class)->findOneBy(['ressource' => $tabRessources[$ressource]->getId(), 'sae' => $sae->getId()]);
+                        $sr = $this->entityManager->getRepository(ApcSaeRessource::class)->findOneBy([
+                            'ressource' => $tabRessources[$ressource]->getId(),
+                            'sae' => $sae->getId()
+                        ]);
                         if ($sr === null) {
                             $resSae = new ApcSaeRessource($sae, $tabRessources[$ressource]);
                             $this->entityManager->persist($resSae);
