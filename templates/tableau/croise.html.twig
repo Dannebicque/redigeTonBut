@@ -6,31 +6,31 @@
 
 {% block bouton_header %}
     {% if not is_granted('ROLE_GT') %}
-    <button class="btn btn-outline-info" id="showAdaptationLocale">Afficher Adaptation Locale</button>
+        <button class="btn btn-outline-info" id="showAdaptationLocale">Afficher Adaptation Locale</button>
     {% endif %}
     {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
-    <a href="{{ path('export_tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm
+        <a href="{{ path('export_tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm
     btn-outline-success
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-    >
-        <i class="bi-download"></i>
-        <span>Export Ecel</span>
-    </a>
+        >
+            <i class="bi-download"></i>
+            <span>Export Ecel</span>
+        </a>
     {% else %}
-    <a href="{{ path('export_tableau_croise_annee', {annee: annee.id}) }}" class="btn btn-sm
+        <a href="{{ path('export_tableau_croise_annee', {annee: annee.id}) }}" class="btn btn-sm
     btn-outline-success
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-    >
-        <i class="bi-download"></i>
-        <span>Export Ecel</span>
-    </a>
+        >
+            <i class="bi-download"></i>
+            <span>Export Ecel</span>
+        </a>
     {% endif %}
 {% endblock %}
 
 {% block content %}
     <div class="alert alert-info mb-3">
         Ce tableau sauvegarde automatiquement vos modifications
-        <strong>dès que vous quittez une zone de  saisie</strong>. Les fiches ressources et SAÉ sont mises à jour en
+        <strong>dès que vous quittez une zone de saisie</strong>. Les fiches ressources et SAÉ sont mises à jour en
         conséquence (volumes horaires, apprentissages critiques)
     </div>
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
@@ -43,16 +43,16 @@
     </ul>
     <div class="tab-content">
         {% for semestre in semestres %}
-        <div class="tab-pane {% if loop.first %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
-            <div class="card">
-                <div class="card-body">
-                    {{ render(controller(
-                        'App\\Controller\\TableauController::tableauSemestre',
-                        { 'semestre': semestre.id, parcours: parcours != null ? parcours.id : null }
-                    )) }}
+            <div class="tab-pane {% if loop.first %}active{% endif %}" id="semestre_{{ semestre.id }}" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        {{ render(controller(
+                            'App\\Controller\\TableauController::tableauSemestre',
+                            { 'semestre': semestre.id, parcours: parcours != null ? parcours.id : null }
+                        )) }}
+                    </div>
                 </div>
             </div>
-        </div>
         {% endfor %}
     </div>
 {% endblock %}
@@ -62,22 +62,24 @@ et/ou libellé. #}
 {% block javascripts %}
     {{ parent() }}
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('DOMContentLoaded', function () {
 
         document.querySelectorAll('.changeAcSae').forEach((elem) => {
           elem.addEventListener('change', changeAcSae)
         })
 
+        {% if not is_granted('ROLE_GT') %}
         document.getElementById('showAdaptationLocale').addEventListener('click', (btn) => {
-          if (btn.currentTarget.innerText === "Afficher Adaptation Locale") {
-            btn.currentTarget.innerText = "Masquer Adaptation Locale";
+          if (btn.currentTarget.innerText === 'Afficher Adaptation Locale') {
+            btn.currentTarget.innerText = 'Masquer Adaptation Locale'
           } else {
-            btn.currentTarget.innerText = "Afficher Adaptation Locale";
+            btn.currentTarget.innerText = 'Afficher Adaptation Locale'
           }
           document.querySelectorAll('.adaptationLocale').forEach((elem) => {
             elem.classList.toggle('d-none')
           })
         })
+        {% endif %}
 
         document.querySelectorAll('.changeAcRessource').forEach((elem) => {
           elem.addEventListener('change', changeAcRessource)
@@ -92,11 +94,11 @@ et/ou libellé. #}
         })
 
         function changeAcSae (e) {
-          updateSae( e.target.checked, e.target.dataset.sae, e.target.dataset.ac)
+          updateSae(e.target.checked, e.target.dataset.sae, e.target.dataset.ac)
         }
 
         function changeAcRessource (e) {
-          updateRessource( e.target.checked, e.target.dataset.ressource, e.target.dataset.ac)
+          updateRessource(e.target.checked, e.target.dataset.ressource, e.target.dataset.ac)
         }
 
         function changeCoeffSae (e) {
@@ -133,16 +135,19 @@ et/ou libellé. #}
           fetch(Routing.generate('formation_apc_sae_coeff_update_ajax', {sae: sae, competence: competence}), {
             method: 'POST',
             body: JSON.stringify({
-              valeur: value.replace(',','.')
+              valeur: value.replace(',', '.')
             })
           })
         }
 
         function updateCoeffRessource (value, ressource, competence) {
-          fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {ressource: ressource, competence: competence}), {
+          fetch(Routing.generate('formation_apc_ressource_coeff_update_ajax', {
+            ressource: ressource,
+            competence: competence
+          }), {
             method: 'POST',
             body: JSON.stringify({
-              valeur: value.replace(',','.')
+              valeur: value.replace(',', '.')
             })
           })
         }
