@@ -100,11 +100,15 @@ et/ou libellé. #}
         }
 
         function changeCoeffSae (e) {
-          updateCoeffSae( e.target.value, e.target.dataset.sae, e.target.dataset.competence)
+          if (e.target.value.trim() !== '') {
+            updateCoeffSae(e.target.value, e.target.dataset.sae, e.target.dataset.competence)
+          }
         }
 
         function changeCoeffRessource (e) {
-          updateCoeffRessource( e.target.value, e.target.dataset.ressource, e.target.dataset.competence)
+          if (e.target.value.trim() !== '') {
+            updateCoeffRessource(e.target.value, e.target.dataset.ressource, e.target.dataset.competence)
+          }
         }
 
         function updateSae (value, sae, ac) {
