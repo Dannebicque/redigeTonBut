@@ -6,12 +6,12 @@
 @use "sass:map";
 
 $colorsApc: (
-        c1:rgb(156, 43, 38),
-        c2: rgb(208, 119, 64),
-        c3: rgb(229, 185, 77),
-        c4: rgb(65, 108, 63),
-        c5: rgb(43, 76, 118),
-        c6: rgb(127, 31, 83)
+        c1:rgb(184, 9, 5),
+        c2: rgb(237, 140, 81),
+        c3: rgb(239, 186, 17),
+        c4: rgb(140, 200, 80),
+        c5: rgb(10, 33, 94),
+        c6: rgb(15, 15, 15)
 );
 
 $colorsParcours: (
@@ -24,21 +24,21 @@ $colorsParcours: (
 );
 
 $colorsApcLight: (
-        c1:rgba(156, 43, 38, 0.2),
-        c2: rgba(208, 119, 64, 0.2),
-        c3: rgba(229, 185, 77, 0.2),
-        c4: rgba(65, 108, 63, 0.2),
-        c5: rgba(43, 76, 118, 0.2),
-        c6: rgba(127, 31, 83, 0.2)
+        c1:rgb(231, 211, 211),
+        c2: rgb(243, 225, 209),
+        c3: rgb(244, 231, 182),
+        c4: rgb(225, 230, 214),
+        c5: rgb(202, 216, 235),
+        c6: rgb(213, 209, 189)
 );
 
 $colorsApcMedium: (
-        c1:rgba(156, 43, 38, 0.6),
-        c2: rgba(208, 119, 64, 0.6),
-        c3: rgba(229, 185, 77, 0.6),
-        c4: rgba(65, 108, 63, 0.6),
-        c5: rgba(43, 76, 118, 0.6),
-        c6: rgba(127, 31, 83, 0.6)
+        c1:rgb(238, 148, 148),
+        c2: rgb(237, 160, 114),
+        c3: rgb(242, 215, 104),
+        c4: rgb(173, 213, 130),
+        c5: rgb(137, 173, 217),
+        c6: rgb(169, 160, 116)
 );
 //todo: gérer la déclinaison de couleur. Le jaune à 50% disparait ? définir les 3 nuances dans 3 tableaux
 .comp {

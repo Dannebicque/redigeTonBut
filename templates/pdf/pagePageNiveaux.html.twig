@@ -41,12 +41,15 @@
                 {% for competence in competences %}
                     {% if parcoursNiveaux[parcours.id][competence.id][i] is defined %}
                         <td class="niveau niveau{{ i }}{{ competence.couleur }}"
-                            style="height: 200px; width: {{ width }}%; vertical-align: middle; text-align: center; padding:4px">
-                            {{ parcoursNiveaux[parcours.id][competence.id][i].libelle }}
+                            style="height: 190px; width: {{ width }}%; vertical-align: middle; text-align: center;
+                                    padding:4px">
+                            <p>Niveau {{ i }}</p>
+                            <p>
+                            {{ parcoursNiveaux[parcours.id][competence.id][i].libelle }}</p>
                         </td>
                     {% else %}
                         <td class=""
-                            style="height: 200px; width: {{ width }}%; vertical-align: middle; text-align: center;
+                            style="height: 190px; width: {{ width }}%; vertical-align: middle; text-align: center;
                                     padding:4px">
                             &nbsp;
                         </td>

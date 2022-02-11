@@ -31,8 +31,6 @@ class ApcStructure
 
     public function parcoursNiveaux(Departement $departement): array
     {
-
-
         $tParcours = [];
         foreach ($departement->getApcParcours() as $parcours) {
             $pn = $this->apcParcoursNiveauRepository->findParcoursNiveauCompetence($parcours);

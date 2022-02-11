@@ -1,12 +1,20 @@
-\subsubsection{SA\'E {{ sae.codeMatiere }} : {{ sae.libelle|latex_purge|raw }}}
+{% if sae.portfolio == true %}
+\subsubsection{ {{ sae.codeMatiere }} : D\'emarche portfolio}
+{% else %}
+\subsubsection{ {{ sae.codeMatiere }} : {{ sae.libelle|latex_purge|raw }}}
+{% endif %}
 
-\begin{tabular}{|m{5cm}|m{19cm}|}
-\hline
-    Semestre {{ semestre.ordreLmd }} & Volume horaire défini localement \\
-\hline
-\end{tabular}
+{#\begin{tabular}{|m{5cm}|m{19cm}|}#}
+{#\hline#}
+{#    Semestre {{ semestre.ordreLmd }} & Volume horaire défini localement \\#}
+{#\hline#}
+{#\end{tabular}#}
 
-\textbf{Compétences ciblées}
+{%  if sae.apcSaeCompetences|length > 1 %}
+\textbf{Comp\'etences cibl\'ees}
+{% else %}
+\textbf{Comp\'etence cibl\'ee}
+{% endif %}
 
 {% for competence in sae.apcSaeCompetences %}
 {% if loop.first %}
@@ -18,11 +26,19 @@
 {% endif %}
 {% endfor %}
 
-\textbf{Objectifs et problématique professionnelle}
+\textbf{Objectifs et probl\'ematique professionnelle}
 
-{{ sae.objectifs != null ? sae.objectifs|latex_purge|raw : '' }}
+{{ sae.objectifs != null ? sae.objectifs|markdown_to_latex : '' }}
 
+\textbf{Descriptif g\'en\'erique}
+
+{{ sae.description != null ? sae.description|markdown_to_latex : '' }}
+
+{%  if sae.apcSaeApprentissageCritiques|length > 1 %}
 \textbf{Apprentissages critiques}
+{% else %}
+\textbf{Apprentissage critique}
+{% endif %}
 
 {% for ac in sae.apcSaeApprentissageCritiques %}
  {% if loop.first %}
@@ -34,7 +50,7 @@
 {% endif %}
 {% endfor %}
 
-\textbf{Ressources mobilisées et combinées}
+\textbf{Ressources mobilis\'ees et combin\'ees}
 
 {% for ressource in sae.apcSaeRessources %}
 {% if loop.first %}
@@ -46,7 +62,8 @@
 {% endif %}
 {% endfor %}
 
-\textbf{Descriptif générique}
 
-{{ sae.description != null ? sae.description|latex_purge|raw : '' }}
+\textbf{Volume horaire}
+
+Volume horaire : \`a d\'efinir localement par chaque IUT
 

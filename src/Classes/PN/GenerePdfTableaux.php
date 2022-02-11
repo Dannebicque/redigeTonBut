@@ -11,6 +11,7 @@ use App\Entity\Semestre;
 use App\Repository\SemestreRepository;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Environment;
 
@@ -29,6 +30,7 @@ class GenerePdfTableaux
         private Structure $structure,
         protected VolumesHoraires $volumesHoraires
     ) {
+        $this->kernel = $kernel;
         $this->dir = $kernel->getProjectDir() . '/public/tableaux/';
     }
 
@@ -126,7 +128,9 @@ class GenerePdfTableaux
 
     private function generePdfCroise($tableauCroise, $donnees, $name, Semestre $semestre, ?ApcParcours $parcours = null)
     {
+        $this->genereImage($tableauCroise->getRessources(), $tableauCroise->getSaes(), $this->departement);
         $html = $this->twig->render('pdf/tableau-croise.html.twig', [
+            'linuxpath' => '/Users/davidannebicque/htdocs/redigeTonBut/public/',
             'departement' => $this->departement,
             'donnees' => $donnees,
             'semestre' => $semestre,
@@ -140,11 +144,50 @@ class GenerePdfTableaux
 
         $output = new PdfResponse(
             $this->knpSnappyPdf->getOutputFromHtml($html, [
+                'enable-local-file-access' => true,
             ]),
             $name
         );
 
         file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/' . $name, $output);
+    }
+
+    private function genereImage($getRessources, $getSaes, Departement $departement)
+    {
+        foreach ($getRessources as $ressource) {
+            $texte = $ressource->getCodeMatiere() . ' ' . $ressource->getLibelle();
+            $texte = $this->adaptTexte($texte);
+            $response = new Response();
+            $response->headers->set('Content-Type', 'image/png');
+            $im = imagecreate(50, 200);
+            $fond = imagecolorallocate($im, 255, 255, 255);
+            $noir = imagecolorallocate($im, 0, 0, 0);
+            imagefill($im, 0, 0, $fond);
+            $font = $this->kernel->getProjectDir() . '/public/arial.ttf';
+            imagettftext($im, 10, 90, 15, 190, $noir, $font, $texte);
+            imagepng($im, $this->kernel->getProjectDir() . '/public/tableaux/'.$departement->getNumeroAnnexe().'/ressource_' . $ressource->getId() . '.png');
+            imagedestroy($im);
+        }
+
+        foreach ($getSaes as $sae) {
+            $texte = $sae->getCodeMatiere() . ' ' . $sae->getLibelle();
+            $texte = $this->adaptTexte($texte);
+            $response = new Response();
+            $response->headers->set('Content-Type', 'image/png');
+            $im = imagecreate(50, 200);
+            $fond = imagecolorallocate($im, 255, 255, 255);
+            $noir = imagecolorallocate($im, 0, 0, 0);
+            imagefill($im, 0, 0, $fond);
+            $font = $this->kernel->getProjectDir() . '/public/arial.ttf';
+            imagettftext($im, 10, 90, 15, 190, $noir, $font, $texte);
+            imagepng($im, $this->kernel->getProjectDir() . '/public/tableaux/'.$departement->getNumeroAnnexe().'/sae_' . $sae->getId() . '.png', 2);
+            imagedestroy($im);
+        }
+    }
+
+    private function adaptTexte(string $texte)
+    {
+        return wordwrap($texte, 30, "\n", false);
     }
 
 }

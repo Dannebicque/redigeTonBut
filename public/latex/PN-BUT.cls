@@ -2,7 +2,7 @@
 \ProvidesClass{PN-BUT}[2021/09/10 trame du Programme National des B.U.T.]
 
 %%%  Chargement de la classe article, avec transfert d'options
-\PassOptionsToClass{a4paper,10pt,twoside,openright,titlepage}{article} % format a4paper par défaut
+\PassOptionsToClass{a4paper,10pt,titlepage}{article} % format a4paper par défaut
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
 \ProcessOptions
 

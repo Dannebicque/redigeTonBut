@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Tableau coirsé pour le B.U.T {{ departement.libelle }}, semestre {{ semestre.ordreLmd }}</h1>
+    <h1>Tableau croisé pour le B.U.T {{ departement.libelle }}, semestre {{ semestre.ordreLmd }}</h1>
     {% if parcours != null %}
-        <h2>Pour le parcours : {{ parcours.libelle }}</h2>
+        <h2>Parcours : {{ parcours.libelle }}</h2>
     {% endif %}
     <table class="table">
         <thead>
@@ -15,18 +15,14 @@
             <th></th>
             <th>AC</th>
             {% for sae in saes %}
-                <th class="vertical">
-                    <div class="vertical">
-                        {{ sae.codeMatiere }} {{ sae.libelle }}
-                    </div>
+                <th>
+                    <img src="{{ linuxpath }}{{ asset('tableaux/'~departement.numeroAnnexe~'/sae_'~sae.id~'.png') }}">
                 </th>
             {% endfor %}
 
             {% for ressource in ressources %}
-                <th class="vertical">
-                    <div class="vertical">
-                        {{ ressource.codeMatiere }} {{ ressource.libelle }}
-                    </div>
+                <th>
+                    <img src="{{ linuxpath }}{{ asset('tableaux/'~departement.numeroAnnexe~'/ressource_'~ressource.id~'.png') }}">
                 </th>
             {% endfor %}
         </tr>
@@ -36,7 +32,7 @@
         {% for niveau in niveaux %}
             <tr>
                 <td rowspan="{{ niveau.apcApprentissageCritiques|length+1 }}" class="bg_{{ niveau.competence
-                .couleur }} vertical">
+                .couleur }}">
                     <div class="vertical">
                         {{ niveau.competence.nomCourt }}
                     </div>
@@ -86,18 +82,18 @@
         </tr>
         <tr>
             <th colspan="2">Adap.</th>
-            <td colspan="{{ saes|length }}" class="text-center">xx</td>
+            <td colspan="{{ saes|length }}" class="text-center">{{  donnees[semestre.ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
             <td class="text-center" colspan="{{ ressources|length }}">
                 &nbsp;
             </td>
         </tr>
         <tr>
             <th colspan="2">Adap.</th>
-            <td colspan="{{ saes|length + ressources|length }}" class="text-center">xx</td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{  donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
         </tr>
         <tr>
             <th colspan="2">Dont TP</th>
-            <td colspan="{{ saes|length + ressources|length }}" class="text-center">xx</td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{  donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
         </tr>
         </tbody>
     </table>

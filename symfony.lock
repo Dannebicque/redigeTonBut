@@ -97,8 +97,23 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "dompdf/dompdf": {
+        "version": "v1.1.1"
+    },
     "egulias/email-validator": {
         "version": "3.1.1"
+    },
+    "endroid/asset": {
+        "version": "2.4.0"
+    },
+    "endroid/embed": {
+        "version": "1.2.0"
+    },
+    "endroid/installer": {
+        "version": "1.4.0"
+    },
+    "endroid/pdf": {
+        "version": "1.4.0"
     },
     "erusev/parsedown": {
         "version": "1.7.4"
@@ -120,6 +135,12 @@
         "files": [
             "config/routes/fos_js_routing.yaml"
         ]
+    },
+    "h4cc/wkhtmltopdf-amd64": {
+        "version": "0.12.4"
+    },
+    "iio/libmergepdf": {
+        "version": "4.0.4"
     },
     "jms/metadata": {
         "version": "2.5.0"
@@ -171,6 +192,12 @@
     },
     "phar-io/version": {
         "version": "3.1.0"
+    },
+    "phenx/php-font-lib": {
+        "version": "0.5.4"
+    },
+    "phenx/php-svg-lib": {
+        "version": "0.3.4"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
@@ -246,6 +273,9 @@
     "psr/simple-cache": {
         "version": "1.0.1"
     },
+    "sabberworm/php-css-parser": {
+        "version": "8.4.0"
+    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },
@@ -305,6 +335,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "setasign/fpdi": {
+        "version": "v2.3.6"
     },
     "symfony/asset": {
         "version": "v5.3.0"
@@ -724,6 +757,9 @@
     },
     "symfonycasts/verify-email-bundle": {
         "version": "v1.5.0"
+    },
+    "tecnickcom/tcpdf": {
+        "version": "6.4.4"
     },
     "theseer/tokenizer": {
         "version": "1.2.0"

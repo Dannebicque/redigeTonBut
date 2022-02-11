@@ -1,14 +1,17 @@
 \subsubsection{Ressource {{ ressource.codeMatiere }} : {{ ressource.libelle|latex_purge|raw }}}
 
-\begin{tabular}{|m{5cm}|m{19cm}|}
-\hline
-    Semestre {{ semestre.ordreLmd }}  & Volume horaire défini nationalement {{ ressource.heuresTotales }}h dont {{
-       ressource.tpPpn}}h TP \\
-\hline
-\end{tabular}
+{#\begin{tabular}{|m{5cm}|m{19cm}|}#}
+{#\hline#}
+{#    Semestre {{ semestre.ordreLmd }}  & Volume horaire d\'efini nationalement {{ ressource.heuresTotales }}h dont {{#}
+{#       ressource.tpPpn}}h TP \\#}
+{#\hline#}
+{#\end{tabular}#}
 
-\textbf{Compétences ciblées} \newline
-
+{% if ressource.apcRessourceCompetences|length >1 %}
+\textbf{Comp\'etences cibl\'ees}
+{% else %}
+\textbf{Comp\'etence cibl\'ee}
+{% endif %}
 
 {% for competence in ressource.apcRessourceCompetences %}
 {% if loop.first %}
@@ -20,19 +23,11 @@
 {% endif %}
 {% endfor %}
 
-\textbf{Apprentissages critiques} \newline
-
-{% for ac in ressource.apcRessourceApprentissageCritiques %}
-{% if loop.first %}
-\begin{itemize}
+{% if ressource.apcSaeRessources|length > 1 %}
+\textbf{SA\'E au sein de laquelle la ressource peut être mobilis\'ee et combin\'ee}
+{% else %}
+\textbf{SA\'E au sein desquelles la ressource peut être mobilis\'ee et combin\'ee}
 {% endif %}
-    \item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
-{% if loop.last %}
-\end{itemize}
-{% endif %}
-{% endfor %}
-
-\textbf{SAÉ concernées} \newline
 
 {% for sae in ressource.apcSaeRessources %}
 {% if loop.first %}
@@ -44,10 +39,18 @@
 {% endif %}
 {% endfor %}
 
-\textbf{Descriptif} \newline
-{{ ressource.description != null ? ressource.description|latex_purge|raw : '' }}
+\textbf{Descriptif}
 
-\textbf{Prérequis} \newline
+{{ ressource.description != null ? ressource.description|markdown_to_latex : '' }}
+
+
+\textbf{Volume horaire}
+
+Volume horaire d\'efini nationalement : {{ ressource.heuresTotales }} heures {% if ressource.tpPpn > 0%}dont {{ressource
+.tpPpn}} heures de TP.{% endif %}
+
+{% if ressource.ressourcesPreRequises|length > 0 %}
+\textbf{Pr\'erequis}
 
 {% for prerequis in ressource.ressourcesPreRequises %}
 {% if loop.first %}
@@ -58,7 +61,25 @@
 \end{itemize}
 {% endif %}
 {% endfor %}
+{% endif %}
+
+\textbf{Mots cl\'es}
+
+{{ ressource.motscles|keyWordsLatex|latex_purge|raw }}
 
 
-\textbf{Mots clés} \newline
-{{ ressource.motscles|latex_purge|keyWordsLatex|raw }}
+{% if ressource.apcRessourceApprentissageCritiques|length >1 %}
+\textbf{Apprentissages critiques cibl\'es}
+{% else %}
+\textbf{Apprentissage critique cibl\'e}
+{% endif %}
+
+{% for ac in ressource.apcRessourceApprentissageCritiques %}
+{% if loop.first %}
+\begin{itemize}
+{% endif %}
+    \item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
+{% if loop.last %}
+\end{itemize}
+{% endif %}
+{% endfor %}
