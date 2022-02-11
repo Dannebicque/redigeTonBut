@@ -10,6 +10,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 #[AsCommand(
     name: 'app:genere-tableaux',
@@ -17,10 +19,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class GenereTableauxCommand extends Command
 {
+    private string $dir;
+    private Filesystem $filesystem;
+
     public function __construct(
+        KernelInterface $kernel,
         protected DepartementRepository $departementRepository,
         protected GenerePdfTableaux $generePdfTableaux
     ) {
+        $this->dir = $kernel->getProjectDir() . '/public/tableaux/';
+        $this->filesystem = new Filesystem();
         parent::__construct();
     }
 
@@ -40,6 +48,8 @@ class GenereTableauxCommand extends Command
         //une spécialité
         $specialite = $this->departementRepository->findOneBy(['sigle' => $arg1]);
         if ($specialite !== null) {
+            $this->filesystem->exists($this->dir.$specialite->getNumeroAnnexe()) ?: $this->filesystem->mkdir($this->dir.$specialite->getNumeroAnnexe());
+
             $this->generePdfTableaux->genereTableauStructure($specialite);
             $this->generePdfTableaux->genereTableauCroise($specialite);
         } else {
