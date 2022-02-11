@@ -19,6 +19,7 @@ class GenerePdfCompetences
     private array $competencesParcours;
     private Departement $departement;
     private $competences;
+    private Filesystem $filesystem;
 
     public function __construct(
         KernelInterface $kernel,
