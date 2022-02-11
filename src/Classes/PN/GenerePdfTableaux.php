@@ -96,9 +96,14 @@ class GenerePdfTableaux
         ]);
         if ($parcours === null) {
             $name = 'tableau-structure.pdf';
+            $nameHtml = 'tableau-structure.html';
         } else {
             $name = 'tableau-structure-' . $parcours->getId() . '.pdf';
+            $nameHtml = 'tableau-structure-' . $parcours->getId() . '.html';
         }
+
+        file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/' . $nameHtml, $html);
+
 
         $output = new PdfResponse(
             $this->knpSnappyPdf->getOutputFromHtml($html, [
@@ -141,6 +146,7 @@ class GenerePdfTableaux
             'coefficients' => $tableauCroise->getCoefficients(),
             'parcours' => $parcours,
         ]);
+        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/' . $name.'.html', $html);
 
         $output = new PdfResponse(
             $this->knpSnappyPdf->getOutputFromHtml($html, [
