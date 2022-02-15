@@ -40,7 +40,7 @@
 
 <h2>Objectifs et problématique professionnelle</h2>
 
-<p>{{ sae.objectifs != null ? sae.objectifs|nl2br|raw : '' }}</p>
+<p>{{ sae.objectifs != null ? sae.objectifs|nl2br|markdown_to_html|raw : '' }}</p>
 
 <h2>Apprentissages critiques</h2>
 
@@ -60,5 +60,5 @@
 
 <h2>Descriptif générique</h2>
 
-<p>{{ sae.description != null ? sae.description|nl2br|raw : '' }}</p>
+<p>{{ sae.description != null ? sae.description|nl2br|markdown_to_html|raw : '' }}</p>
 

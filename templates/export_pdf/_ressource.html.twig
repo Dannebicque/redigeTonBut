@@ -54,7 +54,7 @@
 </ul>
 
 <h2>Descriptif</h2>
-<p>{{ ressource.description != null ? ressource.description|nl2br|raw : '' }}</p>
+<p>{{ ressource.description != null ? ressource.description|nl2br|markdown_to_html|raw : '' }}</p>
 
 <h2>Prérequis</h2>
 
