@@ -15,6 +15,10 @@
             </tr>
 
             <tr>
+                <th>Pourcentage réduction Alternance</th>
+                <td>BUT1 : {{ departement.altBut1 }}%, BUT2 : {{ departement.altBut2 }}%, BUT3 : {{ departement.altBut3 }}%</td>
+            </tr>
+            <tr>
                 <th>Sigle</th>
                 <td>{{ departement.sigle }}</td>
             </tr>
@@ -33,6 +37,10 @@
             <tr>
                 <th>CPN</th>
                 <td>{{ departement.cpn != null ? departement.cpn.display : '-' }}</td>
+            </tr>
+            <tr>
+                <th>Texte descriptif</th>
+                <td>{{ departement.textePresentation }}</td>
             </tr>
         <tr>
             <td colspan="2">

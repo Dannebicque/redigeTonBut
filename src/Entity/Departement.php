@@ -129,6 +129,21 @@ class Departement extends BaseEntity
      */
     private $pn_bloque;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $altBut1;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $altBut2;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $altBut3;
+
 
 
     public function __construct()
@@ -522,6 +537,42 @@ class Departement extends BaseEntity
     public function setPnBloque(bool $pn_bloque): self
     {
         $this->pn_bloque = $pn_bloque;
+
+        return $this;
+    }
+
+    public function getAltBut1(): ?float
+    {
+        return $this->altBut1;
+    }
+
+    public function setAltBut1(float $altBut1): self
+    {
+        $this->altBut1 = $altBut1;
+
+        return $this;
+    }
+
+    public function getAltBut2(): ?float
+    {
+        return $this->altBut2;
+    }
+
+    public function setAltBut2(float $altBut2): self
+    {
+        $this->altBut2 = $altBut2;
+
+        return $this;
+    }
+
+    public function getAltBut3(): ?float
+    {
+        return $this->altBut3;
+    }
+
+    public function setAltBut3(float $altBut3): self
+    {
+        $this->altBut3 = $altBut3;
 
         return $this;
     }

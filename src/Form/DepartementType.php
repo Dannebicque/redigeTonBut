@@ -3,12 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Departement;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,6 +21,11 @@ class DepartementType extends AbstractType
         $builder
             ->add('sigle')
             ->add('libelle')
+            ->add('numeroAnnexe', IntegerType::class, ['disabled' => $this->droit])
+            ->add('altBut1', TextType::class, ['label' => 'Pourcentage de réduction pour l\'alternance en BUT1'])
+            ->add('altBut2', TextType::class, ['label' => 'Pourcentage de réduction pour l\'alternance en BUT2'])
+            ->add('altBut3', TextType::class, ['label' => 'Pourcentage de réduction pour l\'alternance en BUT3'])
+            ->add('numeroAnnexe', IntegerType::class, ['disabled' => $this->droit])
             ->add('numeroAnnexe', IntegerType::class, ['disabled' => $this->droit])
             ->add('typeDepartement', ChoiceType::class,
                 ['choices' => ['Secondaire' => 'secondaire', 'Tertiaire' => 'tertiaire'], 'disabled' => $this->droit])
