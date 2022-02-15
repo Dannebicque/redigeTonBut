@@ -15,15 +15,13 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 \renewcommand{\contentsname}{Sommaire}
 
     \newgeometry{margin=0in} %pour enlever les marges dans la page de titre
-    \thispagestyle{empty}
     \begin{titlepage}
         \begin{center}
-            \includegraphics[width=20cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}
+            \includegraphics[width=19cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}
         \end{center}
     \end{titlepage}
 
     \restoregeometry
-    \mapagevide
 
     \tableofcontents
     \newpage
@@ -46,7 +44,9 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
  \part{R\'eférentiel de formation}
    \chapter{Cadre général}
                 Le diplôme de B.U.T {{departement.sigle}} , quand il est préparé en alternance, s'appuie sur le même
-                référentiel de compétences et sur le même référentiel de formation mais le volume horaire global de chaque semestre sera réduit de 15\% en première année, de 15\% en deuxième année, et de 15\% en troisième année.{# todo: gérer le porucentage d'alterance... Ou est utilisé le texte des parcours ??? #}
+                référentiel de compétences et sur le même référentiel de formation mais le volume horaire global de
+                chaque semestre sera réduit de {{ departement.altBut1}}\% en première année, de {{ departement.altBut1}}\% en deuxième
+                année, et de {{ departement.altBut1}}\% en troisième année.{# todo: Ou est utilisé le texte des parcours ??? #}
 
                 \section{Les situations d'apprentissage et d'évaluation}
                 Les SAÉ permettent l'évaluation en situation de la compétence. Cette évaluation est menée en
@@ -108,13 +108,15 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 
                 Parce qu'ils participent tous deux à la professionnalisation de l'étudiant et en cela sont en dialogue, le PPP et la démarche portfolio ne doivent pourtant être confondus. Le PPP répond davantage à un objectif d'accompagnement qui dépasse le seul cadre des compétences à acquérir, alors que la démarche portfolio répond fondamentalement à des enjeux d'évaluation des compétences.
       \newpage
-   \chapter{Structure du diplôme}
+   \chapter{Structure générale des six semestres de formation}
 
  %% Tableau structurel
+  \begin{landscape}
   \begin{center}
   %%si type 1 ou 2
         \includegraphics[width=19cm]{../tableaux/{{ departement.numeroAnnexe }}/tableau-structure.pdf}
     \end{center}
+    \end{landscape}
     \newpage
 
     %%
@@ -128,18 +130,18 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 %%
 %% on commence un parcours
 %%
-                \newgeometry{margin=0in} %pour enlever les marges dans la page de titre
-                \thispagestyle{empty}
-                \begin{titlepage}
-                    \vspace{2cm}
-                    ~
-                    \begin{center}
-                        \includegraphics[width=20cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}
-                    \end{center}
-                \end{titlepage}
+{#                \newgeometry{margin=0in} %pour enlever les marges dans la page de titre#}
+{#                \thispagestyle{empty}#}
+{#                \begin{titlepage}#}
+{#                    \vspace{2cm}#}
+{#                    ~#}
+{#                    \begin{center}#}
+{#                        \includegraphics[width=20cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}#}
+{#                    \end{center}#}
+{#                \end{titlepage}#}
 
-                \restoregeometry
-                \mapagevide
+{#                \restoregeometry#}
+{#                \mapagevide#}
                 \newpage
 
                 \chapter{Parcours : {{ parcours.libelle|latex_purge }}}
@@ -151,19 +153,21 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
     {% for semestre in departement.semestres|filter(semestre => semestre.ordreLmd > 2) %}
         \section{Semestre {{semestre.ordreLmd}}}
          \subsection{Tableau croisé}
+
      \begin{center}
         \includegraphics[width=19cm]{../tableaux/{{ departement.numeroAnnexe }}/tableau-croise-{{ semestre.id }}-{{
         parcours.id }}.pdf}
     \end{center}
+
     \newpage
-        \subsection{Situations d'apprentissage et d'évaluation (SAÉ)}
+        \subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
 
         {% for sae in saes[semestre.id][parcours.id] %}
         {{ include('latex/sae.tex.twig') }}
         \newpage
         {% endfor %}
 
-        \subsection{Ressources}
+        \subsection{Fiches Ressources}
         {% for ressource in ressources[semestre.id][parcours.id] %}
         {{ include('latex/ressource.tex.twig') }}
         \newpage

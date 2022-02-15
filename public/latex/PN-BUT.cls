@@ -47,9 +47,11 @@
 %% numérotation des sections
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
-\renewcommand{\thesection}{\arabic{section}}
-\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
-\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\thechapter}{\arabic{chapter}.}
+\renewcommand{\thepart}{\Roman{part}.}
+\renewcommand{\thesection}{\arabic{section}.}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}.}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}.}
 
 
 %% espace entre les paragraphes

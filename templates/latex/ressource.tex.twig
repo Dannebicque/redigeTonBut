@@ -1,12 +1,5 @@
 \subsubsection{Ressource {{ ressource.codeMatiere }} : {{ ressource.libelle|latex_purge|raw }}}
 
-{#\begin{tabular}{|m{5cm}|m{19cm}|}#}
-{#\hline#}
-{#    Semestre {{ semestre.ordreLmd }}  & Volume horaire d\'efini nationalement {{ ressource.heuresTotales }}h dont {{#}
-{#       ressource.tpPpn}}h TP \\#}
-{#\hline#}
-{#\end{tabular}#}
-
 {% if ressource.apcRessourceCompetences|length >1 %}
 \textbf{Comp\'etences cibl\'ees}
 {% else %}
@@ -65,7 +58,7 @@ Volume horaire d\'efini nationalement : {{ ressource.heuresTotales }} heures {% 
 
 \textbf{Mots cl\'es}
 
-{{ ressource.motscles|keyWordsLatex|latex_purge|raw }}
+{{ ressource.motscles|keyWordsLatex|raw }}
 
 
 {% if ressource.apcRessourceApprentissageCritiques|length >1 %}

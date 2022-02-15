@@ -1,5 +1,6 @@
-
+\setcounter{section}{0}
 {% for parcours in departement.apcParcours %}
+
 \section{Parcours : {{ parcours.libelle|latex_purge }} }
     \begin{center}
         \includegraphics[width=20cm]{../ref-competences/{{ departement.numeroAnnexe }}/page_1_garde_{{ parcours.id }}.pdf}

@@ -1,4 +1,4 @@
-\chapter{Référentiel de la première année du B.U.T. Commun à tous les parcours}
+\chapter{Référentiel de la première année du B.U.T. commun à tous les parcours}
 \dominitoc
 \newpage
  {% for semestre in departement.semestres|filter(semestre => (semestre.ordreLmd == 1 or semestre.ordreLmd == 2)) %}
@@ -9,7 +9,7 @@
         \includegraphics[width=19cm]{../tableaux/{{ departement.numeroAnnexe }}/tableau-croise-{{ semestre.id }}.pdf}
     \end{center}
     \newpage
-    \subsection{SAÉ}
+    \subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
 
     {% for sae in saes[semestre.id] %}
         {{ include('latex/sae.tex.twig') }}
