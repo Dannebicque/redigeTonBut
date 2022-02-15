@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.4...v1.11.0) (2022-02-15)
+
+
+### Features
+
+* [Alternance] %de réduction de l'alternance ([6182025](https://github.com/Dannebicque/redigeTonBut/commit/61820250ce06ce4bee3ede5b70732fb237235769))
+* [Export PDF] EXPORT TRONC COMMUN OU PARCOURS ([30462e4](https://github.com/Dannebicque/redigeTonBut/commit/30462e43c969f6e5aba43f389aa8199dda2c7e03))
+* [Laurent] contrôleur pour la structure ([4754a36](https://github.com/Dannebicque/redigeTonBut/commit/4754a36eac0213ca05c2aad4ae7dcf837945fc71))
+* [Laurent] contrôleur pour la structure ([56655c7](https://github.com/Dannebicque/redigeTonBut/commit/56655c7826dab3af8ea80a3107de8f4b216423ba))
+* [Laurent] création de répertoire ([fcfbd90](https://github.com/Dannebicque/redigeTonBut/commit/fcfbd905266e7e8dfc1397daf4d632915be1e96e))
+* [Laurent] création de répertoire ([57b5c42](https://github.com/Dannebicque/redigeTonBut/commit/57b5c426ce9888ef5212fced98e70a95a7bfc386))
+* [PN Final] Génération des fichiers Latex pour la version finale du PN ([c7158d4](https://github.com/Dannebicque/redigeTonBut/commit/c7158d49cedb9a5acb1af64315b85a8be2ce459c))
+
+
+### Bug Fixes
+
+* [Croise] Gestion du "tab" sur un blanc ([fe0462f](https://github.com/Dannebicque/redigeTonBut/commit/fe0462ffeaa6ef413488a9717769042d5121fe9a))
+* [Croise] Gestion du "tab" sur un blanc ([83538c1](https://github.com/Dannebicque/redigeTonBut/commit/83538c1204fdd69e1b5fbbbc2c54e5502c4fdcf5))
+* [Import XML] Import XML ([b0c2d53](https://github.com/Dannebicque/redigeTonBut/commit/b0c2d5350a1b54f1a56c9b22bc30340fd26ebe09))
+* [Import XML] Import XML ([1c7d676](https://github.com/Dannebicque/redigeTonBut/commit/1c7d6766b5bd27b92383344431890c8cbc643b7c))
+* [Latex] Améliorations du rendu Latex + CLass ([1b1f1b8](https://github.com/Dannebicque/redigeTonBut/commit/1b1f1b8a965d79cff62e3374136416fab838c12e))
+
 ### [1.10.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.3...v1.10.4) (2022-02-04)
 
 
