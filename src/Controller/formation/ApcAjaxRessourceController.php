@@ -120,8 +120,8 @@ class ApcAjaxRessourceController extends BaseController
             if ($semestre->getDepartement()->getTypeStructure() === Departement::TYPE3) {
                 $parcours = $semestre->getApcParcours();
                 if ($parcours !== null) {
-                    $datas2 = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
-                    $datas = array_merge($datas, $datas2);
+                    $datas = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+                    //$datas = array_merge($datas, $datas2);
                 }
             }
 
