@@ -119,7 +119,8 @@ class ApcRessourceController extends BaseController
                 'departement' => $this->getDepartement(),
                 'editable' => $this->isGranted('ROLE_GT'),
                 'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
-                'parcours' => $parcours
+                'parcours' => $parcours,
+                'ordre' => $apcRessource->getSemestre()->getOrdreLmd()
             ]);
             $form->handleRequest($request);
 

@@ -9,12 +9,10 @@
 
 namespace App\Form;
 
-use App\Entity\ApcCompetence;
 use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\Departement;
 use App\Entity\Semestre;
-use App\Repository\ApcComptenceRepository;
 use App\Repository\SemestreRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -41,12 +39,27 @@ class ApcRessourceType extends AbstractType
         $this->verouille_croise = $options['verouille_croise'];
 
         $builder
-            ->add('codeMatiere', TextType::class, ['label' => 'Code Ressource', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
-            ->add('ficheAdaptationLocale', ChoiceType::class, ['label' => 'Fiche d\'adaptation locale ?', 'expanded' => true, 'choices' => ['Oui' => true, 'Non' => false,], 'attr' => ['class' => 'text-white'], 'label_attr' => ['class' => 'text-white'],'help' => 'Si la fiche est de l\'adaptation locale, elle ne sera pas prise en compte dans les tableaux et simplement affichées aux collègues', 'help_attr' => ['class' => 'text-white']])
+            ->add('codeMatiere', TextType::class,
+                ['label' => 'Code Ressource', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
+            ->add('ficheAdaptationLocale', ChoiceType::class, [
+                'label' => 'Fiche d\'adaptation locale ?',
+                'expanded' => true,
+                'choices' => ['Oui' => true, 'Non' => false,],
+                'attr' => ['class' => 'text-white'],
+                'label_attr' => ['class' => 'text-white'],
+                'help' => 'Si la fiche est de l\'adaptation locale, elle ne sera pas prise en compte dans les tableaux et simplement affichées aux collègues',
+                'help_attr' => ['class' => 'text-white']
+            ])
             ->add('libelle', TextType::class, ['label' => 'Libellé', 'disabled' => $this->verouille_croise])
-            ->add('ordre', NumberType::class, ['label' => 'Ordre dans le semestre', 'disabled' => $this->verouille_croise,])
-            ->add('libelleCourt', TextType::class, ['label' => 'Libellé court', 'attr' => ['maxlength' => 25], 'required' => false,
-                'help' => '25 caractères maximum, utile pour Apogée', 'disabled' => $this->verouille_croise])
+            ->add('ordre', NumberType::class,
+                ['label' => 'Ordre dans le semestre', 'disabled' => $this->verouille_croise,])
+            ->add('libelleCourt', TextType::class, [
+                'label' => 'Libellé court',
+                'attr' => ['maxlength' => 25],
+                'required' => false,
+                'help' => '25 caractères maximum, utile pour Apogée',
+                'disabled' => $this->verouille_croise
+            ])
             ->add('description', TextareaType::class,
                 [
                     'attr' => ['rows' => 20],
@@ -62,36 +75,59 @@ class ApcRessourceType extends AbstractType
                     'help' => 'Utilisez le "," pour séparer les mots clés.',
                     'required' => false,
                 ])
-            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales', ])
+            ->add('heuresTotales', TextType::class, ['label' => 'Heures totales',])
             ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP',])
-            ->add('cmPreco', TextType::class, ['label' => 'Préconisation Heures CM',
+            ->add('cmPreco', TextType::class, [
+                'label' => 'Préconisation Heures CM',
                 'required' => false,
                 'help' => 'A titre indicatif pour les départements.',
                 'label_attr' => ['class' => 'text-white'],
-                'help_attr' => ['class' => 'text-white'],])
-            ->add('tdPreco', TextType::class, ['label' => 'Préconisation Heures TD',
+                'help_attr' => ['class' => 'text-white'],
+            ])
+            ->add('tdPreco', TextType::class, [
+                'label' => 'Préconisation Heures TD',
                 'required' => false,
                 'help' => 'A titre indicatif pour les départements.',
                 'label_attr' => ['class' => 'text-white'],
-                'help_attr' => ['class' => 'text-white'],])
-            ->add('tpPreco', TextType::class, ['label' => 'Préconisation Heures TP',
+                'help_attr' => ['class' => 'text-white'],
+            ])
+            ->add('tpPreco', TextType::class, [
+                'label' => 'Préconisation Heures TP',
                 'required' => false,
                 'help' => 'A titre indicatif pour les départements.',
                 'label_attr' => ['class' => 'text-white'],
-                'help_attr' => ['class' => 'text-white'],])
-
-            ->add('semestre', EntityType::class, [
+                'help_attr' => ['class' => 'text-white'],
+            ]);
+        if ($this->departement->getTypeStructure() === Departement::TYPE3) {
+            $builder->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
-                'required' => true, 'disabled' => $this->verouille_croise,
+                'data' => $this->parcours->getSemestres()[$options['ordre'] - 1],
+                'required' => true,
+                'disabled' => $this->verouille_croise,
                 'choice_label' => 'display',
-                'attr' => ['x-model'=> 'semestre', '@change' => 'changeSemestre'],
+                'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
                 'query_builder' => function(SemestreRepository $semestreRepository) {
-                    return $semestreRepository->findByDepartementParcoursBuilder($this->departement, $this->parcours);
+                    return $semestreRepository->findByDepartementParcoursBuilder($this->departement,
+                        $this->parcours);
                 },
                 'label' => 'Semestre',
                 'expanded' => true,
-            ])
-        ;
+            ]);
+        } else {
+            $builder->add('semestre', EntityType::class, [
+                'class' => Semestre::class,
+                'required' => true,
+                'disabled' => $this->verouille_croise,
+                'choice_label' => 'display',
+                'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
+                'query_builder' => function(SemestreRepository $semestreRepository) {
+                    return $semestreRepository->findByDepartementParcoursBuilder($this->departement,
+                        $this->parcours);
+                },
+                'label' => 'Semestre',
+                'expanded' => true,
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -102,6 +138,7 @@ class ApcRessourceType extends AbstractType
             'editable' => null,
             'verouille_croise' => null,
             'parcours' => null,
+            'ordre' => null,
         ]);
     }
 }

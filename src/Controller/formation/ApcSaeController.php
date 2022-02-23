@@ -114,7 +114,8 @@ class ApcSaeController extends BaseController
                 'departement' => $this->getDepartement(),
                 'editable' => $this->isGranted('ROLE_GT'),
                 'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
-                'parcours' => $parcours
+                'parcours' => $parcours,
+                'ordre' => $apcSae->getSemestre()->getOrdreLmd()
             ]);
             $form->handleRequest($request);
 
