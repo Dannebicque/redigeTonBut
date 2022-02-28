@@ -14,6 +14,7 @@ use App\Repository\ApcSaeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * @ORM\Entity(repositoryClass=ApcSaeRepository::class)
@@ -351,5 +352,11 @@ class ApcSae extends AbstractMatiere
         $this->stage = $stage;
 
         return $this;
+    }
+
+    public function getSlugName()
+    {
+        $slugger = new AsciiSlugger();
+        return $slugger->slug($this->getCodeMatiere());
     }
 }

@@ -50,6 +50,12 @@
         <i class="bi-download"></i>
         <span>Export Word</span>
     </a>
+    <a href="{{ path('export_pdf_sae', {sae: apc_sae.id}) }}" class="btn btn-sm btn-outline-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-download"></i>
+        <span>Export PDF "version PN"</span>
+    </a>
     {% if user_data.departement.pnBloque == false %}
         {% if  is_granted('ROLE_EDITEUR') %}
             <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-sm btn-outline-warning

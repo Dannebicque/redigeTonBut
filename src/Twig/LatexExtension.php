@@ -23,12 +23,14 @@ class LatexExtension extends AbstractExtension
     public function markdownToLatex($text)
     {
         $text = nl2br($text);
-        $text = str_replace(['•	','<br/>', '<br />','<br>'], ['* ',"\r\n\r\n","\r\n\r\n","\r\n\r\n"], $text);
+        $text = str_replace(['SAé', '•	','<br/>', '<br />','<br>'], ['SAÉ', '* ',"\r\n\r\n","\r\n\r\n","\r\n\r\n"], $text);
         $parse = new Parsedown();
         $text = $parse->text($text);
         $text = str_replace(
-            ['<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>','&', 'œ', '’','«','»'],
-            ['',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}'."\r\n",'\&', '\oe{}', '\'','\og','\fg'], $text);
+            ['<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>','&', 'œ', '’','«','»', '°','\&lt;','%','→','…'],
+            ['',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\&', '\oe{}', '\'','\og','\fg ', '$ ^\circ$ ', '> ','\%','->','...'], $text);
+        $text = str_replace('<ol start="', '\begin{enumerate}\setcounter{enumi}{', $text);
+        $text = str_replace('">', '-1}', $text);
 
         return $text;
     }
