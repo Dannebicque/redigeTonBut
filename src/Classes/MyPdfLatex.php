@@ -26,6 +26,8 @@ class MyPdfLatex
 
         sleep(3);
         $name = 'PN-BUT-' . $ressource->getDepartement()->getSigle().'-'.$ressource->getSlugName();
+        echo 'php '.$this->kernel->getProjectDir().'/pdf/compileLatex.php ' .$ressource->getDepartement()->getNumeroAnnexe().' '.$fichierLatex;
+        die();
         $text = shell_exec('php '.$this->kernel->getProjectDir().'/pdf/compileLatex.php ' .$ressource->getDepartement()->getNumeroAnnexe().' '.$fichierLatex);
 
         $response = new Response(file_get_contents($output . $name . '.pdf'));
