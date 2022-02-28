@@ -26,7 +26,7 @@ class MyPdfLatex
 
         sleep(3);
         $name = 'PN-BUT-' . $ressource->getDepartement()->getSigle().'-'.$ressource->getSlugName();
-        exec('./pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
+        shell_exec('pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
 
         $response = new Response(file_get_contents($output . $name . '.pdf'));
         $response->headers->set('Content-Type', 'application/pdf');
@@ -43,7 +43,7 @@ class MyPdfLatex
 
         sleep(3);
         $name = 'PN-BUT-' . $sae->getDepartement()->getSigle().'-'.$sae->getSlugName();
-        exec('./pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
+        shell_exec('pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
 
         $response = new Response(file_get_contents($output . $name . '.pdf'));
         $response->headers->set('Content-Type', 'application/pdf');
