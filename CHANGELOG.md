@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.11.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.11.0...v1.11.1) (2022-02-28)
+
+
+### Features
+
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([e612726](https://github.com/Dannebicque/redigeTonBut/commit/e6127262dff406784ada6a469238664700acf63c))
+
+
+### Bug Fixes
+
+* [Doublons] Doublons des ressources et SAE ([77c7af1](https://github.com/Dannebicque/redigeTonBut/commit/77c7af18b0039c6f518fbeb1f1c41d6b72b349aa))
+* [Doublons] Doublons des ressources et SAE ([a72a8d9](https://github.com/Dannebicque/redigeTonBut/commit/a72a8d93a353c6a8afd5a41bccb90b334232b99b))
+* [PDF] Quelques corrections sur le rendu du PDF provisoire ([7651cd2](https://github.com/Dannebicque/redigeTonBut/commit/7651cd2cc392fde2958d370a6a8c8404f9266daa))
+* [Resetpassword] Correctif ([dad45f1](https://github.com/Dannebicque/redigeTonBut/commit/dad45f1175300a6319b09718b0d268e764591633))
+
 ## [1.11.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.10.4...v1.11.0) (2022-02-15)
 
 
