@@ -24,9 +24,9 @@ class MyPdfLatex
         $output = $this->kernel->getProjectDir() . '/public/pdf/'.$ressource->getDepartement()->getNumeroAnnexe().'/';
         $fichierLatex = $this->genereFileRessource->genereFile($ressource, $output);
 
-        sleep(5);
+        sleep(3);
         $name = 'PN-BUT-' . $ressource->getDepartement()->getSigle().'-'.$ressource->getSlugName();
-        exec('/Library/TeX/texbin/pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
+        exec('pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
 
         $response = new Response(file_get_contents($output . $name . '.pdf'));
         $response->headers->set('Content-Type', 'application/pdf');
@@ -41,9 +41,9 @@ class MyPdfLatex
         $output = $this->kernel->getProjectDir() . '/public/pdf/'.$sae->getDepartement()->getNumeroAnnexe().'/';
         $fichierLatex = $this->genereFileSae->genereFile($sae, $output);
 
-        sleep(5);
+        sleep(3);
         $name = 'PN-BUT-' . $sae->getDepartement()->getSigle().'-'.$sae->getSlugName();
-        exec('/Library/TeX/texbin/pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
+        exec('pdflatex -output-directory=' . $output . ' -jobname=' . $name . ' ' . $fichierLatex);
 
         $response = new Response(file_get_contents($output . $name . '.pdf'));
         $response->headers->set('Content-Type', 'application/pdf');
