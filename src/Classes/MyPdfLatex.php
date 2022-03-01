@@ -45,6 +45,7 @@ class MyPdfLatex
 
         sleep(1);
         $name = 'PN-BUT-' . $sae->getDepartement()->getSigle() . '-' . $sae->getSlugName();
+        chmod($fichierLatex, 0744);
         $text = shell_exec('pdflatex ' . $fichierLatex);
 //        $text = shell_exec('php ' . $this->kernel->getProjectDir() . '/public/pdf/compileLatex.php ' . $fichierLatex . ' ' . $this->kernel->getProjectDir() . '/public/pdf/' . $sae->getDepartement()->getNumeroAnnexe());
         sleep(3);
