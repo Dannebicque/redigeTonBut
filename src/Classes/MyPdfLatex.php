@@ -6,6 +6,9 @@ use App\Classes\Latex\GenereFileRessource;
 use App\Classes\Latex\GenereFileSae;
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -26,10 +29,28 @@ class MyPdfLatex
 
         sleep(1);
         $name = 'PN-BUT-' . $ressource->getDepartement()->getSigle() . '-' . $ressource->getSlugName();
-        $text = shell_exec('php ' . $this->kernel->getProjectDir() . '/public/pdf/compileLatex.php ' . $fichierLatex . ' ' . $this->kernel->getProjectDir() . '/public/pdf/' . $ressource->getDepartement()->getNumeroAnnexe());
+//        $text = shell_exec('php ' . $this->kernel->getProjectDir() . '/public/pdf/compileLatex.php ' . $fichierLatex . ' ' . $this->kernel->getProjectDir() . '/public/pdf/' . $ressource->getDepartement()->getNumeroAnnexe());
+        chmod($fichierLatex, 0744);
+        $application = new Application($this->kernel);
+        $application->setAutoExit(false);
+        var_dump($fichierLatex);
+        $input = new ArrayInput([
+            'command' => 'app:compile-latex',
+            // (optional) define the value of command arguments
+            'arg1' => $ressource->getDepartement()->getNumeroAnnexe(),
+            'arg2' => $fichierLatex,
+
+        ]);
+
+        // You can use NullOutput() if you don't need the output
+        $outputBuffer = new BufferedOutput();
+        $application->run($input, $outputBuffer);
+
+        // return the output, don't use if you used NullOutput()
+        $contentBuffer = $outputBuffer->fetch();
 
         sleep(3);
-
+        var_dump($contentBuffer);
         $response = new Response(file_get_contents($output . $name . '.pdf'));
         $response->headers->set('Content-Type', 'application/pdf');
         $response->headers->set('Content-Disposition', 'attachment;filename="' . $name . '.pdf"');
@@ -46,7 +67,7 @@ class MyPdfLatex
         sleep(1);
         $name = 'PN-BUT-' . $sae->getDepartement()->getSigle() . '-' . $sae->getSlugName();
         chmod($fichierLatex, 0744);
-        $text = shell_exec('pdflatex ' . $fichierLatex);
+        $text = shell_exec('/usr/bin/pdflatex/pdflatex ' . $fichierLatex);
 //        $text = shell_exec('php ' . $this->kernel->getProjectDir() . '/public/pdf/compileLatex.php ' . $fichierLatex . ' ' . $this->kernel->getProjectDir() . '/public/pdf/' . $sae->getDepartement()->getNumeroAnnexe());
         sleep(3);
         $response = new Response(file_get_contents($output . $name . '.pdf'));
