@@ -1,78 +1,89 @@
 \subsubsection{Ressource {{ ressource.codeMatiere }} : {{ ressource.libelle|latex_purge|raw }}}
 
 {% if ressource.apcRessourceCompetences|length >1 %}
-\textbf{Comp\'etences cibl\'ees}
+\textbf{Comp\'etences cibl\'ees : }
 {% else %}
-\textbf{Comp\'etence cibl\'ee}
+\textbf{Comp\'etence cibl\'ee : }
 {% endif %}
 
 {% for competence in ressource.apcRessourceCompetences %}
 {% if loop.first %}
 \begin{itemize}
 {% endif %}
-    \item {{ competence.competence.libelle|latex_purge|raw }}
+\item {{ competence.competence.libelle|latex_purge|raw }}
 {% if loop.last %}
 \end{itemize}
 {% endif %}
 {% endfor %}
 
 {% if ressource.apcSaeRessources|length > 1 %}
-\textbf{SA\'E au sein de laquelle la ressource peut être mobilis\'ee et combin\'ee}
+\textbf{SA\'E au sein de laquelle la ressource peut être mobilis\'ee et combin\'ee : }
 {% else %}
-\textbf{SA\'E au sein desquelles la ressource peut être mobilis\'ee et combin\'ee}
+\textbf{SA\'E au sein desquelles la ressource peut être mobilis\'ee et combin\'ee : }
 {% endif %}
 
 {% for sae in ressource.apcSaeRessources %}
 {% if loop.first %}
 \begin{itemize}
 {% endif %}
-    \item {{ sae.sae.codeMatiere }} | {{ sae.sae.libelle|latex_purge|raw }}
+{% if parcours is defined %}
+{% if sae.sae.isGoodParcours(parcours) %}
+\item {{ sae.sae.codeMatiere }} | {{ sae.sae.libelle|latex_purge|raw }}
+{% endif %}
+{% else %}
+\item {{ sae.sae.codeMatiere }} | {{ sae.sae.libelle|latex_purge|raw }}
+{% endif %}
 {% if loop.last %}
 \end{itemize}
 {% endif %}
 {% endfor %}
 
-\textbf{Descriptif}
+\textbf{Descriptif : }
 
 {{ ressource.description != null ? ressource.description|markdown_to_latex : '' }}
 
-
-\textbf{Volume horaire}
-
-Volume horaire d\'efini nationalement : {{ ressource.heuresTotales }} heures {% if ressource.tpPpn > 0%}dont {{ressource
-.tpPpn}} heures de TP.{% endif %}
-
 {% if ressource.ressourcesPreRequises|length > 0 %}
-\textbf{Pr\'erequis}
+\textbf{Pr\'erequis : }
 
 {% for prerequis in ressource.ressourcesPreRequises %}
 {% if loop.first %}
 \begin{itemize}
 {% endif %}
-    \item {{ prerequis.codeMatiere }} | {{ prerequis.libelle|latex_purge|raw }}
+{% if parcours is defined %}
+{% if prerequis.isGoodParcours(parcours) %}
+\item {{ prerequis.codeMatiere }} | {{ prerequis.libelle|latex_purge|raw }}
+{% endif %}
+{% else %}
+\item {{ prerequis.codeMatiere }} | {{ prerequis.libelle|latex_purge|raw }}
+{% endif %}
 {% if loop.last %}
 \end{itemize}
 {% endif %}
 {% endfor %}
 {% endif %}
 
-\textbf{Mots cl\'es}
-
-{{ ressource.motscles|keyWordsLatex|raw }}
-
 
 {% if ressource.apcRessourceApprentissageCritiques|length >1 %}
-\textbf{Apprentissages critiques cibl\'es}
+\textbf{Apprentissages critiques cibl\'es : }
 {% else %}
-\textbf{Apprentissage critique cibl\'e}
+\textbf{Apprentissage critique cibl\'e : }
 {% endif %}
 
 {% for ac in ressource.apcRessourceApprentissageCritiques %}
 {% if loop.first %}
 \begin{itemize}
 {% endif %}
-    \item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
+\item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
 {% if loop.last %}
 \end{itemize}
 {% endif %}
 {% endfor %}
+
+\textbf{Mots cl\'es : }
+
+{{ ressource.motscles|keyWordsLatex|raw }}
+
+\textbf{Volume horaire : }
+
+Volume horaire d\'efini nationalement : {{ ressource.heuresTotales }} heures {% if ressource.tpPpn > 0%}dont {{ressource
+.tpPpn}} heures de TP.{% endif %}

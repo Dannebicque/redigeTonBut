@@ -5,17 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Tableau croisé pour le B.U.T {{ departement.libelle }}, semestre {{ semestre.ordreLmd }}</h1>
-    {% if parcours != null %}
-        <h2>Parcours : {{ parcours.libelle }}</h2>
-    {% endif %}
+{#    <h1>Tableau croisé pour le B.U.T {{ departement.libelle }}, semestre {{ semestre.ordreLmd }}</h1>#}
+{#    {% if parcours != null %}#}
+{#        <h2>Parcours : {{ parcours.libelle }}</h2>#}
+{#    {% endif %}#}
     <table class="table">
         <thead>
         <tr>
             <th></th>
             <th>AC</th>
             {% for sae in saes %}
-                <th>
+                <th class="tdsae">
                     <img src="{{ linuxpath }}{{ asset('tableaux/'~departement.numeroAnnexe~'/sae_'~sae.id~'.png') }}">
                 </th>
             {% endfor %}
@@ -34,7 +34,7 @@
                 <td rowspan="{{ niveau.apcApprentissageCritiques|length+1 }}" class="bg_{{ niveau.competence
                 .couleur }}">
                     <div class="vertical">
-                        {{ niveau.competence.nomCourt }}
+                        <span class="nomcomp">{{ niveau.competence.nomCourt }}</span>
                     </div>
                 </td>
             </tr>
@@ -45,15 +45,15 @@
                         <p data-bs-toggle="tooltip" title="{{ ac.libelle }}">{{ ac.code }}</p>
                     </td>
                     {% for sae in saes %}
-                        <td class="text-center">
-                            {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}X{% endif %}
+                        <td class="text-center tdsae">
+                            {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}<span class="croix">X</span>{% endif %}
                         </td>
                     {% endfor %}
 
                     {% for ressource in ressources %}
                         <td class="text-center">
                             {% if tab.ressources[ressource.id] is defined and tab.ressources[ressource.id][ac.id] is
-                                defined %}X{% endif %}
+                                defined %}<span class="croix">X</span>{% endif %}
                         </td>
                     {% endfor %}
                 </tr>
@@ -64,36 +64,42 @@
         {% endfor %}
         <tr>
             <th colspan="2">Volume total</th>
-            <td colspan="{{ saes|length }}" class="text-center">&nbsp;</td>
+            <td colspan="{{ saes|length }}" class="text-center tdsae">&nbsp;</td>
             {% for ressource in ressources %}
                 <td class="text-center">
                     {{ ressource.heuresTotales }}
                 </td>
             {% endfor %}
+            <td></td>
         </tr>
         <tr>
             <th colspan="2">Dont TP</th>
-            <td colspan="{{ saes|length }}" class="text-center">&nbsp;</td>
+            <td colspan="{{ saes|length }}" class="text-center tdsae">&nbsp;</td>
             {% for ressource in ressources %}
                 <td class="text-center">
                     {{ ressource.tpPpn }}
                 </td>
             {% endfor %}
+            <td></td>
         </tr>
         <tr>
-            <th colspan="2">Adap.</th>
-            <td colspan="{{ saes|length }}" class="text-center">{{  donnees[semestre.ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
+            <th colspan="2">Adaptation Locale</th>
+            <td colspan="{{ saes|length }}" class="text-center tdsae">{{  donnees[semestre
+                .ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
             <td class="text-center" colspan="{{ ressources|length }}">
                 &nbsp;
             </td>
+            <td></td>
         </tr>
         <tr>
-            <th colspan="2">Adap.</th>
+            <th colspan="2">Adaptation Locale</th>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{  donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
+            <td></td>
         </tr>
         <tr>
             <th colspan="2">Dont TP</th>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{  donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
+            <td></td>
         </tr>
         </tbody>
     </table>

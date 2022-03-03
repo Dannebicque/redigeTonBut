@@ -2,7 +2,15 @@
 %% Fichier généré le {{ 'now'|date('d/m/Y H:i') }}
 %% on définit le pied de pages ici car le nom de la mention est présent
 \pagestyle{fancy}
-%%\usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc} %%nécessaire avec PDFLatex ?
+
+%% filigrane
+\usepackage{draftwatermark}
+\usepackage{xcolor}
+\SetWatermarkColor{gray!20}
+\SetWatermarkFontSize{1.5cm}
+\SetWatermarkText{Travail en cours. Non validé par la CCN}
+%% fin filigrane
 \usepackage{parskip}
 \usepackage{pdflscape} %% éventuellement \usepackage{pdflscape}
 \fancyhead[L,C,R]{}
@@ -32,9 +40,12 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
     Ce document présente le programme national du B.U.T {{ departement.libelle|latex_purge|raw }} et complète l'annexe 1 de l'arrêté relatif aux programmes nationaux de la licence professionnelle- bachelor universitaire de technologie.
 
     \section{Objectifs de la formation}
-    {{ departement.textePresentation|latex_purge|raw }}
+    {{ departement.textePresentation|markdown_to_latex }}
     %% Affiche le S1/S2 si c'est un type 1 ou 2
-
+    {% for parcours in departement.apcParcours %}
+            {% if parcours.textePresentation != '' %}\\{% endif %}
+        {{ parcours.textePresentation|markdown_to_latex }}
+    {% endfor %}
 
     \part{Référentiel de compétences}
     \newpage
@@ -43,12 +54,14 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 
  \part{R\'eférentiel de formation}
    \chapter{Cadre général}
+   \section{L'alternance}
                 Le diplôme de B.U.T {{departement.sigle}} , quand il est préparé en alternance, s'appuie sur le même
-                référentiel de compétences et sur le même référentiel de formation mais le volume horaire global de
-                chaque semestre sera réduit de {{ departement.altBut1}}\% en première année, de {{ departement.altBut1}}\% en deuxième
-                année, et de {{ departement.altBut1}}\% en troisième année.{# todo: Ou est utilisé le texte des parcours ??? #}
+                référentiel de compétences et sur le même référentiel de formation avec un principe de
+                réduction du volume horaire global (heures de formation et heures de projet) de {{ departement
+                .altBut1}}\% en première année, de {{ departement.altBut2}}\% en deuxième
+                année, et de {{ departement.altBut3}}\% en troisième année.
 
-                \section{Les situations d'apprentissage et d'évaluation}
+            \section{Les situations d'apprentissage et d'évaluation (SAÉ)}
                 Les SAÉ permettent l'évaluation en situation de la compétence. Cette évaluation est menée en
                 correspondance avec l'ensemble des éléments structurants le référentiel, et s'appuie sur la démarche
                 portfolio, à savoir une démarche de réflexion et de démonstration portée par l'étudiant lui-même.
@@ -67,7 +80,9 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 
                 Au cours des différents semestres de formation, l'étudiant sera confronté à plusieurs SAÉ qui lui permettront de développer et de mettre en œuvre chaque niveau de compétence ciblé dans le respect des composantes essentielles du référentiel de compétences et en cohérence avec les apprentissages critiques.
 
-                Les SAÉ peuvent mobiliser des heures issues des 1800 ou 2000 heures de formation et des 600 heures de projet. Les SAÉ prennent la forme de dispositifs pédagogiques variés, individuels ou collectifs, organisés dans un cadre universitaire ou extérieur, tels que des ateliers, des études, des challenges, des séminaires, des immersions au sein d'un environnement professionnel, des stages, etc.
+                Les SAÉ peuvent mobiliser des heures issues des {% if departement.typeDepartement == 'tertiaire' %}1800{%
+                else%}2000{% endif%} heures de formation et des 600 heures de
+                projet. Les SAÉ prennent la forme de dispositifs pédagogiques variés, individuels ou collectifs, organisés dans un cadre universitaire ou extérieur, tels que des ateliers, des études, des challenges, des séminaires, des immersions au sein d'un environnement professionnel, des stages, etc.
 
                 \section{La démarche portfolio}
 
@@ -130,29 +145,17 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 %%
 %% on commence un parcours
 %%
-{#                \newgeometry{margin=0in} %pour enlever les marges dans la page de titre#}
-{#                \thispagestyle{empty}#}
-{#                \begin{titlepage}#}
-{#                    \vspace{2cm}#}
-{#                    ~#}
-{#                    \begin{center}#}
-{#                        \includegraphics[width=20cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}#}
-{#                    \end{center}#}
-{#                \end{titlepage}#}
-
-{#                \restoregeometry#}
-{#                \mapagevide#}
-                \newpage
-
                 \chapter{Parcours : {{ parcours.libelle|latex_purge }}}
 {#                \dominitoc#}
-{{ parcours.textePresentation|latex_purge|raw }}
-                \newpage
+{#{{ parcours.textePresentation|latex_purge|raw }}#}
+
 
 {% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
     {% for semestre in departement.semestres|filter(semestre => semestre.ordreLmd > 2) %}
         \section{Semestre {{semestre.ordreLmd}}}
+        \newpage
          \subsection{Tableau croisé}
+{# todo: Ajouter une phrase... #}
 
      \begin{center}
         \includegraphics[width=19cm]{../tableaux/{{ departement.numeroAnnexe }}/tableau-croise-{{ semestre.id }}-{{

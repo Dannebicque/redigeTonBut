@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <style>
         {{ include('pdf/stylepdf.css.twig') }}
+        {% block styles %}{% endblock %}
     </style>
     <title>{% block titre %}{% endblock %}</title>
 </head>

@@ -67,7 +67,7 @@ class MyPdfLatex
         sleep(1);
         $name = 'PN-BUT-' . $sae->getDepartement()->getSigle() . '-' . $sae->getSlugName();
         chmod($fichierLatex, 0744);
-        $text = shell_exec('/usr/bin/pdflatex/pdflatex ' . $fichierLatex);
+        $text = shell_exec('/usr/bin/pdflatex/pdftex -output-directory /var/www/redigeTonBut/public/pdf/1/ ' . $fichierLatex);
 //        $text = shell_exec('php ' . $this->kernel->getProjectDir() . '/public/pdf/compileLatex.php ' . $fichierLatex . ' ' . $this->kernel->getProjectDir() . '/public/pdf/' . $sae->getDepartement()->getNumeroAnnexe());
         sleep(3);
         $response = new Response(file_get_contents($output . $name . '.pdf'));

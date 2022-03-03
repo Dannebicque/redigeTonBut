@@ -359,4 +359,20 @@ class ApcSae extends AbstractMatiere
         $slugger = new AsciiSlugger();
         return $slugger->slug($this->getCodeMatiere());
     }
+
+    public function isGoodParcours(ApcParcours $apcParcours): bool
+    {
+        if ($this->apcSaeParcours->count() === 0) {
+            //pas de parcours dans la SAE, donc tous les parcours
+            return true;
+        }
+
+        foreach ($this->apcSaeParcours as $apcSaeParcour) {
+            if ($apcSaeParcour->getParcours()->getId() === $apcParcours->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

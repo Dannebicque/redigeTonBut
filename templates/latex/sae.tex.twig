@@ -4,66 +4,66 @@
 \subsubsection{ {{ sae.codeMatiere }} : {{ sae.libelle|latex_purge|raw }}}
 {% endif %}
 
-{#\begin{tabular}{|m{5cm}|m{19cm}|}#}
-{#\hline#}
-{#    Semestre {{ semestre.ordreLmd }} & Volume horaire défini localement \\#}
-{#\hline#}
-{#\end{tabular}#}
-
 {%  if sae.apcSaeCompetences|length > 1 %}
-\textbf{Comp\'etences cibl\'ees}
+\textbf{Comp\'etences cibl\'ees :}
 {% else %}
-\textbf{Comp\'etence cibl\'ee}
+\textbf{Comp\'etence cibl\'ee :}
 {% endif %}
 
 {% for competence in sae.apcSaeCompetences %}
 {% if loop.first %}
 \begin{itemize}
 {% endif %}
-    \item {{ competence.competence.libelle|latex_purge|raw }}
+\item {{ competence.competence.libelle|latex_purge|raw }}
 {% if loop.last %}
 \end{itemize}
 {% endif %}
 {% endfor %}
 
-\textbf{Objectifs et probl\'ematique professionnelle}
+\textbf{Objectifs et probl\'ematique professionnelle :}
 
 {{ sae.objectifs != null ? sae.objectifs|markdown_to_latex : '' }}
 
-\textbf{Descriptif g\'en\'erique}
+\textbf{Descriptif g\'en\'erique : }
 
 {{ sae.description != null ? sae.description|markdown_to_latex : '' }}
 
 {%  if sae.apcSaeApprentissageCritiques|length > 1 %}
-\textbf{Apprentissages critiques}
+\textbf{Apprentissages critiques : }
 {% else %}
-\textbf{Apprentissage critique}
+\textbf{Apprentissage critique : }
 {% endif %}
 
 {% for ac in sae.apcSaeApprentissageCritiques %}
  {% if loop.first %}
 \begin{itemize}
 {% endif %}
-   \item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
+\item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
 {% if loop.last %}
 \end{itemize}
 {% endif %}
 {% endfor %}
 
-\textbf{Ressources mobilis\'ees et combin\'ees}
+\textbf{Ressources mobilis\'ees et combin\'ees : }
 
 {% for ressource in sae.apcSaeRessources %}
 {% if loop.first %}
 \begin{itemize}
 {% endif %}
-    \item {{ ressource.ressource.display|latex_purge|raw }}
+{% if parcours is defined %}
+{% if ressource.ressource.isGoodParcours(parcours) %}
+\item {{ ressource.ressource.codeMatiere }} | {{ ressource.ressource.libelle|latex_purge|raw }}
+{% endif %}
+{% else %}
+\item {{ ressource.ressource.codeMatiere }} | {{ ressource.ressource.libelle|latex_purge|raw }}
+{% endif %}
 {% if loop.last %}
 \end{itemize}
 {% endif %}
 {% endfor %}
 
 
-\textbf{Volume horaire}
+\textbf{Volume horaire : }
 
 Volume horaire : \`a d\'efinir localement par chaque IUT
 

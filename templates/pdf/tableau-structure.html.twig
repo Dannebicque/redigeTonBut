@@ -4,6 +4,16 @@
     Tableau structure complet | {{ departement.libelle }}
 {% endblock %}
 
+{% block styles %}
+body {
+    font-size: 14px;
+}
+
+.table th {
+    padding: 5px;
+}
+{% endblock %}
+
 {% block content %}
     <h1>Tableau de structure pour le B.U.T {{ departement.libelle }}</h1>
     {% if parcours != null %}
@@ -164,8 +174,8 @@
                 </td>
             {% endfor %}
             <td class="text-center">
-                {{ donnees.departement.nbSemainesStageMin }} à
-                {{ donnees.departement.nbSemainesStageMax }}
+                {{ donnees.departement.nbSemainesStageMin < 22 ? 22 : donnees.departement.nbSemainesStageMin }} à
+                {{ donnees.departement.nbSemainesStageMax > 26 ? 26 : donnees.departement.nbSemainesStageMax }}
             </td>
         </tr>
         </tbody>
