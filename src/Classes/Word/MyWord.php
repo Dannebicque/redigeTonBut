@@ -48,7 +48,7 @@ class MyWord
     {
         $templateProcessor = $this->genereWordSae($apcSae);
 
-        $filename = 'sae_' . $apcSae->getCodeMatiere() . '.docx';
+        $filename = 'sae_' . $apcSae->getCodeMatiere() . '-'.$apcSae->getId().'.docx';
 
         return new StreamedResponse(
             static function() use ($templateProcessor) {
@@ -90,7 +90,7 @@ class MyWord
     {
         $templateProcessor = $this->genereWord($apcRessource);
 
-        $filename = 'ressource_' . $apcRessource->getCodeMatiere() . '.docx';
+        $filename = 'ressource_' . $apcRessource->getCodeMatiere() . '-'.$apcRessource->getId().'.docx';
 
         return new StreamedResponse(
             static function() use ($templateProcessor) {

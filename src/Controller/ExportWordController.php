@@ -13,7 +13,9 @@ class ExportWordController extends AbstractController
 {
     private MyWord $myWord;
 
-    public function __construct(MyWord $myWord)
+    public function __construct(
+        MyWord $myWord,
+    )
     {
         $this->myWord = $myWord;
     }
