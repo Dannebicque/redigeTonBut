@@ -27,7 +27,7 @@ class GenereTableauxCommand extends Command
         protected DepartementRepository $departementRepository,
         protected GenerePdfTableaux $generePdfTableaux
     ) {
-        $this->dir = $kernel->getProjectDir() . '/public/tableaux/';
+        $this->dir = $kernel->getProjectDir() . '/public/latex/';
         $this->filesystem = new Filesystem();
         parent::__construct();
     }
@@ -48,7 +48,7 @@ class GenereTableauxCommand extends Command
         //une spécialité
         $specialite = $this->departementRepository->findOneBy(['sigle' => $arg1]);
         if ($specialite !== null) {
-            $this->filesystem->exists($this->dir.$specialite->getNumeroAnnexe()) ?: $this->filesystem->mkdir($this->dir.$specialite->getNumeroAnnexe());
+            $this->filesystem->exists($this->dir.$specialite->getNumeroAnnexe().'/tableaux/') ?: $this->filesystem->mkdir($this->dir.$specialite->getNumeroAnnexe().'/tableaux/');
 
             $this->generePdfTableaux->genereTableauStructure($specialite);
             $this->generePdfTableaux->genereTableauCroise($specialite);

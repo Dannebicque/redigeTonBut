@@ -31,7 +31,7 @@ class GenerePdfTableaux
         protected VolumesHoraires $volumesHoraires
     ) {
         $this->kernel = $kernel;
-        $this->dir = $kernel->getProjectDir() . '/public/tableaux/';
+        $this->dir = $kernel->getProjectDir() . '/public/latex/';
     }
 
     public function genereTableauStructure(Departement $departement): void
@@ -102,7 +102,7 @@ class GenerePdfTableaux
             $nameHtml = 'tableau-structure-' . $parcours->getId() . '.html';
         }
 
-        file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/' . $nameHtml, $html);
+        file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/tableaux/' . $nameHtml, $html);
 
 
         $output = new PdfResponse(
@@ -112,7 +112,7 @@ class GenerePdfTableaux
             $name
         );
 
-        file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/' . $name, $output);
+        file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/tableaux/' . $name, $output);
     }
 
     private function afficheParcours(ApcParcours $parcours, Semestre $semestre, array $semestres)
@@ -146,7 +146,7 @@ class GenerePdfTableaux
             'coefficients' => $tableauCroise->getCoefficients(),
             'parcours' => $parcours,
         ]);
-        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/' . $name.'.html', $html);
+        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/tableaux/' . $name.'.html', $html);
 
         $output = new PdfResponse(
             $this->knpSnappyPdf->getOutputFromHtml($html, [
@@ -155,7 +155,7 @@ class GenerePdfTableaux
             $name
         );
 
-        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/' . $name, $output);
+        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/tableaux/' . $name, $output);
     }
 
     private function genereImage($getRessources, $getSaes, Departement $departement)
@@ -171,7 +171,7 @@ class GenerePdfTableaux
             imagefill($im, 0, 0, $fond);
             $font = $this->kernel->getProjectDir() . '/public/arial.ttf';
             imagettftext($im, 10, 90, 15, 190, $noir, $font, $texte);
-            imagepng($im, $this->kernel->getProjectDir() . '/public/tableaux/'.$departement->getNumeroAnnexe().'/ressource_' . $ressource->getId() . '.png');
+            imagepng($im, $this->kernel->getProjectDir() . '/public/latex/'.$departement->getNumeroAnnexe().'/tableaux/ressource_' . $ressource->getId() . '.png');
             imagedestroy($im);
         }
 
@@ -186,7 +186,7 @@ class GenerePdfTableaux
             imagefill($im, 0, 0, $fond);
             $font = $this->kernel->getProjectDir() . '/public/arial.ttf';
             imagettftext($im, 10, 90, 15, 190, $noir, $font, $texte);
-            imagepng($im, $this->kernel->getProjectDir() . '/public/tableaux/'.$departement->getNumeroAnnexe().'/sae_' . $sae->getId() . '.png', 2);
+            imagepng($im, $this->kernel->getProjectDir() . '/public/latex/'.$departement->getNumeroAnnexe().'/tableaux/sae_' . $sae->getId() . '.png', 2);
             imagedestroy($im);
         }
     }

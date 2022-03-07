@@ -91,7 +91,7 @@ class GoodDepartementVoter extends Voter
         }
 
         if ($post instanceof Departement) {
-            if ($this->security->isGranted('ROLE_CPN')) {
+            if (in_array('ROLE_CPN', $user->getRoles())) {
                 foreach ($user->getCpnDepartements() as $dpt) {
                     if ($dpt->getId() === $post->getId()) {
                         return true;
@@ -103,7 +103,7 @@ class GoodDepartementVoter extends Voter
         }
 
         if ($post instanceof Annee && $post->getDepartement() !== null) {
-            if ($this->security->isGranted('ROLE_CPN')) {
+            if (in_array('ROLE_CPN', $user->getRoles())) {
                 foreach ($user->getCpnDepartements() as $dpt) {
                     if ($dpt->getId() === $post->getDepartement()->getId()) {
                         return true;
@@ -116,7 +116,7 @@ class GoodDepartementVoter extends Voter
 
         if ($post instanceof Semestre) {
 
-            if ($this->security->isGranted('ROLE_CPN')) {
+            if (in_array('ROLE_CPN', $user->getRoles())) {
                 foreach ($user->getCpnDepartements() as $dpt) {
                     if ($dpt->getId() === $post->getAnnee()->getDepartement()->getId()) {
                         return true;

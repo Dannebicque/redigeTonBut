@@ -28,7 +28,7 @@ class GenerePdfCompetences
         private ApcStructure $apcStructure
 
     ) {
-        $this->dir = $kernel->getProjectDir() . '/public/ref-competences/';
+        $this->dir = $kernel->getProjectDir() . '/public/latex/';
         $this->filesystem = new Filesystem();
 
     }
@@ -36,7 +36,7 @@ class GenerePdfCompetences
     public function generePdfCompetencesParPage(Departement $departement): void
     {
         $this->departement = $departement;
-        $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe()) ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe());
+        $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe().'/ref-competences/') ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe().'/ref-competences/');
         $this->getDataReferentiel();
 
         foreach ($this->departement->getApcParcours() as $parcours) {
@@ -62,7 +62,7 @@ class GenerePdfCompetences
      */
     public function generePdfCompetencesComplet(Departement $departement): void
     {
-        $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe()) ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe());
+        $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe().'/ref-competences/') ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe().'/ref-competences/');
 
         $this->departement = $departement;
         $this->getDataReferentiel();
@@ -82,7 +82,7 @@ class GenerePdfCompetences
             $name
         );
 
-        file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/' . $name, $output);
+        file_put_contents($this->dir . $departement->getNumeroAnnexe().'/ref-competences/' . $name, $output);
 
     }
 
@@ -115,7 +115,7 @@ class GenerePdfCompetences
             $name
         );
 
-        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/' . $name . '.pdf', $output);
+        file_put_contents($this->dir .  $this->departement->getNumeroAnnexe().'/ref-competences/' . $name . '.pdf', $output);
     }
 
     private function generePageDeGarde(ApcParcours $parcours)

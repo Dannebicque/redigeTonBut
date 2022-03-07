@@ -129,7 +129,7 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
   \begin{landscape}
   \begin{center}
   %%si type 1 ou 2
-        \includegraphics[scale=0.8]{../tableaux/{{ departement.numeroAnnexe }}/tableau-structure.pdf}
+        \includegraphics[scale=0.8]{ {{ departement.numeroAnnexe }}/tableaux/tableau-structure.pdf}
     \end{center}
     \end{landscape}
     \newpage
@@ -158,7 +158,7 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 {# todo: Ajouter une phrase... #}
 
      \begin{center}
-        \includegraphics[width=19cm]{../tableaux/{{ departement.numeroAnnexe }}/tableau-croise-{{ semestre.id }}-{{
+        \includegraphics[width=19cm]{ {{ departement.numeroAnnexe }}/tableaux/tableau-croise-{{ semestre.id }}-{{
         parcours.id }}.pdf}
     \end{center}
 
