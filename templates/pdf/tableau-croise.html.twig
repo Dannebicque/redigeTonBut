@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block content %}
-{#    <h1>Tableau croisé pour le B.U.T {{ departement.libelle }}, semestre {{ semestre.ordreLmd }}</h1>#}
-{#    {% if parcours != null %}#}
-{#        <h2>Parcours : {{ parcours.libelle }}</h2>#}
-{#    {% endif %}#}
+    {#    <h1>Tableau croisé pour le B.U.T {{ departement.libelle }}, semestre {{ semestre.ordreLmd }}</h1> #}
+    {#    {% if parcours != null %} #}
+    {#        <h2>Parcours : {{ parcours.libelle }}</h2> #}
+    {#    {% endif %} #}
     <table class="table">
         <thead>
         <tr>
@@ -16,13 +16,14 @@
             <th>AC</th>
             {% for sae in saes %}
                 <th class="tdsae">
-                    <img src="{{ linuxpath }}{{ asset('tableaux/'~departement.numeroAnnexe~'/sae_'~sae.id~'.png') }}">
+                    <img src="{{ linuxpath }}{{ asset('latex/'~departement.numeroAnnexe~'/tableaux/sae_'~sae.id~'.png')
+                    }}">
                 </th>
             {% endfor %}
 
             {% for ressource in ressources %}
                 <th>
-                    <img src="{{ linuxpath }}{{ asset('tableaux/'~departement.numeroAnnexe~'/ressource_'~ressource.id~'.png') }}">
+                    <img src="{{ linuxpath }}{{ asset('latex/'~departement.numeroAnnexe~'/tableaux/ressource_'~ressource.id~'.png') }}">
                 </th>
             {% endfor %}
         </tr>
@@ -46,7 +47,8 @@
                     </td>
                     {% for sae in saes %}
                         <td class="text-center tdsae">
-                            {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}<span class="croix">X</span>{% endif %}
+                            {% if tab.saes[sae.id] is defined and tab.saes[sae.id][ac.id] is defined %}
+                                <span class="croix">X</span>{% endif %}
                         </td>
                     {% endfor %}
 
@@ -70,7 +72,7 @@
                     {{ ressource.heuresTotales }}
                 </td>
             {% endfor %}
-            <td></td>
+            <td class="text-center">{{ donnees[semestre.ordreLmd]['totalEnseignementRessources'] }}</td>
         </tr>
         <tr>
             <th colspan="2">Dont TP</th>
@@ -80,26 +82,26 @@
                     {{ ressource.tpPpn }}
                 </td>
             {% endfor %}
-            <td></td>
+            <td class="text-center">{{ donnees[semestre.ordreLmd]['totalDontTpRessources'] }}</td>
         </tr>
         <tr>
             <th colspan="2">Adaptation Locale</th>
-            <td colspan="{{ saes|length }}" class="text-center tdsae">{{  donnees[semestre
+            <td colspan="{{ saes|length }}" class="text-center tdsae">{{ donnees[semestre
                 .ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
             <td class="text-center" colspan="{{ ressources|length }}">
                 &nbsp;
             </td>
-            <td></td>
+            <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
         </tr>
         <tr>
             <th colspan="2">Adaptation Locale</th>
-            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{  donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
-            <td></td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
+            <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
         </tr>
         <tr>
             <th colspan="2">Dont TP</th>
-            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{  donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
-            <td></td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
+            <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
         </tr>
         </tbody>
     </table>

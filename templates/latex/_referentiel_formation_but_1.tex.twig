@@ -3,10 +3,9 @@
 \newpage
  {% for semestre in departement.semestres|filter(semestre => (semestre.ordreLmd == 1 or semestre.ordreLmd == 2)) %}
     \section{Semestre {{semestre.ordreLmd}}}
-
     \subsection{Tableau croisé}
      \begin{center}
-        \includegraphics[width=19cm]{ {{ departement.numeroAnnexe }}/tableaux/tableau-croise-{{ semestre.id }}.pdf}
+        \includegraphics[width=19cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre.id~'.pdf}' }}
     \end{center}
     \newpage
     \subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}

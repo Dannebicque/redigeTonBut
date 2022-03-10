@@ -6,7 +6,6 @@
 
 %% filigrane
 \usepackage{draftwatermark}
-\usepackage{amsfonts}
 \usepackage{xcolor}
 \SetWatermarkColor{gray!20}
 \SetWatermarkFontSize{1.5cm}
@@ -42,48 +41,31 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 
     \section{Objectifs de la formation}
     {{ departement.textePresentation|markdown_to_latex }}
-    %% Affiche le S1/S2 si c'est un type 1 ou 2
-    {% for parcours in departement.apcParcours %}
-            {% if parcours.textePresentation != '' %}\\{% endif %}
-        {{ parcours.textePresentation|markdown_to_latex }}
-    {% endfor %}
+    %% Affiche le texte du parcours concerné uniquement
+
+    \section{Objectifs du parcours {{ parcours.libelle|latex_purge|raw }}}
+    {{ parcours.textePresentation|markdown_to_latex }}
 
     \part{Référentiel de compétences}
     \newpage
-    {{ include('latex/_referentiel_competence.tex.twig') }}
+    {{ include('latex/_ref_competence_parcours.tex.twig', {parcours:parcours}) }}
     \newpage
 
  \part{R\'eférentiel de formation}
    \chapter{Cadre général}
-    {{ include('latex/_cadre_general.tex.twig') }}
+  {{ include('latex/_cadre_general.tex.twig') }}
       \newpage
-
    \chapter{Structure générale des six semestres de formation}
 
  %% Tableau structurel
   \begin{landscape}
   \begin{center}
-  %%si type 1 ou 2
-        \includegraphics[scale=0.8]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-structure.pdf}' }}
-     \end{center}
+        \includegraphics[scale=0.8]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-structure-'~parcours.id~'.pdf}' }}
+    \end{center}
     \end{landscape}
     \newpage
-
-    {% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
-        %%
-    %% Partie commune BUT1 si type 1 ou 2.
-        {{ include('latex/_referentiel_formation_but_1.tex.twig') }}
-    {% endif %}
-
-    {% for parcours in departement.apcParcours %}
-
-%%
-%% on commence un parcours
-%%
                 \chapter{Parcours : {{ parcours.libelle|latex_purge }}}
-
-{% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
-    {% for semestre in departement.semestres|filter(semestre => semestre.ordreLmd > 2) %}
+    {% for semestre in departement.semestres|filter(semestre => (semestre.apcParcours.id == parcours.id)) %}
         \section{Semestre {{semestre.ordreLmd}}}
         \newpage
          \subsection{Tableau croisé}
@@ -91,7 +73,7 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 
      \begin{center}
         \includegraphics[width=19cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre
-        .id~'-'~parcours.id~'.pdf}' }}
+        .id~'-'~parcours.id~'.pdf}'}}
     \end{center}
 
     \newpage
@@ -108,8 +90,7 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
         \newpage
         {% endfor %}
 
-    {% endfor %}
-{% endif %}
-{% endfor %}{# parcours #}
+
+        {% endfor %}
 
 \end{document}

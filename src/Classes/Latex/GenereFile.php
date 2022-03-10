@@ -72,19 +72,36 @@ class GenereFile
             }
         }
 
-        $content = $this->twig->render('latex/annexe_specialite.tex.twig', [
-            'departement' => $departement,
-            'competencesParcours' => $competencesParcours,
-            'saes' => $saes,
-            'ressources' => $ressources,
-        ]);
-        $cle = new DateTime('now');
-        $name = $chemin . 'PN-BUT-' . $departement->getSigle() . '.tex'; // . '-' . $cle->format('dmY-Hi') . '.tex';//todo: remettre en prod
-        $fichier = fopen($name, 'wb+');
-        fwrite($fichier, $content);
-        fclose($fichier);
+        if ($departement->getTypeStructure() === Departement::TYPE3) {
+            foreach ($departement->getApcParcours() as $parcour) {
+                $content = $this->twig->render('latex/annexe_specialite_type3.tex.twig', [
+                    'departement' => $departement,
+                    'competencesParcours' => $competencesParcours,
+                    'saes' => $saes,
+                    'ressources' => $ressources,
+                    'parcours' => $parcour,
+                ]);
+                $name = $chemin . 'PN-BUT-' . $departement->getSigle() . '-'.$parcour->getCode().'.tex';
+                $fichier = fopen($name, 'wb+');
+                fwrite($fichier, $content);
+                fclose($fichier);
+            }
+        } else {
 
-        return $name;
+
+            $content = $this->twig->render('latex/annexe_specialite.tex.twig', [
+                'departement' => $departement,
+                'competencesParcours' => $competencesParcours,
+                'saes' => $saes,
+                'ressources' => $ressources,
+            ]);
+            $name = $chemin . 'PN-BUT-' . $departement->getSigle() . '.tex';
+            $fichier = fopen($name, 'wb+');
+            fwrite($fichier, $content);
+            fclose($fichier);
+
+            return $name;
+        }
 
     }
 }

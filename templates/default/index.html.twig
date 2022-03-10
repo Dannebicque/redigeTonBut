@@ -8,7 +8,7 @@
         <ul>
             {% if user_data.departement != null %}
             <li>28/01/2022 : Récupération du référentiel de compétences dans le format PN officiel. (<a href="{{
-                asset('ref-competences/'~user_data.departement.numeroAnnexe~'/referentiel-competences-'~user_data
+                asset('latex/'~user_data.departement.numeroAnnexe~'/ref-competences/referentiel-competences-'~user_data
                     .departement.sigle~'.pdf') }}" target="_blank">Télécharger le fichier</a>)</li>
             {% endif %}
             <li>23/01/2022 : Possibilité de différencier les ECTS selon les parcours pour les Type 1 et 2 à partir du

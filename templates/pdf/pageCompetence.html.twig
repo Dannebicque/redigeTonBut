@@ -61,7 +61,7 @@
                 <tr>
                     <td class="niveau niveau{{ i }}{{ competence.couleur }}">
                         <div class="p-3 niveaucourt">
-                            Niveau {{ parcoursNiveaux[parcours.id][competence.id][i].annee.ordre }}</div>
+                            Niveau {{ parcoursNiveaux[parcours.id][competence.id][i].ordre }}</div>
                         <div class="p-3 niveaulong">{{ parcoursNiveaux[parcours.id][competence.id][i].libelle }}
                         </div>
                     </td>
@@ -79,7 +79,12 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    {% if not loop.last %}
+                    <td class="niveau niveau{{ i }}{{ competence.couleur }}">&nbsp;</td>
+                    <td colspan="2">&nbsp;</td>
+                        {% else %}
+                            <td colspan="3">&nbsp;</td>
+                            {% endif %}
                 </tr>
                 <tr>
                     <td colspan="3">&nbsp;</td>

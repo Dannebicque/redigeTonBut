@@ -8,7 +8,7 @@ bin/console app:genere-ref-competence GMP
 bin/console app:genere-ref-competence TC
 bin/console app:genere-ref-competence CJ
 bin/console app:genere-ref-competence CS
-bin/console app:genere-ref-competence InfoCom
+bin/console app:genere-ref-competence Info-Com
 bin/console app:genere-ref-competence Chimie
 bin/console app:genere-ref-competence GB
 bin/console app:genere-ref-competence GCGP

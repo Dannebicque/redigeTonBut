@@ -133,7 +133,7 @@ class GenerePdfTableaux
 
     private function generePdfCroise($tableauCroise, $donnees, $name, Semestre $semestre, ?ApcParcours $parcours = null)
     {
-        $this->genereImage($tableauCroise->getRessources(), $tableauCroise->getSaes(), $this->departement);
+       // $this->genereImage($tableauCroise->getRessources(), $tableauCroise->getSaes(), $this->departement);
         $html = $this->twig->render('pdf/tableau-croise.html.twig', [
             'linuxpath' => '/Users/davidannebicque/htdocs/redigeTonBut/public/',
             'departement' => $this->departement,
@@ -181,7 +181,7 @@ class GenerePdfTableaux
             $response = new Response();
             $response->headers->set('Content-Type', 'image/png');
             $im = imagecreate(50, 200);
-            $fond = imagecolorallocate($im, 255, 255, 255);
+            $fond = imagecolorallocate($im, 173, 216, 230);
             $noir = imagecolorallocate($im, 0, 0, 0);
             imagefill($im, 0, 0, $fond);
             $font = $this->kernel->getProjectDir() . '/public/arial.ttf';
