@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.11.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.11.1...v1.11.2) (2022-03-10)
+
+
+### Features
+
+* [Couv] Couvertures ([94bb4db](https://github.com/Dannebicque/redigeTonBut/commit/94bb4db265e193a39f463752297a5fa4d8f567c2))
+* [Export PDF] Correctifs sur l'export LAtex ([8ab5ab4](https://github.com/Dannebicque/redigeTonBut/commit/8ab5ab477deb53b5d4a1946775146df3b4271912))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([66d43ec](https://github.com/Dannebicque/redigeTonBut/commit/66d43ec40a5d04c1cf068aa9bfd839c4a39fc9b3))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([d9b0094](https://github.com/Dannebicque/redigeTonBut/commit/d9b0094e8aeb68eb950b675eae0cc64cbc6c13a1))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([dd0c464](https://github.com/Dannebicque/redigeTonBut/commit/dd0c464aff34746bcdce6d0cfd7666b1e73682cf))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([40ce4ee](https://github.com/Dannebicque/redigeTonBut/commit/40ce4eeba10b72f0fa7cf33e1aeea750dc395d3c))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([ac79e1a](https://github.com/Dannebicque/redigeTonBut/commit/ac79e1ac04c14b94fc1dfaa67d46f50d043a0444))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([1855da8](https://github.com/Dannebicque/redigeTonBut/commit/1855da80d1d7d4a970e84565ec3eb8bd89c989fe))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([a6b26e8](https://github.com/Dannebicque/redigeTonBut/commit/a6b26e8fa06ecbf64907813a10249d2e9f3f94be))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([86d3460](https://github.com/Dannebicque/redigeTonBut/commit/86d3460c042ba5002cfbf6d273b3383f952ce2b1))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([6ea8aad](https://github.com/Dannebicque/redigeTonBut/commit/6ea8aadf38831f72978d9fe35eeff0ddd0ba61b8))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([e1bfe2d](https://github.com/Dannebicque/redigeTonBut/commit/e1bfe2d6ff8a9efaeac703efbdedceff1e187eb2))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([b681c04](https://github.com/Dannebicque/redigeTonBut/commit/b681c04d5f40bd1ca368867aa042f0e1804c1cc8))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([4247045](https://github.com/Dannebicque/redigeTonBut/commit/42470451d036b23ae2835e500df4380c016f89f6))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([af738f7](https://github.com/Dannebicque/redigeTonBut/commit/af738f719778ab89ac962226d5acb83e0ed5af6e))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([10b5d6f](https://github.com/Dannebicque/redigeTonBut/commit/10b5d6f25369ab415e1394954c9d4c3bbfb51e8d))
+* [Export PDF] Export Latex d'une fiche ressource ou SAE ([7bd0329](https://github.com/Dannebicque/redigeTonBut/commit/7bd03290a98dde28362718b67540091f774b4f25))
+* [Images] Images ([0a534b7](https://github.com/Dannebicque/redigeTonBut/commit/0a534b70168ad75aba6776c987080030f71b4ae8))
+
+
+### Bug Fixes
+
+* [APC] suppression bouton provisoire ([9e70c16](https://github.com/Dannebicque/redigeTonBut/commit/9e70c16cd893528995941538d08137b9eded75cb))
+* [latex] Réorganisation des répertoires ([c32a8e7](https://github.com/Dannebicque/redigeTonBut/commit/c32a8e7dd0568888e3dd17ee89ca1c9bb9430905))
+* [pdf] pdf provisoire ([9ec4f47](https://github.com/Dannebicque/redigeTonBut/commit/9ec4f477a1a0d50d45d1dea4150ce5ba5eef977f))
+* [PDF] version finale ([87c29a8](https://github.com/Dannebicque/redigeTonBut/commit/87c29a82f5815eb10fa49b39050c17e9ebe9575b))
+* [word] Bug si deux fiche son le même code. ([7e9606c](https://github.com/Dannebicque/redigeTonBut/commit/7e9606c326ccda5c9e5799e967bb03319c84a94a))
+
 ### [1.11.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.11.0...v1.11.1) (2022-02-28)
 
 

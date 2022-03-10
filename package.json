@@ -7,15 +7,13 @@
         "sass": "^1.35.0",
         "sass-loader": "^11.0.0",
         "stimulus": "^2.0.0",
-        "svelte": "^3.38.2",
-        "svelte-loader": "^3.1.2",
         "webpack-notifier": "^1.6.0"
     },
     "license": "MPL2.0",
     "author": "David Annebicque",
     "name": "orebut",
     "private": true,
-    "version": "1.11.1",
+    "version": "1.11.2",
     "auto-changelog": {
         "template": "keepachangelog",
         "unreleased": true,
