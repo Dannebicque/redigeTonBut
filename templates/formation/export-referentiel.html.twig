@@ -34,8 +34,18 @@
 </head>
 <body>
 <h1 style="margin-top:15px">{{ departement.libelle }}</h1>
+
+<h2>Présentation de la spécialité</h2>
+<p>
+{{ departement.textePresentation|nl2br|markdown_to_html|raw }}
+</p>
+<br>
 {% if parcours is defined %}
     <h2>Parcours {{ parcours.libelle }}</h2>
+    <h2>Présentation du parcours</h2>
+    <p>
+        {{ parcours.textePresentation|nl2br|markdown_to_html|raw }}
+    </p>
     <div style="page-break-after: always"></div>
 {% endif %}
 

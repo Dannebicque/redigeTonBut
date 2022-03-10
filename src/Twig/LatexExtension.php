@@ -27,8 +27,8 @@ class LatexExtension extends AbstractExtension
         $parse = new Parsedown();
         $text = $parse->text($text);
         $text = str_replace(
-            ['<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>','&', 'œ', '’','«','»', '°','\&lt;','%','→','…'],
-            ['',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\&', '\oe{}', '\'','\og','\fg ', '$ ^\circ$ ', '> ','\%','->','...'], $text);
+            ['<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>','&', 'œ', '’','«','»', '°','\&lt;','%','→','…', '**Z**'],
+            ['',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\&', '\oe{}', '\'','\og','\fg ', '$ ^\circ$ ', '> ','\%','->','...','\mathbb{Z}'], $text);
         $text = str_replace('<ol start="', '\begin{enumerate}\setcounter{enumi}{', $text);
         $text = str_replace('">', '-1}', $text);
 
@@ -47,7 +47,7 @@ class LatexExtension extends AbstractExtension
 
     public function keyWords($text)
     {
-        $text = str_replace(['-','–'], [' -- ',' -- '], $text);
+        $text = str_replace([' - ',' – '], [' -- ',' -- '], $text);
         $text = str_replace(['&', 'œ', '’','•',', ', ';', ','], ['\&', '\oe{}', '\'','*',' -- ',' -- ',' -- '], $text);
         return $text;
     }
