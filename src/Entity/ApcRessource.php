@@ -413,8 +413,11 @@ class ApcRessource extends AbstractMatiere
         return $slugger->slug($this->getCodeMatiere());
     }
 
-    public function isGoodParcours(ApcParcours $apcParcours): bool
+    public function isGoodParcours(?ApcParcours $apcParcours): bool
     {
+        if ($apcParcours === null) {
+            return true;
+        }
         if ($this->apcRessourceParcours->count() === 0) {
             //pas de parcours dans la SAE, donc tous les parcours
             return true;
