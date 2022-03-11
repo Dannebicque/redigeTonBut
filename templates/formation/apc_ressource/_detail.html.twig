@@ -67,11 +67,18 @@
 <h3>SAÉ concernées</h3>
 <p>
     {% for sae in saes %}
-        {% if sae.sae.isGoodParcours(apc_ressource.apcRessourceParcours.get(0).parcours) %}
-        <span class="badge bg-primary"
-              data-provide="tooltip"
-              title="{{ sae.sae.libelle }}"
-        >{{ sae.sae.codeMatiere }}</span>
+        {% if apc_ressource.apcRessourceParcours.get(0).parcours is defined %}
+            {% if sae.sae.isGoodParcours(apc_ressource.apcRessourceParcours.get(0).parcours) %}
+            <span class="badge bg-primary"
+                  data-provide="tooltip"
+                  title="{{ sae.sae.libelle }}"
+            >{{ sae.sae.codeMatiere }}</span>
+            {% endif %}
+        {% else %}
+            <span class="badge bg-primary"
+                  data-provide="tooltip"
+                  title="{{ sae.sae.libelle }}"
+            >{{ sae.sae.codeMatiere }}</span>
         {% endif %}
     {% endfor %}
 </p>
