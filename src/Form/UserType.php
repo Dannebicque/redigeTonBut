@@ -42,7 +42,8 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, ['label' => 'email'])
             ->add('roles', ChoiceType::class, [
                 'label' => 'Autorisations',
-                'choices' => $choix
+                'choices' => $choix,
+                'disabled' => !$options['droit_gt'],
             ])
             ->add('departement', EntityType::class,
                 ['label' => 'Spécialité',
