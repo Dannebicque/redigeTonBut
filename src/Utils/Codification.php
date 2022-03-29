@@ -40,7 +40,7 @@ class Codification
         }
 
         if ($apcSae->getStage() === true) {
-            $texte =  'STAGE'.self::codeParcoursSae($parcours);
+            $texte =  'STAGE.'.self::codeParcoursSae($parcours);
             return substr($texte, 0, -1);
         }
         return 'SAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).self::codeSurDeuxChiffres($apcSae->getOrdre());
