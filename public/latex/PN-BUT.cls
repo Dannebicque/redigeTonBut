@@ -3,10 +3,10 @@
 
 %%%  Chargement de la classe article, avec transfert d'options
 \PassOptionsToClass{a4paper,10pt,titlepage}{article} % format a4paper par défaut
-\DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
 \ProcessOptions
 
-\LoadClass{book}
+\LoadClass[oneside]{book}
 
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[cyr]{aeguill}
@@ -21,7 +21,7 @@
 %% choix de la fonte de caractères
 \usepackage{helvet}
 \renewcommand{\familydefault}{\sfdefault}
-
+\renewcommand{\headrulewidth}{0pt}
 
 
 
@@ -66,17 +66,15 @@
 \newpage
 }
 
-\RequirePackage{minitoc}
-
-\def\PageDeGrade#1{\ifx}
+%\def\PageDeGrade#1{\ifx}
 %%%  Destination de l'article (proposé pour une conf, une revue...)
 
-\def\Destination#1{\ifx{#1}{}\gdef\@Destination{}%
-\else\gdef\@Destination{#1}\fi}
+%\def\Destination#1{\ifx{#1}{}\gdef\@Destination{}%
+%\else\gdef\@Destination{#1}\fi}
 
 %%%   Destination vide par défaut
 
-\Destination{}
+%\Destination{}
 
 %%%   Auteur par défaut, pour eviter de recopier a chaque fois
 

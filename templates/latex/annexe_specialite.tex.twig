@@ -10,7 +10,7 @@
 \usepackage{xcolor}
 \SetWatermarkColor{gray!20}
 \SetWatermarkFontSize{1.5cm}
-\SetWatermarkText{Travail en cours. Non validé par la CCN}
+\SetWatermarkText{Validé CCN. \\ En attente de validation CNESER}
 %% fin filigrane
 \usepackage{parskip}
 \usepackage{pdflscape} %% éventuellement \usepackage{pdflscape}
@@ -20,95 +20,155 @@
 http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|latex_purge|raw }}}
 \fancyfoot[R]{\thepage}
 
+\makeatletter
+\let\ps@plain=\ps@fancy
+\makeatother
+
 \begin{document}
 \renewcommand{\contentsname}{Sommaire}
 
-    \newgeometry{margin=0in} %pour enlever les marges dans la page de titre
-    \begin{titlepage}
-        \begin{center}
-            \includegraphics[width=19cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}
-        \end{center}
-    \end{titlepage}
+\newgeometry{margin=0in} %pour enlever les marges dans la page de titre
+\begin{titlepage}
+\begin{center}
+\includegraphics[width=19.7cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}
+\end{center}
+\end{titlepage}
+\setcounter{page}{2}
+\restoregeometry
 
-    \restoregeometry
+\tableofcontents
 
-    \tableofcontents
-    \newpage
+\part{La formation B.U.T. {{ departement.libelle|latex_purge|raw }} et ses parcours}
+
+Ce document présente le programme national du B.U.T. {{ departement.libelle|latex_purge|raw }} et complète l'annexe 1
+ de l'arrêté relatif aux programmes nationaux de la licence professionnelle -- bachelor universitaire de technologie.
+
+\section{Objectifs de la formation}
+{{ departement.textePresentation|markdown_to_latex }}
+%% Affiche le S1/S2 si c'est un type 1 ou 2
+
+{% for parcours in departement.apcParcours %}
+\subsection{Le parcours : {{ parcours.libelle|latex_purge }}}
+
+{{ parcours.textePresentation|markdown_to_latex }}
+
+{% if parcours.modalitesParticulieres != null and parcours.modalitesParticulieres|trim != '' %}
+{{ parcours.modalitesParticulieres|markdown_to_latex }}
+{% endif %}
+{% endfor %}
+
+\part{Référentiel de compétences}
+{{ include('latex/_referentiel_competence.tex.twig') }}
 
 
-    \part{La formation B.U.T. {{ departement.libelle|latex_purge|raw }} et ses parcours}
+\part{R\'eférentiel de formation}
+\chapter{Cadre général}
+{{ include('latex/_cadre_general.tex.twig') }}
 
-    Ce document présente le programme national du B.U.T {{ departement.libelle|latex_purge|raw }} et complète l'annexe 1 de l'arrêté relatif aux programmes nationaux de la licence professionnelle- bachelor universitaire de technologie.
+{% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
+\chapter{Structure générale des six semestres de formation}
 
-    \section{Objectifs de la formation}
-    {{ departement.textePresentation|markdown_to_latex }}
-    %% Affiche le S1/S2 si c'est un type 1 ou 2
-    {% for parcours in departement.apcParcours %}
-            {% if parcours.textePresentation != '' %}\\{% endif %}
-        {{ parcours.textePresentation|markdown_to_latex }}
-    {% endfor %}
+%% Tableau structurel
+\begin{landscape}
+\begin{center}
+%%si type 1 ou 2
+\includegraphics[scale=0.8]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-structure.pdf}' }}
+\end{center}
+\end{landscape}
 
-    \part{Référentiel de compétences}
-    \newpage
-    {{ include('latex/_referentiel_competence.tex.twig') }}
-    \newpage
+%%
+%% Partie commune BUT1 si type 1 ou 2.
+{{ include('latex/_referentiel_formation_but_1.tex.twig') }}
+{% endif %}
 
- \part{R\'eférentiel de formation}
-   \chapter{Cadre général}
-    {{ include('latex/_cadre_general.tex.twig') }}
-      \newpage
-
-   \chapter{Structure générale des six semestres de formation}
-
- %% Tableau structurel
-  \begin{landscape}
-  \begin{center}
-  %%si type 1 ou 2
-        \includegraphics[scale=0.8]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-structure.pdf}' }}
-     \end{center}
-    \end{landscape}
-    \newpage
-
-    {% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
-        %%
-    %% Partie commune BUT1 si type 1 ou 2.
-        {{ include('latex/_referentiel_formation_but_1.tex.twig') }}
-    {% endif %}
-
-    {% for parcours in departement.apcParcours %}
+{% for parcours in departement.apcParcours %}
 
 %%
 %% on commence un parcours
 %%
-                \chapter{Parcours : {{ parcours.libelle|latex_purge }}}
+\chapter{Parcours : {{ parcours.libelle|latex_purge }}}
 
 {% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
-    {% for semestre in departement.semestres|filter(semestre => semestre.ordreLmd > 2) %}
-        \section{Semestre {{semestre.ordreLmd}}}
-        \newpage
-         \subsection{Tableau croisé}
-{# todo: Ajouter une phrase... #}
+{% for semestre in departement.semestres|filter(semestre => semestre.ordreLmd > 2) %}
+\section{Semestre {{semestre.ordreLmd}}}
+\subsection{Tableau croisé}
 
-     \begin{center}
-        \includegraphics[width=19cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre
-        .id~'-'~parcours.id~'.pdf}' }}
-    \end{center}
+Ce tableau explicite les correspondances entre les compétences, les apprentissages critiques, les SAÉ et les ressources programmés dans le semestre.
 
-    \newpage
-        \subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
+Les SAÉ et les ressources ainsi identifiées pour chaque UE participent à son obtention, et en ce sens doivent faire l’objet d’une évaluation, à l’exception de la démarche portfolio des semestres impairs.
 
-        {% for sae in saes[semestre.id][parcours.id] %}
-        {{ include('latex/sae.tex.twig') }}
-        \newpage
-        {% endfor %}
+Ce tableau détaille par ailleurs la répartition du volume horaire global des heures d’enseignement encadré de chaque semestre, à savoir :
+\begin{itemize}
+\item[--] le volume horaire alloué à l’ensemble des SAÉ ;
+\item[--] le volume de chaque ressource définie nationalement dont les heures TP ;
+\item[--] le volume horaire, dont les heures TP, relevant d’une partie de l’adaptation locale et pouvant être affecté de manière non exclusive soit aux SAÉ, soit aux ressources définies nationalement ou localement.
+\end{itemize}
 
-        \subsection{Fiches Ressources}
-        {% for ressource in ressources[semestre.id][parcours.id] %}
-        {{ include('latex/ressource.tex.twig') }}
-        \newpage
-        {% endfor %}
+\begin{center}
+\includegraphics[width=19.7cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre.id~'-'~parcours.id~'.pdf}' }}
+\end{center}
+\newpage
+\subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
 
-    {% endfor %}
+{% for sae in saes[semestre.id][parcours.id] %}
+{{ include('latex/sae.tex.twig') }}
+\newpage
+{% endfor %}
+
+\subsection{Fiches Ressources}
+{% for ressource in ressources[semestre.id][parcours.id] %}
+{{ include('latex/ressource.tex.twig') }}
+\newpage
+{% endfor %}
+
+{% endfor %}
+{% else %}
+
+\section{Structure générale des six semestres du parcours {{ parcours.libelle|latex_purge }}}
+
+%% Tableau structurel
+\begin{landscape}
+\begin{center}
+%%si type 3 / Structure.
+ \includegraphics[scale=0.8]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-structure-'~parcours.id~'.pdf}' }}
+\end{center}
+\end{landscape}
+
+{#  type 3 #}
+{% for key in semestres[parcours.id] %}
+{% set semestre = key.semestre %}
+\section{Semestre {{ semestre.ordreLmd }}}
+\subsection{Tableau croisé}
+
+Ce tableau explicite les correspondances entre les compétences, les apprentissages critiques, les SAÉ et les ressources programmés dans le semestre.
+
+Les SAÉ et les ressources ainsi identifiées pour chaque UE participent à son obtention, et en ce sens doivent faire l’objet d’une évaluation, à l’exception de la démarche portfolio des semestres impairs.
+
+Ce tableau détaille par ailleurs la répartition du volume horaire global des heures d’enseignement encadré de chaque semestre, à savoir :
+\begin{itemize}
+\item[--] le volume horaire alloué à l’ensemble des SAÉ ;
+\item[--] le volume de chaque ressource définie nationalement dont les heures TP ;
+\item[--] le volume horaire, dont les heures TP, relevant d’une partie de l’adaptation locale et pouvant être affecté de manière non exclusive soit aux SAÉ, soit aux ressources définies nationalement ou localement.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=19.7cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre.id~'-'~parcours.id~'.pdf}' }}
+\end{center}
+\newpage
+\subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
+
+{% for sae in key.saes %}
+{{ include('latex/sae.tex.twig') }}
+\newpage
+{% endfor %}
+
+\subsection{Fiches Ressources}
+{% for ressource in key.ressources %}
+{{ include('latex/ressource.tex.twig') }}
+\newpage
+{% endfor %}
+
+{% endfor %}
 {% endif %}
 {% endfor %}{# parcours #}
 

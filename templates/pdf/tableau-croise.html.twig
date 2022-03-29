@@ -84,8 +84,9 @@
             {% endfor %}
             <td class="text-center">{{ donnees[semestre.ordreLmd]['totalDontTpRessources'] }}</td>
         </tr>
+
         <tr>
-            <th colspan="2">Adaptation Locale</th>
+            <th colspan="2">Adaptation Locale (SAÉ)</th>
             <td colspan="{{ saes|length }}" class="text-center tdsae">{{ donnees[semestre
                 .ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
             <td class="text-center" colspan="{{ ressources|length }}">
@@ -94,12 +95,12 @@
             <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
         </tr>
         <tr>
-            <th colspan="2">Adaptation Locale</th>
+            <th colspan="2">Adaptation Locale <br>(Ressources ou SAÉ)</th>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
             <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
         </tr>
         <tr>
-            <th colspan="2">Dont TP</th>
+            <th colspan="2">TP Adaptation locale</th>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
             <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
         </tr>

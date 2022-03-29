@@ -133,7 +133,7 @@ class GenerePdfTableaux
 
     private function generePdfCroise($tableauCroise, $donnees, $name, Semestre $semestre, ?ApcParcours $parcours = null)
     {
-       // $this->genereImage($tableauCroise->getRessources(), $tableauCroise->getSaes(), $this->departement);
+        $this->genereImage($tableauCroise->getRessources(), $tableauCroise->getSaes(), $this->departement);
         $html = $this->twig->render('pdf/tableau-croise.html.twig', [
             'linuxpath' => '/Users/davidannebicque/htdocs/redigeTonBut/public/',
             'departement' => $this->departement,
@@ -151,6 +151,7 @@ class GenerePdfTableaux
         $output = new PdfResponse(
             $this->knpSnappyPdf->getOutputFromHtml($html, [
                 'enable-local-file-access' => true,
+                'zoom' => 0.75,
             ]),
             $name
         );
@@ -162,7 +163,14 @@ class GenerePdfTableaux
     {
         foreach ($getRessources as $ressource) {
             $texte = $ressource->getCodeMatiere() . ' ' . $ressource->getLibelle();
-            $texte = $this->adaptTexte($texte);
+            if (strlen($texte) < 30) {
+                $size = 10;
+            } else {
+                $size = 8;
+            }
+
+            $texte = $this->adaptTexte($texte, $size);
+
             $response = new Response();
             $response->headers->set('Content-Type', 'image/png');
             $im = imagecreate(50, 200);
@@ -170,15 +178,20 @@ class GenerePdfTableaux
             $noir = imagecolorallocate($im, 0, 0, 0);
             imagefill($im, 0, 0, $fond);
             $font = $this->kernel->getProjectDir() . '/public/arial.ttf';
-            imagettftext($im, 10, 90, 15, 190, $noir, $font, $texte);
+            imagettftext($im, $size, 90, 15, 190, $noir, $font, $texte);
             imagepng($im, $this->kernel->getProjectDir() . '/public/latex/'.$departement->getNumeroAnnexe().'/tableaux/ressource_' . $ressource->getId() . '.png');
             imagedestroy($im);
         }
 
         foreach ($getSaes as $sae) {
             $texte = $sae->getCodeMatiere() . ' ' . $sae->getLibelle();
-            $texte = $this->adaptTexte($texte);
-            $response = new Response();
+            if (strlen($texte) < 30) {
+                $size = 10;
+            } else {
+                $size = 8;
+            }
+
+            $texte = $this->adaptTexte($texte, $size);            $response = new Response();
             $response->headers->set('Content-Type', 'image/png');
             $im = imagecreate(50, 200);
             $fond = imagecolorallocate($im, 173, 216, 230);
@@ -191,9 +204,13 @@ class GenerePdfTableaux
         }
     }
 
-    private function adaptTexte(string $texte)
+    private function adaptTexte(string $texte, int $size)
     {
-        return wordwrap($texte, 30, "\n", false);
+        if ($size === 10) {
+            return wordwrap($texte, 30, "\n", false);
+        }
+        return wordwrap($texte, 38, "\n", false);
+
     }
 
 }

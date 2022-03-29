@@ -360,10 +360,10 @@ class ApcSae extends AbstractMatiere
         return $slugger->slug($this->getCodeMatiere());
     }
 
-    public function isGoodParcours(?ApcParcours $apcParcours): bool
+    public function isGoodParcours(?ApcParcours $apcParcours = null): bool
     {
         if ($apcParcours === null) {
-            return false;
+            return true;
         }
         if ($this->apcSaeParcours->count() === 0) {
             //pas de parcours dans la SAE, donc tous les parcours

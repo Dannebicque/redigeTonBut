@@ -413,8 +413,32 @@ class ApcRessource extends AbstractMatiere
         return $slugger->slug($this->getCodeMatiere());
     }
 
-    public function isGoodParcours(?ApcParcours $apcParcours): bool
+    public function isGoodParcours(?ApcParcours $apcParcours = null): bool
     {
+        if ($apcParcours === null) {
+            return true;
+        }
+        if ($this->apcRessourceParcours->count() === 0) {
+            //pas de parcours dans la SAE, donc tous les parcours
+            return true;
+        }
+
+        foreach ($this->apcRessourceParcours as $apcRessourceParcours) {
+            if ($apcRessourceParcours->getParcours()->getId() === $apcParcours->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isGoodParcoursAndSemestre(Semestre $semestre, ?ApcParcours $apcParcours = null): bool
+    {
+        if ($semestre->getId() !== $this->getSemestre()?->getId()) {
+            //pas le semestre en cours on supprime.
+            return false;
+        }
+
         if ($apcParcours === null) {
             return true;
         }

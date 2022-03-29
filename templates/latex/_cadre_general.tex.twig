@@ -1,5 +1,5 @@
  \section{L'alternance}
-                Le diplôme de B.U.T {{departement.sigle}} , quand il est préparé en alternance, s'appuie sur le même
+                Le diplôme de B.U.T. {{ departement.libelle|latex_purge|raw }}, quand il est préparé en alternance, s'appuie sur le même
                 référentiel de compétences et sur le même référentiel de formation avec un principe de
                 réduction du volume horaire global (heures de formation et heures de projet) de {{ departement
                 .altBut1}}\% en première année, de {{ departement.altBut2}}\% en deuxième
@@ -16,17 +16,16 @@
                  combinaison de ressources pertinentes et cohérentes avec les objectifs ciblés.
                 L'enjeu d'une SAÉ est ainsi multiple :
                 \begin{itemize}
-                    \item Participer au développement de la compétence ;
-                    \item Soutenir l'apprentissage et la maîtrise des ressources ;
-                    \item Intégrer l'autoévaluation par l'étudiant ;
-                    \item Permettre une individualisation des apprentissages.
+                    \item[--] Participer au développement de la compétence ;
+                    \item[--] Soutenir l'apprentissage et la maîtrise des ressources ;
+                    \item[--] Intégrer l'autoévaluation par l'étudiant ;
+                    \item[--] Permettre une individualisation des apprentissages.
                 \end{itemize}
 
                 Au cours des différents semestres de formation, l'étudiant sera confronté à plusieurs SAÉ qui lui permettront de développer et de mettre en œuvre chaque niveau de compétence ciblé dans le respect des composantes essentielles du référentiel de compétences et en cohérence avec les apprentissages critiques.
 
                 Les SAÉ peuvent mobiliser des heures issues des {% if departement.typeDepartement == 'tertiaire' %}1800{%
-                else%}2000{% endif%} heures de formation et des 600 heures de
-                projet. Les SAÉ prennent la forme de dispositifs pédagogiques variés, individuels ou collectifs, organisés dans un cadre universitaire ou extérieur, tels que des ateliers, des études, des challenges, des séminaires, des immersions au sein d'un environnement professionnel, des stages, etc.
+                else%}2000{% endif%} heures de formation et des 600 heures de projet. Les SAÉ prennent la forme de dispositifs pédagogiques variés, individuels ou collectifs, organisés dans un cadre universitaire ou extérieur, tels que des ateliers, des études, des challenges, des séminaires, des immersions au sein d'un environnement professionnel, des stages, etc.
 
                 \section{La démarche portfolio}
 
@@ -43,26 +42,27 @@
                 La démarche portfolio est un processus continu d'autoévaluation qui nécessite un accompagnement par l'ensemble des acteurs de l'équipe pédagogique. L'étudiant est guidé pour comprendre les éléments du référentiel de compétences, ses modalités d'appropriation, les mises en situation correspondantes et les critères d'évaluation.
 
                 \section{Le projet personnel et professionnel}
-                Présent à chaque semestre de la formation et en lien avec les réflexions de l'équipe pédagogique, le projet personnel et professionnel est un élément structurant qui permet à l'étudiant d'être l'acteur de sa formation, d'en comprendre et de s'en approprier les contenus, les objectifs et les compétences ciblées. Il assure également un accompagnement de l'étudiant dans sa propre définition d'une stratégie personnelle et dans la construction de son identité professionnelle, en cohérence avec les métiers et les situations professionnelles couverts par la spécialité “Métiers du Multimédia et de l'Internet” et les parcours associés. Enfin, le PPP prépare l'étudiant à évoluer tout au long de sa vie professionnelle, en lui fournissant des méthodes d'analyse et d'adaptation aux évolutions de la société, des métiers et des compétences.
+
+                Présent à chaque semestre de la formation et en lien avec les réflexions de l'équipe pédagogique, le projet personnel et professionnel est un élément structurant qui permet à l'étudiant d'être l'acteur de sa formation, d'en comprendre et de s'en approprier les contenus, les objectifs et les compétences ciblées. Il assure également un accompagnement de l'étudiant dans sa propre définition d'une stratégie personnelle et dans la construction de son identité professionnelle, en cohérence avec les métiers et les situations professionnelles couverts par la spécialité "{{ departement.libelle|latex_purge|raw }}" et les parcours associés. Enfin, le PPP prépare l'étudiant à évoluer tout au long de sa vie professionnelle, en lui fournissant des méthodes d'analyse et d'adaptation aux évolutions de la société, des métiers et des compétences.
 
                 Par sa dimension personnelle, le PPP vise à :
                 \begin{itemize}
-                    \item Induire chez l'étudiant un questionnement sur son projet et son parcours de formation ;
-                    \item Lui donner les moyens d'intégrer les codes du monde professionnel et socio-économique ;
-                    \item L'aider à se définir et à se positionner ;
-                    \item Le guider dans son évolution et son devenir ;
-                    \item Développer sa capacité d'adaptation.
+                    \item[--] Induire chez l'étudiant un questionnement sur son projet et son parcours de formation ;
+                    \item[--] Lui donner les moyens d'intégrer les codes du monde professionnel et socio-économique ;
+                    \item[--] L'aider à se définir et à se positionner ;
+                    \item[--] Le guider dans son évolution et son devenir ;
+                    \item[--] Développer sa capacité d'adaptation.
                 \end{itemize}
 
                 Au plan professionnel, le PPP permet :
                 \begin{itemize}
-                    \item Une meilleure appréhension des objectifs de la formation, du référentiel de compétences et du
+                    \item[--] Une meilleure appréhension des objectifs de la formation, du référentiel de compétences et du
                     référentiel de formation ;
-                    \item Une connaissance exhaustive des métiers et perspectives professionnelles spécifiques à la
+                    \item[--] Une connaissance exhaustive des métiers et perspectives professionnelles spécifiques à la
                     spécialité et ses parcours ;
-                    \item L'usage contextualisé des méthodes et des outils en lien avec la démarche de recrutement,
+                    \item[--] L'usage contextualisé des méthodes et des outils en lien avec la démarche de recrutement,
                     notamment dans le cadre d'une recherche de contrat d'alternance ou de stage ;
-                    \item La construction d'une identité professionnelle au travers des expériences de mise en situation professionnelle vécues pendant la formation.
+                    \item[--] La construction d'une identité professionnelle au travers des expériences de mise en situation professionnelle vécues pendant la formation.
                 \end{itemize}
 
                 Parce qu'ils participent tous deux à la professionnalisation de l'étudiant et en cela sont en dialogue, le PPP et la démarche portfolio ne doivent pourtant être confondus. Le PPP répond davantage à un objectif d'accompagnement qui dépasse le seul cadre des compétences à acquérir, alors que la démarche portfolio répond fondamentalement à des enjeux d'évaluation des compétences.

@@ -1,23 +1,35 @@
 \chapter{Référentiel de la première année du B.U.T. commun à tous les parcours}
-\dominitoc
+
+{% for semestre in departement.semestres|filter(semestre => (semestre.ordreLmd == 1 or semestre.ordreLmd == 2)) %}
+\section{Semestre {{semestre.ordreLmd}}}
+\subsection{Tableau croisé}
+
+Ce tableau explicite les correspondances entre les compétences, les apprentissages critiques, les SAÉ et les ressources programmés dans le semestre.
+
+Les SAÉ et les ressources ainsi identifiées pour chaque UE participent à son obtention, et en ce sens doivent faire l’objet d’une évaluation, à l’exception de la démarche portfolio des semestres impairs.
+
+Ce tableau détaille par ailleurs la répartition du volume horaire global des heures d’enseignement encadré de chaque semestre, à savoir :
+\begin{itemize}
+\item[--] le volume horaire alloué à l’ensemble des SAÉ ;
+\item[--] le volume de chaque ressource définie nationalement dont les heures TP ;
+\item[--] le volume horaire, dont les heures TP, relevant d’une partie de l’adaptation locale et pouvant être affecté de manière non exclusive soit aux SAÉ, soit aux ressources définies nationalement ou localement.
+\end{itemize}
 \newpage
- {% for semestre in departement.semestres|filter(semestre => (semestre.ordreLmd == 1 or semestre.ordreLmd == 2)) %}
-    \section{Semestre {{semestre.ordreLmd}}}
-    \subsection{Tableau croisé}
-     \begin{center}
-        \includegraphics[width=19cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre.id~'.pdf}' }}
-    \end{center}
-    \newpage
-    \subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
 
-    {% for sae in saes[semestre.id] %}
-        {{ include('latex/sae.tex.twig') }}
-        \newpage
-    {% endfor %}
+\begin{center}
+\includegraphics[width=19cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre.id~'.pdf}' }}
+\end{center}
+\newpage
+\subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
 
-    \subsection{Fiches Ressources}
-    {% for ressource in ressources[semestre.id] %}
-        {{ include('latex/ressource.tex.twig') }}
-        \newpage
-    {% endfor %}
+{% for sae in saes[semestre.id] %}
+{{ include('latex/sae.tex.twig', {parcours: null}) }}
+\newpage
+{% endfor %}
+
+\subsection{Fiches Ressources}
+{% for ressource in ressources[semestre.id] %}
+{{ include('latex/ressource.tex.twig', {parcours: null}) }}
+\newpage
+{% endfor %}
 {% endfor %}

@@ -7,34 +7,38 @@
 {% block styles %}
     @page { size: A4; }
 
-body {
+    body {
     font-size: 14px;
-}
+    }
 
-.table th {
+    .table th {
     padding: 5px;
-}
+    }
 {% endblock %}
 
 {% block content %}
     <h1>Tableau de structure pour le B.U.T {{ departement.libelle }}</h1>
     {% if parcours != null %}
-    <h2>Pour le parcours : {{ parcours.libelle }}</h2>
+        <h2>Pour le parcours : {{ parcours.libelle }}</h2>
     {% endif %}
     <table class="table table-bordered table-sm">
         <thead>
         <tr>
             <th style="height: 40px; font-weight: bold; background-color: #253a52; color: white">Semestres</th>
             {% for i in 1..6 %}
-                <th class="col-semestre text-center" style="height: 30px; font-weight: bold;background-color: #253a52; color: white">S{{ i }}</th>
+                <th class="col-semestre text-center" style="height: 30px; font-weight: bold;background-color: #253a52; color: white">
+                    S{{ i }}</th>
             {% endfor %}
-            <th class="col-total text-center" style="height: 30px; font-weight: bold;background-color: #253a52; color: white">TOTAL</th>
+            <th class="col-total text-center" style="height: 30px; font-weight: bold;background-color: #253a52; color: white">
+                TOTAL
+            </th>
         </tr>
         </thead>
         <tbody>
         <tr class="lignepubliee">
             <th class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
-            white">Nbre d'heures d'enseignement (ressources + SAé)</th>
+            white">Nbre d'heures d'enseignement (ressources + SAé)
+            </th>
             {% for i in 1..6 %}
                 <td class="text-center">
                     {{ donnees[i].nbHeuresRessourcesSae }}
@@ -63,7 +67,8 @@ body {
 
         <tr class="lignepubliee">
             <th class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
-            white">Nbre d'heures d'enseignement définies localement</th>
+            white">Nbre d'heures d'enseignement définies localement
+            </th>
             {% for i in 1..6 %}
                 <td class="text-center">
                     {{ donnees[i].nbHeuresEnseignementLocale }}
@@ -75,7 +80,8 @@ body {
         </tr>
         <tr class="lignepubliee">
             <th class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
-            white">Nbre heures d'enseignement SAÉ définies localement</th>
+            white">Nbre heures d'enseignement SAÉ définies localement
+            </th>
             {% for i in 1..6 %}
                 <td class="text-center">
                     {{ donnees[i].nbHeuresEnseignementSaeLocale }}
@@ -86,7 +92,8 @@ body {
         </tr>
         <tr class="lignepubliee">
             <th class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
-            white">Nbre heures d'enseignement à définir localement dans les Ressources ou les SAÉ</th>
+            white">Nbre heures d'enseignement à définir localement dans les Ressources ou les SAÉ
+            </th>
             {% for i in 1..6 %}
                 <td class="text-center">
                     {{ donnees[i].nbHeuresEnseignementRessourceLocale }}
@@ -97,7 +104,8 @@ body {
 
         <tr class="lignepubliee">
             <th class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
-            white">Nbre heures d'enseignement des ressources définies nationalement</th>
+            white">Nbre heures d'enseignement des ressources définies nationalement
+            </th>
             {% for i in 1..6 %}
                 <td class="text-center">
                     {{ donnees[i].nbHeuresEnseignementRessourceNational }}
@@ -109,31 +117,35 @@ body {
 
         <tr>
             <th class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
-            white">Nbre heures de tp définies nationalement</th>
+            white">Nbre heures de tp définies nationalement
+            </th>
             {% for i in 1..6 %}
                 <td class="text-center">
                     {{ donnees[i].nbHeuresTpNational }}
                 </td>
             {% endfor %}
-            <td class="text-center">
+            <td class="text-center" rowspan="2">
                 {{ donnees.departement.totalTp }}
             </td>
         </tr>
-{#        <tr>#}
-{#            <th class="text-left">Nbre heures de tp à définir localement</th>#}
-{#            {% for i in 1..6 %}#}
-{#                <td class="text-center">#}
-{#                    {{ donnees[i].nbHeuresTpLocale }}#}
-{#                </td>#}
-{#            {% endfor %}#}
-{#        </tr>#}
+        <tr>
+            <th class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
+            white">Nbre heures de tp à définir localement
+            </th>
+            {% for i in 1..6 %}
+                <td class="text-center">
+                    {{ donnees[i].nbHeuresTpLocale }}
+                </td>
+            {% endfor %}
+        </tr>
 
         <tr>
             <td colspan="8">&nbsp;</td>
         </tr>
         <tr class="lignepubliee">
             <th class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
-            white">Nbre d'heures de projet tutoré</th>
+            white">Nbre d'heures de projet tutoré
+            </th>
             {% for i in 1..6 %}
                 <td class="text-center">
                     {{ donnees[i].nbHeuresProjet }}
@@ -145,14 +157,15 @@ body {
         </tr>
         <tr class="lignepubliee">
             <th scope="row" class="text-left" style="height: 30px; font-weight: bold; background-color: #253a52; color:
-            white">Nbre heures de projet/année min 150 h / max 250h</th>
+            white">Nbre heures de projet/année min 150 h / max 250h
+            </th>
             {% for i in range(1, 6, 2) %}
                 <td class="text-center" colspan="2">
                     {{ donnees[i].nbHeuresProjet + donnees[i + 1].nbHeuresProjet }}
                 </td>
             {% endfor %}
             <td class="text-center">
-            {{ donnees.departement.nbHeuresProjet }}
+                {{ donnees.departement.nbHeuresProjet }}
             </td>
         </tr>
 
@@ -167,17 +180,26 @@ body {
             </th>
             {% for i in 1..6 %}
                 <td class="text-center">
-                    {% if donnees[i].nbSemainesStageMin ==0 and donnees[i].nbSemainesStageMax == 0%}
-                    0
-                    {% else %}
-                    {{ donnees[i].nbSemainesStageMin }} à
-                    {{ donnees[i].nbSemainesStageMax }}
-                        {% endif %}
+                    {% if donnees[i].nbSemainesStageMin == 0 and donnees[i].nbSemainesStageMax == 0 %}
+                        0
+                    {% elseif donnees[i].nbSemainesStageMin == donnees[i].nbSemainesStageMax %}
+                        {{ donnees[i].nbSemainesStageMin }}
+                        {% else %}
+                            {{ donnees[i].nbSemainesStageMin }} à
+                            {{ donnees[i].nbSemainesStageMax }}
+                    {% endif %}
                 </td>
             {% endfor %}
             <td class="text-center">
-                {{ donnees.departement.nbSemainesStageMin < 22 ? 22 : donnees.departement.nbSemainesStageMin }} à
-                {{ donnees.departement.nbSemainesStageMax > 26 ? 26 : donnees.departement.nbSemainesStageMax }}
+                {%  set min = donnees.departement.nbSemainesStageMin < 22 ? 22 : donnees.departement
+                               .nbSemainesStageMin %}
+                {%  set max = donnees.departement.nbSemainesStageMax > 26 ? 26 : donnees.departement
+                             .nbSemainesStageMax %}
+                {% if min == max %}
+                {{ max }}
+                {% else %}
+                {{ min }} à {{ max }}
+                {% endif %}
             </td>
         </tr>
         </tbody>

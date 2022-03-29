@@ -10,60 +10,70 @@
 \textbf{Comp\'etence cibl\'ee :}
 {% endif %}
 
-{% for competence in sae.apcSaeCompetences %}
+{% set itemize = false %}
+{% for competence in sae.apcSaeCompetences|filter(competence => competence.competence.isGoodParcours
+(parcours)) %}
 {% if loop.first %}
 \begin{itemize}
+{% set itemize = true %}
 {% endif %}
-\item {{ competence.competence.libelle|latex_purge|raw }}
-{% if loop.last %}
+\item[--] {{ competence.competence.libelle|latex_purge|raw }}
+
+{% endfor %}
+{% if itemize %}
 \end{itemize}
 {% endif %}
-{% endfor %}
+{% set itemize = false %}
 
 \textbf{Objectifs et probl\'ematique professionnelle :}
 
 {{ sae.objectifs != null ? sae.objectifs|markdown_to_latex : '' }}
 
+{% if sae.stage == false %}
 \textbf{Descriptif g\'en\'erique : }
 
 {{ sae.description != null ? sae.description|markdown_to_latex : '' }}
+{% endif %}
 
+{% if sae.portfolio == false %}
 {%  if sae.apcSaeApprentissageCritiques|length > 1 %}
 \textbf{Apprentissages critiques : }
 {% else %}
 \textbf{Apprentissage critique : }
 {% endif %}
 
-{% for ac in sae.apcSaeApprentissageCritiques %}
- {% if loop.first %}
-\begin{itemize}
-{% endif %}
-\item {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
-{% if loop.last %}
-\end{itemize}
-{% endif %}
-{% endfor %}
-
-\textbf{Ressources mobilis\'ees et combin\'ees : }
-
-{% for ressource in sae.apcSaeRessources %}
+{% for ac in sae.apcSaeApprentissageCritiques|filter(ac => ac.apprentissageCritique.competence.isGoodParcours(parcours)) %}
 {% if loop.first %}
 \begin{itemize}
+{% set itemize = true %}
 {% endif %}
-{% if parcours is defined %}
-{% if ressource.ressource.isGoodParcours(parcours) %}
-\item {{ ressource.ressource.codeMatiere }} | {{ ressource.ressource.libelle|latex_purge|raw }}
-{% endif %}
-{% else %}
-\item {{ ressource.ressource.codeMatiere }} | {{ ressource.ressource.libelle|latex_purge|raw }}
-{% endif %}
-{% if loop.last %}
+\item[--] {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
+
+{% endfor %}
+{% if itemize%}
 \end{itemize}
 {% endif %}
+{% endif %}
+{% set itemize = false %}
+
+{% for ressource in sae.apcSaeRessources|filter(ressource => ressource.ressource.isGoodParcours(parcours)) %}
+{% if loop.first %}
+\textbf{Ressources mobilis\'ees et combin\'ees : }
+
+\begin{itemize}
+{% set itemize = true %}
+{% endif %}
+\item[--] {{ ressource.ressource.codeMatiere }} | {{ ressource.ressource.libelle|latex_purge|raw }}
+
 {% endfor %}
+{% if itemize%}
+\end{itemize}
+{% endif %}
+{% set itemize = false %}
 
-
+{% if sae.stage == false %}
 \textbf{Volume horaire : }
 
 Volume horaire : \`a d\'efinir localement par chaque IUT
+{% endif %}
 

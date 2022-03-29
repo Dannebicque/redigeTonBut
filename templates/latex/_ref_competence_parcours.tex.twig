@@ -1,31 +1,31 @@
 \section{Parcours : {{ parcours.libelle|latex_purge }} }
     \begin{center}
-        \includegraphics[width=20cm]{{'{'~departement
+        \includegraphics[width=19.7cm]{{'{'~departement
         .numeroAnnexe~'/ref-competences/page_1_garde_'~parcours.id~'.pdf}' }}
     \end{center}
     \newpage
 \begin{landscape}
     \begin{center}
-        \includegraphics[width=20cm]{{'{'~departement
+        \includegraphics[width=24cm]{{'{'~departement
         .numeroAnnexe~'/ref-competences/page_2_CompetencesComposantes_'~parcours.id~'.pdf}' }}
     \end{center}
     \newpage
 
     \begin{center}
-        \includegraphics[width=20cm]{{'{'~departement
+        \includegraphics[width=24cm]{{'{'~departement
         .numeroAnnexe~'/ref-competences/page_3_SituationProfessionnelles_'~parcours.id~'.pdf}' }}
     \end{center}
     \newpage
 
     \begin{center}
-        \includegraphics[width=20cm]{{'{'~departement
+        \includegraphics[width=24cm]{{'{'~departement
         .numeroAnnexe~'/ref-competences/page_4_PageNiveaux_'~parcours.id~'.pdf}' }}
     \end{center}
     \newpage
 
     {% for competence in competencesParcours[parcours.id] %}
         \begin{center}
-            \includegraphics[width=20cm]{{'{'~departement
+            \includegraphics[width=24cm]{{'{'~departement
         .numeroAnnexe~'/ref-competences/page_5_Competence_'~parcours.id~'_'~competence.id~'.pdf}' }}
         \end{center}
         \newpage

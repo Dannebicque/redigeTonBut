@@ -347,4 +347,26 @@ class ApcCompetence extends BaseEntity
     {
         return md5($this->libelle);
     }
+
+    public function isGoodParcours(?ApcParcours $apcParcours = null): bool
+    {
+        if ($apcParcours === null) {
+            return true;
+        }
+
+        if ($this->apcNiveaux->count() === 0) {
+            //pas de parcours dans la SAE, donc tous les parcours
+            return true;
+        }
+
+        foreach ($this->apcNiveaux as $apcNiveau) {
+            foreach ($apcNiveau->getApcParcoursNiveaux() as $parcours) {
+                if ($parcours->getParcours()->getId() === $apcParcours->getId()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

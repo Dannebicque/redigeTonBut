@@ -1,4 +1,4 @@
-echo "Mise à jour de la codification"
+#echo "Mise à jour de la codification"
 #bin/console app:update-codification-ref
 
 echo "Mise  à jour des fichier Latex"
