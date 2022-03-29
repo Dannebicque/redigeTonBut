@@ -14,7 +14,7 @@ class Codification
 {
     public static function codeRessource(ApcRessource $apcRessource, $parcours) : string
     {
-        return 'R'.$apcRessource->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursRessource($parcours).self::codeSurDeuxChiffres($apcRessource->getOrdre());
+        return 'R'.$apcRessource->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursRessource($parcours).'.'.self::codeSurDeuxChiffres($apcRessource->getOrdre());
     }
 
     public static function codeComposanteEssentielle(ApcComposanteEssentielle $apcComposanteEssentielle) : string
@@ -42,7 +42,7 @@ class Codification
         if ($apcSae->getStage() === true) {
             return 'STAGE'.self::codeParcoursSae($parcours);
         }
-        return 'SAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).self::codeSurDeuxChiffres($apcSae->getOrdre());
+        return 'SAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).'.'.self::codeSurDeuxChiffres($apcSae->getOrdre());
     }
 
     private static function codeSurDeuxChiffres(?int $ordre)
@@ -72,14 +72,14 @@ class Codification
     private static function codeParcoursSae($parcours)
     {
         if (count($parcours) === 1 && $parcours !== null) {
-            return $parcours[0]->getParcours()->getCode().'.';
+            return $parcours[0]->getParcours()->getCode();
         }
     }
 
     private static function codeParcoursRessource($parcours)
     {
         if (count($parcours) === 1 && $parcours !== null) {
-            return $parcours[0]->getParcours()->getCode().'.';
+            return $parcours[0]->getParcours()->getCode();
         }
     }
 
