@@ -51,9 +51,11 @@
 <h3>Ressources mobilisées et combinées</h3>
 <p>
     {% for ressource in ressources %}
+        <a href="{{ path('but_fiche_ressource', {apcRessource:ressource.ressource.id}) }}">
         <span class="badge bg-primary">
                     {{ ressource.ressource.display }}
                     </span>
+        </a>
     {% endfor %}
 </p>
 

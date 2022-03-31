@@ -19,14 +19,7 @@ class FichesExtension extends AbstractExtension
 
     public function keyWords($text)
     {
-        $t = explode(',', $text);
-        $html = '';
-        foreach ($t as $word) {
-            if ('' !== trim($word)) {
-                $html .= '<span class="badge badge-primary">' . $word . '</span>&nbsp;';
-            }
-        }
-
-        return $html;
+        $text = str_replace([', ', ';', ','], [' - ',' - ',' - '], $text);
+        return $text;
     }
 }

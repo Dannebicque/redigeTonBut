@@ -13,7 +13,7 @@
             {{ include('formation/apc_sae/_detail.html.twig') }}
         </div>
     </div>
-    {% if not is_granted('ROLE_GT') %}
+    {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
         <div class="card bg-warning text-white">
             <div class="card-body ">
                 {{ include('formation/apc_sae/_preconisation.html.twig') }}

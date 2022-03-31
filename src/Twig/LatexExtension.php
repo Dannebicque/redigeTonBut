@@ -27,8 +27,8 @@ class LatexExtension extends AbstractExtension
         $parse = new Parsedown();
         $text = $parse->text($text);
         $text = str_replace(
-            ['<em>','</em>','<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>','&', 'œ', '’','«','»', '°','\&lt;','%','→','…', '**Z**','\&quot;', '\&amp;','℃'],
-            ['','','',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item[--] ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\&', '\oe{}', '\'','\og','\fg ', '$ ^\circ$ ', '> ','\%','->','...','\mathbb{Z}','"','\&','$ ^\circ$C'], $text);
+            ['<em>','</em>','<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>','&', 'œ', '’','«','»', '°','\&lt;','%','→','…', 'ℤ','\&quot;', '\&amp;','℃'],
+            ['','','',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item[--] ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\&', '\oe{}', '\'','\og','\fg ', '$ ^\circ$ ', '> ','\%','->','...','$\mathbb{Z}$','"','\&','$ ^\circ$C'], $text);
         $text = str_replace('<ol start="', '\begin{enumerate}\setcounter{enumi}{', $text);
         $text = str_replace('">', '-1}', $text);
 
