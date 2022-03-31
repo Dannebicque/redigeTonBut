@@ -106,14 +106,6 @@
                     {% endfor %}
                 </div>
             </section>
-        {% else %}
-            <section class="scroll-section mb-2" id="export">
-                <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
-                <div class="d-grid">
-                <a href="" class="btn btn-success btn-outline d-block">Récupérer la version provisoire des PN, validés
-                                                                   par la CCN en attente de passage devant le CNESER.</a>
-                </div>
-            </section>
         {% endif %}
     {% endif %}
     {% if is_granted('ROLE_IUT') %}

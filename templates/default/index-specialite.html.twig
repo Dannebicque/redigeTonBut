@@ -4,6 +4,18 @@
 
 {% block content %}
     {% if is_granted('ROLE_IUT') %}
+        <section class="scroll-section mb-2" id="export">
+            <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
+            <div class="d-grid">
+                <a href="{{ asset('pn/PN-BUT-'~user_data.departement.sigle) }}" target="_blank" class="btn btn-success
+                btn-outline
+                d-block">Récupérer la
+                                                                                                     version
+                                                                                       provisoire des
+                                                                                  PN, validés
+                                                                       par la CCN en attente de passage devant le CNESER.</a>
+            </div>
+        </section>
         {% for annee in user_data.annees %}
             <section class="scroll-section" id="buttonTags">
             <h2 class="small-title">B.U.T. {{ annee.ordre }}</h2>
