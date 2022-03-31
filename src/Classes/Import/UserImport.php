@@ -70,19 +70,22 @@ class UserImport
                 $user->setPassword($this->encoder->hashPassword($user, $password));
                 $this->entityManager->persist($user);
             } else {
-                $user->setNom(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
-                $user->setPrenom(trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue()));
-                $user->setCivilite(trim($sheet->getCellByColumnAndRow(9, $ligne)->getValue()));
-                $user->setEmail($email);
-                $user->setLogin(trim($sheet->getCellByColumnAndRow(7, $ligne)->getValue()));
-                $user->setActif(true);
-                $user->setIsVerified(true);
-                $user->setRoles(['ROLE_IUT']);
-                $password = trim($sheet->getCellByColumnAndRow(8, $ligne)->getValue());
-               // $user->setPassword($password);
+                if ($user->getRoles()[0] !== 'ROLE_IUT') {
 
-                $user->setPassword($this->encoder->hashPassword($user, $password));
-                $this->entityManager->persist($user);
+                    $user->setNom(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
+                    $user->setPrenom(trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue()));
+                    $user->setCivilite(trim($sheet->getCellByColumnAndRow(9, $ligne)->getValue()));
+                    $user->setEmail($email);
+                    $user->setLogin(trim($sheet->getCellByColumnAndRow(7, $ligne)->getValue()));
+                    $user->setActif(true);
+                    $user->setIsVerified(true);
+                    $user->setRoles(['ROLE_IUT']);
+                    $password = trim($sheet->getCellByColumnAndRow(8, $ligne)->getValue());
+                    // $user->setPassword($password);
+
+                    $user->setPassword($this->encoder->hashPassword($user, $password));
+                    $this->entityManager->persist($user);
+                }
             }
             $this->entityManager->flush();
             $ligne++;
