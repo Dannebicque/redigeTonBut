@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.11.2...v1.12.0) (2022-03-31)
+
+
+### Features
+
+* [Codification] ([9cba945](https://github.com/Dannebicque/redigeTonBut/commit/9cba94507ceb629878bfb74a792dce8064236f32))
+* [Codification] ([5a954e0](https://github.com/Dannebicque/redigeTonBut/commit/5a954e0660fadf26250c38741e537bf980ffc7db))
+* [Codification] ([f01d2de](https://github.com/Dannebicque/redigeTonBut/commit/f01d2deae7a786435e6411f2a2549000ed78b21e))
+* [Codification] ([aa6c3e2](https://github.com/Dannebicque/redigeTonBut/commit/aa6c3e2a4dd343a65d98c5a4b7702792075b8e28))
+* [Codification] ([bbe82e4](https://github.com/Dannebicque/redigeTonBut/commit/bbe82e479f41954a56e7f56a4b9e573515c1443a))
+* [Codification] ([6413e8c](https://github.com/Dannebicque/redigeTonBut/commit/6413e8c0faa8172205a142f10e85002661fbf4d0))
+* [Import User] Import d'une liste de directeurs ([020ee5c](https://github.com/Dannebicque/redigeTonBut/commit/020ee5ce734707b74b63f34b3a2668b5e7aca834))
+* [Latex] Gestion de la dernière version des PN pour le CNESER ([3506aa1](https://github.com/Dannebicque/redigeTonBut/commit/3506aa122812a046468e018df4f1be0aeed90917))
+* [Ouverture Directeurs] Mise en place pour l'ouverture aux directeurs d'IUT ([949c14e](https://github.com/Dannebicque/redigeTonBut/commit/949c14e4e541febb2f682cda28e689d8939be8e7))
+* [Texte du portfolio] Commande pour ajouter le texte dans le portfolio ([e8cc545](https://github.com/Dannebicque/redigeTonBut/commit/e8cc5455a512bf7e17dbf933712ffe18957dea6d))
+
+
+### Bug Fixes
+
+* [Blocage User] Changements des droits des user uniquement par le GT. ([8040bb3](https://github.com/Dannebicque/redigeTonBut/commit/8040bb3aa0260f2fad29f3ce95d71c7c588c85ef))
+* [PDF] version finale ([9130860](https://github.com/Dannebicque/redigeTonBut/commit/9130860be009db0780005a412840e61439b891b6))
+* [PDF] version finale ([6d398e4](https://github.com/Dannebicque/redigeTonBut/commit/6d398e4af0ecf2629aae18d5ad5b7d00ec52e3e7))
+* [PDF] version finale ([16db185](https://github.com/Dannebicque/redigeTonBut/commit/16db185dead0f251a9cb24e8555fd3fe3016f71d))
+
 ### [1.11.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.11.1...v1.11.2) (2022-03-10)
 
 
