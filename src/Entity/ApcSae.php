@@ -378,4 +378,39 @@ class ApcSae extends AbstractMatiere
 
         return false;
     }
+
+    public function apcSaeRessourcesOrdre(?ApcParcours $apcParcours = null): Collection | array
+    {
+        $ressources = $this->apcSaeRessources;
+        $t = [];
+        foreach ($ressources as $ressource)
+        {
+            if ($ressource->getRessource()->isGoodParcours($apcParcours)) {
+
+                $t[$ressource->getRessource()->getOrdre()] = $ressource->getRessource();
+            }
+        }
+        ksort($t);
+        return $t;
+    }
+
+    public function apcSaeApprentissageCritiquesOrdre(?ApcParcours $apcParcours = null): Collection | array
+    {
+        $acs = $this->apcSaeApprentissageCritiques;
+        $t = [];
+        foreach ($acs as $ac)
+        {
+            if ($ac->getApprentissageCritique()->getCompetence()->isGoodParcours($apcParcours)) {
+                if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $t)) {
+                    $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];
+                }
+                $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()][$ac->getApprentissageCritique()->getOrdre()] = $ac->getApprentissageCritique();
+            }
+        }
+        ksort($t);
+        foreach ($t as $couleur => $acs) {
+            ksort($t[$couleur]);
+        }
+        return $t;
+    }
 }

@@ -26,12 +26,12 @@
 \textbf{SA\'E au sein desquelles la ressource peut être mobilis\'ee et combin\'ee : }
 {% endif %}
 
-{% for sae in ressource.apcSaeRessources|filter(sae => sae.sae.isGoodParcours(parcours)) %}
+{% for sae in ressource.getApcSaeRessourcesOrdre(parcours) %}
 {% if loop.first %}
 \begin{itemize}
 {% set itemize = true %}
 {% endif %}
-\item[--] {{ sae.sae.codeMatiere }} | {{ sae.sae.libelle|latex_purge|raw }}
+\item[--] {{ sae.codeMatiere }} | {{ sae.libelle|latex_purge|raw }}
 {% endfor %}
 {% if itemize%}
 \end{itemize}
@@ -42,8 +42,7 @@
 
 {{ ressource.description != null ? ressource.description|markdown_to_latex : '' }}
 
-{% for prerequis in ressource.ressourcesPreRequises|filter(prerequis => prerequis.isGoodParcoursAndSemestre
-(semestre, parcours)) %}
+{% for prerequis in ressource.ressourcesPreRequisesOrdre(semestre, parcours) %}
 {% if loop.first %}
 \textbf{Pr\'erequis : }
 
@@ -64,13 +63,15 @@
 \textbf{Apprentissage critique cibl\'e : }
 {% endif %}
 
-{% for ac in ressource.apcRessourceApprentissageCritiques|filter(ac => ac.apprentissageCritique.competence.isGoodParcours(parcours)) %}
+{% for comp in ressource.apcRessourceApprentissageCritiquesOrdre(parcours) %}
 {% if loop.first %}
 \begin{itemize}
 {% set itemize = true %}
 {% endif %}
-\item[--] {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
+{% for ac in comp %}
+\item[--] {{ ac.code }} | {{ ac.libelle|latex_purge|raw }}
 
+{% endfor %}
 {% endfor %}
 {% if itemize%}
 \end{itemize}

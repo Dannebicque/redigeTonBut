@@ -59,7 +59,7 @@ class GenereTableauxCommand extends Command
         }
 
 
-        $io->success('Les documents ont été générés.');
+        $io->success('Les tableaux ont été générés.');
 
         return Command::SUCCESS;
     }

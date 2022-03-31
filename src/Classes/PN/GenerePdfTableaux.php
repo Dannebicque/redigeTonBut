@@ -207,9 +207,9 @@ class GenerePdfTableaux
     private function adaptTexte(string $texte, int $size)
     {
         if ($size === 10) {
-            return wordwrap($texte, 30, "\n", false);
+            return wordwrap($texte, 28, "\n", false);
         }
-        return wordwrap($texte, 38, "\n", false);
+        return wordwrap($texte, 35, "\n", false);
 
     }
 

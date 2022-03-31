@@ -39,13 +39,9 @@ class CompileLatexCommand extends Command
         $arg1 = $input->getArgument('arg1');
         $arg2 = $input->getArgument('arg2');
 
-        var_dump($arg2);
         $chemin = $this->kernel->getProjectDir().'/public/pdf/'.$arg1.'/';
-        var_dump($chemin);
-        var_dump('pdflatex -output-directory ' . $chemin.' '.$arg2);
         $text = shell_exec('pdflatex -output-directory ' . $chemin.' '.$arg2);
         //$io->note($text);
-        var_dump($text);
         return Command::SUCCESS;
     }
 }

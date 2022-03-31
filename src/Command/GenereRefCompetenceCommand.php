@@ -60,7 +60,7 @@ class GenereRefCompetenceCommand extends Command
         }
 
 
-        $io->success('Les documents ont été générés.');
+        $io->success('Les référentiels de compétences ont été générés.');
 
         return Command::SUCCESS;
     }

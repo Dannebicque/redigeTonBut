@@ -57,7 +57,7 @@ class GenereLatexCommand extends Command
         }
 
 
-        $io->success('Fichier généré mise à jour.');
+        $io->success(sprintf('Fichier latex généré pour la spécialité %s.', $arg1));
 
         return Command::SUCCESS;
     }

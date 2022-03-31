@@ -9,7 +9,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Annee;
+use App\Entity\ApcRessource;
 use App\Entity\ApcRessourceApprentissageCritique;
+use App\Entity\Departement;
+use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -41,5 +45,17 @@ class ApcRessourceApprentissageCritiqueRepository extends ServiceEntityRepositor
         }
 
         return $t;
+    }
+
+    public function findByDepartement(Departement $departement)
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin(ApcRessource::class, 'r', 'WITH', 'a.ressource = r.id')
+            ->innerJoin(Semestre::class, 's', 'WITH', 'r.semestre = s.id')
+            ->innerJoin(Annee::class, 'an', 'WITH', 's.annee = an.id')
+            ->where('an.departement = :departement')
+            ->setParameter('departement', $departement->getId())
+            ->getQuery()
+            ->getResult();
     }
 }

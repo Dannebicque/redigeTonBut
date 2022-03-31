@@ -15,6 +15,7 @@ use App\Entity\ApcCompetence;
 use App\Entity\ApcNiveau;
 use App\Entity\Departement;
 use App\Entity\Diplome;
+use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -67,6 +68,22 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
         }
 
         return $query->andWhere(implode(' OR ', $ors))
+            ->orderBy('c.couleur', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBySemestre(
+        Semestre $semestre
+    ) {
+        $query = $this->createQueryBuilder('a')
+            ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'a.niveau = n.id')
+            ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'n.competence = c.id')
+            ->where('n.annee = :annee')
+            ->setParameter('annee', $semestre->getAnnee()->getId());
+
+
+        return $query
             ->orderBy('c.couleur', 'ASC')
             ->getQuery()
             ->getResult();

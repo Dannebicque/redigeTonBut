@@ -42,13 +42,14 @@
 \textbf{Apprentissage critique : }
 {% endif %}
 
-{% for ac in sae.apcSaeApprentissageCritiques|filter(ac => ac.apprentissageCritique.competence.isGoodParcours(parcours)) %}
+{% for comp in sae.apcSaeApprentissageCritiquesOrdre(parcours) %}
 {% if loop.first %}
 \begin{itemize}
 {% set itemize = true %}
 {% endif %}
-\item[--] {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle|latex_purge|raw }}
-
+{% for ac in comp %}
+\item[--] {{ ac.code }} | {{ ac.libelle|latex_purge|raw }}
+{% endfor %}
 {% endfor %}
 {% if itemize%}
 \end{itemize}
@@ -56,14 +57,14 @@
 {% endif %}
 {% set itemize = false %}
 
-{% for ressource in sae.apcSaeRessources|filter(ressource => ressource.ressource.isGoodParcours(parcours)) %}
+{% for ressource in sae.apcSaeRessourcesOrdre(parcours) %}
 {% if loop.first %}
 \textbf{Ressources mobilis\'ees et combin\'ees : }
 
 \begin{itemize}
 {% set itemize = true %}
 {% endif %}
-\item[--] {{ ressource.ressource.codeMatiere }} | {{ ressource.ressource.libelle|latex_purge|raw }}
+\item[--] {{ ressource.codeMatiere }} | {{ ressource.libelle|latex_purge|raw }}
 
 {% endfor %}
 {% if itemize%}

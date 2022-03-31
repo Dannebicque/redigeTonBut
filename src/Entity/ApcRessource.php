@@ -185,12 +185,24 @@ class ApcRessource extends AbstractMatiere
         return $this;
     }
 
-    /**
-     * @return Collection|ApcSaeRessource[]
-     */
     public function getApcSaeRessources(): Collection
     {
         return $this->apcSaeRessources;
+    }
+
+    public function getApcSaeRessourcesOrdre(?ApcParcours $apcParcours = null): Collection | array
+    {
+        $saes = $this->apcSaeRessources;
+        $t = [];
+        foreach ($saes as $sae)
+        {
+            if ($sae->getSae()->isGoodParcours($apcParcours)) {
+
+                $t[$sae->getSae()->getOrdre()] = $sae->getSae();
+            }
+        }
+        ksort($t);
+        return $t;
     }
 
     public function addApcSaeRessource(ApcSaeRessource $apcSaeRessource): self
@@ -432,6 +444,22 @@ class ApcRessource extends AbstractMatiere
         return false;
     }
 
+    public function getRessourcesPreRequisesOrdre(Semestre $semestre, ?ApcParcours $apcParcours = null): array
+    {
+        $ressources = $this->ressourcesPreRequises;
+        $t = [];
+        foreach ($ressources as $ressource)
+        {
+            if ($ressource->isGoodParcoursAndSemestre($semestre, $apcParcours)) {
+
+                $t[$ressource->getOrdre()] = $ressource;
+            }
+        }
+        ksort($t);
+        return $t;
+
+    }
+
     public function isGoodParcoursAndSemestre(Semestre $semestre, ?ApcParcours $apcParcours = null): bool
     {
         if ($semestre->getId() !== $this->getSemestre()?->getId()) {
@@ -454,5 +482,25 @@ class ApcRessource extends AbstractMatiere
         }
 
         return false;
+    }
+
+    public function apcRessourceApprentissageCritiquesOrdre(?ApcParcours $apcParcours = null): Collection | array
+    {
+        $acs = $this->apcRessourceApprentissageCritiques;
+        $t = [];
+        foreach ($acs as $ac)
+        {
+            if ($ac->getApprentissageCritique()->getCompetence()->isGoodParcours($apcParcours)) {
+                if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $t)) {
+                    $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];
+                }
+                $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()][$ac->getApprentissageCritique()->getOrdre()] = $ac->getApprentissageCritique();
+            }
+        }
+        ksort($t);
+        foreach ($t as $couleur => $acs) {
+            ksort($t[$couleur]);
+        }
+        return $t;
     }
 }
