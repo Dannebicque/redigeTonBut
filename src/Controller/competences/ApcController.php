@@ -28,7 +28,6 @@ class ApcController extends BaseController
     #[Route("/consulter/{departement}", name:"administration_apc_referentiel_index", methods:["GET"])]
     public function referentiel(ApcStructure $apcStructure, Departement $departement = null): Response
     {
-        //todo: ordre compétence fonctionnel, mais pas dans l'affichage...
         $tParcours = $apcStructure->parcoursNiveaux($departement);
         $competences = $departement->getApcCompetences();
         $tComp = [];

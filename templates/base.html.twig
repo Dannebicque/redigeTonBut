@@ -27,7 +27,9 @@
             <div class="logo position-relative">
                 <a href="{{ path('homepage') }}">
                     <div class="logo-but">
-                        <i class="bi-pencil"></i>&nbsp;ORéBUT {% if user_data.departement != null %}
+                        <i class="bi-pencil"></i>&nbsp;ORéBUT {% if not is_granted('ROLE_IUT') and user_data.departement
+                            !=
+                            null %}
                             | <span>{{ user_data.departement.sigle }}</span>
                         {% endif %}</div>
                 </a>
@@ -104,6 +106,14 @@
             <div class="menu-container flex-grow-1">
                 <ul id="menu" class="menu">
                     {% if user_data.departement != null %}
+                        {% if is_granted('ROLE_IUT') %}
+                            <li>
+                                <a href="{{path('homepage_specialite')}}">
+                                    <i class="bi bi-house-door icon"></i>
+                                    <span class="label">{{ user_data.departement.sigle }}</span>
+                                </a>
+                            </li>
+                            {% endif %}
                         <li>
                             <a href="#ref_competences" data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
                                 <i class="bi bi-wallet2 icon"></i>
@@ -229,7 +239,7 @@
                                                             <span class="label">SAÉ du parcours</span>
                                                         </a>
                                                     </li>
-
+                                                    {% if is_granted('ROLE_PACD') %}
                                                     <li>
                                                         <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
                                                             <span class="label">Tableau croisé par semestre</span>
@@ -254,10 +264,12 @@
                                                             <span class="label">Validation des AC par les SAÉ</span>
                                                         </a>
                                                     </li>
+                                                    {% endif %}
                                                 </ul>
                                             </li>
                                         {% endfor %}
                                     {% else %}
+                                        {% if is_granted('ROLE_PACD') %}
                                         <li>
                                             <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
                                                 <span class="label">Tableau croisé par semestre</span>
@@ -279,10 +291,12 @@
                                             </a>
                                         </li>
                                     {% endif %}
+                                    {% endif %}
                                 </ul>
                             </li>
                         {% endfor %}
                     {% endif %}
+                    {% if is_granted('ROLE_PACD') %}
                     <li>
                         <a href="#admin" data-href="admin">
                             <i class="bi bi-gear icon"></i>
@@ -342,7 +356,8 @@
 {#                            </li>#}
                         </ul>
                     </li>
-                    {% if is_granted('ROLE_GT') %}
+                    {% endif %}
+                    {% if (is_granted('ROLE_GT') or is_granted('ROLE_IUT')) %}
                         <li class="mega dropdown">
                             <a href="#ref_formation" data-href="ref_formation">
                                 <i class="bi bi-shuffle icon"></i>
@@ -504,6 +519,9 @@
                 </div>
             </div>
             <!-- Title and Top Buttons End -->
+            <div class="alert alert-danger"><strong style="font-size:20px;">
+                    Les éléments présentés dans ORéBUT ont été validés par la CCN, et sont en attente de passage devant le CNESER le 12 avril 2022. Merci de limiter la diffusion des éléments avant cette échéance.
+                </strong></div>
             {% block content %}
 
             {% endblock %}

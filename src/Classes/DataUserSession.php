@@ -34,7 +34,7 @@ class DataUserSession
         $this->dir = $kernel->getProjectDir();
         if ($tokenStorage->getToken() !== null) {
             $this->user = $tokenStorage->getToken()->getUser();
-            if (in_array('ROLE_GT', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_CPN', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_CPN_LECTEUR', $tokenStorage->getToken()->getRoleNames())) {
+            if (in_array('ROLE_IUT', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_GT', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_CPN', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_CPN_LECTEUR', $tokenStorage->getToken()->getRoleNames())) {
                 if ($session->get('departement') !== null) {
                     $this->departement = $departementRepository->find($session->get('departement'));
                 } else {

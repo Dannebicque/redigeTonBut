@@ -184,21 +184,25 @@
                         0
                     {% elseif donnees[i].nbSemainesStageMin == donnees[i].nbSemainesStageMax %}
                         {{ donnees[i].nbSemainesStageMin }}
-                        {% else %}
-                            {{ donnees[i].nbSemainesStageMin }} à
-                            {{ donnees[i].nbSemainesStageMax }}
+                    {% else %}
+                        {{ donnees[i].nbSemainesStageMin }} à
+                        {{ donnees[i].nbSemainesStageMax }}
                     {% endif %}
                 </td>
             {% endfor %}
             <td class="text-center">
-                {%  set min = donnees.departement.nbSemainesStageMin < 22 ? 22 : donnees.departement
-                               .nbSemainesStageMin %}
-                {%  set max = donnees.departement.nbSemainesStageMax > 26 ? 26 : donnees.departement
-                             .nbSemainesStageMax %}
-                {% if min == max %}
-                {{ max }}
+                {% if departement.sigle == 'HSE' %}
+                    26
                 {% else %}
-                {{ min }} à {{ max }}
+                    {% set min = donnees.departement.nbSemainesStageMin < 22 ? 22 : donnees.departement
+                    .nbSemainesStageMin %}
+                    {% set max = donnees.departement.nbSemainesStageMax > 26 ? 26 : donnees.departement
+                    .nbSemainesStageMax %}
+                    {% if min == max %}
+                        {{ max }}
+                    {% else %}
+                        {{ min }} à {{ max }}
+                    {% endif %}
                 {% endif %}
             </td>
         </tr>

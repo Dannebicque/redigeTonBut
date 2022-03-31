@@ -45,4 +45,4 @@ security:
         - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/administration, roles: [ROLE_GT, ROLE_PACD, ROLE_CPN] }
-        - { path: ^/, roles: [ROLE_GT, ROLE_PACD, ROLE_CPN, ROLE_CPN_LECTEUR, ROLE_EDITEUR, ROLE_LECTEUR] }
+        - { path: ^/, roles: [ROLE_GT, ROLE_PACD, ROLE_CPN, ROLE_CPN_LECTEUR, ROLE_IUT, ROLE_EDITEUR, ROLE_LECTEUR] }
