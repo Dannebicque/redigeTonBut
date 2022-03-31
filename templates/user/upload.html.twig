@@ -10,8 +10,10 @@
         <div class="alert alert-info mb-3">
             Pour uploader une liste d'utilisateur merci de respecter le format excel suivant :
             <a href="{{ asset('modele_import.xlsx') }}">Fichier modèle</a>.
+            {% if user_data.departement is defined and user_data.departement != null %}
             Le  département à indiquer est : {{ user_data.departement.sigle }}, les droits possibles sont ROLE_EDITEUR, ROLE_LECTEUR,
             ROLE_PACD
+            {% endif %}
         </div>
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">

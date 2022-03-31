@@ -18,6 +18,7 @@ class UserImport
 {
     private EntityManagerInterface $entityManager;
     private EventDispatcherInterface $eventDispatcher;
+    private UserRepository $userRepository;
     private $departements;
     private $users = [];
 
@@ -30,6 +31,7 @@ class UserImport
         UserRepository $userRepository,
         UserPasswordHasherInterface $encoder
     ) {
+        $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->encoder = $encoder;
@@ -46,45 +48,91 @@ class UserImport
 
     public function import(?string $fichier)
     {
-        //todo: refactoring
-        //acces GT
+        //spécificité de l'import pour les directeur d'IUT
         $excel = $this->openExcelFile($fichier);
         $sheet = $excel->getSheet(0);
         $ligne = 2;
         while (null !== $sheet->getCellByColumnAndRow(1, $ligne)->getValue()) {
-            $email = trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue());
-            if (!in_array($email, $this->users)) {
+            $email = trim($sheet->getCellByColumnAndRow(5, $ligne)->getValue());
+            $user = $this->userRepository->findOneBy(['email' => $email]);
+            if ($user === null) {
                 $user = new User();
-                $user->setNom(trim($sheet->getCellByColumnAndRow(1, $ligne)->getValue()));
-                $user->setPrenom(trim($sheet->getCellByColumnAndRow(2, $ligne)->getValue()));
-                $user->setCivilite(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
+                $user->setNom(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
+                $user->setPrenom(trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue()));
+                $user->setCivilite(trim($sheet->getCellByColumnAndRow(9, $ligne)->getValue()));
                 $user->setEmail($email);
+                $user->setLogin(trim($sheet->getCellByColumnAndRow(7, $ligne)->getValue()));
                 $user->setActif(true);
                 $user->setIsVerified(true);
-                $dep = trim($sheet->getCellByColumnAndRow(5, $ligne)->getValue());
-                if ($dep !== null && $dep !== '') {
-                    $user->setDepartement($this->departements[$dep]);
-                }
-
-                $role = strtoupper(trim($sheet->getCellByColumnAndRow(6, $ligne)->getValue()));
-                if (!($role === 'ROLE_PACD' || $role === 'ROLE_EDITEUR' || $role === 'ROLE_LECTEUR' || $role === 'ROLE_GT' || $role === 'ROLE_CPN' || $role === 'ROLE_CPN_LECTEUR')) {
-                    $role = 'ROLE_LECTEUR';
-                }
-
-                $user->setRoles([$role]);
-                $password = mb_substr(md5(mt_rand()), 0, 10);
+                $user->setRoles(['ROLE_IUT']);
+                $password = trim($sheet->getCellByColumnAndRow(8, $ligne)->getValue());
+               // $user->setPassword($password);
                 $user->setPassword($this->encoder->hashPassword($user, $password));
                 $this->entityManager->persist($user);
-                $event = new UserEvent($user);
-                $event->setPassword($password);
-                $this->eventDispatcher->dispatch($event, UserEvent::CREATION_COMPTE);
+            } else {
+                $user->setNom(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
+                $user->setPrenom(trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue()));
+                $user->setCivilite(trim($sheet->getCellByColumnAndRow(9, $ligne)->getValue()));
+                $user->setEmail($email);
+                $user->setLogin(trim($sheet->getCellByColumnAndRow(7, $ligne)->getValue()));
+                $user->setActif(true);
+                $user->setIsVerified(true);
+                $user->setRoles(['ROLE_IUT']);
+                $password = trim($sheet->getCellByColumnAndRow(8, $ligne)->getValue());
+               // $user->setPassword($password);
+
+                $user->setPassword($this->encoder->hashPassword($user, $password));
+                $this->entityManager->persist($user);
             }
+            $this->entityManager->flush();
             $ligne++;
         }
 
-        $this->entityManager->flush();
+
 
     }
+
+//    public function import(?string $fichier)
+//    {
+//        //todo: refactoring
+//        //acces GT
+//        $excel = $this->openExcelFile($fichier);
+//        $sheet = $excel->getSheet(0);
+//        $ligne = 2;
+//        while (null !== $sheet->getCellByColumnAndRow(1, $ligne)->getValue()) {
+//            $email = trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue());
+//            if (!in_array($email, $this->users)) {
+//                $user = new User();
+//                $user->setNom(trim($sheet->getCellByColumnAndRow(1, $ligne)->getValue()));
+//                $user->setPrenom(trim($sheet->getCellByColumnAndRow(2, $ligne)->getValue()));
+//                $user->setCivilite(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
+//                $user->setEmail($email);
+//                $user->setActif(true);
+//                $user->setIsVerified(true);
+//                $dep = trim($sheet->getCellByColumnAndRow(5, $ligne)->getValue());
+//                if ($dep !== null && $dep !== '') {
+//                    $user->setDepartement($this->departements[$dep]);
+//                }
+//
+//                $role = strtoupper(trim($sheet->getCellByColumnAndRow(6, $ligne)->getValue()));
+//                if (!($role === 'ROLE_PACD' || $role === 'ROLE_EDITEUR' || $role === 'ROLE_LECTEUR' || $role === 'ROLE_GT' || $role === 'ROLE_CPN' || $role === 'ROLE_CPN_LECTEUR')) {
+//                    $role = 'ROLE_LECTEUR';
+//                }
+//
+//                $user->setRoles([$role]);
+//                $password = mb_substr(md5(mt_rand()), 0, 10);
+//                $user->setPassword($this->encoder->hashPassword($user, $password));
+//                $this->entityManager->persist($user);
+//                $event = new UserEvent($user);
+//                $event->setPassword($password);
+//                $this->eventDispatcher->dispatch($event, UserEvent::CREATION_COMPTE);
+//            }
+//            $ligne++;
+//        }
+//
+//        $this->entityManager->flush();
+//
+//    }
 
     public function importDepartement(?string $fichier, Departement $departement)
     {

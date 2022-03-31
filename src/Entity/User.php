@@ -74,6 +74,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $CpnDepartements;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private ?string $login;
+
     public function __construct()
     {
         $this->CpnDepartements = new ArrayCollection();
@@ -274,6 +279,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCpnDepartement(Departement $cpnDepartement): self
     {
         $this->CpnDepartements->removeElement($cpnDepartement);
+
+        return $this;
+    }
+
+    public function getLogin(): ?string
+    {
+        return $this->login;
+    }
+
+    public function setLogin(?string $login): self
+    {
+        $this->login = $login;
 
         return $this;
     }
