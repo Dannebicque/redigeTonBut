@@ -79,7 +79,7 @@
     {% endif %}
 
     {% if user_data.departement != null %}
-        {% if is_granted('ROLE_PACD') %}
+        {% if is_granted('ROLE_PACD') or is_granted('ROLE_LECTEUR') %}
             <section class="scroll-section mb-2" id="export">
                 <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
                 {% if user_data.departement.typeStructure != 'type3' %}
@@ -90,6 +90,14 @@
                         Export d'une pré-version du PN pour les parcours
                     </a>
                 {% endif %}
+                <br>
+                <a href="{{ asset('pn/PN-BUT-'~user_data.departement.sigle~'.pdf') }}" target="_blank" class="btn
+                btn-success
+                btn-outline
+                d-block">
+                    Récupérer la version provisoire des PN, validés par la CCN en attente de passage devant le CNESER .
+                </a>
+                <br>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
                     {% for parcours in user_data.departement.apcParcours %}
                         <div class="col">
