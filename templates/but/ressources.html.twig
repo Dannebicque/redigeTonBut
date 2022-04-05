@@ -69,14 +69,18 @@
                            <th rowspan="2">Code</th>
                            <th rowspan="2">Libelle</th>
                            <th colspan="2" class="text-center">PN Officiel</th>
+                           {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
                            <th colspan="3" class="text-center">Préconisation ACD</th>
+                           {% endif %}
                        </tr>
                        <tr>
                            <th class="text-center">Heures Totales</th>
                            <th class="text-center">Dont TP</th>
+                           {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
                            <th class="bg-warning text-center">CM</th>
                            <th class="bg-warning text-center">TD</th>
                            <th class="bg-warning text-center">TP</th>
+                           {% endif %}
                        </tr>
                        </thead>
                        <tbody>
@@ -96,9 +100,11 @@
                            </td>
                            <td  style="width:10%" class="text-center">{{ ressource.heuresTotales }}</td>
                            <td  style="width:10%" class="text-center"> {{ ressource.tpPpn }}</td>
+                           {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
                            <td class="bg-warning text-center"  style="width:10%">{{ ressource.cmPreco }}</td>
                            <td class="bg-warning text-center"  style="width:10%">{{ ressource.tdPreco }}</td>
                            <td class="bg-warning text-center"  style="width:10%">{{ ressource.tpPreco }}</td>
+                           {% endif %}
                        </tr>
                        {% endfor %}
                        </tbody>

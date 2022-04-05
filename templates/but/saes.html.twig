@@ -67,13 +67,19 @@
                         <tr>
                             <th rowspan="2">Code</th>
                             <th rowspan="2">Libelle</th>
+                            {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
                             <th colspan="3" class="text-center">Préconisation ACD</th>
+                            {% endif %}
                         </tr>
+
                         <tr>
+                            {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
                             <th class="bg-warning text-center">Heures totales (hors ptut)</th>
                             <th class="bg-warning text-center">Dont TP</th>
                             <th class="bg-warning text-center">Ptut</th>
+                            {% endif %}
                         </tr>
+
                         </thead>
                         <tbody>
                         {% for sae in saes[semestre.ordreLmd] %}
@@ -90,9 +96,11 @@
                                     {{ sae.libelle }}
                                     </a>
                                 </td>
+                                {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
                                 <td class="bg-warning text-center" style="width:10%">{{ sae.heuresTotales }}</td>
                                 <td class="bg-warning text-center" style="width:10%">{{ sae.tpPpn }}</td>
                                 <td class="bg-warning text-center" style="width:10%">{{ sae.projetPpn }}</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
