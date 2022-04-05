@@ -82,7 +82,7 @@
 
                         </thead>
                         <tbody>
-                        {% for sae in saes[semestre.ordreLmd]|filter(sae => sae.ficheAdaptationLocale == true) %}
+                        {% for sae in saes[semestre.ordreLmd]|filter(sae => sae.ficheAdaptationLocale == false) %}
                             <tr {% if sae.ficheAdaptationLocale == true %}class="bg-warning text-white"{% endif %}>
                                 <td style="width:20%">
                                     <a href="{{ path('but_fiche_sae',
