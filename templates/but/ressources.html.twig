@@ -84,7 +84,8 @@
                        </tr>
                        </thead>
                        <tbody>
-                       {% for ressource in ressources[semestre.ordreLmd] %}
+                       {% for ressource in ressources[semestre.ordreLmd]|filter(ressource => ressource
+                       .ficheAdaptationLocale == true) %}
                        <tr {% if ressource.ficheAdaptationLocale == true %}class="bg-warning text-white"{% endif %}>
                            <td style="width:15%">
                                <a href="{{ path('but_fiche_ressource',
@@ -106,7 +107,6 @@
                            <td class="bg-warning text-center"  style="width:10%">{{ ressource.tpPreco }}</td>
                            {% endif %}
                        </tr>
-                       {% endfor %}
                        </tbody>
                    </table>
                 </div>
