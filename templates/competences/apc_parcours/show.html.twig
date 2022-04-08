@@ -16,10 +16,14 @@
                     <th>Code</th>
                     <td>{{ apcParcours.code }}</td>
                 </tr>
+                <tr>
+                    <th>Ordre</th>
+                    <td>{{ apcParcours.ordre }} (si 0, l'ordre alphabétique s'applique)</td>
+                </tr>
 
                 <tr>
                     <th>Texte descriptif</th>
-                    <td>{{ apcParcours.textePresentation }}</td>
+                    <td>{{ apcParcours.textePresentation|markdown_to_html|raw }}</td>
                 </tr>
 
                 </tbody>

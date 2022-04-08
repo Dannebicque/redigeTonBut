@@ -34,7 +34,7 @@
                 </tr>
                 <tr>
                     <th>Texte descriptif</th>
-                    <td>{{ departement.textePresentation }}</td>
+                    <td>{{ departement.textePresentation|markdown_to_html|raw }}</td>
                 </tr>
                 </tbody>
             </table>

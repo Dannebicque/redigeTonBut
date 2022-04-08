@@ -117,7 +117,7 @@
                         <li>
                             <a href="#ref_competences" data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
                                 <i class="bi bi-wallet2 icon"></i>
-                                <span class="label">Ref. Compétences</span>
+                                <span class="label">Info. Spécialité</span>
                             </a>
                             <ul id="ref_competences">
                                 <li>
@@ -192,7 +192,7 @@
                                         <li class="dropdown col d-flex flex-column">
                                             <a href="#tronc" class="dropdown-toggle
                                     active">
-                                                <span class="label">Tronc commun</span>
+                                                <span class="label">Toutes les ressources/SAÉ</span>
                                             </a>
                                             <ul id="tronc">
                                                 <li>
@@ -239,12 +239,13 @@
                                                             <span class="label">SAÉ du parcours</span>
                                                         </a>
                                                     </li>
-                                                    {% if is_granted('ROLE_PACD') %}
+
                                                     <li>
                                                         <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
                                                             <span class="label">Tableau croisé par semestre</span>
                                                         </a>
                                                     </li>
+                                                    {% if is_granted('ROLE_PACD') %}
                                                     <li>
                                                         <a href="{{ path('tableau_horaire_annee', {annee: annee.id,
                                                             parcours: parcours.id}) }}">
@@ -269,12 +270,13 @@
                                             </li>
                                         {% endfor %}
                                     {% else %}
-                                        {% if is_granted('ROLE_PACD') %}
+
                                         <li>
                                             <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
                                                 <span class="label">Tableau croisé par semestre</span>
                                             </a>
                                         </li>
+                                        {% if is_granted('ROLE_PACD') %}
                                         <li>
                                             <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">
                                                 <span class="label">Volumes horaires par semestre</span>

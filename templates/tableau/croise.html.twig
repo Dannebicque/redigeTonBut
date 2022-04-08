@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block bouton_header %}
-    {% if not is_granted('ROLE_GT') %}
+    {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
         <button class="btn btn-outline-info" id="showAdaptationLocale">Afficher Adaptation Locale</button>
     {% endif %}
     {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
@@ -14,7 +14,7 @@
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
         >
             <i class="bi-download"></i>
-            <span>Export Ecel</span>
+            <span>Export Excel</span>
         </a>
     {% else %}
         <a href="{{ path('export_tableau_croise_annee', {annee: annee.id}) }}" class="btn btn-sm
@@ -22,17 +22,19 @@
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
         >
             <i class="bi-download"></i>
-            <span>Export Ecel</span>
+            <span>Export Excel</span>
         </a>
     {% endif %}
 {% endblock %}
 
 {% block content %}
+    {% if not is_granted('ROLE_IUT') %}
     <div class="alert alert-info mb-3">
         Ce tableau sauvegarde automatiquement vos modifications
         <strong>dès que vous quittez une zone de saisie</strong>. Les fiches ressources et SAÉ sont mises à jour en
         conséquence (volumes horaires, apprentissages critiques)
     </div>
+    {% endif %}
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
         {% for semestre in semestres %}
             <li class="nav-item" role="presentation">

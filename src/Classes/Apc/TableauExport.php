@@ -50,7 +50,7 @@ class TableauExport
     }
 
 
-    public function exportTableauCroise(Annee $annee, ?ApcParcours $parcours = null)
+    public function exportTableauCroise(Annee $annee, ?ApcParcours $parcours = null, $displayCoeff = false)
     {
         if ($parcours === null || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
@@ -117,30 +117,32 @@ class TableauExport
                     $col = 4;
                 }
 
-                $this->excelWriter->writeCellXY(2, $ligne, 'Coefficients');
-                foreach ($this->tableauCroise->getSaes() as $sae) {
-                    if (array_key_exists($niveau->getCompetence()->getId(),
-                            $this->tableauCroise->getCoefficients()) && array_key_exists($sae->getId(),
-                            $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['saes'])) {
-                        $this->excelWriter->writeCellXY($col, $ligne,
-                            $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['saes'][$sae->getId()]);
-                    } else {
-                        $this->excelWriter->writeCellXY($col, $ligne, 0);
+                if ($displayCoeff === true) {
+                    $this->excelWriter->writeCellXY(2, $ligne, 'Coefficients');
+                    foreach ($this->tableauCroise->getSaes() as $sae) {
+                        if (array_key_exists($niveau->getCompetence()->getId(),
+                                $this->tableauCroise->getCoefficients()) && array_key_exists($sae->getId(),
+                                $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['saes'])) {
+                            $this->excelWriter->writeCellXY($col, $ligne,
+                                $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['saes'][$sae->getId()]);
+                        } else {
+                            $this->excelWriter->writeCellXY($col, $ligne, 0);
+                        }
+                        $col++;
                     }
                     $col++;
-                }
-                $col++;
 
-                foreach ($this->tableauCroise->getRessources() as $ressource) {
-                    if (array_key_exists($niveau->getCompetence()->getId(),
-                            $this->tableauCroise->getCoefficients()) && array_key_exists($ressource->getId(),
-                            $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['ressources'])) {
-                        $this->excelWriter->writeCellXY($col, $ligne,
-                            $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['ressources'][$ressource->getId()]);
-                    } else {
-                        $this->excelWriter->writeCellXY($col, $ligne, 0);
+                    foreach ($this->tableauCroise->getRessources() as $ressource) {
+                        if (array_key_exists($niveau->getCompetence()->getId(),
+                                $this->tableauCroise->getCoefficients()) && array_key_exists($ressource->getId(),
+                                $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['ressources'])) {
+                            $this->excelWriter->writeCellXY($col, $ligne,
+                                $this->tableauCroise->getCoefficients()[$niveau->getCompetence()->getId()]['ressources'][$ressource->getId()]);
+                        } else {
+                            $this->excelWriter->writeCellXY($col, $ligne, 0);
+                        }
+                        $col++;
                     }
-                    $col++;
                 }
                 $ligne++;
                 $this->excelWriter->getColumnsAutoSizeInt(1, $col);
@@ -517,7 +519,7 @@ class TableauExport
     private function afficheParcours($ligne, $parcours, $semestre, $semestres)
     {
         $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
-$ligne++;
+        $ligne++;
         $this->tableauCroise->getDatas($semestre, $parcours);
         $this->excelWriter->writeCellXY(1, $ligne, 'Compétences');
         $this->excelWriter->writeCellXY(2, $ligne, 'Apprentissages critiques');
@@ -616,7 +618,7 @@ $ligne++;
             $this->excelWriter->mergeCellsCaR(3, $ligne + 1, 3 + $nbSaes - 1, $ligne + 1);
             $this->excelWriter->writeCellXY(3, $ligne + 2, '', ['bgcolor' => 'ebb71a']);
             $this->excelWriter->mergeCellsCaR(3, $ligne + 2, 3 + $nbSaes - 1, $ligne + 2);
-            $col+=$nbSaes;
+            $col += $nbSaes;
         } else {
             $col++;
         }
@@ -856,7 +858,7 @@ $ligne++;
             $this->excelWriter->mergeCellsCaR(3, $ligne + 1, 3 + $nbSaes - 1, $ligne + 1);
             $this->excelWriter->writeCellXY(3, $ligne + 2, '', ['bgcolor' => 'ebb71a']);
             $this->excelWriter->mergeCellsCaR(3, $ligne + 2, 3 + $nbSaes - 1, $ligne + 2);
-            $col+=$nbSaes;
+            $col += $nbSaes;
         } else {
             $col++;
         }

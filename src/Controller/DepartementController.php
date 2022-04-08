@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/administration/specialite', name: 'administration_departement_')]
+#[Route(name: 'administration_departement_')]
 class DepartementController extends AbstractController
 {
-    #[Route('/', name: 'index', methods: ['GET'])]
+    #[Route('/administration/specialite/', name: 'index', methods: ['GET'])]
     public function index(
         DepartementRepository $departementRepository,
         UserRepository $userRepository
@@ -27,7 +27,7 @@ class DepartementController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    #[Route('/administration/specialite/{id}', name: 'show', methods: ['GET'])]
     public function show(
         Departement $departement
     ): Response {
@@ -36,7 +36,7 @@ class DepartementController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/lecteur', name: 'lecteur_show', methods: ['GET'])]
+    #[Route('/specialite/{id}/lecteur', name: 'lecteur_show', methods: ['GET'])]
     public function showLecteur(
         Departement $departement
     ): Response {
@@ -45,7 +45,7 @@ class DepartementController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/administration/specialite/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         Departement $departement
@@ -68,7 +68,7 @@ class DepartementController extends AbstractController
         ]);
     }
 
-    #[Route('/{departement}/update/ajax', name: 'update_ajax', methods: ['POST'], options: ["expose" => true])]
+    #[Route('/administration/specialite/{departement}/update/ajax', name: 'update_ajax', methods: ['POST'], options: ["expose" => true])]
     public function updateDepartement(
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
