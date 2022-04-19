@@ -2,7 +2,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <referentiel_formation>
     {% for semestre in semestres %}
-    <semestre numero="{{ semestre.ordreLmd }}" libelle="{{ semestre.libelle }}" ordreAnnee="{{ semestre.ordreAnnee }}">
+    <semestre numero="{{ semestre.ordreLmd }}" libelle="{{ semestre.libelle }}" ordreAnnee="{{ semestre.ordreAnneeXml
+    }}">
         <saes>
             {% for sae in semestre.apcSaes %}
             <sae code="{{ sae.codeMatiere }}" ordre="{{ sae.ordre }}">

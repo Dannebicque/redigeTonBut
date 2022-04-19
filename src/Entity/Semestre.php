@@ -229,7 +229,7 @@ class Semestre extends BaseEntity
     public function display(): string
     {
         if (null !== $this->getAnnee()) {
-            return $this->libelle.' | '.$this->getAnnee()->getLibelle();
+            return $this->libelle . ' | ' . $this->getAnnee()->getLibelle();
         }
 
         return $this->libelle;
@@ -562,5 +562,19 @@ class Semestre extends BaseEntity
         $this->apcParcours = $apcParcours;
 
         return $this;
+    }
+
+    public function ordreAnneeXml()
+    {
+        switch ($this->ordreLmd) {
+            case 1:
+            case 3:
+            case 5:
+                return 1;
+            case 2:
+            case 4:
+            case 6:
+                return 2;
+        }
     }
 }
