@@ -9,7 +9,6 @@ use App\Classes\Apc\TableauExport;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

@@ -1,0 +1,8 @@
+<br><p>Choisir les parcours</p>
+<div>
+    {% for parcour in parcours %}
+        <input type="checkbox" name="parcours[]" value="{{ parcour.id }}" checked><label> {{ parcour.libelle
+            }}</label><br>
+    {% endfor %}
+</div>
+<br><br>
