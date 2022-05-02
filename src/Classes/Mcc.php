@@ -465,7 +465,11 @@ class Mcc
         $excelWriter->setSpreadsheet($spreadsheet, true);
 
 
-        return $excelWriter->genereFichier('mcc_fi_' . $departement->getSigle());
+        if ($fi === true) {
+            return $excelWriter->genereFichier('mcc_fi_' . $departement->getSigle());
+        }
+
+        return $excelWriter->genereFichier('mcc_fc_' . $departement->getSigle());
     }
 
     private function borderInsideOutside($cellDebut, $cellFin, $sheet)
