@@ -304,8 +304,10 @@ class Mcc
                         $sheet->getStyle(Coordinate::stringFromColumnIndex($tabRefCompetences[$competence->getCompetence()->getId()]) . $ligne)->getFill()
                             ->setFillType(Fill::FILL_SOLID)
                             ->getStartColor()->setARGB('FFF6D6B8');
-                        $sheet->setCellValueByColumnAndRow($tabRefCompetences[$competence->getCompetence()->getId()],
-                            $ligne, $competence->getCoefficient());
+                        if ($iut === 'rcc') {
+                            $sheet->setCellValueByColumnAndRow($tabRefCompetences[$competence->getCompetence()->getId()],
+                                $ligne, $competence->getCoefficient());
+                        }
                     }
 
                     if ($departement->getTypeStructure() === Departement::TYPE3 || $semestre->getOrdreLmd() >= 3) {
@@ -342,8 +344,10 @@ class Mcc
                         $sheet->getStyle(Coordinate::stringFromColumnIndex($tabRefCompetences[$competence->getCompetence()->getId()]) . $ligne)->getFill()
                             ->setFillType(Fill::FILL_SOLID)
                             ->getStartColor()->setARGB('FFF6D6B8');
-                        $sheet->setCellValueByColumnAndRow($tabRefCompetences[$competence->getCompetence()->getId()],
-                            $ligne, $competence->getCoefficient());
+                        if ($iut === 'rcc') {
+                            $sheet->setCellValueByColumnAndRow($tabRefCompetences[$competence->getCompetence()->getId()],
+                                $ligne, $competence->getCoefficient());
+                        }
                     }
 
                     if ($departement->getTypeStructure() === Departement::TYPE3 || $semestre->getOrdreLmd() >= 3) {
