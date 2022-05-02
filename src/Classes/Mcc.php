@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\ConditionalFormatting\Wizard;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Protection;
 use PhpOffice\PhpSpreadsheet\Style\Style;
 
 class Mcc
@@ -44,25 +45,35 @@ class Mcc
 
         // Prépare le modèle avant de dupliquer
         $sheetModele = $spreadsheet->getSheetByName('modele');
-        if ($sheetModele !== null) {
-            $sheetModele->setPrintGridlines(false);//masque la grille
+        $sheetModele1 = $spreadsheet->getSheetByName('modele_1'); //modèle du BUT 1
+
+        if ($sheetModele !== null && $sheetModele1) {
+
             if ($departement->getTypeDepartement() === Departement::SECONDAIRE) {
-                $sheetModele->setCellValue('N1', 'Sciences, Technologies, Santé');
+                $sheetModele->setCellValue('M1', 'Sciences, Technologies, Santé');
+                $sheetModele1->setCellValue('M1', 'Sciences, Technologies, Santé');
             } else {
-                $sheetModele->setCellValue('N1', 'Droit, Economie, Gestion, Sciences sociale');
+                $sheetModele->setCellValue('M1', 'Droit, Economie, Gestion, Sciences sociale');
+                $sheetModele1->setCellValue('M1', 'Droit, Economie, Gestion, Sciences sociale');
             }
-            $sheetModele->setCellValue('N4', $departement->getLibelle());
+            $sheetModele->setCellValue('M4', $departement->getLibelle());
+            $sheetModele1->setCellValue('M4', $departement->getLibelle());
 
             if ($fi === false) {
                 $sheetModele->setCellValue('E8', '');
                 $sheetModele->setCellValue('E10', 'X');
                 $sheetModele->setCellValue('E12', 'X');
                 $sheetModele->setCellValue('E14', 'X');
+
+                $sheetModele1->setCellValue('E8', '');
+                $sheetModele1->setCellValue('E10', 'X');
+                $sheetModele1->setCellValue('E12', 'X');
+                $sheetModele1->setCellValue('E14', 'X');
             }
 
-            //création des parcours
+            //création des parcours, uniquement sur modèle
             $i = 0;
-            $col = Coordinate::columnIndexFromString('AP');
+            $col = Coordinate::columnIndexFromString('AO');
             $rowTotal = 51;
 
             foreach ($parcours as $parc) {
@@ -103,53 +114,53 @@ class Mcc
                 $sheetModele->getStyle('A' . $rowTotal)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
                 $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('C'), $rowTotal,
-                    Coordinate::columnIndexFromString('E'), $rowTotal + 1);
+                    Coordinate::columnIndexFromString('D'), $rowTotal + 1);
                 $sheetModele->getStyle('C' . $rowTotal)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
                 $sheetModele->getStyle('C' . $rowTotal)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
                 $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('C'), $rowTotal + 2,
-                    Coordinate::columnIndexFromString('E'), $rowTotal + 3);
+                    Coordinate::columnIndexFromString('D'), $rowTotal + 3);
 
-                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('H'), $rowTotal + 1,
-                    Coordinate::columnIndexFromString('K'), $rowTotal + 1);
-                $sheetModele->getStyle('H' . $rowTotal + 1)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('G'), $rowTotal + 1,
+                    Coordinate::columnIndexFromString('J'), $rowTotal + 1);
+                $sheetModele->getStyle('G' . $rowTotal + 1)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 // formule de calcul des heures
                 $colParc = Coordinate::stringFromColumnIndex($tabRefParcours[$parc->getId()]);
                 $locale = 'fr';
                 $validLocale = Settings::setLocale($locale);
                 if (!$validLocale) {
-                    echo 'Unable to set locale to '.$locale." - reverting to en_us<br />\n";
+                    echo 'Unable to set locale to ' . $locale . " - reverting to en_us<br />\n";
                 }
 
+                $sheetModele->setCellValue('G' . $rowTotal,
+                    '=SUMIF($' . $colParc . '22:$' . $colParc . '49,"X",G22:G49)');
+                $sheetModele->setCellValue('G' . $rowTotal + 1,
+                    '=H' . $rowTotal . '+I' . $rowTotal . '+J' . $rowTotal . '+G' . $rowTotal);
                 $sheetModele->setCellValue('H' . $rowTotal,
                     '=SUMIF($' . $colParc . '22:$' . $colParc . '49,"X",H22:H49)');
-                $sheetModele->setCellValue('H' . $rowTotal + 1,
-                    '=H' . $rowTotal . '+I' . $rowTotal . '+J' . $rowTotal . '+K' . $rowTotal);
                 $sheetModele->setCellValue('I' . $rowTotal,
                     '=SUMIF($' . $colParc . '22:$' . $colParc . '49,"X",I22:I49)');
                 $sheetModele->setCellValue('J' . $rowTotal,
                     '=SUMIF($' . $colParc . '22:$' . $colParc . '49,"X",J22:J49)');
-                $sheetModele->setCellValue('K' . $rowTotal,
-                    '=SUMIF($' . $colParc . '22:$' . $colParc . '49,"X",K22:K49)');
 
 
                 // partie total Coefficients
-                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('AI'), $rowTotal,
-                    Coordinate::columnIndexFromString('AO'), $rowTotal + 3);
-                $sheetModele->getStyle('AI' . $rowTotal)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheetModele->getStyle('AI' . $rowTotal)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('AH'), $rowTotal,
+                    Coordinate::columnIndexFromString('AN'), $rowTotal + 3);
+                $sheetModele->getStyle('AH' . $rowTotal)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheetModele->getStyle('AH' . $rowTotal)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
-                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('AP'), $rowTotal,
+                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('AO'), $rowTotal,
                     $col + $i + 1, $rowTotal);
-                $sheetModele->getStyle('AP' . $rowTotal)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+                $sheetModele->getStyle('AO' . $rowTotal)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
-                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('AP'), $rowTotal + 1,
+                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('AO'), $rowTotal + 1,
                     $col + $i + 1, $rowTotal + 1);
-                $sheetModele->getStyle('AP' . ($rowTotal + 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+                $sheetModele->getStyle('AO' . ($rowTotal + 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
-                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('AP'), $rowTotal + 2,
+                $sheetModele->mergeCellsByColumnAndRow(Coordinate::columnIndexFromString('AO'), $rowTotal + 2,
                     $col + $i + 1, $rowTotal + 3);
-                $sheetModele->getStyle('AP' . ($rowTotal + 2))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+                $sheetModele->getStyle('AO' . ($rowTotal + 2))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
                 $sheetModele->getRowDimension($rowTotal)->setRowHeight(17.25);
                 $sheetModele->getRowDimension($rowTotal + 1)->setRowHeight(17.25);
@@ -172,9 +183,9 @@ class Mcc
                 $sheetModele->getCellByColumnAndRow(Coordinate::columnIndexFromString('A'),
                     $rowTotal)->getStyle()->getAlignment()->setWrapText(true);
 
-                $sheetModele->setCellValueByColumnAndRow(Coordinate::columnIndexFromString('AI'), $rowTotal,
+                $sheetModele->setCellValueByColumnAndRow(Coordinate::columnIndexFromString('AH'), $rowTotal,
                     'Parcours : ' . $parc->getLibelle());
-                $sheetModele->getCellByColumnAndRow(Coordinate::columnIndexFromString('AI'),
+                $sheetModele->getCellByColumnAndRow(Coordinate::columnIndexFromString('AH'),
                     $rowTotal)->getStyle()->getAlignment()->setWrapText(true);
 
                 $tabRefTotalParcours[$parc->getId()] = $rowTotal;
@@ -183,6 +194,10 @@ class Mcc
             }
             $sheetModele->mergeCellsByColumnAndRow($col, 16, $col + $i - 1, 16);
             $sheetModele->getStyle(Coordinate::StringFromColumnIndex($col) . '16')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $cellDebut = Coordinate::StringFromColumnIndex($col) . '16';
+            $cellFin = Coordinate::StringFromColumnIndex($col + $i - 1) . '16';
+            $sheetModele = $this->borderInsideOutside($cellDebut, $cellFin, $sheetModele);
+
             $cellDebut = Coordinate::StringFromColumnIndex($col) . '17';
             $cellFin = Coordinate::StringFromColumnIndex($col + $i - 1) . '21';
             $sheetModele = $this->borderInsideOutside($cellDebut, $cellFin, $sheetModele);
@@ -191,15 +206,20 @@ class Mcc
             $cellFin = Coordinate::StringFromColumnIndex($col + $i - 1) . '49';
             $sheetModele = $this->borderInsideOutside($cellDebut, $cellFin, $sheetModele);
 
-            $debutCompetences = $col + $i + 1;
+            $debutCompetencesBUT23 = $col + $i + 1;
         }
 
         /** @var \App\Entity\Semestre $semestre */
         foreach ($semestres as $semestre) {
-            dump($semestre->getLibelle());
             $this->tabRefTotalParcours = $tabRefTotalParcours;
+            if ($semestre->getOrdreLmd() < 3 && $departement->getTypeStructure() !== Departement::TYPE3) {
+                $sheetModele = $spreadsheet->getSheetByName('modele_1');
+                $debutCompetences = Coordinate::columnIndexFromString('AO');
+            } else {
+                $sheetModele = $spreadsheet->getSheetByName('modele');
+                $debutCompetences = $debutCompetencesBUT23;
+            }
 
-            $sheetModele = $spreadsheet->getSheetByName('modele');
             if ($sheetModele !== null) {
                 $sheet = $sheetModele->copy();
 
@@ -208,7 +228,7 @@ class Mcc
                 unset($sheet);
                 $spreadsheet->setActiveSheetIndexByName('Semestre ' . $semestre->getOrdreLmd());
                 $sheet = $spreadsheet->getActiveSheet();
-                $sheet->setCellValue('N6', $semestre->getOrdreLmd());
+                $sheet->setCellValue('M6', $semestre->getOrdreLmd());
 
                 //Ajout des colonnes de compétences
                 $competences = $this->apcNiveauRepository->findBySemestre($semestre);
@@ -240,6 +260,10 @@ class Mcc
                     $i++;
                 }
                 $sheet->mergeCellsByColumnAndRow($debutCompetences, 16, $debutCompetences + $i - 1, 16);
+                $cellDebut = Coordinate::StringFromColumnIndex($debutCompetences) . '16';
+                $cellFin = Coordinate::StringFromColumnIndex($debutCompetences + $i - 1) . '16';
+                $sheet = $this->borderInsideOutside($cellDebut, $cellFin, $sheet);
+
                 $sheet->getStyle(Coordinate::StringFromColumnIndex($debutCompetences) . '16')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
                 $cellDebut = Coordinate::StringFromColumnIndex($debutCompetences) . '17';
@@ -259,13 +283,19 @@ class Mcc
                     $sheet->setCellValueByColumnAndRow(2, $ligne, $ressource->getCodeMatiere());
                     $sheet->setCellValueByColumnAndRow(3, $ligne, $ressource->getLibelle());
                     $sheet->setCellValueByColumnAndRow(4, $ligne, $ressource->getLibelleCourt());
-                    $sheet->setCellValueByColumnAndRow(6, $ligne, $ressource->getHeuresTotales());
-                    $cellPtut = Coordinate::stringFromColumnIndex(11) . $ligne;
+                    $sheet->setCellValueByColumnAndRow(5, $ligne, $ressource->getHeuresTotales());
+                    $sheet->getStyle('E' . $ligne)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
+
+                    $sheet->setCellValue('F' . $ligne,
+                        '=SUM(G' . $ligne . ':I' . $ligne . ')');
+                    $sheet->getStyle('F' . $ligne)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
+
+                    $cellPtut = Coordinate::stringFromColumnIndex(10) . $ligne;
                     $sheet->getStyle($cellPtut)->getFill()
                         ->setFillType(Fill::FILL_SOLID)
                         ->getStartColor()->setARGB('FFCCCCCC');
-                    $cellDebut = Coordinate::stringFromColumnIndex(27) . $ligne;
-                    $cellFin = Coordinate::stringFromColumnIndex(40) . $ligne;
+                    $cellDebut = Coordinate::stringFromColumnIndex(26) . $ligne;
+                    $cellFin = Coordinate::stringFromColumnIndex(39) . $ligne;
                     $sheet->getStyle($cellDebut . ':' . $cellFin)->getFill()
                         ->setFillType(Fill::FILL_SOLID)
                         ->getStartColor()->setARGB('FFCCCCCC');
@@ -274,14 +304,11 @@ class Mcc
                         $sheet->getStyle(Coordinate::stringFromColumnIndex($tabRefCompetences[$competence->getCompetence()->getId()]) . $ligne)->getFill()
                             ->setFillType(Fill::FILL_SOLID)
                             ->getStartColor()->setARGB('FFF6D6B8');
+                        $sheet->setCellValueByColumnAndRow($tabRefCompetences[$competence->getCompetence()->getId()],
+                            $ligne, $competence->getCoefficient());
                     }
 
-                    if ($departement->getTypeStructure() !== Departement::TYPE3 && $semestre->getOrdreLmd() < 3) {
-                        //tous les parcours sur du BUT1
-                        foreach ($parcours as $parc) {
-                            $sheet->setCellValueByColumnAndRow($tabRefParcours[$parc->getId()], $ligne, 'X');
-                        }
-                    } else {
+                    if ($departement->getTypeStructure() === Departement::TYPE3 || $semestre->getOrdreLmd() >= 3) {
                         foreach ($ressource->getApcRessourceParcours() as $apcSaeParcour) {
                             if (array_key_exists($apcSaeParcour->getParcours()->getId(), $parcours)) {
 
@@ -302,8 +329,11 @@ class Mcc
                     $sheet->setCellValueByColumnAndRow(2, $ligne, $sae->getCodeMatiere());
                     $sheet->setCellValueByColumnAndRow(3, $ligne, $sae->getLibelle());
                     $sheet->setCellValueByColumnAndRow(4, $ligne, $sae->getLibelleCourt());
-                    $cellDebut = Coordinate::stringFromColumnIndex(15) . $ligne;
-                    $cellFin = Coordinate::stringFromColumnIndex(26) . $ligne;
+                    $sheet->setCellValue('F' . $ligne,
+                        '=SUM(G' . $ligne . ':J' . $ligne . ')');
+                    $sheet->getStyle('F' . $ligne)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
+                    $cellDebut = Coordinate::stringFromColumnIndex(14) . $ligne;
+                    $cellFin = Coordinate::stringFromColumnIndex(25) . $ligne;
                     $sheet->getStyle($cellDebut . ':' . $cellFin)->getFill()
                         ->setFillType(Fill::FILL_SOLID)
                         ->getStartColor()->setARGB('FFCCCCCC');
@@ -312,14 +342,11 @@ class Mcc
                         $sheet->getStyle(Coordinate::stringFromColumnIndex($tabRefCompetences[$competence->getCompetence()->getId()]) . $ligne)->getFill()
                             ->setFillType(Fill::FILL_SOLID)
                             ->getStartColor()->setARGB('FFF6D6B8');
+                        $sheet->setCellValueByColumnAndRow($tabRefCompetences[$competence->getCompetence()->getId()],
+                            $ligne, $competence->getCoefficient());
                     }
 
-                    if ($departement->getTypeStructure() !== Departement::TYPE3 && $semestre->getOrdreLmd() < 3) {
-                        //tous les parcours sur du BUT1
-                        foreach ($parcours as $parc) {
-                            $sheet->setCellValueByColumnAndRow($tabRefParcours[$parc->getId()], $ligne, 'X');
-                        }
-                    } else {
+                    if ($departement->getTypeStructure() === Departement::TYPE3 || $semestre->getOrdreLmd() >= 3) {
                         foreach ($sae->getApcSaeParcours() as $apcSaeParcour) {
                             if (array_key_exists($apcSaeParcour->getParcours()->getId(), $parcours)) {
                                 $sheet->setCellValueByColumnAndRow($tabRefParcours[$apcSaeParcour->getParcours()->getId()],
@@ -331,27 +358,60 @@ class Mcc
                     $ligne++;
                 }
 
-                $finTableau = $ligne-1;
-
+                $finTableau = $ligne - 1;
                 // Formules coméptences
                 foreach ($competences as $competence) {
-                    foreach ($parcours as $parcour) {
-                        $colParc = Coordinate::stringFromColumnIndex($tabRefParcours[$parcour->getId()]);
+                    if ($departement->getTypeStructure() === Departement::TYPE3 || $semestre->getOrdreLmd() >= 3) {
+                        foreach ($parcours as $parcour) {
+                            $colParc = Coordinate::stringFromColumnIndex($tabRefParcours[$parcour->getId()]);
+                            $colComp = Coordinate::stringFromColumnIndex($tabRefCompetences[$competence->getCompetence()->getId()]);
+                            $sheet->setCellValue($colComp . $this->tabRefTotalParcours[$parcour->getId()] + 1,
+                                '=SUMIF($' . $colParc . '22:$' . $colParc . $finTableau . ',"X",' . $colComp . '22:' . $colComp . $finTableau . ')');
+                            //=SOMME.SI($AP22:$AP49;"X";AT22:AT49)
+                            //total des SAE
+                            $sheet->setCellValue($colComp . $this->tabRefTotalParcours[$parcour->getId()] + 2,
+                                '=SUMIF($' . $colParc . $debutSae . ':$' . $colParc . $finTableau . ',"X",' . $colComp . $debutSae . ':' . $colComp . $finTableau . ')');
+
+                            $total = $colComp . $this->tabRefTotalParcours[$parcour->getId()] + 1;
+                            $totalSae = $colComp . $this->tabRefTotalParcours[$parcour->getId()] + 2;
+                            $cellCondition = $colComp . $this->tabRefTotalParcours[$parcour->getId()] + 3;
+                            $sheet->setCellValue($cellCondition,
+                                '=IFERROR(' . $totalSae . '/' . $total . ',"")');
+
+                            $redStyle = new Style(false, true);
+                            $redStyle->getFill()
+                                ->setFillType(Fill::FILL_SOLID)
+                                ->getEndColor()->setARGB(Color::COLOR_RED);
+                            $redStyle->getFont()->setColor(new Color(Color::COLOR_WHITE));
+
+                            $conditionalStyles = [];
+                            $wizardFactory = new Wizard('A1');
+                            /** @var Wizard\Expression $expressionWizard */
+                            $expressionWizard = $wizardFactory->newRule(Wizard::EXPRESSION);
+                            $expressionWizard->expression('AND(ISNUMBER(' . $cellCondition . '),OR(' . $cellCondition . '<40%,' . $cellCondition . '>60%))')
+                                ->setStyle($redStyle);
+                            $conditionalStyles[] = $expressionWizard->getConditional();
+                            $sheet
+                                ->getStyle($cellCondition)
+                                ->setConditionalStyles($conditionalStyles);
+
+                        }
+                    } else {
+                        $finTableau = $finTableau > 49 ? $finTableau : 49;
                         $colComp = Coordinate::stringFromColumnIndex($tabRefCompetences[$competence->getCompetence()->getId()]);
-                        dump($colComp . $this->tabRefTotalParcours[$parcour->getId()]+1);
-                        $sheet->setCellValue($colComp . $this->tabRefTotalParcours[$parcour->getId()]+1,
-                            '=SUMIF($' . $colParc . '22:$' . $colParc . $finTableau.',"X",'.$colComp.'22:'.$colComp. $finTableau.')');
+                        $sheet->setCellValue($colComp . ($finTableau + 3),
+                            '=SUM(' . $colComp . '22:' . $colComp . $finTableau . ')');
                         //=SOMME.SI($AP22:$AP49;"X";AT22:AT49)
                         //total des SAE
-                        dump($colComp . $this->tabRefTotalParcours[$parcour->getId()]+2);
-                        $sheet->setCellValue($colComp . $this->tabRefTotalParcours[$parcour->getId()]+2,
-                            '=SUMIF($' . $colParc . $debutSae.':$' . $colParc . $finTableau.',"X",'.$colComp. $debutSae.':'.$colComp.$finTableau.')');
+                        $sheet->setCellValue($colComp . ($finTableau + 4),
+                            '=SUM(' . $colComp . $debutSae . ':' . $colComp . $finTableau . ')');
 
-                        $total = $colComp . $this->tabRefTotalParcours[$parcour->getId()]+1;
-                        $totalSae = $colComp . $this->tabRefTotalParcours[$parcour->getId()]+2;
-                        $cellCondition = $colComp . $this->tabRefTotalParcours[$parcour->getId()]+3;
+                        $total = $colComp . ($finTableau + 3);
+                        $totalSae = $colComp . ($finTableau + 4);
+                        $cellCondition = $colComp . ($finTableau + 5);
+
                         $sheet->setCellValue($cellCondition,
-                            '=IFERROR('.$totalSae.'/'.$total.',"")');
+                            '=IFERROR(' . $totalSae . '/' . $total . ',"")');
 
                         $redStyle = new Style(false, true);
                         $redStyle->getFill()
@@ -363,22 +423,43 @@ class Mcc
                         $wizardFactory = new Wizard('A1');
                         /** @var Wizard\Expression $expressionWizard */
                         $expressionWizard = $wizardFactory->newRule(Wizard::EXPRESSION);
-                        $expressionWizard->expression('AND(ISNUMBER('.$cellCondition.'),OR('.$cellCondition.'<40%,'.$cellCondition.'>60%))')
+                        $expressionWizard->expression('AND(ISNUMBER(' . $cellCondition . '),OR(' . $cellCondition . '<40%,' . $cellCondition . '>60%))')
                             ->setStyle($redStyle);
-                        dump($expressionWizard->getConditional());
                         $conditionalStyles[] = $expressionWizard->getConditional();
                         $sheet
                             ->getStyle($cellCondition)
                             ->setConditionalStyles($conditionalStyles);
 
+                        $sheet->getStyle($cellCondition)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
+                        $sheet->getStyle($totalSae)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
+                        $sheet->getStyle($total)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
                     }
                 }
+
+                //vérouillage
+
+
+//                for ($j = 1; $j < 55; $j++) {
+//                   $sheet->getColumnDimensionByColumn($j)->setVisible(false);
+////                    for ($i = 1; $i < 22; $i++) {
+////                        $sheet->getRowDimension($i)->setVisible(false);
+////                        $sheet->getStyle(Coordinate::stringFromColumnIndex($j) . $i)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
+////                    }
+//////                    $finTableau = $finTableau > 49 ? $finTableau : 49;
+//////                    for ($i = $finTableau; $i < 80; $i++) {
+//////                        //$sheet->getRowDimension($i)->setVisible(false);
+//////                        $sheet->getStyle(Coordinate::stringFromColumnIndex($j) . $i)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
+//////                    }
+//                }
             }
         }
+
         $sheetModele = $spreadsheet->getSheetByName('modele');
         $spreadsheet->removeSheetByIndex($spreadsheet->getIndex($sheetModele));//suppression de la page modele
+        $sheetModele = $spreadsheet->getSheetByName('modele_1');
+        $spreadsheet->removeSheetByIndex($spreadsheet->getIndex($sheetModele));//suppression de la page modele
+        $excelWriter->setSpreadsheet($spreadsheet, true);
 
-        $excelWriter->setSpreadsheet($spreadsheet);
 
         return $excelWriter->genereFichier('mcc_fi_' . $departement->getSigle());
     }
