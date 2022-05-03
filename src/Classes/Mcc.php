@@ -47,6 +47,12 @@ class Mcc
         $sheetModele = $spreadsheet->getSheetByName('modele');
         $sheetModele1 = $spreadsheet->getSheetByName('modele_1'); //modèle du BUT 1
 
+        $redStyle = new Style(false, true);
+        $redStyle->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getEndColor()->setARGB(Color::COLOR_RED);
+        $redStyle->getFont()->setColor(new Color(Color::COLOR_WHITE));
+
         if ($sheetModele !== null && $sheetModele1) {
 
             if ($departement->getTypeDepartement() === Departement::SECONDAIRE) {
@@ -192,11 +198,13 @@ class Mcc
                 $rowTotal += 5;
                 $i++;
             }
-            $sheetModele->mergeCellsByColumnAndRow($col, 16, $col + $i - 1, 16);
+            if ($i > 1) {
+                $sheetModele->mergeCellsByColumnAndRow($col, 16, $col + $i - 1, 16);
+                $cellDebut = Coordinate::StringFromColumnIndex($col) . '16';
+                $cellFin = Coordinate::StringFromColumnIndex($col + $i - 1) . '16';
+                $sheetModele = $this->borderInsideOutside($cellDebut, $cellFin, $sheetModele);
+            }
             $sheetModele->getStyle(Coordinate::StringFromColumnIndex($col) . '16')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $cellDebut = Coordinate::StringFromColumnIndex($col) . '16';
-            $cellFin = Coordinate::StringFromColumnIndex($col + $i - 1) . '16';
-            $sheetModele = $this->borderInsideOutside($cellDebut, $cellFin, $sheetModele);
 
             $cellDebut = Coordinate::StringFromColumnIndex($col) . '17';
             $cellFin = Coordinate::StringFromColumnIndex($col + $i - 1) . '21';
@@ -283,6 +291,9 @@ class Mcc
                     $sheet->setCellValueByColumnAndRow(2, $ligne, $ressource->getCodeMatiere());
                     $sheet->setCellValueByColumnAndRow(3, $ligne, $ressource->getLibelle());
                     $sheet->setCellValueByColumnAndRow(4, $ligne, $ressource->getLibelleCourt());
+
+                    $cell = Coordinate::stringFromColumnIndex(4) . $ligne;
+
                     $sheet->setCellValueByColumnAndRow(5, $ligne, $ressource->getHeuresTotales());
                     $sheet->getStyle('E' . $ligne)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
 
@@ -331,6 +342,9 @@ class Mcc
                     $sheet->setCellValueByColumnAndRow(2, $ligne, $sae->getCodeMatiere());
                     $sheet->setCellValueByColumnAndRow(3, $ligne, $sae->getLibelle());
                     $sheet->setCellValueByColumnAndRow(4, $ligne, $sae->getLibelleCourt());
+
+                    $cell = Coordinate::stringFromColumnIndex(4) . $ligne;
+
                     $sheet->setCellValue('F' . $ligne,
                         '=SUM(G' . $ligne . ':J' . $ligne . ')');
                     $sheet->getStyle('F' . $ligne)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
@@ -382,12 +396,6 @@ class Mcc
                             $sheet->setCellValue($cellCondition,
                                 '=IFERROR(' . $totalSae . '/' . $total . ',"")');
 
-                            $redStyle = new Style(false, true);
-                            $redStyle->getFill()
-                                ->setFillType(Fill::FILL_SOLID)
-                                ->getEndColor()->setARGB(Color::COLOR_RED);
-                            $redStyle->getFont()->setColor(new Color(Color::COLOR_WHITE));
-
                             $conditionalStyles = [];
                             $wizardFactory = new Wizard('A1');
                             /** @var Wizard\Expression $expressionWizard */
@@ -417,12 +425,6 @@ class Mcc
                         $sheet->setCellValue($cellCondition,
                             '=IFERROR(' . $totalSae . '/' . $total . ',"")');
 
-                        $redStyle = new Style(false, true);
-                        $redStyle->getFill()
-                            ->setFillType(Fill::FILL_SOLID)
-                            ->getEndColor()->setARGB(Color::COLOR_RED);
-                        $redStyle->getFont()->setColor(new Color(Color::COLOR_WHITE));
-
                         $conditionalStyles = [];
                         $wizardFactory = new Wizard('A1');
                         /** @var Wizard\Expression $expressionWizard */
@@ -439,22 +441,6 @@ class Mcc
                         $sheet->getStyle($total)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
                     }
                 }
-
-                //vérouillage
-
-
-//                for ($j = 1; $j < 55; $j++) {
-//                   $sheet->getColumnDimensionByColumn($j)->setVisible(false);
-////                    for ($i = 1; $i < 22; $i++) {
-////                        $sheet->getRowDimension($i)->setVisible(false);
-////                        $sheet->getStyle(Coordinate::stringFromColumnIndex($j) . $i)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
-////                    }
-//////                    $finTableau = $finTableau > 49 ? $finTableau : 49;
-//////                    for ($i = $finTableau; $i < 80; $i++) {
-//////                        //$sheet->getRowDimension($i)->setVisible(false);
-//////                        $sheet->getStyle(Coordinate::stringFromColumnIndex($j) . $i)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
-//////                    }
-//                }
             }
         }
 
