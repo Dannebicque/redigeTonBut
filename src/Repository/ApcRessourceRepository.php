@@ -186,4 +186,19 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByDD(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.libelle LIKE :t1')
+            ->orWhere('r.description LIKE :t1')
+            ->orWhere('r.motsCles LIKE :t1')
+            ->orwhere('r.libelle LIKE :t2')
+            ->orWhere('r.description LIKE :t2')
+            ->orWhere('r.motsCles LIKE :t2')
+            ->setParameter('t1', '%urable%')
+            ->setParameter('t2', '%éco-%')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -21,7 +21,9 @@
                 <td>{{ ressource.libelle }}</td>
                 <td>{{ ressource.semestre.departement.sigle }}</td>
                 <td>{{ ressource.semestre.libelle }}</td>
-                <td>&nbsp;</td>
+                <td><a href="{{ path('but_fiche_ressource',
+                        {'apcRessource': ressource.id, parcours: parcours is defined ? parcours.id : null }) }}"
+                       target="_blank">Voir la fiche</a></td>
             </tr>
         {% endif %}
         {% endfor %}
@@ -32,7 +34,9 @@
                 <td>{{ sae.libelle }}</td>
                 <td>{{ sae.semestre.departement.sigle }}</td>
                 <td>{{ sae.semestre.libelle }}</td>
-                <td>&nbsp;</td>
+                <td><a href="{{ path('but_fiche_sae',
+                        {'apcSae': sae.id, parcours: parcours is defined ? parcours.id : null }) }}"
+                       target="_blank">Voir la fiche</a></td>
             </tr>
         {% endif %}
         {% endfor %}
