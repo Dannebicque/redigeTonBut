@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DurableController!{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Ress/Sae</th>
+            <th>Libellé</th>
+            <th>Département</th>
+            <th>Semestre</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ressource in ressources %}
+            {%if ressource.semestre != null%}
+            <tr>
+                <td>Ress.</td>
+                <td>{{ ressource.libelle }}</td>
+                <td>{{ ressource.semestre.departement.sigle }}</td>
+                <td>{{ ressource.semestre.libelle }}</td>
+                <td>&nbsp;</td>
+            </tr>
+        {% endif %}
+        {% endfor %}
+        {% for sae in saes %}
+            {%if sae.semestre != null %}
+            <tr>
+                <td>SAE.</td>
+                <td>{{ sae.libelle }}</td>
+                <td>{{ sae.semestre.departement.sigle }}</td>
+                <td>{{ sae.semestre.libelle }}</td>
+                <td>&nbsp;</td>
+            </tr>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock %}
