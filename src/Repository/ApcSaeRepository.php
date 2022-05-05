@@ -170,4 +170,19 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByKeywords(array $keyWords)
+    {
+        $query = $this->createQueryBuilder('r');
+
+        foreach ($keyWords as $keyword) {
+            $query->orWhere('r.libelle LIKE :t1')
+                ->orWhere('r.description LIKE :t1')
+                ->orWhere('r.objectifs LIKE :t1')
+                ->setParameter('t1', '%'.mb_strtolower($keyword).'%');
+        }
+
+        return $query->getQuery()
+            ->getResult();
+    }
 }

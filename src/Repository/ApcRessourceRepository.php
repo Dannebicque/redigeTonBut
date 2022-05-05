@@ -90,7 +90,7 @@ class ApcRessourceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->where('s.annee = :annee')
-           // ->andWhere('r.ficheAdaptationLocale = false')
+            // ->andWhere('r.ficheAdaptationLocale = false')
             ->setParameter('annee', $annee->getId())
             ->orderBy('r.semestre', 'ASC')
             ->addOrderBy('r.ordre', 'ASC')
@@ -112,8 +112,8 @@ class ApcRessourceRepository extends ServiceEntityRepository
         //todo: ne filtre pas selon les parcours...
         foreach ($semestres as $sem) {
             if ($sem->getOrdreLmd() <= $semestre->getOrdreLmd()) {
-                $query->orWhere('r.semestre = :semestre'.$i)
-                    ->setParameter('semestre'.$i, $sem->getId());
+                $query->orWhere('r.semestre = :semestre' . $i)
+                    ->setParameter('semestre' . $i, $sem->getId());
                 $i++;
             }
         }
@@ -199,6 +199,21 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->setParameter('t1', '%urable%')
             ->setParameter('t2', '%éco-%')
             ->getQuery()
+            ->getResult();
+    }
+
+    public function findByKeywords(array $keywords): array
+    {
+        $query = $this->createQueryBuilder('r');
+
+        foreach ($keywords as $keyword) {
+            $query->orWhere('r.libelle LIKE :t1')
+                ->orWhere('r.description LIKE :t1')
+                ->orWhere('r.motsCles LIKE :t1')
+                ->setParameter('t1', mb_strtolower($keyword));
+        }
+
+        return $query->getQuery()
             ->getResult();
     }
 }

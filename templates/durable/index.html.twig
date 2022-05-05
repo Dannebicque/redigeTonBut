@@ -3,44 +3,104 @@
 {% block title %}Hello DurableController!{% endblock %}
 
 {% block content %}
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Ress/Sae</th>
-            <th>Libellé</th>
-            <th>Département</th>
-            <th>Semestre</th>
-            <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for ressource in ressources %}
-            {%if ressource.semestre != null%}
-            <tr>
-                <td>Ress.</td>
-                <td>{{ ressource.libelle }}</td>
-                <td>{{ ressource.semestre.departement.sigle }}</td>
-                <td>{{ ressource.semestre.libelle }}</td>
-                <td><a href="{{ path('but_fiche_ressource',
-                        {'apcRessource': ressource.id, parcours: parcours is defined ? parcours.id : null }) }}"
-                       target="_blank">Voir la fiche</a></td>
-            </tr>
-        {% endif %}
-        {% endfor %}
-        {% for sae in saes %}
-            {%if sae.semestre != null %}
-            <tr>
-                <td>SAE.</td>
-                <td>{{ sae.libelle }}</td>
-                <td>{{ sae.semestre.departement.sigle }}</td>
-                <td>{{ sae.semestre.libelle }}</td>
-                <td><a href="{{ path('but_fiche_sae',
-                        {'apcSae': sae.id, parcours: parcours is defined ? parcours.id : null }) }}"
-                       target="_blank">Voir la fiche</a></td>
-            </tr>
-        {% endif %}
-        {% endfor %}
-        </tbody>
+    <div class="card mb-2">
+        <div class="card-body">
+            <form method="post">
+                <div id="blocs">
+                    <div id="bloc_1">
+                        <label for="name_1">Mot clé :</label>
+                        <input type="text" id="name_1" name="name_1" class="form-control">
+                    </div>
+                </div>
+                <div>
+                    <button id="btnAdd" class="btn btn-outline-success">Ajouter</button>
+                </div>
 
-    </table>
+                <div>
+                    <input type="checkbox" name="type[]" value="sae" checked> SAÉ
+                    <input type="checkbox" name="type[]" value="ressource" checked> Ressource
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-outline-success">Rechercher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-2">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-success">
+                        <strong>Mots clés : </strong>{% for keyword in keyWords %}{{ keyword }}, {% endfor %}
+                        <strong>Nb réponses : </strong> {{ ressources|length }} ressources, {{ saes|length }} saes
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Ress/Sae</th>
+                            <th>Libellé</th>
+                            <th>Département</th>
+                            <th>Semestre</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ressource in ressources %}
+                            {% if ressource.semestre != null %}
+                                <tr>
+                                    <td>Ress.</td>
+                                    <td>{{ ressource.libelle }}</td>
+                                    <td>{{ ressource.semestre.departement.sigle }}</td>
+                                    <td>{{ ressource.semestre.libelle }}</td>
+                                    <td><a href="{{ path('but_fiche_ressource',
+                                            {'apcRessource': ressource.id, parcours: parcours is defined ? parcours.id : null }) }}"
+                                           target="_blank">Voir la fiche</a></td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        {% for sae in saes %}
+                            {% if sae.semestre != null %}
+                                <tr>
+                                    <td>SAE.</td>
+                                    <td>{{ sae.libelle }}</td>
+                                    <td>{{ sae.semestre.departement.sigle }}</td>
+                                    <td>{{ sae.semestre.libelle }}</td>
+                                    <td><a href="{{ path('but_fiche_sae',
+                                            {'apcSae': sae.id, parcours: parcours is defined ? parcours.id : null }) }}"
+                                           target="_blank">Voir la fiche</a></td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      const ready = (callback) => {
+        if (document.readyState != 'loading') callback()
+        else document.addEventListener('DOMContentLoaded', callback)
+      }
+
+      ready(() => {
+        document.querySelector('#btnAdd').addEventListener('click', function (e) {
+          console.log('cocuou')
+          e.preventDefault()
+          var bloc = document.querySelector('#bloc_1')
+          var clone = bloc.cloneNode(true)
+          clone.querySelector('input').value = ''
+          clone.querySelector('input').name = 'name_' + (document.querySelectorAll('#bloc_1 input').length + 1)
+          clone.querySelector('input').id = 'name_' + (document.querySelectorAll('#bloc_1 input').length + 1)
+          clone.querySelector('label').setAttribute('for', 'name_' + (document.querySelectorAll('#bloc_1 input').length + 1))
+          document.querySelector('#blocs').appendChild(clone)
+        })
+      })
+    </script>
 {% endblock %}
