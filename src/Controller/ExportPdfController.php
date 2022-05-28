@@ -161,4 +161,59 @@ class ExportPdfController extends BaseController
             $name
         );
     }
+
+    #[Route('/export/al/pdf/{parcours}', name: 'export_pdf_adaptation_locale')]
+    public function exportPdfAl(
+        Pdf $knpSnappyPdf,
+        SemestreRepository $semestreRepository,
+        ApcSaeRepository $apcSaeRepository,
+        ApcSaeParcoursRepository $apcSaeParcoursRepository,
+        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
+        ApcRessourceRepository $apcRessourceRepository,
+        ApcParcours $parcours
+    ): Response {
+        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+            $semestres = $semestreRepository->findByParcours($parcours);
+        } else {
+            $semestres = $this->getDepartement()->getSemestres();
+        }
+
+        $ressources = [];
+        $saes = [];
+
+        foreach ($semestres as $semestre) {
+            if ($this->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $semestre->getOrdreLmd() < 3) {
+                $ressources[$semestre->getId()] = $apcRessourceRepository->findBySemestreAl($semestre);
+                $saes[$semestre->getId()] = $apcSaeRepository->findBySemestreAl($semestre);
+            } else {
+                $ressources[$semestre->getId()] = $apcRessourceParcoursRepository->findBySemestreAl($semestre, $parcours);
+                $saes[$semestre->getId()] = $apcSaeParcoursRepository->findBySemestreAl($semestre, $parcours);
+            }
+        }
+
+        $day = new DateTime('now');
+        $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_' . $parcours->getCode() . '_' . $day->format('dmYHis') . '.pdf';
+        $html = $this->renderView('formation/export-referentiel.html.twig', [
+            'allParcours' => $this->getDepartement()->getApcParcours(),
+            'departement' => $this->getDepartement(),
+            'semestres' => $semestres,
+            'saes' => $saes,
+            'ressources' => $ressources,
+            'parcours' => $parcours,
+        ]);
+
+        $header = $this->renderView('export_pdf/_header.html.twig',
+            ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
+        $footer = $this->renderView('export_pdf/_footer.html.twig');
+
+        return new PdfResponse(
+            $knpSnappyPdf->getOutputFromHtml($html,
+                [
+                    'header-html' => $header,
+//                    'footer-html' => $footer,
+                ]
+            ),
+            $name
+        );
+    }
 }

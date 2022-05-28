@@ -35,6 +35,11 @@
                                 <p class="card-text">
                                 <ul>
                                     <li>
+                                        <a href="{{ path('export_pdf_adaptation_locale', {parcours: parcours.id}) }}">
+                                            Export de l'adaptation locale dans le référentiel de formation
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="{{ path('export_ressources_annee', {annee: annee.id, parcours: parcours.id, _format:'docx'}) }}">
                                             <span class="label">Exporter les Ressources de l'année en Word</span>
                                         </a>
