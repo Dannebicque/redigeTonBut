@@ -43,14 +43,14 @@ class ExportController extends BaseController
     }
 
 
-    #[Route('/export-referentiel-formation/word', name: 'export_referentiel_format_word_al')]
+    #[Route('/export-referentiel-formation/word', name: 'export_referentiel_format_word')]
     public function exportReferentielFormationWord(
         ApcReferentielFormationExport $apcReferentielFormationExport): Response
     {
         return $apcReferentielFormationExport->export($this->getDepartement(), 'docx');
     }
 
-    #[Route('/export-referentiel-formation/word-al', name: 'export_referentiel_format_word')]
+    #[Route('/export-referentiel-formation/word-al', name: 'export_referentiel_format_word_al')]
     public function exportReferentielFormationWordAl(
         ApcReferentielFormationExport $apcReferentielFormationExport): Response
     {

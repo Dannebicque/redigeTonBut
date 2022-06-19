@@ -65,7 +65,7 @@ class ApcReferentielFormationExport
                 return $this->exportExcel();
                 break;
             case 'al':
-                return $this->exportZipWordAl();
+                return $this->exportZipWord();
                 break;
 
         }
