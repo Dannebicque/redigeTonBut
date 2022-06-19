@@ -11,6 +11,8 @@
         Export Excel du référentiel de formation
     </a> | <a href="{{ path('export_referentiel_format_word', {departement:user_data.departement.id}) }}">
     Export complet de toutes les fiches ressources/SAE au format word
+</a> | <a href="{{ path('export_referentiel_format_word_al', {departement:user_data.departement.id}) }}">
+    Export de toutes les fiches ressources/SAE au format word pour l'adaptation locale
 </a><br><br>
     <a href="{{ path('export_referentiel_synthese_format_excel', {departement:user_data.departement.id}) }}">
         Synthèse des ressources et SAE / parcours / semestre (avec volumes horaires)

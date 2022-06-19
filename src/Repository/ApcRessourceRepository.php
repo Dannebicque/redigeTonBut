@@ -69,6 +69,21 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByDepartementAl(Departement $departement)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
+            ->where('a.departement = :departement')
+            ->andWhere('r.ficheAdaptationLocale = true')
+            ->setParameter('departement', $departement->getId())
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByAnneeArray(Annee $annee)
     {
         $query = $this->findByAnnee($annee);
