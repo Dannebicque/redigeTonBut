@@ -226,8 +226,15 @@ class ExcelWriter
         }
     }
 
-    public function setSpreadsheet(Spreadsheet $sheet) {
+    public function setSpreadsheet(Spreadsheet $sheet, bool $mcc = false): void
+    {
         $this->spreadsheet = $sheet;
+       if ($mcc === true) {
+           foreach ($this->spreadsheet->getAllSheets() as $sh) {
+               $sh->setShowGridlines(false);
+               $sh->getProtection()->setSheet(true);
+           }
+       }
     }
 
     public function genereFichier($name) {

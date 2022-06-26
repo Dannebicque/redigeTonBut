@@ -47,8 +47,14 @@ class ApcReferentielFormationExport
     public function export(Departement $departement, string $_format)
     {
 
-        $this->ressources = $this->apcRessourceRepository->findByDepartement($departement);
-        $this->saes = $this->apcSaeRepository->findByDepartement($departement);
+        if ($_format === 'al') {
+            $this->ressources = $this->apcRessourceRepository->findByDepartementAl($departement);
+            $this->saes = $this->apcSaeRepository->findByDepartementAl($departement);
+        }  else {
+            $this->ressources = $this->apcRessourceRepository->findByDepartement($departement);
+            $this->saes = $this->apcSaeRepository->findByDepartement($departement);
+        }
+
 
 
         switch ($_format) {
@@ -57,6 +63,9 @@ class ApcReferentielFormationExport
                 break;
             case 'xlsx':
                 return $this->exportExcel();
+                break;
+            case 'al':
+                return $this->exportZipWord();
                 break;
 
         }

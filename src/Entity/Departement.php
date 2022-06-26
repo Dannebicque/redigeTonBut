@@ -130,6 +130,11 @@ class Departement extends BaseEntity
     private $pn_bloque;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $coeff_editable;
+
+    /**
      * @ORM\Column(type="float")
      */
     private $altBut1;
@@ -537,6 +542,18 @@ class Departement extends BaseEntity
     public function setPnBloque(bool $pn_bloque): self
     {
         $this->pn_bloque = $pn_bloque;
+
+        return $this;
+    }
+
+    public function getCoeffEditable(): ?bool
+    {
+        return $this->coeff_editable;
+    }
+
+    public function setCoeffEditable(bool $coeff_editable): self
+    {
+        $this->coeff_editable = $coeff_editable;
 
         return $this;
     }

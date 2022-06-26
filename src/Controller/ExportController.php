@@ -9,7 +9,6 @@ use App\Classes\Apc\TableauExport;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -49,6 +48,13 @@ class ExportController extends BaseController
         ApcReferentielFormationExport $apcReferentielFormationExport): Response
     {
         return $apcReferentielFormationExport->export($this->getDepartement(), 'docx');
+    }
+
+    #[Route('/export-referentiel-formation/word-al', name: 'export_referentiel_format_word_al')]
+    public function exportReferentielFormationWordAl(
+        ApcReferentielFormationExport $apcReferentielFormationExport): Response
+    {
+        return $apcReferentielFormationExport->export($this->getDepartement(), 'al');
     }
 
     #[Route('/export-ressources/{annee}.{_format}/{parcours}', name: 'export_ressources_annee')]

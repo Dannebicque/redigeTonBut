@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Exports pour la spécialité{% endblock %}
+
+{% block content %}
+    <form method="post" action="{{ path('export_mcc_genere') }}" class="form">
+        <div>
+            <label for="departement">Spécialité</label>
+            <select name="departement" id="departement">
+                <option value="">Choisir</option>
+                {% for departement in departements %}
+                    <option value="{{ departement.id }}">{{ departement.libelle }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="parcours">
+
+        </div>
+        <div>
+            <label for="iut">IUT ?</label>
+            <input type="radio" name="iut" value="troyes" id="iut" checked> IUT de Troyes
+            <input type="radio" name="iut" value="rcc"> IUT RCC
+        </div>
+        <div>
+            <label for="type">FI/FC ?</label>
+            <input type="radio" name="type" value="fi" id="type" checked> Formation Initiale
+            <input type="radio" name="type" value="fc"> Formation Continue / Alternance
+        </div>
+        <div>
+            <button type="submit">Valider</button>
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      const ready = (callback) => {
+        if (document.readyState != 'loading') callback()
+        else document.addEventListener('DOMContentLoaded', callback)
+      }
+
+      ready(() => {
+        document.querySelector('#departement').addEventListener('change', (e) => {
+          console.log(e.target.value)
+          document.querySelector('#parcours').innerHTML = ''
+          fetch('{{ path('export_mcc_parcours') }}?departement=' + e.target.value)
+            .then(response => response.text())
+            .then(html => {
+              document.querySelector('#parcours').innerHTML = html
+            })
+        })
+      })
+    </script>
+{% endblock %}

@@ -66,6 +66,21 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByDepartementAl(Departement $departement)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
+            ->where('a.departement = :departement')
+            ->andWhere('r.ficheAdaptationLocale = true')
+            ->setParameter('departement', $departement->getId())
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByDepartementToSemestreArray(?Departement $departement)
     {
         $tab = [];
@@ -153,6 +168,36 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
             ->getQuery()
+            ->getResult();
+    }
+
+    public function findByDD(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.libelle LIKE :t1')
+            ->orWhere('r.objectifs LIKE :t1')
+            ->orWhere('r.description LIKE :t1')
+            ->orwhere('r.libelle LIKE :t2')
+            ->orWhere('r.objectifs LIKE :t2')
+            ->orWhere('r.description LIKE :t2')
+            ->setParameter('t1', '%urable%')
+            ->setParameter('t2', '%éco-%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByKeywords(array $keyWords)
+    {
+        $query = $this->createQueryBuilder('r');
+
+        foreach ($keyWords as $keyword) {
+            $query->orWhere('r.libelle LIKE :t1')
+                ->orWhere('r.description LIKE :t1')
+                ->orWhere('r.objectifs LIKE :t1')
+                ->setParameter('t1', '%'.mb_strtolower($keyword).'%');
+        }
+
+        return $query->getQuery()
             ->getResult();
     }
 }

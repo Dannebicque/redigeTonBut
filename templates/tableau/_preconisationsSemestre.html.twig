@@ -45,7 +45,7 @@
 
                 {% for sae in saes %}
                     <td class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
+                        {% if (is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true) and user_data.departement.coeffEditable == false %}
                             <span  x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }}, {{ niveau.competence.id }})"></span>
                         {% else %}
                             <input type="text" class="form-control"
@@ -58,7 +58,7 @@
                 {% endfor %}
                 {% for sae in saesAl %}
                     <td class="text-center bg-warning adaptationLocale d-none">
-                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
+                        {% if (is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true) and user_data.departement.coeffEditable == false %}
                             <span  x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saesAl, {{ sae.id
                             }}, {{ niveau.competence.id }})"></span>
                         {% else %}
@@ -75,7 +75,7 @@
                 <th>&nbsp;</th>
                 {% for ressource in ressources %}
                     <td  class="text-center">
-                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
+                        {% if (is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true) and user_data.departement.coeffEditable == false %}
                             <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
                             .ressources,
 {{ ressource.id }}, {{ niveau.competence.id }})"></span>
@@ -91,7 +91,7 @@
                 {% endfor %}
                 {% for ressource in ressourcesAl %}
                     <td  class="text-center bg-warning adaptationLocale d-none">
-                        {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
+                        {% if (is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true) and user_data.departement.coeffEditable == false %}
                             <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
                             .ressourcesAl,
 {{ ressource.id }}, {{ niveau.competence.id }})"></span>
@@ -108,7 +108,7 @@
                 {% endfor %}
                 <td></td>
                 <td class="text-center">
-                    {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
+                    {% if (is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true) and user_data.departement.coeffEditable == false %}
                         <span x-html="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
                 'ects')"></span>
                     {% else %}
