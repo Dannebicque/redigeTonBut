@@ -42,7 +42,7 @@
                     {% if parcoursNiveaux[parcours.id][competence.id][i] is defined %}
                         <td class="niveau niveau{{ i }}{{ competence.couleur }}"
                             style="height: 190px; width: {{ width }}%; vertical-align: middle; text-align: center;
-                                    padding:4px">
+                                    padding:2px">
                             <p>Niveau {{ parcoursNiveaux[parcours.id][competence.id][i].ordre }}</p>
                             <p>
                             {{ parcoursNiveaux[parcours.id][competence.id][i].libelle }}</p>
@@ -50,7 +50,7 @@
                     {% else %}
                         <td class=""
                             style="height: 190px; width: {{ width }}%; vertical-align: middle; text-align: center;
-                                    padding:4px">
+                                    padding:2px">
                             &nbsp;
                         </td>
                     {% endif %}

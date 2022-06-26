@@ -98,6 +98,7 @@ class GenereFile
 
         $name = $chemin . 'PN-BUT-' . $departement->getSigle() . '.tex';
         $fichier = fopen($name, 'wb+');
+        $content="\xEF\xBB\xBF".$content;
         fwrite($fichier, $content);
         fclose($fichier);
 

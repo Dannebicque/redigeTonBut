@@ -33,7 +33,6 @@ class MyPdfLatex
         chmod($fichierLatex, 0744);
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
-        var_dump($fichierLatex);
         $input = new ArrayInput([
             'command' => 'app:compile-latex',
             // (optional) define the value of command arguments
@@ -50,7 +49,6 @@ class MyPdfLatex
         $contentBuffer = $outputBuffer->fetch();
 
         sleep(3);
-        var_dump($contentBuffer);
         $response = new Response(file_get_contents($output . $name . '.pdf'));
         $response->headers->set('Content-Type', 'application/pdf');
         $response->headers->set('Content-Disposition', 'attachment;filename="' . $name . '.pdf"');
