@@ -61,7 +61,7 @@
 {% block javascripts %}
     {{ parent() }}
 <script>
-    {% if not is_granted('ROLE_GT') %}
+    {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
   document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('showAdaptationLocale').addEventListener('click', (btn) => {
       if (btn.currentTarget.innerText === 'Afficher Adaptation Locale') {
