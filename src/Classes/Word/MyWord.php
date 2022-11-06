@@ -260,6 +260,17 @@ class MyWord
             }
         }
 
+        // get elements in Exemple
+        $containers = $this->prepareTexte($apcSae->getExemples());
+        $nbElements = count($containers);
+        $templateProcessor->cloneBlock('exempleblock', $nbElements, true, true);
+
+        foreach ($containers as $i => $iValue) {
+            if ($iValue !== null) {
+                $templateProcessor->setComplexBlock('exemple#' . ($i + 1), $iValue);
+            }
+        }
+
         if ($acs !== null) {
             $templateProcessor->setComplexValue('apprentissages', $acs);
         }
