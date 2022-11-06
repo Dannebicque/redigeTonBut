@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.12.0...v1.12.1) (2022-11-06)
+
+
+### Features
+
+* [AL] Masque des colonnes d'AL ([7e4059d](https://github.com/Dannebicque/redigeTonBut/commit/7e4059d7833868a865f88906743e5d7bbee1bd2d))
+* [AL] Masque des colonnes d'AL ([990330f](https://github.com/Dannebicque/redigeTonBut/commit/990330f0764d97cf90226fdab2f671fb39c20af2))
+* [AL] Masque des colonnes d'AL ([e0d671d](https://github.com/Dannebicque/redigeTonBut/commit/e0d671df2ddad745ec0ec53fde5415aa5ed60ad2))
+* [Coeff] Edition des coefficients ([323a455](https://github.com/Dannebicque/redigeTonBut/commit/323a455289b870c71c4a7151241fd9a410673902))
+* [Directeurs] Améliorations diverses pour la partie directeurs (exports, ...) ([8cfc70f](https://github.com/Dannebicque/redigeTonBut/commit/8cfc70fdbe79cafda1563ebfc2c0073e16b2644c))
+* [Directeurs] Textes ([5121226](https://github.com/Dannebicque/redigeTonBut/commit/5121226a78073c2353c90f40a361d034ce35792b))
+* [Directeurs] Textes ([78b013b](https://github.com/Dannebicque/redigeTonBut/commit/78b013b7b132d9bf84f9f02bbf02ad34aba12ac7))
+* [Droits] Ajout droits DGESIP ([221b751](https://github.com/Dannebicque/redigeTonBut/commit/221b75152729eecf3b86766cf605972576f0dce0))
+* [Durable] Liste des ressources/SAE ([88e8b4c](https://github.com/Dannebicque/redigeTonBut/commit/88e8b4cd6905178f9bbb517555425bf480e7efe4))
+* [Import User] Import d'une liste de directeurs ([16b3155](https://github.com/Dannebicque/redigeTonBut/commit/16b3155152fce66a0f9e12e3e15f3520722c81e3))
+* [Import User] Import d'une liste de directeurs ([27397e2](https://github.com/Dannebicque/redigeTonBut/commit/27397e2cfa38db5eed9f329ceead7cc341fd3c48))
+* [Import User] Import d'une liste de directeurs ([71346cf](https://github.com/Dannebicque/redigeTonBut/commit/71346cf2ed838a3ee5ad86bc9a4caff92174231d))
+* [Import User] Import d'une liste de directeurs ([d8fdeb9](https://github.com/Dannebicque/redigeTonBut/commit/d8fdeb9da27d8e62395ff193af0acf391bad3693))
+* [Import User] Import d'une liste de directeurs ([c835abc](https://github.com/Dannebicque/redigeTonBut/commit/c835abc2f9a82f42800ad4e7ffffc3974768a382))
+* [Import User] Import d'une liste de directeurs ([33f382f](https://github.com/Dannebicque/redigeTonBut/commit/33f382fd0356263466e69774600124bc58591a35))
+* [Import User] Import d'une liste de directeurs ([03affb8](https://github.com/Dannebicque/redigeTonBut/commit/03affb89acb710b719ddd9b07fddb1acea35fd48))
+* [MCC] Export des MCC (Troyes et RCC) ([c4f9913](https://github.com/Dannebicque/redigeTonBut/commit/c4f99133e5cffb8b1255cadacebf444bc5ecf51e))
+* [SAE] Export des exemples ([ed45428](https://github.com/Dannebicque/redigeTonBut/commit/ed45428aa793d19450be46e04d6c6689602f1ed5))
+
+
+### Bug Fixes
+
+* [Durable] mcc ([bec94b3](https://github.com/Dannebicque/redigeTonBut/commit/bec94b3424ab567131d0b0792216562a3acdd345))
+* [Durable] mcc ([da6988b](https://github.com/Dannebicque/redigeTonBut/commit/da6988bd4b020fdab40d6b85b54d7864a0c8a1b3))
+* [Durable] recherche ([da35369](https://github.com/Dannebicque/redigeTonBut/commit/da3536926f79cc2a86c3ec15e5fa302a3b08dac5))
+* [Excel] Correctifs ([d32225a](https://github.com/Dannebicque/redigeTonBut/commit/d32225a23c059cbdea7687892e46a047de61eea9))
+* [Excel] Correctifs ([a1ddadd](https://github.com/Dannebicque/redigeTonBut/commit/a1ddadd22ebf29db18fb80f48beceab696ef9b88))
+* [Excel] Correctifs ([bdc2a11](https://github.com/Dannebicque/redigeTonBut/commit/bdc2a11828c83cbdf33f14205ca6c0006ab04111))
+* [Excel] Correctifs ([812e859](https://github.com/Dannebicque/redigeTonBut/commit/812e859a9f8efa01934eed5e7d177cf74353d94d))
+* [Excel] Correctifs ([05e98e4](https://github.com/Dannebicque/redigeTonBut/commit/05e98e4b9308ec2384096d8948b8070b21efb082))
+* [Export AL] recherche ([de53ef9](https://github.com/Dannebicque/redigeTonBut/commit/de53ef925656effab5dea60daf9b997a7b07be5d))
+* [Export AL] word ([f94490a](https://github.com/Dannebicque/redigeTonBut/commit/f94490a77497ba893d1625c03fb7b22ba180ba5f))
+* [Export AL] word ([c5774c9](https://github.com/Dannebicque/redigeTonBut/commit/c5774c9df3a373f785efa1545cc5c81a7d421bd0))
+* [Export] Ordre du semestre dans l'année ([67a300c](https://github.com/Dannebicque/redigeTonBut/commit/67a300cbb7cc8ebfca3d92ef63ff8ab5e6a1d6a5))
+* [latex] Correctifs ([4090db6](https://github.com/Dannebicque/redigeTonBut/commit/4090db642ee4dc9844b5dd876f4196625fe33510))
+* [Ouverture IUT] Affichage préconisations ([7067efd](https://github.com/Dannebicque/redigeTonBut/commit/7067efdfe66654a0bc4d77fbc62d4f1c787e05d2))
+* [Ouverture IUT] Affichage préconisations ([1915b64](https://github.com/Dannebicque/redigeTonBut/commit/1915b6470dfa052ceb89e9a34032682623c1c574))
+
 ## [1.12.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.11.2...v1.12.0) (2022-03-31)
 
 
