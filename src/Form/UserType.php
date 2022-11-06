@@ -18,14 +18,17 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $choix = [
+            'IUT' => 'ROLE_IUT',
             'Editeur' => 'ROLE_EDITEUR',
             'Lecteur' => 'ROLE_LECTEUR',
             'Secrétaire de CPN (lecture/écriture)' => 'ROLE_CPN',
             'Membre CPN (lecture)' => 'ROLE_CPN_LECTEUR',
             'PACD' => 'ROLE_PACD',
         ];
+
         if ($options['droit_gt'] === true) {
             $choix['Membre du GT'] = 'ROLE_GT';
+            $choix['Membre DGESIP'] = 'ROLE_DGESIP';
         }
 
         ksort($choix);
