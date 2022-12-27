@@ -43,12 +43,12 @@ class VolumesHoraires
         /** @var \App\Entity\Semestre $semestre */
         foreach ($this->semestres as $semestre)
         {
+            dump($semestre->getOrdreLmd());
             if ($this->parcours === null) {
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {
                 $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->parcours);
             }
-
 
             $sem = new VolumesHorairesSemestre($semestre, $ressources);
             $json[$semestre->getOrdreLmd()] = $sem->getJson();

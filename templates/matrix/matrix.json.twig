@@ -1,0 +1,69 @@
+{"framework":
+{"institution":"all",
+    "name": "{{ departement.sigle }} - {{ parcours.libelle }}",
+    "description":"The title of the framework should be short. It is displayed as title on the SmartEvidence page as well as in the drop-down menu where people select the framework. You can write more in the description and also use basic HTML here.",
+    "selfassess":false,
+    "evidencestatuses":
+    [
+        {"begun":"Ready for assessment"},
+        {"incomplete":"Doesn't meet the standard"},
+        {"partialcomplete":"Partially meets the standard"},
+        {"completed":"Meets the standard"}
+    ],
+    "standards":
+    [
+        {% for competence in competences %}
+        {
+            "shortname":"{{ competence.nomCourt }}",
+            "name":"{{ competence.libelle }}",
+            "description":"{{ competence.libelle }}",
+            "standardid": {{ competence.id }}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+{#        {#}
+{#            "shortname":"2",#}
+{#            "name":"2 - Title of the standard",#}
+{#            "description":"Description of the standard. This description appears when you hover over the standard on the SmartEvidence page and is also displayed when selecting the standard in the Annotations block.",#}
+{#            "standardid":2#}
+{#        },#}
+{#        {#}
+{#            "shortname":"3",#}
+{#            "name":"3 - Title of the standard",#}
+{#            "description":"Description of the standard. This description appears when you hover over the standard on the SmartEvidence page and is also displayed when selecting the standard in the Annotations block.",#}
+{#            "standardid":3#}
+{#        },#}
+{#        {#}
+{#            "shortname":"4",#}
+{#            "name":"4 - Title of the standard",#}
+{#            "description":"Description of the standard. This description appears when you hover over the standard on the SmartEvidence page and is also displayed when selecting the standard in the Annotations block.",#}
+{#            "standardid":4#}
+{#        }#}
+    ],
+    "standardelements":
+    [
+        {% for competence in competences %}
+        {% for i in 1..3 %}
+        {% if parcoursNiveaux[parcours.id][competence.id][i] is defined %}
+        {
+            "shortname":"Niveau {{ parcoursNiveaux[parcours.id][competence.id][i].ordre }}",
+            "name":"{{ parcoursNiveaux[parcours.id][competence.id][i].ordre }}. {{ parcoursNiveaux[parcours.id][competence.id][i].libelle }}",
+            "description":"{{ parcoursNiveaux[parcours.id][competence.id][i].libelle }}",
+            "standardid":{{ competence.id }},
+            "elementid": "{{ parcoursNiveaux[parcours.id][competence.id][i].id }}"
+        },
+            {% for ac in parcoursNiveaux[parcours.id][competence.id][i].apcApprentissageCritiques %}
+            {
+                "shortname":"{{ ac.code }}",
+                "name":"{{ ac.libelle }}",
+                "description":"{{ ac.libelle }}",
+                "standardid":{{ competence.id }},
+                "parentelementid": "{{ parcoursNiveaux[parcours.id][competence.id][i].id }}",
+                "elementid":"{{ ac.id }}"
+            }
+            {% endfor %}
+        {% endif %}{% if not loop.last %},{% endif %}
+        {% endfor %}
+        {% endfor %}
+    ]
+}
+}

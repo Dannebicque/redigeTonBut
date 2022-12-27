@@ -69,8 +69,6 @@ class ApcReferentielFormationExport
                 break;
 
         }
-
-
     }
 
     private function exportZipWord()

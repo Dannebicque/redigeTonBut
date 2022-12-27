@@ -292,8 +292,6 @@ class Mcc
                     $sheet->setCellValueByColumnAndRow(3, $ligne, $ressource->getLibelle());
                     $sheet->setCellValueByColumnAndRow(4, $ligne, $ressource->getLibelleCourt());
 
-                    $cell = Coordinate::stringFromColumnIndex(4) . $ligne;
-
                     $sheet->setCellValueByColumnAndRow(5, $ligne, $ressource->getHeuresTotales());
                     $sheet->getStyle('E' . $ligne)->getProtection()->setLocked(Protection::PROTECTION_PROTECTED);
 
@@ -342,8 +340,6 @@ class Mcc
                     $sheet->setCellValueByColumnAndRow(2, $ligne, $sae->getCodeMatiere());
                     $sheet->setCellValueByColumnAndRow(3, $ligne, $sae->getLibelle());
                     $sheet->setCellValueByColumnAndRow(4, $ligne, $sae->getLibelleCourt());
-
-                    $cell = Coordinate::stringFromColumnIndex(4) . $ligne;
 
                     $sheet->setCellValue('F' . $ligne,
                         '=SUM(G' . $ligne . ':J' . $ligne . ')');
