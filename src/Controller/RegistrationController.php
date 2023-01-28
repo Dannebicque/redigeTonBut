@@ -42,6 +42,8 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user->setIsVerified(true);
+            $user->setActif(true);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -54,17 +56,17 @@ class RegistrationController extends AbstractController
                     ->htmlTemplate('registration/confirmation_email.html.twig')
                     ->context(['user' => $user])
             );
-            if ($user->getDepartement() !== null && $user->getDepartement()->getPacd() !== null) {
-                $email = (new TemplatedEmail())
-                    ->to($user->getDepartement()->getPacd()->getEmail())
-                    ->subject('[ORéBUT] Demande d\'accès à l\'application')
-                    ->htmlTemplate('registration/nouvelle_demande_email.html.twig')
-                    ->context(['user' => $user]);
-                $mailer->send($email);
-            }
+//            if ($user->getDepartement() !== null && $user->getDepartement()->getPacd() !== null) {
+//                $email = (new TemplatedEmail())
+//                    ->to($user->getDepartement()->getPacd()->getEmail())
+//                    ->subject('[ORéBUT] Demande d\'accès à l\'application')
+//                    ->htmlTemplate('registration/nouvelle_demande_email.html.twig')
+//                    ->context(['user' => $user]);
+//                $mailer->send($email);
+//            }
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_register_wait');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [
