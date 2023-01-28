@@ -1,5 +1,6 @@
 security:
     role_hierarchy:
+        ROLE_LABSET: ROLE_IUT
         ROLE_GT: ROLE_CPN
         ROLE_CPN: ROLE_PACD
         ROLE_PACD: ROLE_EDITEUR
@@ -51,5 +52,6 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/labset, roles: [ROLE_LABSET] }
         - { path: ^/administration, roles: [ROLE_GT, ROLE_PACD, ROLE_CPN] }
         - { path: ^/, roles: [ROLE_GT, ROLE_PACD, ROLE_CPN, ROLE_CPN_LECTEUR, ROLE_IUT, ROLE_EDITEUR, ROLE_LECTEUR] }

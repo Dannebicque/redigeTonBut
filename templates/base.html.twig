@@ -105,6 +105,14 @@
             <!-- Menu Start -->
             <div class="menu-container flex-grow-1">
                 <ul id="menu" class="menu">
+                    {% if is_granted('ROLE_LABSET') %}
+                    <li>
+                        <a href="{{ path('app_labset') }}">
+                            <i class="bi bi-laptop icon"></i>
+                            <span class="label">Labset</span>
+                        </a>
+                    </li>
+                    {% endif %}
                     {% if user_data.departement != null %}
                         {% if is_granted('ROLE_IUT') %}
                             <li>
