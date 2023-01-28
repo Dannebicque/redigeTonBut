@@ -1,0 +1,114 @@
+<h2 class="small-title mt-2">Détails de la SAE</h2>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <dl>
+                    <dt>SAE</dt>
+                    <dd>{{ qapes.sae != null ? qapes.sae.libelle : '-' }}
+                        ({{ qapes.sae != null ? qapes.sae.codeMatiere :
+                        '-' }})
+                    </dd>
+                    <dt>
+                        Intitulé local de la SAE
+                    </dt>
+                    <dd>
+                        {{ qapes.intituleSae }}
+                    </dd>
+                    <dt>
+                        Année Création / Version / Révision
+                    </dt>
+                    <dd>
+                        {{ qapes.anneeCreation }} / {{ qapes.version }} / {{ qapes.dateVersion }}
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-6">
+                <dl>
+                    <dt>Rédacteur(s)</dt>
+                    <dd>
+                        {% for red in qapes.redacteur %}{{ red.display }}{% if not loop.last %}, {% endif %}{% endfor %}
+                    </dd>
+                    <dt>Lien</dt>
+                    <dd>
+                        <a href="{{ qapes.lien }}" target="_blank">{{ qapes.lien }}</a>
+                    </dd>
+                    <dt>Mode de dispense</dt>
+                    <dd>
+                        {{ qapes.modeDispense }}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <strong class="mt-2">A épingler</strong>
+        <div>
+            {{ qapes.aEpingler|raw }}
+        </div>
+        <div class="row  mt-2">
+            <div class="col-6">
+                <dl>
+                    <dt>Nb ECTS</dt>
+                    <dd>{{ qapes.nbEcts }}</dd>
+                    <dt>
+                        SAE en Groupe ou Individuelle
+                    </dt>
+                    <dd>
+                        {{ qapes.saeGroupeIndividuelle }}
+                    </dd>
+                    <dt>
+                        Nb étudiants / Nb Encadrants
+                    </dt>
+                    <dd>
+                        {{ qapes.nbEtudiants }} / {{ qapes.nbEncadrants }}
+                    </dd>
+                    <dt>
+                        Nb Heures en autonomie / Nb Heures dirigées
+                    </dt>
+                    <dd>
+                        {{ qapes.nbHeuresAutonomie }} / {{ qapes.nbHeuresDirigees }}
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-6">
+                <dl>
+                    <dt>Type de SAE</dt>
+                    <dd>
+                        {{ qapes.typeSae }}
+                    </dd>
+                    <dt>Public Cible de la SAE</dt>
+                    <dd>
+                        {{ qapes.publicCible }}
+                    </dd>
+                    <dt>Commentaires</dt>
+                    <dd>
+                        {{ qapes.publicCibleCommentaire }}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="mt-2">
+            <strong>Objectifs de la SAE</strong>
+            <p>
+                {{ qapes.objectifsSae|raw }}
+            </p>
+        </div>
+        <div class="mt-2">
+            <strong>Déroulement de la SAE</strong>
+            <p>
+                {{ qapes.deroulementSae|raw }}
+            </p>
+        </div>
+        <div class="mt-2">
+            <strong >Modalités d'évaluation de la SAE</strong>
+            <p>
+                {{ qapes.evaluations|raw }}
+            </p>
+        </div>
+        <div class="mt-2">
+            <strong>Lien(s) ligne du temps</strong>
+            <p>
+                {{ qapes.lienLigneDuTemps|raw }}
+            </p>
+        </div>
+    </div>
+</div>

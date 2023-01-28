@@ -86,12 +86,18 @@ class ApcSae extends AbstractMatiere
      */
     private ?bool $stage = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity=QapesSae::class, mappedBy="sae")
+     */
+    private $qapesSaes;
+
     public function __construct()
     {
         $this->apcSaeCompetences = new ArrayCollection();
         $this->apcSaeRessources = new ArrayCollection();
         $this->apcSaeApprentissageCritiques = new ArrayCollection();
         $this->apcSaeParcours = new ArrayCollection();
+        $this->qapesSaes = new ArrayCollection();
     }
 
     public function getSemestre(): ?Semestre
@@ -412,5 +418,35 @@ class ApcSae extends AbstractMatiere
             ksort($t[$couleur]);
         }
         return $t;
+    }
+
+    /**
+     * @return Collection<int, QapesSae>
+     */
+    public function getQapesSaes(): Collection
+    {
+        return $this->qapesSaes;
+    }
+
+    public function addQapesSae(QapesSae $qapesSae): self
+    {
+        if (!$this->qapesSaes->contains($qapesSae)) {
+            $this->qapesSaes[] = $qapesSae;
+            $qapesSae->setSae($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQapesSae(QapesSae $qapesSae): self
+    {
+        if ($this->qapesSaes->removeElement($qapesSae)) {
+            // set the owning side to null (unless already changed)
+            if ($qapesSae->getSae() === $this) {
+                $qapesSae->setSae(null);
+            }
+        }
+
+        return $this;
     }
 }

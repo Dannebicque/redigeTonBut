@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}QapesSae{% endblock %}
+
+{% block content %}
+    {{ include('labset/qapes_sae/_synthese_iut.html.twig') }}
+    {{ include('labset/qapes_sae/_synthese_sae.html.twig') }}
+
+    <h2 class="small-title mt-2">Evaluation</h2>
+    <div class="card">
+        <div class="card-body">
+            <strong>Date de l'évaluation LABSET : {{ qapes.dateEvaluation }}</strong>
+            {% for critere in qapes.qapesSaeCritereReponses %}
+                <div class="mt-2">
+                    <strong>{{ critere.qapesCritere != null ? critere.qapesCritere.libelle }} : {{ critere.reponse
+                        }}</strong>
+                    <div>
+                        {{ critere.commentaireRepose|raw }}
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'B.U.T. ',
+        },
+        {
+            href:path('app_labset'),
+            title: 'Liste des SAE',
+        }
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('app_qapes_sae_edit', {id:qapes.id}) }}" class="btn
+            btn-outline-warning
+            btn-icon btn-icon-end
+    w-100
+    w-sm-auto"
+    >
+        <i class="bi bi-pencil"></i>
+        <span>Modifier</span>
+    </a>
+{% endblock %}

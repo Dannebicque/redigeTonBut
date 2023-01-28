@@ -79,9 +79,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private ?string $login;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=QapesSae::class, mappedBy="auteur")
+     */
+    private $qapesSaesAuteurs;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=QapesSae::class, mappedBy="redacteur")
+     */
+    private $qapesSaesRedacteurs;
+
     public function __construct()
     {
         $this->CpnDepartements = new ArrayCollection();
+        $this->qapesSaesAuteurs = new ArrayCollection();
+        $this->qapesSaesRedacteurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -295,4 +307,67 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function getActif(): ?bool
+    {
+        return $this->actif;
+    }
+
+    /**
+     * @return Collection<int, QapesSae>
+     */
+    public function getQapesSaesAuteurs(): Collection
+    {
+        return $this->qapesSaesAuteurs;
+    }
+
+    public function addQapesSaesAuteur(QapesSae $qapesSaesAuteur): self
+    {
+        if (!$this->qapesSaesAuteurs->contains($qapesSaesAuteur)) {
+            $this->qapesSaesAuteurs[] = $qapesSaesAuteur;
+            $qapesSaesAuteur->addAuteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQapesSaesAuteur(QapesSae $qapesSaesAuteur): self
+    {
+        if ($this->qapesSaesAuteurs->removeElement($qapesSaesAuteur)) {
+            $qapesSaesAuteur->removeAuteur($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QapesSae>
+     */
+    public function getQapesSaesRedacteurs(): Collection
+    {
+        return $this->qapesSaesRedacteurs;
+    }
+
+    public function addQapesSaesRedacteur(QapesSae $qapesSaesRedacteur): self
+    {
+        if (!$this->qapesSaesRedacteurs->contains($qapesSaesRedacteur)) {
+            $this->qapesSaesRedacteurs[] = $qapesSaesRedacteur;
+            $qapesSaesRedacteur->addRedacteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQapesSaesRedacteur(QapesSae $qapesSaesRedacteur): self
+    {
+        if ($this->qapesSaesRedacteurs->removeElement($qapesSaesRedacteur)) {
+            $qapesSaesRedacteur->removeRedacteur($this);
+        }
+
+        return $this;
+    }
 }

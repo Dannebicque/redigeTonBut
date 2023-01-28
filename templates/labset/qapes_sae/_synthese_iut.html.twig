@@ -1,0 +1,25 @@
+<h2 class="small-title mt-2">SAE, IUT, Parcours</h2>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <dl>
+                    <dt>Auteur(s)</dt>
+                    <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{%
+                            endfor %}</dd>
+                    <dt>IUT</dt>
+                    <dd>{{ qapes.iutSite != null ? qapes.iutSite.iut.libelle  : '-'}} ({{ qapes.iutSite != null ?
+                        qapes.iutSite.libelle : '-' }})</dd>
+                </dl>
+            </div>
+            <div class="col-6">
+                <dl>
+                    <dt>Spécialité</dt>
+                    <dd>{{ qapes.specialite != null ? qapes.specialite.sigle : '-' }}</dd>
+                    <dt>Parcours</dt>
+                    <dd>{{ qapes.parcours != null ? qapes.parcours.libelle : '-' }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

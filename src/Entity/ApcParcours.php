@@ -78,6 +78,16 @@ class ApcParcours extends BaseEntity
      */
     private $semestres;
 
+    /**
+     * @ORM\OneToMany(targetEntity=IutSiteParcours::class, mappedBy="parcours")
+     */
+    private $iutSiteParcours;
+
+    /**
+     * @ORM\OneToMany(targetEntity=QapesSae::class, mappedBy="parcours")
+     */
+    private $qapesSaes;
+
     public function __construct(Departement $departement)
     {
         $this->setDepartement($departement);
@@ -85,6 +95,8 @@ class ApcParcours extends BaseEntity
         $this->apcSaeParcours = new ArrayCollection();
         $this->apcRessourceParcours = new ArrayCollection();
         $this->semestres = new ArrayCollection();
+        $this->iutSiteParcours = new ArrayCollection();
+        $this->qapesSaes = new ArrayCollection();
     }
 
     public function getLibelle(): ?string
@@ -302,5 +314,65 @@ class ApcParcours extends BaseEntity
 
         return $semestres;
 
+    }
+
+    /**
+     * @return Collection<int, IutSiteParcours>
+     */
+    public function getIutSiteParcours(): Collection
+    {
+        return $this->iutSiteParcours;
+    }
+
+    public function addIutSiteParcour(IutSiteParcours $iutSiteParcour): self
+    {
+        if (!$this->iutSiteParcours->contains($iutSiteParcour)) {
+            $this->iutSiteParcours[] = $iutSiteParcour;
+            $iutSiteParcour->setParcours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIutSiteParcour(IutSiteParcours $iutSiteParcour): self
+    {
+        if ($this->iutSiteParcours->removeElement($iutSiteParcour)) {
+            // set the owning side to null (unless already changed)
+            if ($iutSiteParcour->getParcours() === $this) {
+                $iutSiteParcour->setParcours(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QapesSae>
+     */
+    public function getQapesSaes(): Collection
+    {
+        return $this->qapesSaes;
+    }
+
+    public function addQapesSae(QapesSae $qapesSae): self
+    {
+        if (!$this->qapesSaes->contains($qapesSae)) {
+            $this->qapesSaes[] = $qapesSae;
+            $qapesSae->setParcours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQapesSae(QapesSae $qapesSae): self
+    {
+        if ($this->qapesSaes->removeElement($qapesSae)) {
+            // set the owning side to null (unless already changed)
+            if ($qapesSae->getParcours() === $this) {
+                $qapesSae->setParcours(null);
+            }
+        }
+
+        return $this;
     }
 }

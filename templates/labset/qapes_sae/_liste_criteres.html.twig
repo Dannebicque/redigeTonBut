@@ -1,0 +1,26 @@
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Critere</th>
+        <th>Réponse</th>
+        <th>Commentaire</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for critere in criteres %}
+    <tr>
+        <td>
+            {{ critere.qapesCritere.libelle }}
+        </td>
+        <td>
+            {{ critere.reponse }}
+        </td>
+        <td>
+            {{ critere.commentaireRepose }}
+        </td>
+        <td></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

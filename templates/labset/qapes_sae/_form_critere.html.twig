@@ -1,0 +1,15 @@
+<label for="reponse">Réponse</label>
+<select id="reponse" class="form-select">
+    <option>Choisissez une option</option>
+    {% for choix in listeChoix %}
+    <option>{{ choix }}</option>
+    {% endfor %}
+</select>
+
+<label for="commentaire">Commentaire libre de la réponse</label>
+<textarea id="commentaire" class="form-control" rows="6">
+    Commentaire
+</textarea>
+
+<button type="button" class="btn btn-outline-success mt-2"
+{{ stimulus_action('qapes3', 'sauvegardeCritere') }}>Enregistrer</button>

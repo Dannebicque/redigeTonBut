@@ -149,6 +149,11 @@ class Departement extends BaseEntity
      */
     private $altBut3;
 
+    /**
+     * @ORM\OneToMany(targetEntity=QapesSae::class, mappedBy="specialite")
+     */
+    private $qapesSaes;
+
 
 
     public function __construct()
@@ -159,6 +164,7 @@ class Departement extends BaseEntity
         $this->users = new ArrayCollection();
         $this->departements_enfnat = new ArrayCollection();
         $this->cpns = new ArrayCollection();
+        $this->qapesSaes = new ArrayCollection();
     }
 
     public function getLibelle(): ?string
@@ -590,6 +596,36 @@ class Departement extends BaseEntity
     public function setAltBut3(float $altBut3): self
     {
         $this->altBut3 = $altBut3;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QapesSae>
+     */
+    public function getQapesSaes(): Collection
+    {
+        return $this->qapesSaes;
+    }
+
+    public function addQapesSae(QapesSae $qapesSae): self
+    {
+        if (!$this->qapesSaes->contains($qapesSae)) {
+            $this->qapesSaes[] = $qapesSae;
+            $qapesSae->setSpecialite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQapesSae(QapesSae $qapesSae): self
+    {
+        if ($this->qapesSaes->removeElement($qapesSae)) {
+            // set the owning side to null (unless already changed)
+            if ($qapesSae->getSpecialite() === $this) {
+                $qapesSae->setSpecialite(null);
+            }
+        }
 
         return $this;
     }
