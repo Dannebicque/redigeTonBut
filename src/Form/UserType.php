@@ -19,6 +19,7 @@ class UserType extends AbstractType
     {
         $choix = [
             'IUT' => 'ROLE_IUT',
+            'Labset' => 'ROLE_LABSET',
             'Editeur' => 'ROLE_EDITEUR',
             'Lecteur' => 'ROLE_LECTEUR',
             'Secrétaire de CPN (lecture/écriture)' => 'ROLE_CPN',
