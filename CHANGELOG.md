@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.0...v1.13.1) (2023-01-29)
+
+
+### Features
+
+* [Acces] Validation par défaut avec droits IUT ([d8b7bf1](https://github.com/Dannebicque/redigeTonBut/commit/d8b7bf1eb4b99478286f0ee0fcbda9686968cf7b))
+* [Acces] Validation par défaut avec droits IUT ([4df817c](https://github.com/Dannebicque/redigeTonBut/commit/4df817c68caa04a23c97bf2427b104613e199ddc))
+* [Qapes] Filtre par parcours/spécialité des SAE ([6321a58](https://github.com/Dannebicque/redigeTonBut/commit/6321a58cd8f155121b9ee6310fa0d36915ba518f))
+
 ## [1.13.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.12.1...v1.13.0) (2023-01-28)
 
 
