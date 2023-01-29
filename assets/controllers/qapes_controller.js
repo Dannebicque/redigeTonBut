@@ -18,18 +18,38 @@ export default class extends Controller {
     console.log('hello from qapes_controller.js')
   }
 
+  changeParcours(event) {
+    const parcours = event.target.value
+    this._updateSaeFromParcours(parcours)
+  }
+
+  changeSpecialite(event) {
+    const specialite = event.target.value
+    this._updateSaeFromSpecialite(specialite)
+  }
+
   changeIut(event) {
     this._updateSiteIut(event.target.value)
+  }
+
+  changeSiteIut(event) {
+    const siteIut = event.target.value
+    this._updateParcours(siteIut)
+    this._updateSpecialite(siteIut)
   }
 
   async _updateSiteIut(iut) {
     document.getElementById('qapes_sae_part1_iutSite').disabled = false
     await fetch(this.urlApiValue + '?action=siteIut&iut=' + iut).then(response => response.json()).then(
       data => {
-        console.log(data)
         const sites = data
         let selectSites = document.getElementById('qapes_sae_part1_iutSite')
         selectSites.innerHTML = ''
+
+        let option = document.createElement('option')
+        option.value = ''
+        option.text = 'Choisir le site de l\'IUT'
+        selectSites.appendChild(option)
 
         sites.forEach(site => {
           let option = document.createElement('option')
@@ -37,18 +57,22 @@ export default class extends Controller {
           option.text = site.libelle
           selectSites.appendChild(option)
         })
-      }
+      },
     )
   }
 
   async _updateSpecialite(siteIut) {
-    document.getElementById('qapes_sae_part1_iutSite').disabled = false
-    await fetch(this.urlApiValue + '?action=siteIut&iut=' + iut).then(response => response.json()).then(
-      data => {
-        console.log(data)
+    document.getElementById('qapes_sae_part1_specialite').disabled = false
+    await fetch(this.urlApiValue + '?action=specialite&siteIut=' + siteIut).then(response => response.json()).then(
+      async data => {
         const sites = data
-        let selectSites = document.getElementById('qapes_sae_part1_iutSite')
+        let selectSites = document.getElementById('qapes_sae_part1_specialite')
         selectSites.innerHTML = ''
+
+        let option = document.createElement('option')
+        option.text = 'Choisir une spécialité (tronc commun) ou un parcours'
+        option.value = ''
+        selectSites.appendChild(option)
 
         sites.forEach(site => {
           let option = document.createElement('option')
@@ -56,18 +80,23 @@ export default class extends Controller {
           option.text = site.libelle
           selectSites.appendChild(option)
         })
-      }
+      },
     )
+
   }
 
-  async _updateParcours(siteIut, specialite) {
-    document.getElementById('qapes_sae_part1_iutSite').disabled = false
-    await fetch(this.urlApiValue + '?action=siteIut&iut=' + iut).then(response => response.json()).then(
+  async _updateParcours(siteIut) {
+    document.getElementById('qapes_sae_part1_parcours').disabled = false
+    await fetch(this.urlApiValue + '?action=parcours&siteIut=' + siteIut).then(response => response.json()).then(
       data => {
-        console.log(data)
         const sites = data
-        let selectSites = document.getElementById('qapes_sae_part1_iutSite')
+        let selectSites = document.getElementById('qapes_sae_part1_parcours')
         selectSites.innerHTML = ''
+
+        let option = document.createElement('option')
+        option.text = 'Choisir une spécialité (tronc commun) ou un parcours'
+        option.value = ''
+        selectSites.appendChild(option)
 
         sites.forEach(site => {
           let option = document.createElement('option')
@@ -75,17 +104,16 @@ export default class extends Controller {
           option.text = site.libelle
           selectSites.appendChild(option)
         })
-      }
+      },
     )
   }
 
   async _updateSaeFromSpecialite(specialite) {
-    document.getElementById('qapes_sae_part1_iutSite').disabled = false
-    await fetch(this.urlApiValue + '?action=siteIut&iut=' + iut).then(response => response.json()).then(
+    document.getElementById('qapes_sae_part1_sae').disabled = false
+    await fetch(this.urlApiValue + '?action=saeFromSpecialite&specialite=' + specialite).then(response => response.json()).then(
       data => {
-        console.log(data)
         const sites = data
-        let selectSites = document.getElementById('qapes_sae_part1_iutSite')
+        let selectSites = document.getElementById('qapes_sae_part1_sae')
         selectSites.innerHTML = ''
 
         sites.forEach(site => {
@@ -94,17 +122,16 @@ export default class extends Controller {
           option.text = site.libelle
           selectSites.appendChild(option)
         })
-      }
+      },
     )
   }
 
-  async _updateSaeFromParcours(specialite) {
-    document.getElementById('qapes_sae_part1_iutSite').disabled = false
-    await fetch(this.urlApiValue + '?action=siteIut&iut=' + iut).then(response => response.json()).then(
+  async _updateSaeFromParcours(parcours) {
+    document.getElementById('qapes_sae_part1_sae').disabled = false
+    await fetch(this.urlApiValue + '?action=saeFromParcours&parcours=' + parcours).then(response => response.json()).then(
       data => {
-        console.log(data)
         const sites = data
-        let selectSites = document.getElementById('qapes_sae_part1_iutSite')
+        let selectSites = document.getElementById('qapes_sae_part1_sae')
         selectSites.innerHTML = ''
 
         sites.forEach(site => {
@@ -113,7 +140,7 @@ export default class extends Controller {
           option.text = site.libelle
           selectSites.appendChild(option)
         })
-      }
+      },
     )
   }
 }

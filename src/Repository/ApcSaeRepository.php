@@ -11,6 +11,7 @@ namespace App\Repository;
 
 use App\Entity\Annee;
 use App\Entity\ApcSae;
+use App\Entity\ApcSaeParcours;
 use App\Entity\Departement;
 use App\Entity\Semestre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -198,6 +199,20 @@ class ApcSaeRepository extends ServiceEntityRepository
         }
 
         return $query->getQuery()
+            ->getResult();
+    }
+
+    public function findByParcours(int $iut)
+    {
+        return $this->createQueryBuilder('r')
+            ->join('r.apcSaeParcours', 'p')
+
+            ->where('p.parcours = :iut')
+
+            ->setParameter('iut', $iut)
+            ->orderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
             ->getResult();
     }
 }

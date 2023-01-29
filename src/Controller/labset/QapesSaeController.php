@@ -7,6 +7,11 @@ use App\Entity\QapesSaeCritereReponse;
 use App\Form\QapesSaePart1Type;
 use App\Form\QapesSaePart2Type;
 use App\Form\QapesSaePart3Type;
+use App\Repository\ApcParcoursRepository;
+use App\Repository\ApcRessourceRepository;
+use App\Repository\ApcSaeRepository;
+use App\Repository\DepartementRepository;
+use App\Repository\IutSiteParcoursRepository;
 use App\Repository\IutSiteRepository;
 use App\Repository\QapesCriteresEvaluationRepository;
 use App\Repository\QapesSaeCritereReponseRepository;
@@ -24,7 +29,9 @@ class QapesSaeController extends AbstractController
 
     #[Route('/api', name: 'app_qapes_sae_api', methods: ['GET', 'POST'])]
     public function api(
-        QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository,
+        ApcSaeRepository $apcSaeRepository,
+        DepartementRepository $departementRepository,
+        IutSiteParcoursRepository $iutSiteParcoursRepository,
         IutSiteRepository $iutSiteRepository,
         Request $request
     ) {
@@ -33,6 +40,57 @@ class QapesSaeController extends AbstractController
             case 'siteIut':
                 $iut = $request->query->get('iut');
                 $siteiut = $iutSiteRepository->findBy(['iut' => $iut]);
+                $siteiutArray = [];
+                foreach ($siteiut as $site) {
+                    $siteiutArray[] = [
+                        'id' => $site->getId(),
+                        'libelle' => $site->getLibelle(),
+                    ];
+                }
+
+                return new JsonResponse($siteiutArray);
+            case 'parcours':
+                $site = $request->query->get('siteIut');
+                $parcours = $iutSiteParcoursRepository->findBy(['site' => $site]);
+                $parcoursArray = [];
+                foreach ($parcours as $parcour) {
+                    $parcoursArray[] = [
+                        'id' => $parcour->getParcours()?->getId(),
+                        'libelle' => $parcour->getParcours()?->getLibelle(). ' ('.$parcour->getParcours()?->getDepartement()?->getSigle().')'
+                    ];
+                }
+
+                return new JsonResponse($parcoursArray);
+            case 'specialite':
+                $iut = $request->query->get('siteIut');
+                $siteiut = $departementRepository->findBySiteIut($iut);
+                $siteiutArray = [];
+                foreach ($siteiut as $site) {
+                    $siteiutArray[] = [
+                        'id' => $site->getId(),
+                        'libelle' => $site->getLibelle(),
+                    ];
+                }
+
+                return new JsonResponse($siteiutArray);
+
+            case 'saeFromParcours':
+                $iut = $request->query->get('parcours');
+                $siteiut = $apcSaeRepository->findByParcours($iut);
+                $siteiutArray = [];
+                foreach ($siteiut as $site) {
+                    $siteiutArray[] = [
+                        'id' => $site->getId(),
+                        'libelle' => $site->getLibelle(),
+                    ];
+                }
+
+                return new JsonResponse($siteiutArray);
+
+            case 'saeFromSpecialite':
+                $iut = $request->query->get('specialite');
+                $departement = $departementRepository->find($iut);
+                $siteiut = $apcSaeRepository->findByDepartement($departement);
                 $siteiutArray = [];
                 foreach ($siteiut as $site) {
                     $siteiutArray[] = [
@@ -97,13 +155,46 @@ class QapesSaeController extends AbstractController
 
 
     #[Route('/new', name: 'app_qapes_sae_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, QapesSaeRepository $qapesSaeRepository): Response
+    public function new(
+        IutSiteRepository $iutSiteRepository,
+        ApcParcoursRepository $parcoursRepository,
+        DepartementRepository $departementRepository,
+        ApcSaeRepository $apcSaeRepository,
+        Request $request, QapesSaeRepository $qapesSaeRepository): Response
     {
         $qapesSae = new QapesSae($this->getUser());
         $form = $this->createForm(QapesSaePart1Type::class, $qapesSae);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $request->request->all()['qapes_sae_part1'];
+            //iutSite
+            $iutSite = $iutSiteRepository->find($data['iutSite'] );
+            $qapesSae->setIutSite($iutSite);
+
+            //parcours
+            if ($data['parcours']  !== '') {
+                $parcours = $parcoursRepository->find($data['parcours'] );
+                $qapesSae->setParcours($parcours);
+                $qapesSae->setSpecialite($parcours->getDepartement());
+            }
+
+            //specialite
+            if ($data['specialite']  !== '') {
+                $specialite = $departementRepository->find($data['specialite'] );
+                $qapesSae->setSpecialite($specialite);
+            }
+
+            if ($data['sae'] !== '') {
+                $sae = $apcSaeRepository->find($data['sae']);
+                $qapesSae->setSae($sae);
+            }
+            //SAE
+
+
+
+
+
             $qapesSaeRepository->add($qapesSae);
 
             return $this->redirectToRoute('app_qapes_sae_new_etape_2', [

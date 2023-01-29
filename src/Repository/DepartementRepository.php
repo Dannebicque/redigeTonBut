@@ -32,4 +32,16 @@ class DepartementRepository extends ServiceEntityRepository
     {
         return $this->findBy([], ['sigle' => 'ASC']);
     }
+
+    public function findBySiteIut(int $iut)
+    {
+        return $this->createQueryBuilder('departement')
+            ->innerJoin('departement.apcParcours', 'apc_parcours')
+            ->innerJoin('apc_parcours.iutSiteParcours', 'iut_site_parcours')
+            ->where('iut_site_parcours.site = :iut')
+            ->setParameter('iut', $iut)
+            ->groupBy('departement.id')
+            ->getQuery()
+            ->getResult();
+    }
 }
