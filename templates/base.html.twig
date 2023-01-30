@@ -106,11 +106,26 @@
             <div class="menu-container flex-grow-1">
                 <ul id="menu" class="menu">
                     {% if is_granted('ROLE_LABSET') %}
+
+
+
                     <li>
-                        <a href="{{ path('app_labset') }}">
-                            <i class="bi bi-laptop icon"></i>
+                        <a href="#ref_competences" data-href="{{ path('app_labset') }}">
+                            <i class="bi bi-wallet2 icon"></i>
                             <span class="label">Labset</span>
                         </a>
+                        <ul id="ref_competences">
+                            <li>
+                                <a href="{{ path('app_labset') }}">
+                                    <span class="label">Questionnaires</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_qapes_criteres_evaluation_index') }}">
+                                    <span class="label">Gestion des critères</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     {% endif %}
                     {% if user_data.departement != null %}

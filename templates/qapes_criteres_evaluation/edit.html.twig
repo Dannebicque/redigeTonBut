@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Modification du critère : {{ qapes_criteres_evaluation.libelle }}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {{ form_start(form) }}
+            {% form_theme form 'form/my-form.html.twig' %}
+            {{ form_rest(form) }}
+            <button class="btn btn-success">Sauvegarder</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+{#{% block breadcrumb %}#}
+{#    {{ include('composants/breadcrumb.html.twig', {liens:[#}
+{#        {#}
+{#        },#}
+{#    ]}) }}#}
+{#{% endblock %}#}
+
+{% block bouton_header %}
+    <a href="{{ path('app_qapes_criteres_evaluation_index') }}"
+       class="btn btn-sm btn-outline-info
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-arrow-left-circle"></i>
+        <span>Retour</span>
+    </a>
+{% endblock %}
+
+

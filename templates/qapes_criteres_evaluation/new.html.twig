@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Création d'un nouveau critère
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {{ include('composants/adm-form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}
+
+{#{% block breadcrumb %}#}
+{#    {{ include('composants/breadcrumb.html.twig', {liens:[#}
+{#        {#}
+{#        },#}
+{#    ]}) }}#}
+{#{% endblock %}#}
+
+{% block bouton_header %}
+    <a href="{{ path('app_qapes_criteres_evaluation_index') }}"
+       class="btn btn-sm btn-outline-info
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-arrow-left-circle"></i>
+        <span>Retour</span>
+    </a>
+{% endblock %}
