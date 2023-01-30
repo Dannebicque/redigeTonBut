@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.1...v1.13.2) (2023-01-30)
+
+
+### Features
+
+* [Qapes] Filtre par parcours/spécialité des SAE ([a8ec5f6](https://github.com/Dannebicque/redigeTonBut/commit/a8ec5f6c26a6ce6e1dc0aab60640212cac7a0d76))
+* [Qapes] gestion des critères ([9ab04c3](https://github.com/Dannebicque/redigeTonBut/commit/9ab04c397c9c49b93dcf2fc22d18406f0652c4ae))
+
 ### [1.13.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.0...v1.13.1) (2023-01-29)
 
 
