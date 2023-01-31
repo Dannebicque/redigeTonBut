@@ -2,9 +2,9 @@
 
 namespace App\Controller\labset;
 
-use App\Entity\QapesCriteresEvaluation;
-use App\Form\QapesCriteresEvaluation1Type;
-use App\Repository\QapesCriteresEvaluationRepository;
+
+use App\Entity\QapesCritere;
+use App\Repository\QapesCritereRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class QapesCriteresEvaluationController extends AbstractController
 {
     #[Route('/', name: 'app_qapes_criteres_evaluation_index', methods: ['GET'])]
-    public function index(QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository): Response
+    public function index(QapesCritereRepository $qapesCriteresEvaluationRepository): Response
     {
         return $this->render('labset/qapes_criteres_evaluation/index.html.twig', [
             'qapes_criteres_evaluations' => $qapesCriteresEvaluationRepository->findAll(),
@@ -22,9 +22,9 @@ class QapesCriteresEvaluationController extends AbstractController
     }
 
     #[Route('/new', name: 'app_qapes_criteres_evaluation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository): Response
+    public function new(Request $request, QapesCritereRepository $qapesCriteresEvaluationRepository): Response
     {
-        $qapesCriteresEvaluation = new QapesCriteresEvaluation();
+        $qapesCriteresEvaluation = new QapesCritere();
         $form = $this->createForm(QapesCriteresEvaluation1Type::class, $qapesCriteresEvaluation);
         $form->handleRequest($request);
 

@@ -2,32 +2,32 @@
 
 namespace App\Repository;
 
-use App\Entity\QapesCriteresEvaluation;
+use App\Entity\QapesCritereReponse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<QapesCriteresEvaluation>
+ * @extends ServiceEntityRepository<QapesCritereReponse>
  *
- * @method QapesCriteresEvaluation|null find($id, $lockMode = null, $lockVersion = null)
- * @method QapesCriteresEvaluation|null findOneBy(array $criteria, array $orderBy = null)
- * @method QapesCriteresEvaluation[]    findAll()
- * @method QapesCriteresEvaluation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method QapesCritereReponse|null find($id, $lockMode = null, $lockVersion = null)
+ * @method QapesCritereReponse|null findOneBy(array $criteria, array $orderBy = null)
+ * @method QapesCritereReponse[]    findAll()
+ * @method QapesCritereReponse[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class QapesCriteresEvaluationRepository extends ServiceEntityRepository
+class QapesCritereReponseRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, QapesCriteresEvaluation::class);
+        parent::__construct($registry, QapesCritereReponse::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(QapesCriteresEvaluation $entity, bool $flush = true): void
+    public function add(QapesCritereReponse $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -39,7 +39,7 @@ class QapesCriteresEvaluationRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(QapesCriteresEvaluation $entity, bool $flush = true): void
+    public function remove(QapesCritereReponse $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -48,7 +48,7 @@ class QapesCriteresEvaluationRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return QapesCriteresEvaluation[] Returns an array of QapesCriteresEvaluation objects
+    //  * @return QapesCritereReponse[] Returns an array of QapesCritereReponse objects
     //  */
     /*
     public function findByExampleField($value)
@@ -65,7 +65,7 @@ class QapesCriteresEvaluationRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?QapesCriteresEvaluation
+    public function findOneBySomeField($value): ?QapesCritereReponse
     {
         return $this->createQueryBuilder('q')
             ->andWhere('q.exampleField = :val')

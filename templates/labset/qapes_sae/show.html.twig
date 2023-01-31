@@ -13,8 +13,8 @@
             <strong>Date de l'évaluation LABSET : {{ qapes.dateEvaluation }}</strong>
             {% for critere in qapes.qapesSaeCritereReponses %}
                 <div class="mt-2">
-                    <strong>{{ critere.qapesCritere != null ? critere.qapesCritere.libelle }} : {{ critere.reponse
-                        }}</strong>
+                    <strong>
+                        {{ critere.qapesCritere != null ? critere.qapesCritere.libelle }} : {{ critere.reponse }}</strong>
                     <div>
                         {{ critere.commentaireRepose|raw }}
                     </div>
