@@ -71,3 +71,19 @@ html[data-navcolor='dark'] .logo-but {
     height: auto;
 }
 
+.criterion {
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    background: #f5a51a;
+    &--correct {
+        background: #21c521;
+    }
+    &--incorrect {
+        background: #f10404;
+    }
+}

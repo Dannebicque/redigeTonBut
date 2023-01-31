@@ -91,15 +91,17 @@
         <div class="offset-md-1 col-md-8">
             <section class="mb-5">
                 <h2 class="h3">Qualité de la SAÉ</h2>
-                <strong>Date de l'évaluation LABSET : {{ qapes.dateEvaluation }}</strong>
+                <p>Date de l'évaluation LABSET : {{ qapes.dateEvaluation }}</p>
                 <div class="row">
                     {% for critere in qapes.qapesSaeCritereReponses %}
-                        <div class="col-md-6 mt-2">
-                            <strong>{{ critere.qapesCritere != null ? critere.qapesCritere.libelle }} : {{ critere.reponse
-                                }}</strong>
-                            <div>
-                                {{ critere.commentaireRepose|raw }}
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="criterion criterion--correct">
+                                    {{ critere.reponse }}
+                                </span>
+                                <h3>{{ critere.qapesCritere != null ? critere.qapesCritere.libelle }}</h3>
                             </div>
+                            <p>{{ critere.commentaireRepose|raw }}</p>
                         </div>
                     {% endfor %}
                 </div>
