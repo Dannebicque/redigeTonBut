@@ -1,6 +1,6 @@
-<h2 class="small-title mt-2">Détails de la SAE</h2>
-<div class="card">
+<div class="card mb-5">
     <div class="card-body">
+        <h3 class="card-title">Détails de la SAE</h5>
         <div class="row">
             <div class="col-6">
                 <dl>
@@ -113,19 +113,37 @@
     </div>
 </div>
 
-<h2 class="small-title mt-2">Référentiel de compétences</h2>
-<div class="card">
+<div class="card mb-5">
     <div class="card-body">
+        <h3 class="card-title">Référentiel de compétences</h5>
         {% if qapes.sae != null %}
-            {% for ac in qapes.sae.apcSaeCompetences %}
-                <span class="badge badge-{{ ac.competence.couleur }}">{{ ac.competence.libelle }}</span>
-            {% endfor %}
-            {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
-                <ul>
-                    <li><span class="badge badge-{{ ac.apprentissageCritique.niveau.competence.couleur }}">{{ ac.apprentissageCritique.libelle }}</span></li>
-                </ul>
-
-            {% endfor %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Compétence</th>
+                        <th>Apprentissages critiques</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in qapes.sae.apcSaeCompetences %}
+                        <tr>
+                          <td>
+                              <span class="badge badge-{{ c.competence.couleur }}">&nbsp;</span> 
+                              {{ c.competence.libelle }}
+                          </td>
+                          <td>
+                              {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
+                                  {% if (ac.apprentissageCritique.niveau.competence == c.competence) %}
+                                      <ul class="list-unstyled">
+                                          <li>{{ ac.apprentissageCritique.libelle }}</li>
+                                      </ul>
+                                  {% endif %}
+                              {% endfor %}
+                          </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
         <div class="alert alert-warning">
             Pas de SAE selectionnée
