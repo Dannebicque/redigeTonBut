@@ -3,54 +3,49 @@
 {% block title %}LABSET{% endblock %}
 
 {% block content %}
-    <div class="card mb-5">
-        <div class="card-body">
-            <table class="table">
-                <thead>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>SAE</th>
+                <th>IUT</th>
+                <th>Spécialité</th>
+                <th>Parcours</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sae in saes %}
                 <tr>
-                    <th>SAE</th>
-                    <th>IUT</th>
-                    <th>Spécialité</th>
-                    <th>Parcours</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for sae in saes %}
-                    <tr>
-                        <td>
+                    <td>
+                        <a href="{{ path('app_qapes_sae_show', {id:sae.id}) }}">
                             {{ sae.intituleSae }} ({{ sae.sae ? sae.sae.libelle : '-' }})
-                        </td>
-                        <td>{{ sae.iutSite ? (sae.iutSite.iut ? sae.iutSite.iut.libelle : '-') : '-' }} ({{ sae
-                            .iutSite ? sae.iutSite.libelle : '-' }})
-                        </td>
-                        <td>{{ sae.specialite ? sae.specialite.sigle : '-' }}</td>
-                        <td>{{ sae.parcours ? sae.parcours.libelle : '-' }}</td>
-                        <td>
-                            <a href="{{ path('app_qapes_sae_show', {id:sae.id}) }}" class="btn btn-outline-info
-                            btn-sm">
-                                <i class="bi bi-eye"></i>
-                                Voir
-                            </a>
-                            <a href="{{ path('app_qapes_sae_edit', {id:sae.id}) }}" class="btn btn-outline-warning btn-sm">
-                                <i class="bi bi-pencil"></i>
-                                Modifier
-                            </a>
-                            <form method="POST" action="{{ path('app_qapes_sae_delete', {id:sae.id}) }}"
-                                  onsubmit="return confirm('Êtes vous sûr de vouloir supprimer cet élément ?');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sae.id) }}">
-                                <button class="btn btn-sm btn-icon btn-icon-start btn-outline-danger ms-1">
-                                    <i class="bi-trash"></i>
-                                    <span class="d-none d-xxl-inline-block">Supprimer</span>
-                                </button>
-                            </form>
+                        </a>
+                    </td>
+                    <td>{{ sae.iutSite ? (sae.iutSite.iut ? sae.iutSite.iut.libelle : '-') : '-' }} ({{ sae
+                        .iutSite ? sae.iutSite.libelle : '-' }})
+                    </td>
+                    <td>{{ sae.specialite ? sae.specialite.sigle : '-' }}</td>
+                    <td>{{ sae.parcours ? sae.parcours.libelle : '-' }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('app_qapes_sae_edit', {id:sae.id}) }}" class="btn btn-outline-warning btn-sm mb-1">
+                            <i class="bi bi-pencil"></i>
+                            Modifier
+                        </a>
+                        <form method="POST" class="d-inline" action="{{ path('app_qapes_sae_delete', {id:sae.id}) }}"
+                              onsubmit="return confirm('Êtes vous sûr de vouloir supprimer cet élément ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sae.id) }}">
+                            <button class="btn btn-sm btn-icon btn-icon-start btn-outline-danger mb-1">
+                                <i class="bi-trash"></i>
+                                <span class="d-none d-xxl-inline-block">Supprimer</span>
+                            </button>
+                        </form>
 
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}
 
@@ -75,6 +70,6 @@
     w-sm-auto"
     >
         <i class="bi bi-plus-circle"></i>
-        <span>Ajouter une QAPES</span>
+        <span>Ajouter une SAÉ</span>
     </a>
 {% endblock %}
