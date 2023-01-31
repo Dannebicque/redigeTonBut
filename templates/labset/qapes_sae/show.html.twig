@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}QapesSae{% endblock %}
+{% block title %}{{ qapes.sae.libelle }}{% endblock %}
+{% block header %}{{ qapes.sae.libelle }}{% endblock %}
 
 {% block content %}
     {{ include('labset/qapes_sae/_synthese_iut.html.twig') }}

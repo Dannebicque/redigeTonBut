@@ -873,6 +873,11 @@
   "resolved" "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.3.tgz"
   "version" "0.5.3"
 
+"@hotwired/stimulus@^3.0.0":
+  "integrity" "sha512-HGlzDcf9vv/EQrMJ5ZG6VWNs8Z/xMN+1o2OhV1gKiSG6CqZt5MCBB1gRg5ILiN3U0jEAxuDTNPRfBcnZBDmupQ=="
+  "resolved" "https://registry.npmjs.org/@hotwired/stimulus/-/stimulus-3.2.1.tgz"
+  "version" "3.2.1"
+
 "@nodelib/fs.scandir@2.1.5":
   "integrity" "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="
   "resolved" "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -1576,9 +1581,9 @@
     "lodash.uniq" "^4.5.0"
 
 "caniuse-lite@^1.0.0", "caniuse-lite@^1.0.30001219":
-  "integrity" "sha512-pDHgRndit6p1NR2GhzMbQ6CkRrp4VKuSsqbcLeOQppYPKOYkKT/6ZvZDvKJUqcmtyWIAHuZq3SVS2vc1egCZzw=="
-  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001237.tgz"
-  "version" "1.0.30001237"
+  "integrity" "sha512-kbaCEBRRVSoeNs74sCuq92MJyGrMtjWVfhltoHUCW4t4pXFvGjUBrfo47weBRViHkiV3eBYyIsfl956NtHGazw=="
+  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001334.tgz"
+  "version" "1.0.30001334"
 
 "chalk@^2.0.0", "chalk@^2.3.2", "chalk@^2.4.2":
   "integrity" "sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ=="
@@ -4527,30 +4532,6 @@
   "version" "8.1.1"
   dependencies:
     "has-flag" "^4.0.0"
-
-"svelte-dev-helper@^1.1.9":
-  "integrity" "sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M="
-  "resolved" "https://registry.npmjs.org/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz"
-  "version" "1.1.9"
-
-"svelte-hmr@^0.14.2":
-  "integrity" "sha512-kItFF7vqzStckSigoFmMnxJpTOdB9TWnQAW6Js+yAB4277tLbJIIE5KBlGHNmJNpA7MguqidsPB27Uw5UzQPCA=="
-  "resolved" "https://registry.npmjs.org/svelte-hmr/-/svelte-hmr-0.14.4.tgz"
-  "version" "0.14.4"
-
-"svelte-loader@^3.1.2":
-  "integrity" "sha512-RhVIvitb+mtIwKNyvNQoDQ0EhXg2KH8LhQiiqeJh8u6vqJyGWoMoFcYCar69TT+1iaK5IYe0wPNYJ6TILcsurw=="
-  "resolved" "https://registry.npmjs.org/svelte-loader/-/svelte-loader-3.1.2.tgz"
-  "version" "3.1.2"
-  dependencies:
-    "loader-utils" "^2.0.0"
-    "svelte-dev-helper" "^1.1.9"
-    "svelte-hmr" "^0.14.2"
-
-"svelte@^3.38.2", "svelte@>=3.19.0", "svelte@>3.0.0":
-  "integrity" "sha512-q5Dq0/QHh4BLJyEVWGe7Cej5NWs040LWjMbicBGZ+3qpFWJ1YObRmUDZKbbovddLC9WW7THTj3kYbTOFmU9fbg=="
-  "resolved" "https://registry.npmjs.org/svelte/-/svelte-3.38.2.tgz"
-  "version" "3.38.2"
 
 "svgo@^2.3.0":
   "integrity" "sha512-fz4IKjNO6HDPgIQxu4IxwtubtbSfGEAJUq/IXyTPIkGhWck/faiiwfkvsB8LnBkKLvSoyNNIY6d13lZprJMc9Q=="

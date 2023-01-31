@@ -12,7 +12,10 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,8 +24,13 @@ class QapesSaePart2Type extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('intituleSae')
-            ->add('lien')
+            ->add('intituleSae', TextType::class, [
+                'label' => 'Intitulé de la SAÉ',
+                'help' => 'Un nom clair, simple, permettant de parler de cette SAÉ entre collègues'
+            ])
+            ->add('lien', UrlType::class, [
+              'label' => 'Lien vers une présentation de la SAÉ'
+            ])
             ->add('aEpingler', TextareaType::class, [
                 'required' => false,
                 'attr' => [
@@ -30,41 +38,47 @@ class QapesSaePart2Type extends AbstractType
                 ],
                 'label' => 'A épingler',
             ])
-            ->add('anneeCreation')
+            ->add('anneeCreation', null, [
+                'label' => 'Année de création de la SAÉ'
+            ])
             ->add('version')
-            ->add('dateVersion')
-            ->add('modeDispense',ChoiceType::class, [
+            ->add('dateVersion', null, [
+                'label' => 'Date de la version'
+            ])
+            ->add('modeDispense', ChoiceType::class, [
                 'choices' => [
-                    'En présentiel' => 'présentiel',
+                    'En présentiel' => 'presentiel',
                     'En distanciel' => 'distanciel',
                     'Hybride' => 'hybride'
                 ],
                 'label' => 'Organisation de la SAE'
             ])
-            ->add('nbEcts')
+            ->add('nbEcts', NumberType::class, [
+                'label' => 'Crédits ECTS'
+            ])
             ->add('typeSae', ChoiceType::class, [
                 'choices' => [
                     'Serious game' => 'serious game',
                     'Simulation' => 'simulation',
                     'Cas' => 'cas',
                     'Projet' => 'projet',
-                    'Problème' => 'problème',
-                    'Pas précisé' => 'pas précisé',
+                    'Problème' => 'probleme',
+                    'Pas précisé' => 'pas precise',
                 ],
                 'label' => 'Type de SAE',
             ])
             ->add('saeGroupeIndividuelle', ChoiceType::class, [
                 'choices' => [
-                    'Individuelle' => 'Individuelle',
-                    'En Groupe' => 'Groupe',
+                    'Individuelle' => 'individuelle',
+                    'En Groupe' => 'groupe',
                 ],
                 'label' => 'Composition de la SAE'
             ])
             ->add('publicCible', ChoiceType::class, [
                 'choices' => [
-                    'Etudiants' => 'Etudiants',
-                    'Alternants' => 'Alternants',
-                    'Mixte' => 'Mixte',
+                    'Etudiants' => 'etudiants',
+                    'Alternants' => 'alternants',
+                    'Mixte' => 'mixte',
                 ],
                 'label' => 'Public cible'
             ])
@@ -75,10 +89,18 @@ class QapesSaePart2Type extends AbstractType
                     'rows' => 5,
                 ],
             ])
-            ->add('nbEtudiants')
-            ->add('nbEncadrants')
-            ->add('nbHeuresAutonomie')
-            ->add('nbHeuresDirigees')
+            ->add('nbEtudiants', null, [
+                'label' => 'Nombre d’étudiants'
+            ])
+            ->add('nbEncadrants', null, [
+              'label' => 'Nombre d’encadrants'
+            ])
+            ->add('nbHeuresAutonomie', null, [
+              'label' => 'Nombre d’heures en autonomie'
+            ])
+            ->add('nbHeuresDirigees', null, [
+              'label' => 'Nombre d’heures dirigées'
+            ])
             ->add('objectifsSae', TextareaType::class, [
                 'label' => 'Objectifs de la SAE',
                 'required' => false,
@@ -87,13 +109,15 @@ class QapesSaePart2Type extends AbstractType
                 ],
             ])
             ->add('deroulementSae', TextareaType::class, [
-                'label' => 'Dérroulement de la SAE',
+                'label' => 'Déroulement de la SAE',
                 'required' => false,
                 'attr' => [
                     'rows' => 5,
                 ],
             ])
-            ->add('lienLigneDuTemps')
+            ->add('lienLigneDuTemps', UrlType::class, [
+              'label' => 'Lien vers la ligne du temps de la SAÉ'
+            ])
             ->add('evaluations', TextareaType::class, [
                 'label' => 'Modalités d\'Évaluations',
                 'required' => false,
