@@ -106,7 +106,7 @@
             </section>
 
             <h2 class="h4">Aspects pédagogiques</h2>
-            <div class="row mb-4">
+            <div class="row mb-5">
                 <div class="col-md-6">
                     <strong class="mt-2">À épingler</strong>
                     <p>{{ qapes.aEpingler|raw }}</p>
@@ -134,40 +134,7 @@
             </div>
 
             <h2 class="h4">Référentiel de compétences</h2>
-            {% if qapes.sae != null %}
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Compétence</th>
-                            <th>Apprentissages critiques</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for c in qapes.sae.apcSaeCompetences %}
-                            <tr>
-                              <td>
-                                  <span class="badge badge-{{ c.competence.couleur }}">&nbsp;</span> 
-                                  {{ c.competence.libelle }}
-                              </td>
-                              <td>
-                                  {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
-                                      {% if (ac.apprentissageCritique.niveau.competence == c.competence) %}
-                                          <ul class="list-unstyled">
-                                              <li>{{ ac.apprentissageCritique.libelle }}</li>
-                                          </ul>
-                                      {% endif %}
-                                  {% endfor %}
-                              </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <div class="alert alert-warning">
-                    Pas de SAÉ selectionnée
-                </div>
-            {% endif %}
-
+            {{ include('labset/qapes_sae/_referentiel.html.twig') }}
         </div
     </div>
 {% endblock %}

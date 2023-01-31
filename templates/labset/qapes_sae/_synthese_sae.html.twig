@@ -104,36 +104,4 @@
 </div>
 
 <h2 class="h4">Référentiel de compétences</h2>
-{% if qapes.sae != null %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Compétence</th>
-                <th>Apprentissages critiques</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for c in qapes.sae.apcSaeCompetences %}
-                <tr>
-                  <td>
-                      <span class="badge badge-{{ c.competence.couleur }}">&nbsp;</span> 
-                      {{ c.competence.libelle }}
-                  </td>
-                  <td>
-                      {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
-                          {% if (ac.apprentissageCritique.niveau.competence == c.competence) %}
-                              <ul class="list-unstyled">
-                                  <li>{{ ac.apprentissageCritique.libelle }}</li>
-                              </ul>
-                          {% endif %}
-                      {% endfor %}
-                  </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <div class="alert alert-warning">
-        Pas de SAÉ selectionnée
-    </div>
-{% endif %}
+{{ include('labset/qapes_sae/_referentiel.html.twig') }}

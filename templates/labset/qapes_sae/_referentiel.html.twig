@@ -1,0 +1,38 @@
+{% if qapes.sae != null %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Compétences</th>
+                <th>Apprentissages critiques</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in qapes.sae.apcSaeCompetences %}
+                <tr>
+                  <td>
+                      <div class="d-flex">
+                        <span class="badge badge-{{ c.competence.couleur }} me-2">&nbsp;</span> 
+                        <div>{{ c.competence.libelle }}</div>
+                      </div>
+                  </td>
+                  <td>
+                      {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
+                          {% if (ac.apprentissageCritique.niveau.competence == c.competence) %}
+                              <ul class="list-unstyled">
+                                  <li class="d-flex">
+                                      <span class="badge badge-{{ c.competence.couleur }} me-2">&nbsp;</span> 
+                                      <div>{{ ac.apprentissageCritique.libelle }}</div>
+                                  </li>
+                              </ul>
+                          {% endif %}
+                      {% endfor %}
+                  </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-warning">
+        Pas de SAÉ selectionnée
+    </div>
+{% endif %}
