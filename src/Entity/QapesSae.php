@@ -162,6 +162,76 @@ class QapesSae
      */
     private $qapesSaeCritereReponse;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $effetsObserves;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $lienRepertoire;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $coordinationIntervenant;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isCoordinationIntervenant;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $lienDocumentCoordination;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $consignesCommuniquees;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $lienConsignes;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $elementsContexte;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $elementsContextesObstacles;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $swatForce;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $swatFaiblesse;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $modificationsApportees;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $temoignagesEtudiants;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $temoignagesEnseignants;
+
     public function __construct(UserInterface $user)
     {
         $this->auteur = new ArrayCollection();
@@ -550,6 +620,174 @@ class QapesSae
                 $qapesSaeCritereReponse->setSae(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEffetsObserves(): ?string
+    {
+        return $this->effetsObserves;
+    }
+
+    public function setEffetsObserves(?string $effetsObserves): self
+    {
+        $this->effetsObserves = $effetsObserves;
+
+        return $this;
+    }
+
+    public function getLienRepertoire(): ?string
+    {
+        return $this->lienRepertoire;
+    }
+
+    public function setLienRepertoire(?string $lienRepertoire): self
+    {
+        $this->lienRepertoire = $lienRepertoire;
+
+        return $this;
+    }
+
+    public function getCoordinationIntervenant(): ?string
+    {
+        return $this->coordinationIntervenant;
+    }
+
+    public function setCoordinationIntervenant(?string $coordinationIntervenant): self
+    {
+        $this->coordinationIntervenant = $coordinationIntervenant;
+
+        return $this;
+    }
+
+    public function getIsCoordinationIntervenant(): ?bool
+    {
+        return $this->isCoordinationIntervenant;
+    }
+
+    public function setIsCoordinationIntervenant(bool $isCoordinationIntervenant): self
+    {
+        $this->isCoordinationIntervenant = $isCoordinationIntervenant;
+
+        return $this;
+    }
+
+    public function getLienDocumentCoordination(): ?string
+    {
+        return $this->lienDocumentCoordination;
+    }
+
+    public function setLienDocumentCoordination(?string $lienDocumentCoordination): self
+    {
+        $this->lienDocumentCoordination = $lienDocumentCoordination;
+
+        return $this;
+    }
+
+    public function getConsignesCommuniquees(): ?bool
+    {
+        return $this->consignesCommuniquees;
+    }
+
+    public function setConsignesCommuniquees(bool $consignesCommuniquees): self
+    {
+        $this->consignesCommuniquees = $consignesCommuniquees;
+
+        return $this;
+    }
+
+    public function getLienConsignes(): ?string
+    {
+        return $this->lienConsignes;
+    }
+
+    public function setLienConsignes(?string $lienConsignes): self
+    {
+        $this->lienConsignes = $lienConsignes;
+
+        return $this;
+    }
+
+    public function getElementsContexte(): ?string
+    {
+        return $this->elementsContexte;
+    }
+
+    public function setElementsContexte(?string $elementsContexte): self
+    {
+        $this->elementsContexte = $elementsContexte;
+
+        return $this;
+    }
+
+    public function getElementsContextesObstacles(): ?string
+    {
+        return $this->elementsContextesObstacles;
+    }
+
+    public function setElementsContextesObstacles(?string $elementsContextesObstacles): self
+    {
+        $this->elementsContextesObstacles = $elementsContextesObstacles;
+
+        return $this;
+    }
+
+    public function getSwatForce(): ?string
+    {
+        return $this->swatForce;
+    }
+
+    public function setSwatForce(?string $swatForce): self
+    {
+        $this->swatForce = $swatForce;
+
+        return $this;
+    }
+
+    public function getSwatFaiblesse(): ?string
+    {
+        return $this->swatFaiblesse;
+    }
+
+    public function setSwatFaiblesse(?string $swatFaiblesse): self
+    {
+        $this->swatFaiblesse = $swatFaiblesse;
+
+        return $this;
+    }
+
+    public function getModificationsApportees(): ?string
+    {
+        return $this->modificationsApportees;
+    }
+
+    public function setModificationsApportees(?string $modificationsApportees): self
+    {
+        $this->modificationsApportees = $modificationsApportees;
+
+        return $this;
+    }
+
+    public function getTemoignagesEtudiants(): ?string
+    {
+        return $this->temoignagesEtudiants;
+    }
+
+    public function setTemoignagesEtudiants(?string $temoignagesEtudiants): self
+    {
+        $this->temoignagesEtudiants = $temoignagesEtudiants;
+
+        return $this;
+    }
+
+    public function getTemoignagesEnseignants(): ?string
+    {
+        return $this->temoignagesEnseignants;
+    }
+
+    public function setTemoignagesEnseignants(?string $temoignagesEnseignants): self
+    {
+        $this->temoignagesEnseignants = $temoignagesEnseignants;
 
         return $this;
     }

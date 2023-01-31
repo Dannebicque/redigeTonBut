@@ -7,6 +7,7 @@ use App\Entity\QapesSaeCritereReponse;
 use App\Form\QapesSaePart1Type;
 use App\Form\QapesSaePart2Type;
 use App\Form\QapesSaePart3Type;
+use App\Form\QapesSaePart4Type;
 use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
@@ -243,6 +244,9 @@ class QapesSaeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $qapesSaeRepository->add($qapesSae);
+            return $this->redirectToRoute('app_qapes_sae_new_etape_4', [
+                'qapesSae' => $qapesSae->getId(),
+            ]);
         }
 
         return $this->render('labset/qapes_sae/new_step3.html.twig', [
@@ -250,6 +254,26 @@ class QapesSaeController extends AbstractController
             'form' => $form->createView(),
             'criteres' => $criteres,
             'reponses' =>$t
+        ]);
+    }
+
+    #[Route('/new/etape-4/{qapesSae}', name: 'app_qapes_sae_new_etape_4', methods: ['GET', 'POST'])]
+    public function etape4(
+        QapesCritereRepository $qapesCritereRepository,
+        Request $request,
+        QapesSaeRepository $qapesSaeRepository,
+        QapesSae $qapesSae
+    ): Response {
+        $form = $this->createForm(QapesSaePart4Type::class, $qapesSae);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $qapesSaeRepository->add($qapesSae);
+        }
+
+        return $this->render('labset/qapes_sae/new_step4.html.twig', [
+            'qapes' => $qapesSae,
+            'form' => $form->createView(),
         ]);
     }
 

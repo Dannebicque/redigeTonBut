@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Détails de la SAE{% endblock %}
+
+{% block content %}
+    {{ include('labset/qapes_sae/_synthese_iut.html.twig') }}
+
+    <section>
+        {% form_theme form 'form/my-form.html.twig' %}
+        {{ form_start(form) }}
+
+        <h2 class="h4">Informations clefs</h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                {{ form_row(form.effetsObserves) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.lienRepertoire) }}
+            </div>
+        </div>
+
+        <h2 class="h4">Intervenants</h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                {{ form_row(form.isCoordinationIntervenant) }}
+                {{ form_row(form.coordinationIntervenant) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.lienDocumentCoordination) }}
+            </div>
+        </div>
+
+        <h2 class="h4">Consignes</h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                {{ form_row(form.consignesCommuniquees) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.lienConsignes) }}
+            </div>
+        </div>
+
+        <h2 class="h4">SWOT</h2>
+        <div class="row">
+            <div class="col-md-6">
+                Forces
+                {{ form_row(form.swatForce) }}
+            </div>
+            <div class="col-md-6">
+                Faiblesses
+                {{ form_row(form.swatFaiblesse) }}
+            </div>
+            <div class="col-md-6">
+                Opportunités
+                {{ form_row(form.elementsContexte) }}
+            </div>
+            <div class="col-md-6">
+                Menaces
+                {{ form_row(form.elementsContextesObstacles) }}
+            </div>
+        </div>
+
+        <h2 class="h4">Modifications envisagées</h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                {{ form_row(form.modificationsApportees) }}
+            </div>
+        </div>
+
+        <h2 class="h4">Témoignages</h2>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.temoignagesEnseignants) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.temoignagesEtudiants) }}
+            </div>
+
+        </div>
+        <button class="btn btn-primary">Sauvegarder et continuer vers l'évaluation</button>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}
+
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'B.U.T. ',
+        },
+        {
+            href:path('app_labset'),
+            title: 'Liste des SAE',
+        }
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('app_labset') }}" class="btn
+            btn-outline-success
+            btn-icon btn-icon-end
+    w-100
+    w-sm-auto"
+    >
+        <i class="bi bi-pencil"></i>
+        <span>retour</span>
+    </a>
+{% endblock %}
