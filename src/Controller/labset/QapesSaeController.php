@@ -81,7 +81,7 @@ class QapesSaeController extends AbstractController
                 foreach ($siteiut as $site) {
                     $siteiutArray[] = [
                         'id' => $site->getId(),
-                        'libelle' => $site->getLibelle(),
+                        'libelle' => $site->getDisplay(),
                     ];
                 }
 
@@ -95,7 +95,7 @@ class QapesSaeController extends AbstractController
                 foreach ($siteiut as $site) {
                     $siteiutArray[] = [
                         'id' => $site->getId(),
-                        'libelle' => $site->getLibelle(),
+                        'libelle' => $site->getDisplay(),
                     ];
                 }
 

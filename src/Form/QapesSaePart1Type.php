@@ -94,6 +94,7 @@ class QapesSaePart1Type extends AbstractType
         if ($this->edit === true) {
             $builder->add('sae', EntityType::class, [
                 'class' => ApcSae::class,
+                'choice_label' => 'display',
                 'query_builder' => function(ApcSaeRepository $er) {
                     if ($this->apcParcours !== null) {
                         $er->createQueryBuilder('r')

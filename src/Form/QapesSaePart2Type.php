@@ -9,6 +9,7 @@ use App\Entity\Iut;
 use App\Entity\IutSite;
 use App\Entity\QapesSae;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -127,6 +128,11 @@ class QapesSaePart2Type extends AbstractType
             ])
             ->add('redacteur', EntityType::class, [
                 'class' => User::class,
+                'query_builder' => function(UserRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.nom', 'ASC')
+                        ->addOrderBy('u.prenom', 'ASC');
+                },
                 'multiple' => true,
                 'choice_label' => 'display',
                 'label' => 'Rédacteur(s) de la SAE',

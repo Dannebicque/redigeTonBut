@@ -8,7 +8,7 @@
         <thead>
         <tr>
             <th>Libellé</th>
-            <th>Valeurs</th>
+            <th>Réponses</th>
             <th>actions</th>
         </tr>
         </thead>
@@ -20,7 +20,13 @@
                         {{ qapes_criteres_evaluation.libelle }}
                     </a>
                 </td>
-                <td>{{ qapes_criteres_evaluation.valeurs }}</td>
+                <td>
+                    <ul>
+                    {% for rep in qapes_criteres_evaluation.qapesCritereReponses %}
+                    <li>{{ rep.libelle }}</li>
+                    {% endfor %}
+                    </ul>
+                </td>
                 <td>
                     <a href="{{ path('app_qapes_criteres_evaluation_edit', {'id': qapes_criteres_evaluation.id}) }}"
                        class="btn btn-sm btn-outline-warning btn-icon btn-icon-end w-100 w-sm-auto mx-2">
