@@ -2,6 +2,7 @@
 /.env.local
 /.env.local.php
 /.env.*.local
+/.idea
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
@@ -25,3 +26,7 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 /public/upload/
+/public/latex/
+/public/matrix/
+/public/excel/
+
