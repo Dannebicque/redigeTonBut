@@ -112,3 +112,24 @@
         </div>
     </div>
 </div>
+
+<h2 class="small-title mt-2">Référentiel de compétences</h2>
+<div class="card">
+    <div class="card-body">
+        {% if qapes.sae != null %}
+            {% for ac in qapes.sae.apcSaeCompetences %}
+                <span class="badge badge-{{ ac.competence.couleur }}">{{ ac.competence.libelle }}</span>
+            {% endfor %}
+            {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
+                <ul>
+                    <li><span class="badge badge-{{ ac.apprentissageCritique.niveau.competence.couleur }}">{{ ac.apprentissageCritique.libelle }}</span></li>
+                </ul>
+
+            {% endfor %}
+        {% else %}
+        <div class="alert alert-warning">
+            Pas de SAE selectionnée
+        </div>
+        {% endif %}
+    </div>
+</div>

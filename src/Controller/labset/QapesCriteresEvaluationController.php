@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\labset;
 
 use App\Entity\QapesCriteresEvaluation;
 use App\Form\QapesCriteresEvaluation1Type;
@@ -16,7 +16,7 @@ class QapesCriteresEvaluationController extends AbstractController
     #[Route('/', name: 'app_qapes_criteres_evaluation_index', methods: ['GET'])]
     public function index(QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository): Response
     {
-        return $this->render('qapes_criteres_evaluation/index.html.twig', [
+        return $this->render('labset/qapes_criteres_evaluation/index.html.twig', [
             'qapes_criteres_evaluations' => $qapesCriteresEvaluationRepository->findAll(),
         ]);
     }
@@ -33,7 +33,7 @@ class QapesCriteresEvaluationController extends AbstractController
             return $this->redirectToRoute('app_qapes_criteres_evaluation_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('qapes_criteres_evaluation/new.html.twig', [
+        return $this->renderForm('labset/qapes_criteres_evaluation/new.html.twig', [
             'qapes_criteres_evaluation' => $qapesCriteresEvaluation,
             'form' => $form,
         ]);
@@ -42,7 +42,7 @@ class QapesCriteresEvaluationController extends AbstractController
     #[Route('/{id}', name: 'app_qapes_criteres_evaluation_show', methods: ['GET'])]
     public function show(QapesCriteresEvaluation $qapesCriteresEvaluation): Response
     {
-        return $this->render('qapes_criteres_evaluation/show.html.twig', [
+        return $this->render('labset/qapes_criteres_evaluation/show.html.twig', [
             'qapes_criteres_evaluation' => $qapesCriteresEvaluation,
         ]);
     }
@@ -58,7 +58,7 @@ class QapesCriteresEvaluationController extends AbstractController
             return $this->redirectToRoute('app_qapes_criteres_evaluation_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('qapes_criteres_evaluation/edit.html.twig', [
+        return $this->renderForm('labset/qapes_criteres_evaluation/edit.html.twig', [
             'qapes_criteres_evaluation' => $qapesCriteresEvaluation,
             'form' => $form,
         ]);

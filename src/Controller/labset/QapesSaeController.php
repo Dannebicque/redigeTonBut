@@ -189,11 +189,6 @@ class QapesSaeController extends AbstractController
                 $sae = $apcSaeRepository->find($data['sae']);
                 $qapesSae->setSae($sae);
             }
-            //SAE
-
-
-
-
 
             $qapesSaeRepository->add($qapesSae);
 
@@ -259,12 +254,41 @@ class QapesSaeController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_qapes_sae_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, QapesSae $qapesSae, QapesSaeRepository $qapesSaeRepository): Response
+    public function edit(
+        IutSiteRepository $iutSiteRepository,
+        ApcParcoursRepository $parcoursRepository,
+        DepartementRepository $departementRepository,
+        ApcSaeRepository $apcSaeRepository,
+        Request $request,
+        QapesSae $qapesSae, QapesSaeRepository $qapesSaeRepository): Response
     {
         $form = $this->createForm(QapesSaePart1Type::class, $qapesSae);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $request->request->all()['qapes_sae_part1'];
+            //iutSite
+            $iutSite = $iutSiteRepository->find($data['iutSite'] );
+            $qapesSae->setIutSite($iutSite);
+
+            //parcours
+            if ($data['parcours']  !== '') {
+                $parcours = $parcoursRepository->find($data['parcours'] );
+                $qapesSae->setParcours($parcours);
+                $qapesSae->setSpecialite($parcours->getDepartement());
+            }
+
+            //specialite
+            if ($data['specialite']  !== '') {
+                $specialite = $departementRepository->find($data['specialite'] );
+                $qapesSae->setSpecialite($specialite);
+            }
+
+            if ($data['sae'] !== '') {
+                $sae = $apcSaeRepository->find($data['sae']);
+                $qapesSae->setSae($sae);
+            }
+
             $qapesSaeRepository->add($qapesSae);
 
             return $this->redirectToRoute('app_qapes_sae_new_etape_2', [
