@@ -125,6 +125,12 @@ class QapesSaePart2Type extends AbstractType
                     'rows' => 5,
                 ],
             ])
+            ->add('redacteur', EntityType::class, [
+                'class' => User::class,
+                'multiple' => true,
+                'choice_label' => 'display',
+                'label' => 'Rédacteur(s) de la SAE',
+            ])
         ;
     }
 

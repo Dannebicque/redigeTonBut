@@ -271,7 +271,8 @@ class QapesSaeController extends AbstractController
         Request $request,
         QapesSae $qapesSae, QapesSaeRepository $qapesSaeRepository): Response
     {
-        $form = $this->createForm(QapesSaePart1Type::class, $qapesSae);
+        $form = $this->createForm(QapesSaePart1Type::class, $qapesSae,
+        ['edit' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

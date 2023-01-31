@@ -19,8 +19,10 @@
             </div>
             <div class="col-md-4">
                 <dl>
-                    <dt>Auteur(s)</dt>
+                    <dt>Auteur(s) de la fiche qualité</dt>
                     <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+                    <dt>Rédacteur(s) de la SAE</dt>
+                    <dd>{% for aut in qapes.redacteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
                 </dl>
             </div>
         </div>
