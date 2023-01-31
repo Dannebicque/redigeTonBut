@@ -158,9 +158,9 @@ class QapesSae
     private $dateEvaluation;
 
     /**
-     * @ORM\OneToMany(targetEntity=QapesSaeCritereReponse::class, mappedBy="qapes_sae")
+     * @ORM\OneToMany(targetEntity=QapesSaeCritereReponse::class, mappedBy="sae", cascade={"persist", "remove"})
      */
-    private $qapesSaeCritereReponses;
+    private $qapesSaeCritereReponse;
 
     public function __construct(UserInterface $user)
     {
@@ -168,6 +168,7 @@ class QapesSae
         $this->redacteur = new ArrayCollection();
         $this->addRedacteur($user);
         $this->qapesSaeCritereReponses = new ArrayCollection();
+        $this->qapesSaeCritereReponse = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -526,16 +527,16 @@ class QapesSae
     /**
      * @return Collection<int, QapesSaeCritereReponse>
      */
-    public function getQapesSaeCritereReponses(): Collection
+    public function getQapesSaeCritereReponse(): Collection
     {
-        return $this->qapesSaeCritereReponses;
+        return $this->qapesSaeCritereReponse;
     }
 
     public function addQapesSaeCritereReponse(QapesSaeCritereReponse $qapesSaeCritereReponse): self
     {
-        if (!$this->qapesSaeCritereReponses->contains($qapesSaeCritereReponse)) {
-            $this->qapesSaeCritereReponses[] = $qapesSaeCritereReponse;
-            $qapesSaeCritereReponse->setQapesSae($this);
+        if (!$this->qapesSaeCritereReponse->contains($qapesSaeCritereReponse)) {
+            $this->qapesSaeCritereReponse[] = $qapesSaeCritereReponse;
+            $qapesSaeCritereReponse->setSae($this);
         }
 
         return $this;
@@ -543,10 +544,10 @@ class QapesSae
 
     public function removeQapesSaeCritereReponse(QapesSaeCritereReponse $qapesSaeCritereReponse): self
     {
-        if ($this->qapesSaeCritereReponses->removeElement($qapesSaeCritereReponse)) {
+        if ($this->qapesSaeCritereReponse->removeElement($qapesSaeCritereReponse)) {
             // set the owning side to null (unless already changed)
-            if ($qapesSaeCritereReponse->getQapesSae() === $this) {
-                $qapesSaeCritereReponse->setQapesSae(null);
+            if ($qapesSaeCritereReponse->getSae() === $this) {
+                $qapesSaeCritereReponse->setSae(null);
             }
         }
 

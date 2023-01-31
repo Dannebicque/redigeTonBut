@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\QapesCriteresEvaluationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\QapesCritereReponseRepository;
 
 /**
- * @ORM\Entity(repositoryClass=QapesCriteresEvaluationRepository::class)
+ * @ORM\Entity(repositoryClass=QapesCritereReponseRepository::class)
  */
-class QapesCriteresEvaluation
+class QapesCritereReponse
 {
     /**
      * @ORM\Id
@@ -20,17 +20,22 @@ class QapesCriteresEvaluation
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=150)
      */
     private $libelle;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=7)
      */
-    private $valeurs = '';
+    private $couleur;
 
     /**
-     * @ORM\OneToMany(targetEntity=QapesSaeCritereReponse::class, mappedBy="qapes_critere")
+     * @ORM\ManyToOne(targetEntity=QapesCritere::class, inversedBy="qapesCritereReponses")
+     */
+    private $qapesCritere;
+
+    /**
+     * @ORM\OneToMany(targetEntity=QapesSaeCritereReponse::class, mappedBy="reponse")
      */
     private $qapesSaeCritereReponses;
 
@@ -56,14 +61,26 @@ class QapesCriteresEvaluation
         return $this;
     }
 
-    public function getValeurs(): ?string
+    public function getCouleur(): ?string
     {
-        return $this->valeurs;
+        return $this->couleur;
     }
 
-    public function setValeurs(string $valeurs): self
+    public function setCouleur(string $couleur): self
     {
-        $this->valeurs = $valeurs;
+        $this->couleur = $couleur;
+
+        return $this;
+    }
+
+    public function getQapesCritere(): ?QapesCritere
+    {
+        return $this->qapesCritere;
+    }
+
+    public function setQapesCritere(?QapesCritere $qapesCritere): self
+    {
+        $this->qapesCritere = $qapesCritere;
 
         return $this;
     }
@@ -80,7 +97,7 @@ class QapesCriteresEvaluation
     {
         if (!$this->qapesSaeCritereReponses->contains($qapesSaeCritereReponse)) {
             $this->qapesSaeCritereReponses[] = $qapesSaeCritereReponse;
-            $qapesSaeCritereReponse->setQapesCritere($this);
+            $qapesSaeCritereReponse->setReponse($this);
         }
 
         return $this;
@@ -90,8 +107,8 @@ class QapesCriteresEvaluation
     {
         if ($this->qapesSaeCritereReponses->removeElement($qapesSaeCritereReponse)) {
             // set the owning side to null (unless already changed)
-            if ($qapesSaeCritereReponse->getQapesCritere() === $this) {
-                $qapesSaeCritereReponse->setQapesCritere(null);
+            if ($qapesSaeCritereReponse->getReponse() === $this) {
+                $qapesSaeCritereReponse->setReponse(null);
             }
         }
 

@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\QapesSaeCritereReponseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\QapesSaeCritereReponseRepository;
 
 /**
  * @ORM\Entity(repositoryClass=QapesSaeCritereReponseRepository::class)
@@ -18,74 +18,69 @@ class QapesSaeCritereReponse
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=QapesSae::class, inversedBy="qapesSaeCritereReponses")
+     * @ORM\ManyToOne(targetEntity=QapesCritere::class, inversedBy="qapesSaeCritereReponses")
      */
-    private $qapes_sae;
+    private $critere;
 
     /**
-     * @ORM\ManyToOne(targetEntity=QapesCriteresEvaluation::class, inversedBy="qapesSaeCritereReponses")
+     * @ORM\ManyToOne(targetEntity=QapesSae::class, inversedBy="qapesSaeCritereReponse")
      */
-    private $qapes_critere;
+    private $sae;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $commentaire;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=QapesCritereReponse::class, inversedBy="qapesSaeCritereReponses")
      */
     private $reponse;
 
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $commentaire_repose;
-
-    public function getId(): ?int
+    public function getCritere(): ?QapesCritere
     {
-        return $this->id;
+        return $this->critere;
     }
 
-    public function getQapesSae(): ?QapesSae
+    public function setCritere(?QapesCritere $critere): self
     {
-        return $this->qapes_sae;
-    }
-
-    public function setQapesSae(?QapesSae $qapes_sae): self
-    {
-        $this->qapes_sae = $qapes_sae;
+        $this->critere = $critere;
 
         return $this;
     }
 
-    public function getQapesCritere(): ?QapesCriteresEvaluation
+    public function getSae(): ?QapesSae
     {
-        return $this->qapes_critere;
+        return $this->sae;
     }
 
-    public function setQapesCritere(?QapesCriteresEvaluation $qapes_critere): self
+    public function setSae(?QapesSae $sae): self
     {
-        $this->qapes_critere = $qapes_critere;
+        $this->sae = $sae;
 
         return $this;
     }
 
-    public function getReponse(): ?string
+    public function getCommentaire(): ?string
+    {
+        return $this->commentaire;
+    }
+
+    public function setCommentaire(?string $commentaire): self
+    {
+        $this->commentaire = $commentaire;
+
+        return $this;
+    }
+
+    public function getReponse(): ?QapesCritereReponse
     {
         return $this->reponse;
     }
 
-    public function setReponse(string $reponse): self
+    public function setReponse(?QapesCritereReponse $reponse): self
     {
         $this->reponse = $reponse;
-
-        return $this;
-    }
-
-    public function getCommentaireRepose(): ?string
-    {
-        return $this->commentaire_repose;
-    }
-
-    public function setCommentaireRepose(string $commentaire_repose): self
-    {
-        $this->commentaire_repose = $commentaire_repose;
 
         return $this;
     }

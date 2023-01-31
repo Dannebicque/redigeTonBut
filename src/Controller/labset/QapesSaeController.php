@@ -13,7 +13,7 @@ use App\Repository\ApcSaeRepository;
 use App\Repository\DepartementRepository;
 use App\Repository\IutSiteParcoursRepository;
 use App\Repository\IutSiteRepository;
-use App\Repository\QapesCriteresEvaluationRepository;
+use App\Repository\QapesCritereRepository;
 use App\Repository\QapesSaeCritereReponseRepository;
 use App\Repository\QapesSaeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -104,54 +104,54 @@ class QapesSaeController extends AbstractController
 
     }
 
-    #[Route('/api/{qapes}', name: 'app_qapes_sae_api_step3', methods: ['GET', 'POST'])]
-    public function apiStep3(
-        QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository,
-        QapesSaeCritereReponseRepository $qapesSaeCritereReponseRepository,
-        QapesSae $qapes,
-        Request $request
-    ) {
-        $action = $request->query->get('action');
-        switch ($action) {
-            case 'afficheFormCritere':
-                $critere = $qapesCriteresEvaluationRepository->find($request->query->get('critereId'));
+//    #[Route('/api/{qapes}', name: 'app_qapes_sae_api_step3', methods: ['GET', 'POST'])]
+//    public function apiStep3(
+//        QapesCritereRepository $qapesCriteresEvaluationRepository,
+//        QapesSaeCritereReponseRepository $qapesSaeCritereReponseRepository,
+//        QapesSae $qapes,
+//        Request $request
+//    ) {
+//        $action = $request->query->get('action');
+//        switch ($action) {
+//            case 'afficheFormCritere':
+//                $critere = $qapesCriteresEvaluationRepository->find($request->query->get('critereId'));
+//
+//                return $this->render('labset/qapes_sae/_form_critere.html.twig', [
+//                    'critere' => $critere,
+//                    'listeChoix' => explode(',', $critere->getValeurs()),
+//                ]);
+//            case 'listeCritere':
+//                $criteres = $qapesSaeCritereReponseRepository->findBy(['qapes_sae' => $qapes]);
+//
+//                return $this->render('labset/qapes_sae/_liste_criteres.html.twig', [
+//                    'criteres' => $criteres,
+//                ]);
+//        }
+//
+//    }
 
-                return $this->render('labset/qapes_sae/_form_critere.html.twig', [
-                    'critere' => $critere,
-                    'listeChoix' => explode(',', $critere->getValeurs()),
-                ]);
-            case 'listeCritere':
-                $criteres = $qapesSaeCritereReponseRepository->findBy(['qapes_sae' => $qapes]);
 
-                return $this->render('labset/qapes_sae/_liste_criteres.html.twig', [
-                    'criteres' => $criteres,
-                ]);
-        }
-
-    }
-
-
-    #[Route('/post-3/{qapes}', name: 'app_qapes_sae_post_step3', methods: ['POST'])]
-    public function postStep3(
-        EntityManagerInterface $entityManager,
-        QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository,
-        QapesSaeCritereReponseRepository $qapesSaeCritereReponseRepository,
-        QapesSae $qapes,
-        Request $request
-    ) {
-        $data = json_decode($request->getContent(), true);
-
-        $qc = new QapesSaeCritereReponse();
-        $qc->setQapesSae($qapes);
-        $qc->setQapesCritere($qapesCriteresEvaluationRepository->find($data['critereId']));
-        $qc->setReponse($data['reponse']);
-        $qc->setCommentaireRepose($data['commentaire']);
-        $entityManager->persist($qc);
-        $entityManager->flush();
-
-        return $this->json(true);
-
-    }
+//    #[Route('/post-3/{qapes}', name: 'app_qapes_sae_post_step3', methods: ['POST'])]
+//    public function postStep3(
+//        EntityManagerInterface $entityManager,
+//        QapesCritereRepository $qapesCriteresEvaluationRepository,
+//        QapesSaeCritereReponseRepository $qapesSaeCritereReponseRepository,
+//        QapesSae $qapes,
+//        Request $request
+//    ) {
+//        $data = json_decode($request->getContent(), true);
+//
+//        $qc = new QapesSaeCritereReponse();
+//        $qc->setQapesSae($qapes);
+//        $qc->setQapesCritere($qapesCriteresEvaluationRepository->find($data['critereId']));
+//        $qc->setReponse($data['reponse']);
+//        $qc->setCommentaireRepose($data['commentaire']);
+//        $entityManager->persist($qc);
+//        $entityManager->flush();
+//
+//        return $this->json(true);
+//
+//    }
 
 
     #[Route('/new', name: 'app_qapes_sae_new', methods: ['GET', 'POST'])]
@@ -225,11 +225,19 @@ class QapesSaeController extends AbstractController
 
     #[Route('/new/etape-3/{qapesSae}', name: 'app_qapes_sae_new_etape_3', methods: ['GET', 'POST'])]
     public function etape3(
-        QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository,
+        QapesCritereRepository $qapesCritereRepository,
         Request $request,
         QapesSaeRepository $qapesSaeRepository,
         QapesSae $qapesSae
     ): Response {
+
+        $criteres = $qapesCritereRepository->findAll();
+        $reponsesCriteres = $qapesSae->getQapesSaeCritereReponse();
+        $t = [];
+        foreach ($reponsesCriteres as $reponseCritere) {
+            $t[$reponseCritere->getCritere()->getId()] = $reponseCritere;
+        }
+
         $form = $this->createForm(QapesSaePart3Type::class, $qapesSae);
         $form->handleRequest($request);
 
@@ -240,7 +248,8 @@ class QapesSaeController extends AbstractController
         return $this->render('labset/qapes_sae/new_step3.html.twig', [
             'qapes' => $qapesSae,
             'form' => $form->createView(),
-            'criteres' => $qapesCriteresEvaluationRepository->findAll(),
+            'criteres' => $criteres,
+            'reponses' =>$t
         ]);
     }
 
