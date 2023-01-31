@@ -2,31 +2,21 @@
 <div class="row">
     <div class="col-md-6 mb-4">
         <dl>
-            <dt>
-                Intitulé de la SAÉ
-            </dt>
+            <dt>Intitulé de la SAÉ</dt>
+            <dd>{{ qapes.intituleSae }}</dd>
+            <dt>SAÉ dans le programme</dt>
             <dd>
-                {{ qapes.intituleSae }}
-            </dd>
-            <dt>
-                SAÉ dans le programme
-            </dt>
-            <dd>{{ qapes.sae != null ? qapes.sae.libelle : '-' }}
-                ({{ qapes.sae != null ? qapes.sae.codeMatiere :
-                '-' }})
+              {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
+              ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
             </dd>
         </dl>
     </div>
     <div class="col-md-6 mb-4">
         <dl>
             <dt>Type de SAE</dt>
-            <dd>
-                {{ qapes.typeSae }}
-            </dd>
+            <dd>{{ qapes.typeSae }}</dd>
             <dt>Rédacteur(s)</dt>
-            <dd>
-                {% for red in qapes.redacteur %}{{ red.display }}{% if not loop.last %}, {% endif %}{% endfor %}
-            </dd>
+            <dd>{% for red in qapes.redacteur %}{{ red.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
         </dl>
     </div>
 </div>
@@ -36,17 +26,13 @@
     <div class="col-md-6 mb-4">
         <dl>
             <dt>Lien vers une présentation de la SAÉ</dt>
-            <dd>
-                <a href="{{ qapes.lien }}" target="_blank">{{ qapes.lien }}</a>
-            </dd>
+            <dd><a href="{{ qapes.lien }}" target="_blank">{{ qapes.lien }}</a></dd>
         </dl>
     </div>
     <div class="col-md-6 mb-4">
         <dl>
             <dt>Lien vers la ligne du temps de la SAÉ</dt>
-            <dd>
-                <a href="{{ qapes.lienLigneDuTemps }}" target="_blank">{{ qapes.lienLigneDuTemps }}</a>
-            </dd>
+            <dd><a href="{{ qapes.lienLigneDuTemps }}" target="_blank">{{ qapes.lienLigneDuTemps }}</a></dd>
         </dl>
     </div>
 </div>
@@ -118,36 +104,4 @@
 </div>
 
 <h2 class="h4">Référentiel de compétences</h2>
-{% if qapes.sae != null %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Compétence</th>
-                <th>Apprentissages critiques</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for c in qapes.sae.apcSaeCompetences %}
-                <tr>
-                  <td>
-                      <span class="badge badge-{{ c.competence.couleur }}">&nbsp;</span> 
-                      {{ c.competence.libelle }}
-                  </td>
-                  <td>
-                      {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
-                          {% if (ac.apprentissageCritique.niveau.competence == c.competence) %}
-                              <ul class="list-unstyled">
-                                  <li>{{ ac.apprentissageCritique.libelle }}</li>
-                              </ul>
-                          {% endif %}
-                      {% endfor %}
-                  </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <div class="alert alert-warning">
-        Pas de SAÉ selectionnée
-    </div>
-{% endif %}
+{{ include('labset/qapes_sae/_referentiel.html.twig') }}

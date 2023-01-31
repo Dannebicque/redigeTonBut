@@ -3,49 +3,39 @@
 {% block header %}Liste des critères{% endblock %}
 
 {% block content %}
-    <div class="card">
-        <div class="card-body">
 
-
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Libellé</th>
-                    <th>Valeurs</th>
-                    <th>actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for qapes_criteres_evaluation in qapes_criteres_evaluations %}
-                    <tr>
-                        <td>{{ qapes_criteres_evaluation.libelle }}</td>
-                        <td>{{ qapes_criteres_evaluation.valeurs }}</td>
-                        <td>
-                            <a href="{{ path('app_qapes_criteres_evaluation_show', {'id': qapes_criteres_evaluation.id}) }}"
-                               class="btn btn-sm btn-outline-info
-        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-                            >
-                                <i class="bi-eye"></i>
-                                <span>Voir</span>
-                            </a>
-                            <a href="{{ path('app_qapes_criteres_evaluation_edit', {'id': qapes_criteres_evaluation.id}) }}"
-                               class="btn btn-sm btn-outline-warning
-        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-                            >
-                                <i class="bi-pencil"></i>
-                                <span>Modifier</span>
-                            </a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="3">no records found</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Libellé</th>
+            <th>Valeurs</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for qapes_criteres_evaluation in qapes_criteres_evaluations %}
+            <tr>
+                <td>
+                    <a href="{{ path('app_qapes_criteres_evaluation_show', {'id': qapes_criteres_evaluation.id}) }}">
+                        {{ qapes_criteres_evaluation.libelle }}
+                    </a>
+                </td>
+                <td>{{ qapes_criteres_evaluation.valeurs }}</td>
+                <td>
+                    <a href="{{ path('app_qapes_criteres_evaluation_edit', {'id': qapes_criteres_evaluation.id}) }}"
+                       class="btn btn-sm btn-outline-warning btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                        <i class="bi-pencil"></i>
+                        <span>Modifier</span>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block bouton_header %}

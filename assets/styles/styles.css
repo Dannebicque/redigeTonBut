@@ -6909,7 +6909,7 @@ input[type='file']::file-selector-button {
   font-size: 0.85em;
   margin-bottom: 0.25rem; }
   .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
-    content: '|';
+    content: '/';
     color: var(--alternate); }
   .breadcrumb .breadcrumb-item,
   .breadcrumb .breadcrumb-item a {

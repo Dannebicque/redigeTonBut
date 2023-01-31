@@ -1,27 +1,149 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ qapes.sae.libelle }}{% endblock %}
-{% block header %}{{ qapes.sae.libelle }}{% endblock %}
+{% block title %}{{ qapes.intituleSae }}{% endblock %}
+{% block header %}{{ qapes.intituleSae }}{% endblock %}
 
 {% block content %}
-    {{ include('labset/qapes_sae/_synthese_iut.html.twig') }}
-    {{ include('labset/qapes_sae/_synthese_sae.html.twig') }}
-
-    <h2 class="small-title mt-2">Evaluation</h2>
-    <div class="card">
-        <div class="card-body">
-            <strong>Date de l'évaluation LABSET : {{ qapes.dateEvaluation }}</strong>
-            {% for critere in qapes.qapesSaeCritereReponses %}
-                <div class="mt-2">
-                    <strong>
-                        {{ critere.qapesCritere != null ? critere.qapesCritere.libelle }} : {{ critere.reponse }}</strong>
-                    <div>
-                        {{ critere.commentaireRepose|raw }}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Contexte</h5>
+                    <dl>
+                        <dt>IUT</dt>
+                        <dd>{{ qapes.iutSite != null ? qapes.iutSite.iut.libelle  : '-'}} ({{ qapes.iutSite != null ? qapes.iutSite.libelle : '-' }})</dd>
+                        <dt>Spécialité</dt>
+                        <dd>{{ qapes.specialite != null ? qapes.specialite.sigle : '-' }}</dd>
+                        <dt>Parcours</dt>
+                        <dd>{{ qapes.parcours != null ? qapes.parcours.libelle : '-' }}</dd>
+                        <dt>SAÉ dans le programme</dt>
+                        <dd>
+                          {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
+                          ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
+                        </dd>
+                        <dt>Auteur(s)</dt>
+                        <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+                        <dt>Rédacteur(s)</dt>
+                        <dd>{% for red in qapes.redacteur %}{{ red.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Liens Web</h5>
+                    <dl>
+                        <dt>Lien vers une présentation de la SAÉ</dt>
+                        <dd><a href="{{ qapes.lien }}" target="_blank">{{ qapes.lien }}</a></dd>
+                        <dt>Lien vers la ligne du temps de la SAÉ</dt>
+                        <dd><a href="{{ qapes.lienLigneDuTemps }}" target="_blank">{{ qapes.lienLigneDuTemps }}</a></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Aspects administratifs</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <strong class="mt-2">Nombre d’étudiants</strong>
+                            <p class="display-3">{{ qapes.nbEtudiants }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <strong class="mt-2">Nombre d’encadrants</strong>
+                            <p class="display-3">{{ qapes.nbEncadrants }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <strong class="mt-2">Nombre d’heures en autonomie</strong>
+                            <p class="display-3">{{ qapes.nbHeuresAutonomie }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <strong class="mt-2">Nombre d’heures dirigées</strong>
+                            <p class="display-3">{{ qapes.nbHeuresDirigees }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <strong class="mt-2">Crédits ECTS</strong>
+                            <p class="display-5">{{ qapes.nbEcts }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <strong class="mt-2">Mode de dispense</strong>
+                            <p>{{ qapes.modeDispense }}</p>
+                        </div>
+                    </div>
+                    <strong class="mt-2">Public cible</strong>
+                    <p>{{ qapes.publicCible }}</p>
+                    <strong class="mt-2">Commentaire sur le public cible</strong>
+                    <p>{{ qapes.publicCibleCommentaire }}</p>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Version</h5>
+                    <strong class="mt-2">
+                        Année de création de la SAÉ / 
+                        Version
+                    </strong>
+                    <p>
+                        {{ qapes.anneeCreation }} /
+                        {{ qapes.version }} - {{ qapes.dateVersion }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="offset-md-1 col-md-8">
+            <section class="mb-5">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h2 class="h3">Qualité de la SAÉ</h2>
+                    </div>
+                    <div class="col-md-2">
+                        <p class="text-end">Évalué le {{ qapes.dateEvaluation }}</p>
                     </div>
                 </div>
+                <div class="row">
+                    {% for critere in qapes.qapesSaeCritereReponses %}
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="criterion" style="background-color: #{{ critere.reponse }}">
+                                    {{ critere.reponse }}
+                                </span>
+                                <h3>{{ critere.qapesCritere != null ? critere.qapesCritere.libelle }}</h3>
+                            </div>
+                            <p>{{ critere.commentaireRepose|raw }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
 
-            {% endfor %}
-        </div>
+            <h2 class="h4">Aspects pédagogiques</h2>
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <strong class="mt-2">À épingler</strong>
+                    <p>{{ qapes.aEpingler|raw }}</p>
+                </div>
+                <div class="col-md-6">
+                    <strong class="mt-2">Objectifs</strong>
+                    <p>{{ qapes.objectifsSae|raw }}</p>
+                </div>
+                <div class="col-md-6">
+                    <strong class="mt-2">Déroulement</strong>
+                    <p>{{ qapes.deroulementSae|raw }}</p>
+                </div>
+                <div class="col-md-6">
+                    <strong class="mt-2">Modalités d'évaluation</strong>
+                    <p>{{ qapes.evaluations|raw }}</p>
+                </div>
+                <div class="col-md-6">
+                    <strong class="mt-2">Composition de la SAÉ</strong>
+                    <p>{{ qapes.saeGroupeIndividuelle }}</p>
+                </div>
+                <div class="col-md-6">
+                    <strong class="mt-2">Type de SAÉ</strong>
+                    <p>{{ qapes.typeSae }}</p>
+                </div>
+            </div>
+
+            <h2 class="h4">Référentiel de compétences</h2>
+            {{ include('labset/qapes_sae/_referentiel.html.twig') }}
+        </div
     </div>
 {% endblock %}
 
