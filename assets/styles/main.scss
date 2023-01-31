@@ -79,11 +79,5 @@ html[data-navcolor='dark'] .logo-but {
     justify-content: center;
     align-items: center;
     margin-right: 15px;
-    background: #f5a51a;
-    &--correct {
-        background: #21c521;
-    }
-    &--incorrect {
-        background: #f10404;
-    }
+    background-color: #DDDDDD;
 }
