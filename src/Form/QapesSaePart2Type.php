@@ -38,9 +38,13 @@ class QapesSaePart2Type extends AbstractType
                 ],
                 'label' => 'A épingler',
             ])
-            ->add('anneeCreation')
+            ->add('anneeCreation', null, [
+                'label' => 'Année de création de la SAÉ'
+            ])
             ->add('version')
-            ->add('dateVersion')
+            ->add('dateVersion', null, [
+                'label' => 'Date de la version'
+            ])
             ->add('modeDispense', ChoiceType::class, [
                 'choices' => [
                     'En présentiel' => 'presentiel',
@@ -85,10 +89,18 @@ class QapesSaePart2Type extends AbstractType
                     'rows' => 5,
                 ],
             ])
-            ->add('nbEtudiants')
-            ->add('nbEncadrants')
-            ->add('nbHeuresAutonomie')
-            ->add('nbHeuresDirigees')
+            ->add('nbEtudiants', null, [
+                'label' => 'Nombre d’étudiants'
+            ])
+            ->add('nbEncadrants', null, [
+              'label' => 'Nombre d’encadrants'
+            ])
+            ->add('nbHeuresAutonomie', null, [
+              'label' => 'Nombre d’heures en autonomie'
+            ])
+            ->add('nbHeuresDirigees', null, [
+              'label' => 'Nombre d’heures dirigées'
+            ])
             ->add('objectifsSae', TextareaType::class, [
                 'label' => 'Objectifs de la SAE',
                 'required' => false,

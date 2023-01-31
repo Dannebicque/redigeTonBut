@@ -1,153 +1,153 @@
-<div class="card mb-5">
-    <div class="card-body">
-        <h3 class="card-title">Détails de la SAE</h5>
-        <div class="row">
-            <div class="col-6">
-                <dl>
-                    <dt>SAE</dt>
-                    <dd>{{ qapes.sae != null ? qapes.sae.libelle : '-' }}
-                        ({{ qapes.sae != null ? qapes.sae.codeMatiere :
-                        '-' }})
-                    </dd>
-                    <dt>
-                        Intitulé local de la SAE
-                    </dt>
-                    <dd>
-                        {{ qapes.intituleSae }}
-                    </dd>
-                    <dt>
-                        Année Création / Version / Révision
-                    </dt>
-                    <dd>
-                        {{ qapes.anneeCreation }} / {{ qapes.version }} / {{ qapes.dateVersion }}
-                    </dd>
-                </dl>
-            </div>
-            <div class="col-6">
-                <dl>
-                    <dt>Rédacteur(s)</dt>
-                    <dd>
-                        {% for red in qapes.redacteur %}{{ red.display }}{% if not loop.last %}, {% endif %}{% endfor %}
-                    </dd>
-                    <dt>Lien</dt>
-                    <dd>
-                        <a href="{{ qapes.lien }}" target="_blank">{{ qapes.lien }}</a>
-                    </dd>
-                    <dt>Mode de dispense</dt>
-                    <dd>
-                        {{ qapes.modeDispense }}
-                    </dd>
-                </dl>
-            </div>
-        </div>
-        <strong class="mt-2">A épingler</strong>
-        <div>
-            {{ qapes.aEpingler|raw }}
-        </div>
-        <div class="row  mt-2">
-            <div class="col-6">
-                <dl>
-                    <dt>Nb ECTS</dt>
-                    <dd>{{ qapes.nbEcts }}</dd>
-                    <dt>
-                        SAE en Groupe ou Individuelle
-                    </dt>
-                    <dd>
-                        {{ qapes.saeGroupeIndividuelle }}
-                    </dd>
-                    <dt>
-                        Nb étudiants / Nb Encadrants
-                    </dt>
-                    <dd>
-                        {{ qapes.nbEtudiants }} / {{ qapes.nbEncadrants }}
-                    </dd>
-                    <dt>
-                        Nb Heures en autonomie / Nb Heures dirigées
-                    </dt>
-                    <dd>
-                        {{ qapes.nbHeuresAutonomie }} / {{ qapes.nbHeuresDirigees }}
-                    </dd>
-                </dl>
-            </div>
-            <div class="col-6">
-                <dl>
-                    <dt>Type de SAE</dt>
-                    <dd>
-                        {{ qapes.typeSae }}
-                    </dd>
-                    <dt>Public Cible de la SAE</dt>
-                    <dd>
-                        {{ qapes.publicCible }}
-                    </dd>
-                    <dt>Commentaires</dt>
-                    <dd>
-                        {{ qapes.publicCibleCommentaire }}
-                    </dd>
-                </dl>
-            </div>
-        </div>
-        <div class="mt-2">
-            <strong>Objectifs de la SAE</strong>
-            <p>
-                {{ qapes.objectifsSae|raw }}
-            </p>
-        </div>
-        <div class="mt-2">
-            <strong>Déroulement de la SAE</strong>
-            <p>
-                {{ qapes.deroulementSae|raw }}
-            </p>
-        </div>
-        <div class="mt-2">
-            <strong >Modalités d'évaluation de la SAE</strong>
-            <p>
-                {{ qapes.evaluations|raw }}
-            </p>
-        </div>
-        <div class="mt-2">
-            <strong>Lien(s) ligne du temps</strong>
-            <p>
-                {{ qapes.lienLigneDuTemps|raw }}
-            </p>
-        </div>
+<h2 class="h4">Informations clefs</h2>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <dl>
+            <dt>
+                Intitulé de la SAÉ
+            </dt>
+            <dd>
+                {{ qapes.intituleSae }}
+            </dd>
+            <dt>
+                SAÉ dans le programme
+            </dt>
+            <dd>{{ qapes.sae != null ? qapes.sae.libelle : '-' }}
+                ({{ qapes.sae != null ? qapes.sae.codeMatiere :
+                '-' }})
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6 mb-4">
+        <dl>
+            <dt>Type de SAE</dt>
+            <dd>
+                {{ qapes.typeSae }}
+            </dd>
+            <dt>Rédacteur(s)</dt>
+            <dd>
+                {% for red in qapes.redacteur %}{{ red.display }}{% if not loop.last %}, {% endif %}{% endfor %}
+            </dd>
+        </dl>
     </div>
 </div>
 
-<div class="card mb-5">
-    <div class="card-body">
-        <h3 class="card-title">Référentiel de compétences</h5>
-        {% if qapes.sae != null %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Compétence</th>
-                        <th>Apprentissages critiques</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for c in qapes.sae.apcSaeCompetences %}
-                        <tr>
-                          <td>
-                              <span class="badge badge-{{ c.competence.couleur }}">&nbsp;</span> 
-                              {{ c.competence.libelle }}
-                          </td>
-                          <td>
-                              {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
-                                  {% if (ac.apprentissageCritique.niveau.competence == c.competence) %}
-                                      <ul class="list-unstyled">
-                                          <li>{{ ac.apprentissageCritique.libelle }}</li>
-                                      </ul>
-                                  {% endif %}
-                              {% endfor %}
-                          </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-        <div class="alert alert-warning">
-            Pas de SAE selectionnée
-        </div>
-        {% endif %}
+<h2 class="h4">Liens Web</h2>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <dl>
+            <dt>Lien vers une présentation de la SAÉ</dt>
+            <dd>
+                <a href="{{ qapes.lien }}" target="_blank">{{ qapes.lien }}</a>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6 mb-4">
+        <dl>
+            <dt>Lien vers la ligne du temps de la SAÉ</dt>
+            <dd>
+                <a href="{{ qapes.lienLigneDuTemps }}" target="_blank">{{ qapes.lienLigneDuTemps }}</a>
+            </dd>
+        </dl>
     </div>
 </div>
+
+<h2 class="h4">Aspects pédagogiques</h2>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <strong class="mt-2">À épingler</strong>
+        <p>{{ qapes.aEpingler|raw }}</p>
+    </div>
+    <div class="col-md-6">
+        <strong class="mt-2">Objectifs</strong>
+        <p>{{ qapes.objectifsSae|raw }}</p>
+    </div>
+    <div class="col-md-6">
+        <strong class="mt-2">Déroulement</strong>
+        <p>{{ qapes.deroulementSae|raw }}</p>
+    </div>
+    <div class="col-md-6">
+        <strong class="mt-2">Modalités d'évaluation</strong>
+        <p>{{ qapes.evaluations|raw }}</p>
+    </div>
+    <div class="col-md-6">
+        <strong class="mt-2">Composition de la SAE</strong>
+        <p>{{ qapes.saeGroupeIndividuelle }}</p>
+    </div>
+</div>
+
+<h2 class="h4">Aspects administratifs</h2>
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <strong class="mt-2">Mode de dispense</strong>
+        <p>{{ qapes.modeDispense }}</p>
+        <strong class="mt-2">Nombre d’étudiants</strong>
+        <p>{{ qapes.nbEtudiants }}</p>
+        <strong class="mt-2">Nombre d’encadrants</strong>
+        <p>{{ qapes.nbEncadrants }}</p>
+    </div>
+    <div class="col-md-4 mb-4">
+        <strong class="mt-2">Crédits ECTS</strong>
+        <p>{{ qapes.nbEcts }}</p>
+        <strong class="mt-2">Nombre d’heures en autonomie</strong>
+        <p>{{ qapes.nbHeuresAutonomie }}</p>
+        <strong class="mt-2">Nombre d’heures dirigées</strong>
+        <p>{{ qapes.nbHeuresDirigees }}</p>
+    </div>
+    <div class="col-md-4 mb-4">
+        <strong class="mt-2">Public cible</strong>
+        <p>{{ qapes.publicCible }}</p>
+        <strong class="mt-2">Commentaire sur le public cible</strong>
+        <p>{{ qapes.publicCibleCommentaire }}</p>
+    </div>
+</div>
+
+<h2 class="h4">Version</h2>
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <strong class="mt-2">Année de création de la SAÉ</strong>
+        <p>{{ qapes.anneeCreation }}</p>
+    </div>
+    <div class="col-md-4 mb-4">
+        <strong class="mt-2">Version</strong>
+        <p>{{ qapes.version }}</p>
+    </div>
+    <div class="col-md-4 mb-4">
+        <strong class="mt-2">Date de la version</strong>
+        <p>{{ qapes.dateVersion }}</p>
+    </div>
+</div>
+
+<h2 class="h4">Référentiel de compétences</h2>
+{% if qapes.sae != null %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Compétence</th>
+                <th>Apprentissages critiques</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in qapes.sae.apcSaeCompetences %}
+                <tr>
+                  <td>
+                      <span class="badge badge-{{ c.competence.couleur }}">&nbsp;</span> 
+                      {{ c.competence.libelle }}
+                  </td>
+                  <td>
+                      {% for ac in qapes.sae.apcSaeApprentissageCritiques %}
+                          {% if (ac.apprentissageCritique.niveau.competence == c.competence) %}
+                              <ul class="list-unstyled">
+                                  <li>{{ ac.apprentissageCritique.libelle }}</li>
+                              </ul>
+                          {% endif %}
+                      {% endfor %}
+                  </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-warning">
+        Pas de SAÉ selectionnée
+    </div>
+{% endif %}
