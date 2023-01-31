@@ -100,6 +100,11 @@ class ApcSae extends AbstractMatiere
         $this->qapesSaes = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->getLibelle();
+    }
+
     public function getSemestre(): ?Semestre
     {
         return $this->semestre;
