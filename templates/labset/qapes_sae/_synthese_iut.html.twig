@@ -1,8 +1,8 @@
-<h2 class="small-title mt-2">SAE, IUT, Parcours</h2>
-<div class="card">
+<div class="card mb-5">
     <div class="card-body">
+        <h5 class="card-title">L'essentiel</h5>
         <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
                 <dl>
                     <dt>Auteur(s)</dt>
                     <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{%
@@ -12,7 +12,7 @@
                         qapes.iutSite.libelle : '-' }})</dd>
                 </dl>
             </div>
-            <div class="col-6">
+            <div class="col-md-6">
                 <dl>
                     <dt>Spécialité</dt>
                     <dd>{{ qapes.specialite != null ? qapes.specialite.sigle : '-' }}</dd>
