@@ -8,22 +8,22 @@
     <section {{ stimulus_controller('qapes', {
         urlApi: path('app_qapes_sae_api'),
     }) }}>
-      {% form_theme form 'form/my-form.html.twig' %}
-      {{ form_start(form) }}
-      <div class="row mb-4">
-        <div class="col-md-6">
-          {{ form_row(form.iut) }}
-          {{ form_row(form.iutSite) }}
-          {{ form_row(form.specialite) }}
-          {{ form_row(form.parcours) }}
-          {{ form_row(form.sae) }}
+        {% form_theme form 'form/my-form.html.twig' %}
+        {{ form_start(form) }}
+        <div class="row mb-4">
+            <div class="col-md-6">
+                {{ form_row(form.iut) }}
+                {{ form_row(form.iutSite) }}
+                {{ form_row(form.specialite) }}
+                {{ form_row(form.parcours) }}
+                {{ form_row(form.sae) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.redacteur) }}
+            </div>
         </div>
-        <div class="col-md-6">
-          {{ form_row(form.redacteur) }}
-        </div>
-      </div>
-      <button class="btn btn-primary">Sauvegarder et continuer vers la saisie</button>
-      {{ form_end(form) }}
+        <button class="btn btn-primary">Sauvegarder et continuer vers la saisie</button>
+        {{ form_end(form) }}
     </section>
 {% endblock %}
 
