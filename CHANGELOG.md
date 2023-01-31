@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.2...v1.13.3) (2023-01-31)
+
+
+### Features
+
+* [Couvertures] Couverture des PDF ([419ed35](https://github.com/Dannebicque/redigeTonBut/commit/419ed350c2997ee14ef57564e8e2832a75d3253c))
+* [Matrix] Générateur de fichiers pour Mahara ([386a584](https://github.com/Dannebicque/redigeTonBut/commit/386a584d9754e9e2622a09e2ae7b2e98bdeb21c6))
+* [Qapes] gestion des critères ([95928f6](https://github.com/Dannebicque/redigeTonBut/commit/95928f6919d8d19406774bc77c8969c0fb1e71d3))
+* [Qapes] gestion des critères ([b5ee3e9](https://github.com/Dannebicque/redigeTonBut/commit/b5ee3e94cc73caf982651a3adedbb19f25af40b6))
+
 ### [1.13.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.1...v1.13.2) (2023-01-30)
 
 
