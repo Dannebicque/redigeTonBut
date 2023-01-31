@@ -8,7 +8,7 @@
         <div class="col-md-3">
             <div class="card mb-4">
                 <div class="card-body">
-                    <h3 class="card-title">Contexte</h5>
+                    <h3 class="card-title">Contexte</h3>
                     <dl>
                         <dt>IUT</dt>
                         <dd>{{ qapes.iutSite != null ? qapes.iutSite.iut.libelle  : '-'}} ({{ qapes.iutSite != null ? qapes.iutSite.libelle : '-' }})</dd>
@@ -30,7 +30,7 @@
             </div>
             <div class="card mb-4">
                 <div class="card-body">
-                    <h3 class="card-title">Liens Web</h5>
+                    <h3 class="card-title">Liens Web</h3>
                     <dl>
                         <dt>Lien vers une présentation de la SAÉ</dt>
                         <dd><a href="{{ qapes.lien }}" target="_blank">{{ qapes.lien }}</a></dd>
@@ -41,7 +41,7 @@
             </div>
             <div class="card mb-4">
                 <div class="card-body">
-                    <h3 class="card-title">Aspects administratifs</h5>
+                    <h3 class="card-title">Aspects administratifs</h3>
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <strong class="mt-2">Nombre d’étudiants</strong>
@@ -76,9 +76,9 @@
             </div>
             <div class="card mb-4">
                 <div class="card-body">
-                    <h3 class="card-title">Version</h5>
+                    <h3 class="card-title">Version</h3>
                     <strong class="mt-2">
-                        Année de création de la SAÉ / 
+                        Année de création de la SAÉ /
                         Version
                     </strong>
                     <p>
@@ -99,15 +99,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    {% for critere in qapes.qapesSaeCritereReponses %}
+                    {% for critere in qapes.qapesSaeCritereReponse %}
                         <div class="col-md-6 mb-4">
                             <div class="d-flex align-items-center mb-3">
-                                <span class="criterion" style="background-color: #{{ critere.reponse }}">
-                                    {{ critere.reponse }}
+                                <span class="criterion" style="background-color: #{{ critere.reponse.couleur }}">
+                                    {{ critere.reponse.libelle }}
                                 </span>
-                                <h3>{{ critere.qapesCritere != null ? critere.qapesCritere.libelle }}</h3>
                             </div>
-                            <p>{{ critere.commentaireRepose|raw }}</p>
+                            <p>{{ critere.commentaire|raw }}</p>
                         </div>
                     {% endfor %}
                 </div>
