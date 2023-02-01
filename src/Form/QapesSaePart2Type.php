@@ -30,7 +30,8 @@ class QapesSaePart2Type extends AbstractType
                 'help' => 'Un nom clair, simple, permettant de parler de cette SAÉ entre collègues'
             ])
             ->add('lien', UrlType::class, [
-              'label' => 'Lien vers une présentation de la SAÉ'
+              'label' => 'Lien vers une présentation de la SAÉ',
+                'required' => false,
             ])
             ->add('aEpingler', TextareaType::class, [
                 'required' => false,
@@ -117,7 +118,8 @@ class QapesSaePart2Type extends AbstractType
                 ],
             ])
             ->add('lienLigneDuTemps', UrlType::class, [
-              'label' => 'Lien vers la ligne du temps de la SAÉ'
+              'label' => 'Lien vers la ligne du temps de la SAÉ',
+                'required' => false,
             ])
             ->add('evaluations', TextareaType::class, [
                 'label' => 'Modalités d\'Évaluations',
