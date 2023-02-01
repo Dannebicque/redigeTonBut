@@ -43,7 +43,6 @@ class VolumesHoraires
         /** @var \App\Entity\Semestre $semestre */
         foreach ($this->semestres as $semestre)
         {
-            dump($semestre->getOrdreLmd());
             if ($this->parcours === null) {
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {

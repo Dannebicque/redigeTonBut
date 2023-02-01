@@ -263,7 +263,7 @@ class QapesSaeController extends AbstractController
                 } else {
                     $reponse = null;
                 }
-                dump($reponse);
+
                 //si le critère existe dans $t, on le met à jour, sinon on le crée
                 if (array_key_exists($critere->getId(), $t)) {
                     $t[$critere->getId()]->setReponse($reponse);
