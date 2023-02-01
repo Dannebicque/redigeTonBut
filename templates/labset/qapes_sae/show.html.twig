@@ -101,9 +101,11 @@
                 <div class="row">
                     {% for critere in qapes.qapesSaeCritereReponse %}
                         <div class="col-md-6 mb-4">
+                            {{ critere.critere.libelle }}
                             <div class="d-flex align-items-center mb-3">
-                                <span class="criterion" style="background-color: #{{ critere.reponse.couleur }}">
-                                    {{ critere.reponse.libelle }}
+                                <span class="criterion" style="background-color: #{{ critere.reponse != null ?
+                                critere.reponse.couleur : 'ffffff' }}">
+                                    {{ critere.reponse != null ? critere.reponse.libelle : 'Non défini' }}
                                 </span>
                             </div>
                             <p>{{ critere.commentaire|raw }}</p>

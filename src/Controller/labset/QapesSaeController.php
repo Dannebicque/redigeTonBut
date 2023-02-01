@@ -14,6 +14,7 @@ use App\Repository\ApcSaeRepository;
 use App\Repository\DepartementRepository;
 use App\Repository\IutSiteParcoursRepository;
 use App\Repository\IutSiteRepository;
+use App\Repository\QapesCritereReponseRepository;
 use App\Repository\QapesCritereRepository;
 use App\Repository\QapesSaeCritereReponseRepository;
 use App\Repository\QapesSaeRepository;
@@ -226,6 +227,7 @@ class QapesSaeController extends AbstractController
 
     #[Route('/new/etape-3/{qapesSae}', name: 'app_qapes_sae_new_etape_3', methods: ['GET', 'POST'])]
     public function etape3(
+        QapesCritereReponseRepository $qapesCritereReponseRepository,
         QapesCritereRepository $qapesCritereRepository,
         Request $request,
         QapesSaeRepository $qapesSaeRepository,
@@ -243,7 +245,45 @@ class QapesSaeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $qapesSaeRepository->add($qapesSae);
+
+            //mise à jour des critères
+            foreach ($criteres as $critere) {
+                //commentaire
+                if ($request->request->has('commentaire_' . $critere->getId())) {
+                    $commentaire = $request->request->get('commentaire_' . $critere->getId());
+                } else {
+                    $commentaire = '';
+                }
+
+                //réponse
+                if ($request->request->has('reponse_' . $critere->getId())) {
+
+                    $reponse = $qapesCritereReponseRepository->find($request->request->get('reponse_' . $critere->getId()));
+
+                } else {
+                    $reponse = null;
+                }
+                dump($reponse);
+                //si le critère existe dans $t, on le met à jour, sinon on le crée
+                if (array_key_exists($critere->getId(), $t)) {
+                    $t[$critere->getId()]->setReponse($reponse);
+                    $t[$critere->getId()]->setCommentaire($commentaire);
+                } else {
+                    $critReponse = new QapesSaeCritereReponse();
+                    $critReponse->setCritere($critere);
+                    $critReponse->setReponse($reponse);
+                    $critReponse->setCommentaire($commentaire);
+                    $critReponse->setSae($qapesSae);
+                    $qapesSae->addQapesSaeCritereReponse($critReponse);
+
+                    $t[$critere->getId()] = $critReponse;
+                }
+
+                $qapesSaeRepository->add($qapesSae);
+
+            }
+
+
             return $this->redirectToRoute('app_qapes_sae_new_etape_4', [
                 'qapesSae' => $qapesSae->getId(),
             ]);

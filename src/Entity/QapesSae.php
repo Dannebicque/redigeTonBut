@@ -180,7 +180,7 @@ class QapesSae
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isCoordinationIntervenant;
+    private $isCoordinationIntervenant = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -190,7 +190,7 @@ class QapesSae
     /**
      * @ORM\Column(type="boolean")
      */
-    private $consignesCommuniquees;
+    private $consignesCommuniquees = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
