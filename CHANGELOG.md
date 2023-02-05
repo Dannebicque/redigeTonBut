@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.3...v1.13.4) (2023-02-05)
+
+
+### Features
+
+* [Qapes] Affichage ([f5c8a67](https://github.com/Dannebicque/redigeTonBut/commit/f5c8a67a1b7431a30813241173a70419610fe0be))
+* [Qapes] Affichage ([7fc6350](https://github.com/Dannebicque/redigeTonBut/commit/7fc635033ce499c6e769bf88a7535f0666de8741))
+* [Qapes] Affichage ([2aeec77](https://github.com/Dannebicque/redigeTonBut/commit/2aeec773c8f8aa625561ed5a2a89326bcbba6a55))
+* [Qapes] Analyse ([25bc34f](https://github.com/Dannebicque/redigeTonBut/commit/25bc34f676832ea419f1c0d6c8f3cf6f80de71df))
+* [Qapes] Analyse ([0300a7e](https://github.com/Dannebicque/redigeTonBut/commit/0300a7e491afd893bcad2dccce32c5eb254dc4d6))
+* [Qapes] Analyse ([ba9474c](https://github.com/Dannebicque/redigeTonBut/commit/ba9474cda0ac3053108b74e70c87344ec5efaa64))
+* [Qapes] Analyse ([b2e96a5](https://github.com/Dannebicque/redigeTonBut/commit/b2e96a5f55c4a96078b55be9942128620cd910a5))
+* [Qapes] Critères ([3566dae](https://github.com/Dannebicque/redigeTonBut/commit/3566dae3c2bd9019f08ee76348782997faa1a740))
+
 ### [1.13.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.2...v1.13.3) (2023-01-31)
 
 
