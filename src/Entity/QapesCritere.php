@@ -25,6 +25,12 @@ class QapesCritere
     private $libelle;
 
     /**
+     * @ORM\Column(type="text")
+     */
+    private $description;
+
+
+    /**
      * @ORM\OneToMany(targetEntity=QapesSaeCritereReponse::class, mappedBy="critere")
      */
     private $qapesSaeCritereReponses;
@@ -113,6 +119,18 @@ class QapesCritere
                 $qapesCritereReponse->setQapesCritere(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
