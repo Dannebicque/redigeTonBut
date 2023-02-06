@@ -19,6 +19,10 @@
                         <strong>{{ critere.libelle }}</strong>
                     </p>
 
+                    <p>
+                        {{ critere.description|raw }}
+                    </p>
+
                     <label for="reponse_{{ critere.id }}">Réponse</label>
                     <select id="reponse_{{ critere.id }}" name="reponse_{{ critere.id }}" class="form-select">
                         <option>Choisir une réponse</option>
