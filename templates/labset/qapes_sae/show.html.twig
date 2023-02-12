@@ -106,7 +106,8 @@
                                 critere.reponse.couleur : 'ffffff' }}">
                                     {{ critere.reponse != null ? critere.reponse.libelle : 'Non défini' }}
                                 </span>
-                                <h3 class="flex-grow-1">{{ critere.critere.libelle }}</h3>
+                                <h3 class="flex-grow-1">{{ critere.critere.libelleAffichage != null ? critere.critere
+                                    .libelleAffichage : critere.critere.libelle }}</h3>
                             </div>
                             <p>{{ critere.commentaire|raw }}</p>
                         </div>
