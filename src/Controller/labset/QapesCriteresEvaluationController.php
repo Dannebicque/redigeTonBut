@@ -4,6 +4,7 @@ namespace App\Controller\labset;
 
 
 use App\Entity\QapesCritere;
+use App\Form\QapesCritereType;
 use App\Repository\QapesCritereRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ class QapesCriteresEvaluationController extends AbstractController
     public function new(Request $request, QapesCritereRepository $qapesCriteresEvaluationRepository): Response
     {
         $qapesCriteresEvaluation = new QapesCritere();
-        $form = $this->createForm(QapesCriteresEvaluation1Type::class, $qapesCriteresEvaluation);
+        $form = $this->createForm(QapesCritereType::class, $qapesCriteresEvaluation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -33,14 +34,14 @@ class QapesCriteresEvaluationController extends AbstractController
             return $this->redirectToRoute('app_qapes_criteres_evaluation_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('labset/qapes_criteres_evaluation/new.html.twig', [
+        return $this->render('labset/qapes_criteres_evaluation/new.html.twig', [
             'qapes_criteres_evaluation' => $qapesCriteresEvaluation,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_qapes_criteres_evaluation_show', methods: ['GET'])]
-    public function show(QapesCriteresEvaluation $qapesCriteresEvaluation): Response
+    public function show(QapesCritere $qapesCriteresEvaluation): Response
     {
         return $this->render('labset/qapes_criteres_evaluation/show.html.twig', [
             'qapes_criteres_evaluation' => $qapesCriteresEvaluation,
@@ -48,9 +49,9 @@ class QapesCriteresEvaluationController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_qapes_criteres_evaluation_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, QapesCriteresEvaluation $qapesCriteresEvaluation, QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository): Response
+    public function edit(Request $request, QapesCritere $qapesCriteresEvaluation, QapesCritereRepository $qapesCriteresEvaluationRepository): Response
     {
-        $form = $this->createForm(QapesCriteresEvaluation1Type::class, $qapesCriteresEvaluation);
+        $form = $this->createForm(QapesCritereType::class, $qapesCriteresEvaluation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -58,14 +59,14 @@ class QapesCriteresEvaluationController extends AbstractController
             return $this->redirectToRoute('app_qapes_criteres_evaluation_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('labset/qapes_criteres_evaluation/edit.html.twig', [
+        return $this->render('labset/qapes_criteres_evaluation/edit.html.twig', [
             'qapes_criteres_evaluation' => $qapesCriteresEvaluation,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_qapes_criteres_evaluation_delete', methods: ['POST'])]
-    public function delete(Request $request, QapesCriteresEvaluation $qapesCriteresEvaluation, QapesCriteresEvaluationRepository $qapesCriteresEvaluationRepository): Response
+    public function delete(Request $request, QapesCritere $qapesCriteresEvaluation, QapesCritereRepository $qapesCriteresEvaluationRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$qapesCriteresEvaluation->getId(), $request->request->get('_token'))) {
             $qapesCriteresEvaluationRepository->remove($qapesCriteresEvaluation);

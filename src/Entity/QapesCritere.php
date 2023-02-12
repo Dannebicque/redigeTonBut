@@ -36,7 +36,7 @@ class QapesCritere
     private $qapesSaeCritereReponses;
 
     /**
-     * @ORM\OneToMany(targetEntity=QapesCritereReponse::class, mappedBy="qapesCritere")
+     * @ORM\OneToMany(targetEntity=QapesCritereReponse::class, mappedBy="qapesCritere", cascade={"persist","remove"})
      */
     private $qapesCritereReponses;
 

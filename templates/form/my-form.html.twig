@@ -1,5 +1,14 @@
 {% use "bootstrap_5_layout.html.twig" %}
 
+{% macro collection_item(form) %}
+    <div data-form-collection-target="field" class="mb-2">
+        {{ form_widget(form) }}
+        <button data-action="form-collection#removeItem" class="btn btn-danger me-1">
+            <i class="fas fa-trash"></i> Retirer un élément
+        </button>
+    </div>
+{% endmacro %}
+
 {% block choice_widget_expanded -%}
     <div {{ block('widget_container_attributes') }}>
         <div class="row">
@@ -32,3 +41,20 @@
     {{ parent() }}
     <div class="invalid-feedback"></div>
 {%- endblock form_widget_compound -%}
+
+{% block collection_stimulus_widget %}
+    {% import _self as formMacros %}
+    <div data-controller="form-collection"
+         {% if max_items is defined %}data-form-collection-max-items-value="{{ max_items }}"{% endif %}
+         data-form-collection-prototype-value="{{ formMacros.collection_item(form.vars.prototype)|json_encode }}">
+        <div data-form-collection-target="fields">
+            {% do form.setRendered %}
+            {% for field in form %}
+                {{ formMacros.collection_item(field) }}
+            {% endfor %}
+        </div>
+        <button data-action="form-collection#addItem" class="btn btn-success">
+            <i class="fas fa-plus"></i> Ajouter un élément
+        </button>
+    </div>
+{% endblock collection_stimulus_widget %}
