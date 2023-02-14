@@ -5,15 +5,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card">
-        <div class="card-body">
-            {{ form_start(form) }}
-            {% form_theme form 'form/my-form.html.twig' %}
-            {{ form_rest(form) }}
-            <button class="btn btn-success">Sauvegarder</button>
-            {{ form_end(form) }}
-        </div>
-    </div>
+    {{ form_start(form) }}
+    {% form_theme form 'form/my-form.html.twig' %}
+    {{ form_rest(form) }}
+    <button class="btn btn-success">Sauvegarder</button>
+    {{ form_end(form) }}
 {% endblock %}
 {#{% block breadcrumb %}#}
 {#    {{ include('composants/breadcrumb.html.twig', {liens:[#}
