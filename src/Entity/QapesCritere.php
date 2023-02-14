@@ -25,7 +25,7 @@ class QapesCritere
     private $libelle;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
@@ -36,9 +36,14 @@ class QapesCritere
     private $qapesSaeCritereReponses;
 
     /**
-     * @ORM\OneToMany(targetEntity=QapesCritereReponse::class, mappedBy="qapesCritere")
+     * @ORM\OneToMany(targetEntity=QapesCritereReponse::class, mappedBy="qapesCritere", cascade={"persist","remove"})
      */
     private $qapesCritereReponses;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $libelleAffichage;
 
     public function __construct()
     {
@@ -131,6 +136,18 @@ class QapesCritere
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLibelleAffichage(): ?string
+    {
+        return $this->libelleAffichage;
+    }
+
+    public function setLibelleAffichage(?string $libelleAffichage): self
+    {
+        $this->libelleAffichage = $libelleAffichage;
 
         return $this;
     }

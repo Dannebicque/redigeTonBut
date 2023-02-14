@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.5](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.4...v1.13.5) (2023-02-12)
+
+
+### Features
+
+* Gestion des critères ([86709ad](https://github.com/Dannebicque/redigeTonBut/commit/86709ad9419368c147d1060dca13302883ee4580))
+* Libellé pour l'affichage des critères ([b45d951](https://github.com/Dannebicque/redigeTonBut/commit/b45d951769df62e10f29be2c1af05d43af3f8520))
+
 ### [1.13.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.3...v1.13.4) (2023-02-05)
 
 
