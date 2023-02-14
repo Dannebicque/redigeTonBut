@@ -7,18 +7,25 @@
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ qapes_criteres_evaluation.id }}</td>
-            </tr>
-            <tr>
-                <th>Libelle</th>
-                <td>{{ qapes_criteres_evaluation.libelle }}</td>
-            </tr>
-            <tr>
-                <th>Valeurs</th>
-                <td>{{ qapes_criteres_evaluation.valeurs }}</td>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ qapes_criteres_evaluation.id }}</td>
+        </tr>
+        <tr>
+            <th>Libelle</th>
+            <td>{{ qapes_criteres_evaluation.libelle }}</td>
+        </tr>
+        <tr>
+            <th>Libelle pour affichage des résultats</th>
+            <td>{{ qapes_criteres_evaluation.libelleAffichage }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ qapes_criteres_evaluation.description }}</td>
+        </tr>
+        <tr>
+
+        </tr>
         </tbody>
     </table>
 
@@ -26,5 +33,4 @@
 
     <a href="{{ path('app_qapes_criteres_evaluation_edit', {'id': qapes_criteres_evaluation.id}) }}">edit</a>
 
-    {{ include('qapes_criteres_evaluation/_delete_form.html.twig') }}
 {% endblock %}
