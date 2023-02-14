@@ -49,10 +49,12 @@
     <div data-controller="form-collection"
          {% if max_items is defined %}data-form-collection-max-items-value="{{ max_items }}"{% endif %}
          data-form-collection-prototype-value="{{ formMacros.collection_item(form.vars.prototype)|json_encode }}">
-        <div data-form-collection-target="fields">
+        <div data-form-collection-target="fields" class="row">
             {% do form.setRendered %}
             {% for field in form %}
-                {{ formMacros.collection_item(field) }}
+                <div class="col-md-3">
+                    {{ formMacros.collection_item(field) }}
+                </div>
             {% endfor %}
         </div>
         <button data-action="form-collection#addItem" class="btn btn-success">
