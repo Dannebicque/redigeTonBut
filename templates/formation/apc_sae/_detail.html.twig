@@ -1,67 +1,75 @@
-<table class="table table-bordered">
-    <tr>
-        <th>Parcours</th>
-        <th>Semestre</th>
-    </tr>
-    <tr>
-        <td>
-            {% for parcours in apc_sae.apcSaeParcours %}
-                <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
-                        {{ parcours.parcours.libelle }}</span>
-            {% else %}
-                <span class="badge bg-success">
-                        Tous les parcours</span>
-            {% endfor %}
-        </td>
-        <td>{{ apc_sae.semestre != null ? apc_sae.semestre.libelle : '-' }}</td>
-    </tr>
-    <tr>
-        <th>Code et Nom</th>
-        <th>Volume horaire</th>
-    </tr>
-    <tr>
-        <td>{{ apc_sae.codeMatiere }} | {{ apc_sae.libelle }}</td>
-        <td>Défini localement</td>
-    </tr>
-</table>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table bg-white">
+            <tr>
+                <th>Parcours</th>
+                <td>
+                    {% for parcours in apc_sae.apcSaeParcours %}
+                        <div class="d-flex mb-2">
+                            <span class="badge badge-parcours-{{ parcours.parcours.couleur }} me-2">
+                                {{ parcours.parcours.code }}
+                            </span>
+                            <div>{{ parcours.parcours.libelle }}</div>
+                        </div>
+                    {% else %}
+                        <span class="badge bg-success">
+                            Tous les parcours
+                        </span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Code et Nom</th>
+                <td>{{ apc_sae.codeMatiere }} | {{ apc_sae.libelle }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table bg-white">
+            <tr>
+                <th>Semestre</th>
+                <td>{{ apc_sae.semestre != null ? apc_sae.semestre.libelle : '-' }}</td>
+            </tr>
+            <tr>
+                <th>Code et Nom</th>
+                <td>Défini localement</td>
+            </tr>
+        </table>
+    </div>
+</div>
 
-<h3>Compétences ciblées</h3>
-<p>
-    {% for competence in apc_sae.apcSaeCompetences %}
-        <span class="badge badge-lg badge-{{ competence.competence.couleur }}">
-                    {{ competence.competence.libelle }}
-                </span>
-    {% endfor %}
-</p>
+<div class="row">
+    <div class="col-md-6">
+        <h3 class="mt-5 mb-3">Compétences ciblées</h3>
+        {% for competence in apc_sae.apcSaeCompetences %}
+            <div class="d-flex mb-2">
+              <span class="badge badge-{{ competence.competence.couleur }} me-2">&nbsp;</span>
+              <div>{{ competence.competence.libelle }}</div>
+            </div>
+        {% endfor %}
 
-<h3>Objectifs et problématique professionnelle</h3>
-<p>
-    {{ apc_sae.objectifs != null ? apc_sae.objectifs|markdown_to_html : '' }}
-</p>
+        <h3 class="mt-5 mb-3">Apprentissages critiques</h3>
+        {% for ac in apc_sae.apcSaeApprentissageCritiques %}
+            <div class="d-flex mb-2">
+                <span class="badge badge-{{ ac.apprentissageCritique.competence.couleur }} me-2">{{ ac.apprentissageCritique.code }}</span>
+                <div>{{ ac.apprentissageCritique.libelle }}</div>
+            </div>
+        {% endfor %}
 
-<h3>Apprentissages critiques</h3>
-<p>
-    {% for ac in apc_sae.apcSaeApprentissageCritiques %}
-        <span class="badge badge-{{ ac.apprentissageCritique.competence.couleur }}">
-                    {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle }}
-                </span>
-    {% endfor %}
-</p>
+        <h3 class="mt-5 mb-3">Ressources mobilisées et combinées</h3>
+        {% for ressource in ressources %}
+            <div class="d-flex mb-2">
+                <span class="badge bg-primary me-2">{{ ressource.ressource.codeMatiere }}</span>
+                <div>{{ ressource.ressource.libelle }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        <h3 class="mt-5">Objectifs et problématique professionnelle</h3>
+        <p>{{ apc_sae.objectifs != null ? apc_sae.objectifs|markdown_to_html : '' }}</p>
+        <h3 class="mt-5">Descriptif générique</h3>
+        <p>{{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}</p>
+    </div>
+</div>
 
-<h3>Ressources mobilisées et combinées</h3>
-<p>
-    {% for ressource in ressources %}
-        <a href="{{ path('but_fiche_ressource', {apcRessource:ressource.ressource.id}) }}">
-        <span class="badge bg-primary">
-                    {{ ressource.ressource.display }}
-                    </span>
-        </a>
-    {% endfor %}
-</p>
-
-
-<h3>Descriptif générique</h3>
-<p>
-    {{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}
-</p>
 

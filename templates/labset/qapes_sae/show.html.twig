@@ -18,8 +18,14 @@
                         <dd>{{ qapes.parcours != null ? qapes.parcours.libelle : '-' }}</dd>
                         <dt>SAÉ dans le programme</dt>
                         <dd>
-                          {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
-                          ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
+                          {% if qapes.sae == null %}
+                            -
+                          {% else %}
+                            <a href="{{ path('but_fiche_sae', {'apcSae': qapes.sae.id}) }}">
+                                {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
+                                ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
+                            </a>
+                          {% endif %}
                         </dd>
                         <dt>Auteur(s)</dt>
                         <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
