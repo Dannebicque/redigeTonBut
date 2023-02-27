@@ -119,19 +119,19 @@
             <div class="row mb-5">
                 <div class="col-md-6">
                     <strong class="mt-2">À épingler</strong>
-                    <p>{{ qapes.aEpingler|raw }}</p>
+                    <p>{{ qapes.aEpingler|markdown_to_html }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Objectifs</strong>
-                    <p>{{ qapes.objectifsSae|raw }}</p>
+                    <p>{{ qapes.objectifsSae|markdown_to_html }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Déroulement</strong>
-                    <p>{{ qapes.deroulementSae|raw }}</p>
+                    <p>{{ qapes.deroulementSae|markdown_to_html }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Modalités d'évaluation</strong>
-                    <p>{{ qapes.evaluations|raw }}</p>
+                    <p>{{ qapes.evaluations|markdown_to_html }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Composition de la SAÉ</strong>
