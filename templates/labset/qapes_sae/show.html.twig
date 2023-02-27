@@ -21,9 +21,9 @@
                           {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
                           ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
                         </dd>
-                        <dt>Auteur(s)</dt>
+                        <dt>Auteur(s) de la SAE</dt>
                         <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
-                        <dt>Rédacteur(s)</dt>
+                        <dt>Rédacteur(s) de la fiche qualité</dt>
                         <dd>{% for red in qapes.redacteur %}{{ red.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
                     </dl>
                 </div>

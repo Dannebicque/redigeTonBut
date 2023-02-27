@@ -143,7 +143,7 @@ class QapesSaePart2Type extends AbstractType
                                    data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
                 'help_html' => true,
             ])
-            ->add('redacteur', EntityType::class, [
+            ->add('auteur', EntityType::class, [
                 'class' => User::class,
                 'query_builder' => function(UserRepository $er) {
                     return $er->createQueryBuilder('u')
@@ -154,6 +154,12 @@ class QapesSaePart2Type extends AbstractType
                 'multiple' => true,
                 'choice_label' => 'display',
                 'label' => 'Rédacteur(s) de la SAE',
+            ])
+            ->add('auteursAutres', TextareaType::class, [
+                'label' => 'Ajouter des rédacteurs absents de la liste',
+                'required' => false,
+                'mapped' => false,
+                'help' => 'Saisir nom; prénom et email, séparés par un ";" (point virgule) des auteurs, un par ligne.'
             ])
         ;
     }

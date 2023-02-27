@@ -36,7 +36,7 @@ class QapesSaePart1Type extends AbstractType
         $this->apcParcours = $builder->getData()->getParcours();
         $this->departement = $builder->getData()->getSpecialite();
         $builder
-            ->add('auteur', EntityType::class, [
+            ->add('redacteur', EntityType::class, [
                 'class' => User::class,
                 'query_builder' => function(UserRepository $er) {
                     return $er->createQueryBuilder('u')
@@ -44,6 +44,7 @@ class QapesSaePart1Type extends AbstractType
                         ->addOrderBy('u.prenom', 'ASC');
                 },
                 'multiple' => true,
+                'required' => false,
                 'choice_label' => 'display',
                 'label' => 'Auteur(s) de la fiche qualité SAE',
                 'help' => 'En complément de l\'auteur initial. Maintenir ctrl ou cmd pour ajouter plusieurs auteurs',
@@ -70,6 +71,12 @@ class QapesSaePart1Type extends AbstractType
                 'required' => false,
                 'disabled' => !$this->edit,
                 'attr' => ['data-action' => 'change->qapes#changeSpecialite'],
+            ])
+            ->add('redacteursAutres', TextareaType::class, [
+                'label' => 'Ajouter des auteurs absents de la liste',
+                'required' => false,
+                'mapped' => false,
+                'help' => 'Saisir nom; prénom et email, séparés par un ";" (point virgule) des auteurs, un par ligne.'
             ])
             ->add('parcours', EntityType::class, [
                 'class' => ApcParcours::class,
