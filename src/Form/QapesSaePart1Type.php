@@ -46,7 +46,7 @@ class QapesSaePart1Type extends AbstractType
                 'multiple' => true,
                 'choice_label' => 'display',
                 'label' => 'Auteur(s) de la fiche qualité SAE',
-                'help' => 'En complément de l\'auteur initial',
+                'help' => 'En complément de l\'auteur initial. Maintenir ctrl ou cmd pour ajouter plusieurs auteurs',
             ])
             ->add('iut', EntityType::class, [
                 'class' => Iut::class,

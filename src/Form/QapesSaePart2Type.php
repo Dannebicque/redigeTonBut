@@ -36,9 +36,12 @@ class QapesSaePart2Type extends AbstractType
             ->add('aEpingler', TextareaType::class, [
                 'required' => false,
                 'attr' => [
-                    'rows' => 5,
+                    'rows' => 10,
                 ],
                 'label' => 'A épingler',
+                'help' => 'Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                'help_html' => true,
             ])
             ->add('anneeCreation', null, [
                 'label' => 'Année de création de la SAÉ'
@@ -90,6 +93,9 @@ class QapesSaePart2Type extends AbstractType
                 'attr' => [
                     'rows' => 5,
                 ],
+                'help' => 'Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                'help_html' => true,
             ])
             ->add('nbEtudiants', null, [
                 'label' => 'Nombre d’étudiants'
@@ -107,15 +113,21 @@ class QapesSaePart2Type extends AbstractType
                 'label' => 'Objectifs de la SAE',
                 'required' => false,
                 'attr' => [
-                    'rows' => 5,
+                    'rows' => 10,
                 ],
+                'help' => 'Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                'help_html' => true,
             ])
             ->add('deroulementSae', TextareaType::class, [
                 'label' => 'Déroulement de la SAE',
                 'required' => false,
                 'attr' => [
-                    'rows' => 5,
+                    'rows' => 10,
                 ],
+                'help' => 'Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                'help_html' => true,
             ])
             ->add('lienLigneDuTemps', UrlType::class, [
               'label' => 'Lien vers la ligne du temps de la SAÉ',
@@ -125,8 +137,11 @@ class QapesSaePart2Type extends AbstractType
                 'label' => 'Modalités d\'Évaluations',
                 'required' => false,
                 'attr' => [
-                    'rows' => 5,
+                    'rows' => 10,
                 ],
+                'help' => 'Il est possible d\'utiliser <a href="#" data-bs-toggle="modal"
+                                   data-bs-target="#modalMarkdown">la syntaxe Markdown dans ce bloc de texte</a>',
+                'help_html' => true,
             ])
             ->add('redacteur', EntityType::class, [
                 'class' => User::class,
@@ -135,6 +150,7 @@ class QapesSaePart2Type extends AbstractType
                         ->orderBy('u.nom', 'ASC')
                         ->addOrderBy('u.prenom', 'ASC');
                 },
+                'help' => 'Maintenir ctrl ou cmd pour ajouter plusieurs auteurs',
                 'multiple' => true,
                 'choice_label' => 'display',
                 'label' => 'Rédacteur(s) de la SAE',
