@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.8](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.7...v1.13.8) (2023-02-27)
+
+
+### Features
+
+* Edition d'un critère ([c78ded9](https://github.com/Dannebicque/redigeTonBut/commit/c78ded99165f3ed9301b2ad2f916cd53ab41a1cf))
+* Edition d'un critère ([e6ab98b](https://github.com/Dannebicque/redigeTonBut/commit/e6ab98b92dbb50b9307c9dcfbc3750931f51458c))
+* Markdown sur l'affichage ([ca36bb0](https://github.com/Dannebicque/redigeTonBut/commit/ca36bb0ab70ed3a8b0aad590e6423478b406252f))
+* Texte d'aide sur les formulaires ([aadf683](https://github.com/Dannebicque/redigeTonBut/commit/aadf6831977e792bb347aad3ad1f9f8a992d36a4))
+
 ### [1.13.7](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.6...v1.13.7) (2023-02-14)
 
 ### [1.13.6](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.5...v1.13.6) (2023-02-14)
