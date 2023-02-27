@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.9](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.8...v1.13.9) (2023-02-27)
+
+
+### Features
+
+* Ajout d'utilisateurs non présents ([f1d46eb](https://github.com/Dannebicque/redigeTonBut/commit/f1d46eb7be22477a20eff406ef526273092def7b))
+
 ### [1.13.8](https://github.com/Dannebicque/redigeTonBut/compare/v1.13.7...v1.13.8) (2023-02-27)
 
 
