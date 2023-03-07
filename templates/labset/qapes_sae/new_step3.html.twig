@@ -6,47 +6,44 @@
     {{ include('labset/qapes_sae/_synthese_iut.html.twig') }}
     {{ include('labset/qapes_sae/_synthese_sae.html.twig') }}
 
-    <div class="card mt-2">
-        <div class="card-body">
-            {% form_theme form 'form/my-form.html.twig' %}
-            {{ form_start(form) }}
+    <h2>Évaluation de la qualité de la SAÉ</h2>
+    {% form_theme form 'form/my-form.html.twig' %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-lg-4">
             {{ form_row(form.dateEvaluation) }}
-
-            {% for critere in criteres %}
-                <hr>
-                <div class="mt-2">
-                    <p>
-                        <strong>{{ critere.libelle }}</strong>
-                    </p>
-
-                    <p>
-                        {{ critere.description|raw }}
-                    </p>
-
-                    <label for="reponse_{{ critere.id }}">Réponse</label>
-                    <select id="reponse_{{ critere.id }}" name="reponse_{{ critere.id }}" class="form-select">
-                        <option>Choisir une réponse</option>
-                        {% for rep in critere.qapesCritereReponses %}
-                        <option value="{{ rep.id }}" {% if reponses[critere.id] is defined and reponses[critere.id]
-                        .reponse != null and  reponses[critere.id].reponse.id == rep.id %}selected{% endif %}>
-                            {{ rep.libelle }}
-                            {% endfor %}
-                    </select>
-
-                    <label for="commentaire_{{ critere.id }}">Commentaire</label>
-                    <textarea id="commentaire_{{ critere.id }}" name="commentaire_{{ critere.id }}"
-                              class="form-control">{% if reponses[critere.id] is defined %}{{ reponses[critere.id].commentaire }}{% endif %}</textarea>
-                </div>
-            {% endfor %}
-
-            <button class="btn btn-primary mt-3">
-                Sauvegarder et continuer vers l'analyse
-            </button>
-            {{ form_end(form) }}
         </div>
     </div>
 
+    {% for critere in criteres %}
+        <div class="row mb-5">
+            <div class="col-lg-5">
+                <h3 class="h4">{{ critere.libelle }}</h3>
+                <p>{{ critere.description|raw }}</p>
+            </div>
+            <div class="col-lg-2">
+                <label for="reponse_{{ critere.id }}">Réponse</label>
+                <select id="reponse_{{ critere.id }}" name="reponse_{{ critere.id }}" class="form-select mb-3">
+                    <option>Choisir une réponse</option>
+                    {% for rep in critere.qapesCritereReponses %}
+                    <option value="{{ rep.id }}" {% if reponses[critere.id] is defined and reponses[critere.id]
+                    .reponse != null and  reponses[critere.id].reponse.id == rep.id %}selected{% endif %}>
+                        {{ rep.libelle }}
+                        {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-5">
+                <label for="commentaire_{{ critere.id }}">Commentaire</label>
+                <textarea id="commentaire_{{ critere.id }}" name="commentaire_{{ critere.id }}" rows="6"
+                          class="form-control">{% if reponses[critere.id] is defined %}{{ reponses[critere.id].commentaire }}{% endif %}</textarea>
+            </div>
+        </div>
+    {% endfor %}
 
+    <button class="btn btn-primary mt-3">
+        Sauvegarder et continuer vers l'analyse
+    </button>
+    {{ form_end(form) }}
 
 {% endblock %}
 
