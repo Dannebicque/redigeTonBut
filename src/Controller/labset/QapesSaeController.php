@@ -4,6 +4,7 @@ namespace App\Controller\labset;
 
 use App\Entity\QapesSae;
 use App\Entity\QapesSaeCritereReponse;
+use App\Entity\User;
 use App\Form\QapesSaePart1Type;
 use App\Form\QapesSaePart2Type;
 use App\Form\QapesSaePart3Type;
@@ -16,6 +17,7 @@ use App\Repository\IutSiteRepository;
 use App\Repository\QapesCritereReponseRepository;
 use App\Repository\QapesCritereRepository;
 use App\Repository\QapesSaeRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -107,6 +109,8 @@ class QapesSaeController extends AbstractController
 
     #[Route('/new', name: 'app_qapes_sae_new', methods: ['GET', 'POST'])]
     public function new(
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
         IutSiteRepository $iutSiteRepository,
         ApcParcoursRepository $parcoursRepository,
         DepartementRepository $departementRepository,
@@ -119,6 +123,25 @@ class QapesSaeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $request->request->all()['qapes_sae_part1'];
+            $listeAuteurs = explode("\r\n",$data['redacteursAutres']);
+            foreach ($listeAuteurs as $auteur) {
+                $auteur = explode(";", $auteur);
+                if (count($auteur) === 3) {
+                    $exist = $userRepository->findOneBy(['email' => $auteur[2]]);
+                    if ($exist === null) {
+                        $user = new User();
+                        $user->setNom($auteur[0]);
+                        $user->setPrenom($auteur[1]);
+                        $user->setPassword('labset');
+                        $user->setEmail($auteur[2]);
+                        $user->setRoles(['ROLE_LABSET']);
+                        $entityManager->persist($user);
+                        $qapesSae->addRedacteur($user);
+                    } else {
+                        $qapesSae->addRedacteur($exist);
+                    }
+                }
+            }
             //iutSite
             $iutSite = $iutSiteRepository->find($data['iutSite'] );
             $qapesSae->setIutSite($iutSite);
@@ -155,12 +178,36 @@ class QapesSaeController extends AbstractController
     }
 
     #[Route('/new/etape-2/{qapesSae}', name: 'app_qapes_sae_new_etape_2', methods: ['GET', 'POST'])]
-    public function etape2(Request $request, QapesSaeRepository $qapesSaeRepository, QapesSae $qapesSae): Response
+    public function etape2(
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager,
+        Request $request, QapesSaeRepository $qapesSaeRepository, QapesSae $qapesSae): Response
     {
         $form = $this->createForm(QapesSaePart2Type::class, $qapesSae);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $request->request->all()['qapes_sae_part2'];
+            $listeAuteurs = explode("\r\n",$data['auteursAutres']);
+            foreach ($listeAuteurs as $auteur) {
+                $auteur = explode(";", $auteur);
+                if (count($auteur) === 3) {
+                    $exist = $userRepository->findOneBy(['email' => $auteur[2]]);
+                    if ($exist === null) {
+                        $user = new User();
+                        $user->setNom($auteur[0]);
+                        $user->setPrenom($auteur[1]);
+                        $user->setPassword('labset');
+                        $user->setEmail($auteur[2]);
+                        $user->setRoles(['ROLE_LABSET']);
+                        $entityManager->persist($user);
+                        $qapesSae->addAuteur($user);
+                    } else {
+                        $qapesSae->addAuteur($exist);
+                    }
+                }
+            }
+
             $qapesSaeRepository->add($qapesSae);
 
             return $this->redirectToRoute('app_qapes_sae_new_etape_3', [
@@ -279,6 +326,8 @@ class QapesSaeController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_qapes_sae_edit', methods: ['GET', 'POST'])]
     public function edit(
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager,
         IutSiteRepository $iutSiteRepository,
         ApcParcoursRepository $parcoursRepository,
         DepartementRepository $departementRepository,
@@ -292,6 +341,27 @@ class QapesSaeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $request->request->all()['qapes_sae_part1'];
+            $listeAuteurs = explode("\r\n",$data['redacteursAutres']);
+            foreach ($listeAuteurs as $auteur) {
+                $auteur = explode(";", $auteur);
+                if (count($auteur) === 3) {
+                    $exist = $userRepository->findOneBy(['email' => $auteur[2]]);
+                    if ($exist === null) {
+                        $user = new User();
+                        $user->setNom($auteur[0]);
+                        $user->setPrenom($auteur[1]);
+                        $user->setPassword('labset');
+                        $user->setEmail($auteur[2]);
+                        $user->setRoles(['ROLE_LABSET']);
+                        $entityManager->persist($user);
+                        $qapesSae->addRedacteur($user);
+                    } else {
+                        $qapesSae->addRedacteur($exist);
+                    }
+                }
+            }
+
+
             //iutSite
             $iutSite = $iutSiteRepository->find($data['iutSite'] );
             $qapesSae->setIutSite($iutSite);

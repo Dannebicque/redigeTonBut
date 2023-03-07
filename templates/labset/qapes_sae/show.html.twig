@@ -27,9 +27,9 @@
                             </a>
                           {% endif %}
                         </dd>
-                        <dt>Auteur(s)</dt>
+                        <dt>Auteur(s) de la SAE</dt>
                         <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
-                        <dt>Rédacteur(s)</dt>
+                        <dt>Rédacteur(s) de la fiche qualité</dt>
                         <dd>{% for red in qapes.redacteur %}{{ red.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
                     </dl>
                 </div>
@@ -125,19 +125,19 @@
             <div class="row mb-5">
                 <div class="col-md-6">
                     <strong class="mt-2">À épingler</strong>
-                    <p>{{ qapes.aEpingler|raw }}</p>
+                    <p>{{ qapes.aEpingler != null ? qapes.aEpingler|markdown_to_html  : '' }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Objectifs</strong>
-                    <p>{{ qapes.objectifsSae|raw }}</p>
+                    <p>{{ qapes.objectifsSae != null ? qapes.objectifsSae|markdown_to_html  : '' }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Déroulement</strong>
-                    <p>{{ qapes.deroulementSae|raw }}</p>
+                    <p>{{ qapes.deroulementSae != null ? qapes.deroulementSae|markdown_to_html : ''  }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Modalités d'évaluation</strong>
-                    <p>{{ qapes.evaluations|raw }}</p>
+                    <p>{{ qapes.evaluations != null ? qapes.evaluations|markdown_to_html : '' }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Composition de la SAÉ</strong>

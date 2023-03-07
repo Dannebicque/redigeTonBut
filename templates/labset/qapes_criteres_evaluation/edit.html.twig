@@ -7,7 +7,13 @@
 {% block content %}
     {{ form_start(form) }}
     {% form_theme form 'form/my-form.html.twig' %}
-    {{ form_rest(form) }}
+    {{ form_row(form.libelle) }}
+    {{ form_row(form.libelleAffichage) }}
+    {{ form_row(form.description) }}
+
+    {{ form_row(form.qapesCritereReponses) }} {# qui va lui mème générer autant d'entrée que nécessaire et les
+    boutons associés. #}
+
     <button class="btn btn-success">Sauvegarder</button>
     {{ form_end(form) }}
 {% endblock %}
