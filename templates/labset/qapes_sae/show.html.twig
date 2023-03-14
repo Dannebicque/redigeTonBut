@@ -108,8 +108,8 @@
                     {% for critere in qapes.qapesSaeCritereReponse %}
                         <div class="col-md-6 mb-4">
                             <div class="d-flex align-items-center mb-3">
-                                <span class="criterion" style="background-color: #{{ critere.reponse != null ?
-                                critere.reponse.couleur : 'ffffff' }}">
+                                <span class="criterion" style="background-color: {{ critere.reponse != null ?
+                                critere.reponse.couleur : '#ffffff' }}">
                                     {{ critere.reponse != null ? critere.reponse.libelle : 'Non défini' }}
                                 </span>
                                 <h3 class="flex-grow-1">{{ critere.critere.libelleAffichage != null ? critere.critere
