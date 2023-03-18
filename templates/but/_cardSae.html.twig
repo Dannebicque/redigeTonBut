@@ -2,37 +2,42 @@
     <div class="card {% if sae.ficheAdaptationLocale == true %}bg-warning text-white{% endif %}">
         <div class="card-body">
             <h4 class="card-title">{{ sae.display }}
-                <span class="badge badge-primary">{{ sae
-                    .semestre.libelle }}</span></h4>
-            <p>{{ sae.objectifs }}</p>
+                <span class="badge badge-primary">
+                    {{ sae.semestre.libelle }}
+                </span>
+            </h4>
+            <p>
+                {% for parcours in sae.apcSaeParcours %}
+                    <div class="d-flex mb-2">
+                        <span class="badge badge-parcours-{{ parcours.parcours.couleur }} me-2">
+                            {{ parcours.parcours.code }}
+                        </span>
+                        <div><i>{{ parcours.parcours.libelle }}</i></div>
+                    </div>
+                {% else %}
+                    <div class="d-flex">
+                        <span class="badge bg-success me-2">Tous</span>
+                        <div>Tous les parcours</div>
+                    </div>
+                {% endfor %}
+            </p>
+            <p>{{ sae.objectifs | markdown_to_html}}</p>
             <p>
                 {% for competence in sae.apcSaeCompetences %}
                     <span class="badge badge-{{ competence.competence.couleur }}">
                         {{ competence.competence.nomCourt }}</span>
                 {% endfor %}
             </p>
-
-            <p>
-                {% for parcours in sae.apcSaeParcours %}
-                    <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
-                        {{ parcours.parcours.libelle }}</span>
-                {% else %}
-                    <span class="badge bg-success">
-                        Tous les parcours</span>
-                {% endfor %}
-            </p>
         </div>
-        <div class="card-footer">
-            <div class="col-12 d-flex align-items-center justify-content-md-end mb-2">
-                <a href="{{ path('but_fiche_sae',
-                    {'apcSae': sae.id, parcours: parcours != null ? parcours.id : null}) }}"
-                   class="btn btn-block btn-sm btn-icon btn-icon-start btn-outline-primary ms-1"
-                   target="_blank"
-                >
-                    <i class="bi-info-circle"></i>
-                    <span class="d-none d-xxl-inline-block">Voir la fiche SAÉ</span>
-                </a>
-            </div>
+        <div class="card-footer text-end">
+            <a href="{{ path('but_fiche_sae',
+                {'apcSae': sae.id, parcours: parcours != null ? parcours.id : null}) }}"
+                class="btn btn-block btn-sm btn-icon btn-icon-start btn-outline-primary"
+                target="_blank"
+            >
+                <i class="bi-info-circle"></i>
+                <span class="d-none d-xxl-inline-block stretched-link">Voir la fiche SAÉ</span>
+            </a>
             {% if  is_granted('ROLE_EDITEUR') %}
                 <div class="col-12 d-flex align-items-center justify-content-md-end">
                     {% if user_data.departement.pnBloque == false %}
