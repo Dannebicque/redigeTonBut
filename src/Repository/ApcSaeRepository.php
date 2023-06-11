@@ -215,4 +215,20 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findBySigleDepartement(string $sigle)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
+            ->innerJoin('a.departement', 'd')
+            ->where('d.sigle = :departement')
+            ->andWhere('r.ficheAdaptationLocale = false')
+            ->setParameter('departement', $sigle)
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

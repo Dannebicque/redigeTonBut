@@ -9,6 +9,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\LifeCycleTrait;
 use DateTime;
 use DateTimeInterface;
@@ -16,14 +19,35 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DepartementRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @ApiFilter(SearchFilter::class, properties={"sigle": "exact"})
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read:departement"}},
+ *     collectionOperations={"get"},
+ *     itemOperations={"get"}
+ * )
  */
-class Departement extends BaseEntity
+class Departement
 {
     use LifeCycleTrait;
+
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     * @ApiProperty(identifier=false)
+     */
+    private ?int $id = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public const TERTIAIRE = 'tertiaire';
     public const SECONDAIRE = 'secondaire';
@@ -33,7 +57,7 @@ class Departement extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"actualite_administration"})
+     * @Groups({"actualite_administration", "read:departement"})
      */
     private ?string $libelle;
 
@@ -45,32 +69,39 @@ class Departement extends BaseEntity
     /**
      * @ORM\OneToMany(targetEntity=ApcCompetence::class, mappedBy="departement")
      * @ORM\OrderBy({"couleur"="ASC"})
+     * @Groups({"read:departement"})
      */
     private Collection $apcCompetences;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcParcours::class, mappedBy="departement")
      * @ORM\OrderBy({"ordre":"ASC"})
+     * @Groups({"read:departement"})
      */
     private Collection $apcParcours;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"read:departement"})
      */
     private ?string $typeDepartement;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, unique=true)
+     * @ApiProperty(identifier=true)
+     * @Groups({"read:departement"})
      */
     private ?string $sigle;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:departement"})
      */
     private ?int $numeroAnnexe;
 
     /**
      * @ORM\Column(type="string", length=5)
+     * @Groups({"read:departement"})
      */
     private ?string $typeStructure;
 
@@ -81,6 +112,7 @@ class Departement extends BaseEntity
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read:departement"})
      */
     private ?string $textePresentation;
 
@@ -116,11 +148,13 @@ class Departement extends BaseEntity
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"read:departement"})
      */
     private ?DateTime $dateVersionCompetence;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"read:departement"})
      */
     private ?DateTime $dateVersionFormation;
 
@@ -136,16 +170,19 @@ class Departement extends BaseEntity
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read:departement"})
      */
     private $altBut1;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read:departement"})
      */
     private $altBut2;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read:departement"})
      */
     private $altBut3;
 

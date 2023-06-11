@@ -14,6 +14,7 @@ use App\Repository\ApcNiveauRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcNiveauRepository::class)
@@ -25,27 +26,32 @@ class ApcNiveau extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:competence"})
      */
     private ?string $libelle;
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcNiveaux")
+     * @Groups({"read:departement"})
      */
     private ?ApcCompetence $competence;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:competence", "read:departement"})
      */
     private ?int $ordre;
 
     /**
      * @ORM\ManyToOne(targetEntity=Annee::class, inversedBy="apcNiveaux")
+     * @Groups({"read:competence", "read:departement"})
      */
     private ?Annee $annee;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcApprentissageCritique::class, mappedBy="niveau", cascade={"persist","remove"})
      * @ORM\OrderBy({"code"="ASC"})
+     * @Groups({"read:competence"})
      */
     private Collection $apcApprentissageCritiques;
 

@@ -9,16 +9,44 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcSaeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use App\Controller\api\GetSaesSpecialite;
 
 /**
  * @ORM\Entity(repositoryClass=ApcSaeRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read:sae"}},
+ *     collectionOperations={
+ *     "get",
+ *     "get_by_specialite"={
+ *         "method"="GET",
+ *         "path"="/specialite/{specialite}/saes",
+ *         "openapi_context" = {
+ *             "parameters" = {
+ *                 {
+ *                      "name" = "specialite",
+ *                      "in" = "path",
+ *                      "description" = "Spécialité",
+ *                      "required" = true,
+ *                      "schema"={
+ *                          "type" : "string"
+ *                      },
+ *                      "style"="simple"
+ *                 }
+ *           }
+ *     },
+ *         "controller"=GetSaesSpecialite::class,
+ *     }},
+ *     itemOperations={"get"}
+ * )
  */
 class ApcSae extends AbstractMatiere
 {
@@ -28,11 +56,13 @@ class ApcSae extends AbstractMatiere
 
     /**
      * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="apcSaes")
+     * @Groups({"read:sae"})
      */
     private ?Semestre $semestre;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read:sae"})
      */
     private float $projetPpn = 0;
 
@@ -48,6 +78,7 @@ class ApcSae extends AbstractMatiere
 
     /**
      * @ORM\OneToMany(targetEntity=ApcSaeApprentissageCritique::class, mappedBy="sae", cascade={"persist","remove"})
+     * @Groups({"read:sae"})
      */
     private Collection $apcSaeApprentissageCritiques;
 
@@ -58,16 +89,19 @@ class ApcSae extends AbstractMatiere
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:sae"})
      */
     private ?int $ordre;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read:sae"})
      */
     private ?string $objectifs;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read:sae"})
      */
     private ?string $exemples;
 
@@ -78,11 +112,13 @@ class ApcSae extends AbstractMatiere
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"read:sae"})
      */
     private ?bool $portfolio = false;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"read:sae"})
      */
     private ?bool $stage = false;
 

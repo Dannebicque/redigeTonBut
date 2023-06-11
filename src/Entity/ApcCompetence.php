@@ -9,15 +9,43 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcComptenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\api\GetCompetenceSpecialite;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcComptenceRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read:competence"}},
+ *     collectionOperations={
+ *     "get",
+ *     "get_by_specialite"={
+ *         "method"="GET",
+ *         "path"="/specialite/{specialite}/competences",
+ *         "openapi_context" = {
+ *             "parameters" = {
+ *                 {
+ *                      "name" = "specialite",
+ *                      "in" = "path",
+ *                      "description" = "Spécialité",
+ *                      "required" = true,
+ *                      "schema"={
+ *                          "type" : "string"
+ *                      },
+ *                      "style"="simple"
+ *                 }
+ *           }
+ *     },
+ *         "controller"=GetCompetenceSpecialite::class,
+ *     }},
+ *     itemOperations={"get"}
+ * )
  */
 class ApcCompetence extends BaseEntity
 {
@@ -35,26 +63,31 @@ class ApcCompetence extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:competence"})
      */
     private ?string $libelle;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"read:competence", "read:departement"})
      */
     private ?string $nom_court;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"read:competence"})
      */
     private ?string $couleur;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcComposanteEssentielle::class, mappedBy="competence", cascade={"persist","remove"})
+     * @Groups({"read:competence"})
      */
     private Collection $apcComposanteEssentielles;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcNiveau::class, mappedBy="competence", cascade={"persist","remove"})
+     * @Groups({"read:competence"})
      */
     private Collection $apcNiveaux;
 
@@ -71,6 +104,7 @@ class ApcCompetence extends BaseEntity
     /**
      * @ORM\OneToMany(targetEntity=ApcSituationProfessionnelle::class, mappedBy="competence",
      *                                                                 cascade={"persist","remove"})
+     * @Groups({"read:competence"})
      */
     private Collection $apcSituationProfessionnelles;
 
@@ -81,6 +115,7 @@ class ApcCompetence extends BaseEntity
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:competence", "read:departement"})
      */
     private ?int $numero;
 

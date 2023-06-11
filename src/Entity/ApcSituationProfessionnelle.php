@@ -12,6 +12,7 @@ namespace App\Entity;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcSituationProfessionnelleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcSituationProfessionnelleRepository::class)
@@ -23,6 +24,7 @@ class ApcSituationProfessionnelle extends BaseEntity
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"read:competence"})
      */
     private ?string $libelle;
 

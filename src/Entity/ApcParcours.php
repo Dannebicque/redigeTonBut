@@ -14,6 +14,7 @@ use App\Repository\ApcParcoursRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcParcoursRepository::class)
@@ -25,16 +26,19 @@ class ApcParcours extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:departement"})
      */
     private ?string $libelle;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups({"read:departement"})
      */
     private ?string $code;
 
     /**
      * @ORM\OneToMany(targetEntity=ApcParcoursNiveau::class, mappedBy="parcours")
+     * @Groups({"read:departement"})
      */
     private Collection $apcParcoursNiveaux;
 
@@ -55,21 +59,25 @@ class ApcParcours extends BaseEntity
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read:departement"})
      */
     private ?string $textePresentation;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"read:departement"})
      */
     private ?string $couleur;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:departement"})
      */
     private ?int $ordre = 1;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read:departement"})
      */
     private ?string $modalitesParticulieres;
 

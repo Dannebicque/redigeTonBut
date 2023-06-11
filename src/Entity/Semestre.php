@@ -25,18 +25,19 @@ class Semestre extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"article_administration", "date_administration", "semestre",
-     *                                    "etudiants_administration","document_administration"})
+     * @Groups({"read:ressource","read:sae"})
      */
     private ?string $libelle;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:ressource","read:sae"})
      */
     private int $ordreAnnee; //dans l'année
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:ressource","read:sae"})
      */
     private int $ordreLmd; //dans le LMD
 

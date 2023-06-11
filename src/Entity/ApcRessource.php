@@ -9,16 +9,44 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcRessourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use App\Controller\api\GetRessourcesSpecialite;
 
 /**
  * @ORM\Entity(repositoryClass=ApcRessourceRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read:ressource"}},
+ *     collectionOperations={
+ *     "get",
+ *     "get_by_specialite"={
+ *         "method"="GET",
+ *         "path"="/specialite/{specialite}/ressources",
+ *         "openapi_context" = {
+ *             "parameters" = {
+ *                 {
+ *                      "name" = "specialite",
+ *                      "in" = "path",
+ *                      "description" = "Spécialité",
+ *                      "required" = true,
+ *                      "schema"={
+ *                          "type" : "string"
+ *                      },
+ *                      "style"="simple"
+ *                 }
+ *           }
+ *     },
+ *         "controller"=GetRessourcesSpecialite::class,
+ *     }},
+ *     itemOperations={"get"}
+ * )
  */
 class ApcRessource extends AbstractMatiere
 {
@@ -28,11 +56,13 @@ class ApcRessource extends AbstractMatiere
 
     /**
      * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="apcRessources")
+     * @Groups({"read:ressource"})
      */
     private ?Semestre $semestre;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read:ressource"})
      */
     private ?string $motsCles;
 
@@ -43,6 +73,7 @@ class ApcRessource extends AbstractMatiere
 
     /**
      * @ORM\OneToMany(targetEntity=ApcRessourceApprentissageCritique::class, mappedBy="ressource", cascade={"persist","remove"})
+     * @Groups({"read:ressource"})
      */
     private Collection $apcRessourceApprentissageCritiques;
 
@@ -58,6 +89,7 @@ class ApcRessource extends AbstractMatiere
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:ressource"})
      */
     private ?int $ordre = 1;
 

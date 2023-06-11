@@ -14,6 +14,7 @@ use App\Repository\ApcApprentissageCritiqueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcApprentissageCritiqueRepository::class)
@@ -25,6 +26,7 @@ class ApcApprentissageCritique extends BaseEntity
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"read:competence", "read:ressource","read:sae"})
      */
     private ?string $libelle;
 
@@ -35,6 +37,7 @@ class ApcApprentissageCritique extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"read:competence", "read:ressource","read:sae"})
      */
     private ?string $code;
 
@@ -50,6 +53,7 @@ class ApcApprentissageCritique extends BaseEntity
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:competence"})
      */
     private ?int $ordre;
 

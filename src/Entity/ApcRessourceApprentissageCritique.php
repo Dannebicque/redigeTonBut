@@ -12,6 +12,7 @@ namespace App\Entity;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcRessourceApprentissageCritiqueRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcRessourceApprentissageCritiqueRepository::class)
@@ -29,6 +30,7 @@ class ApcRessourceApprentissageCritique extends BaseEntity
     /**
      * @ORM\ManyToOne(targetEntity=ApcApprentissageCritique::class, inversedBy="apcRessourceApprentissageCritiques")
      * @ORM\OrderBy({"code":"ASC"})
+     * @Groups({"read:ressource"})
      */
     private ?ApcApprentissageCritique $apprentissageCritique;
 

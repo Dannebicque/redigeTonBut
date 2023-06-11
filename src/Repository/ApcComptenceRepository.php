@@ -34,6 +34,18 @@ class ApcComptenceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findBySigleDepartement($departement): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.departement', 'd')
+            ->where('d.sigle = :sigle')
+            ->setParameter('sigle', $departement)
+            ->orderBy('c.couleur', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function findByDepartementBuilder(Departement $departement)
     {
         return $this->createQueryBuilder('c')

@@ -12,6 +12,7 @@ namespace App\Entity;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcComposanteEssentielleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcComposanteEssentielleRepository::class)
@@ -23,6 +24,7 @@ class ApcComposanteEssentielle extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:competence"})
      */
     private ?string $libelle;
 
@@ -33,11 +35,13 @@ class ApcComposanteEssentielle extends BaseEntity
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read:competence"})
      */
     private ?int $ordre;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups({"read:competence"})
      */
     private ?string $code;
 

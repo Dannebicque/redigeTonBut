@@ -30,7 +30,7 @@ class Annee extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"annee"})
+     * @Groups({"read:competence", "read:departement"})
      */
     private ?string $libelle;
 

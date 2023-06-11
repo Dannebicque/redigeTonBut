@@ -12,6 +12,7 @@ namespace App\Entity;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcParcoursNiveauRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcParcoursNiveauRepository::class)
@@ -23,6 +24,7 @@ class ApcParcoursNiveau extends BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcNiveau::class, inversedBy="apcParcoursNiveaux")
+     * @Groups({"read:departement"})
      */
     private ?ApcNiveau $niveau;
 

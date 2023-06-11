@@ -22,36 +22,37 @@ abstract class AbstractMatiere extends BaseEntity
 {
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"matiere"})
+     * @Groups({"read:ressource"})
      */
     private string $libelle;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read:ressource"})
      */
     private ?string $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"matiere_administration"})
+     * @Groups({"read:ressource"})
      */
     private float $cmPpn = 0;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"matiere_administration"})
+     * @Groups({"read:ressource"})
      */
     private float $tdPpn = 0;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"matiere_administration"})
+     * @Groups({"read:ressource"})
      */
     private float $heuresTotales = 0;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"matiere_administration"})
+     * @Groups({"read:ressource"})
      */
     private float $tpPpn = 0;
 
@@ -62,12 +63,13 @@ abstract class AbstractMatiere extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=20)
-     * @Groups({"matiere"})
+     * @Groups({"read:ressource"})
      */
     private ?string $codeMatiere = '-';
 
     /**
      * @ORM\Column(type="string", length=25, nullable=true)
+     * @Groups({"read:ressource"})
      */
     private ?string $libelleCourt;
 
