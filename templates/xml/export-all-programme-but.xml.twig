@@ -1,0 +1,93 @@
+{% autoescape %}
+<?xml version="1.0" encoding="UTF-8"?>
+<programmes>
+    {% for departement in departements|filter(departement => departement.numeroAnnexe < 5) %}
+        {% set semestres = departement.semestres %}
+    <referentiel_formation specialite="{{ departement.sigle }}"
+                           specialite_long="{{ departement.libelle }}"
+                           type="B.U.T." annexe="{{ departement.numeroAnnexe }}"
+                           type_structure="{{ departement.typeStructure }}"
+                           type_departement="{{ departement.typeDepartement }}"
+                           version="{{ departement.dateVersionCompetence != null ? departement
+                           .dateVersionCompetence|date('Y-m-d H:i:s') : '-' }}">
+        {% for semestre in semestres %}
+        <semestre numero="{{ semestre.ordreLmd }}" libelle="{{ semestre.libelle }}" ordreAnnee="{{ semestre.ordreAnneeXml
+        }}">
+            <saes>
+                {% for sae in semestre.apcSaes %}
+                <sae code="{{ sae.codeMatiere }}" ordre="{{ sae.ordre }}">
+                    <titre>{{ sae.libelle }}</titre>
+                    <description>
+                        {{ sae.description }}
+                    </description>
+                    <objectifs>
+                        {{ sae.objectifs }}
+                    </objectifs>
+                    <acs>
+                        {% for ac in sae.apcSaeApprentissageCritiques %}
+                        <ac>{{ ac.apprentissageCritique.code }}</ac>
+                        {% endfor %}
+                    </acs>
+                    <competences>
+                        {% for competence in sae.apcSaeCompetences %}
+                        <competence coefficient="{{ competence.coefficient }}" nom="{{ competence.competence.nomCourt }}"/>
+                        {% endfor %}
+                    </competences>
+                    <ressources>
+                        {% for ressource in sae.apcSaeRessources %}
+                        <ressource>{{ ressource.ressource.codeMatiere }}</ressource>
+                        {% endfor %}
+                    </ressources>
+                    <liste_parcours>
+                        {% for parcours in sae.apcSaeParcours %}
+                        <parcours>{{ parcours.parcours.code }}</parcours>
+                        {% endfor %}
+                    </liste_parcours>
+                </sae>
+                {% endfor %}
+            </saes>
+            <ressources>
+                {% for ressource in semestre.apcRessources %}
+                <ressource code="{{ ressource.codeMatiere }}" heuresCMTD="{{ ressource.heuresTotales }}"
+                               heuresTP="{{ ressource.tpPpn }}" ordre="{{ ressource.ordre }}">
+                        <titre>{{ ressource.libelle }}</titre>
+                        <description>
+                            {{ ressource.description }}
+                        </description>
+                        <mots-cles>
+                            {{ ressource.motsCles }}
+                        </mots-cles>
+                        <acs>
+                            {% for ac in ressource.apcRessourceApprentissageCritiques %}
+                            <ac>{{ ac.apprentissageCritique.code }}</ac>
+                            {% endfor %}
+                        </acs>
+                        <saes>
+                            {% for ressource in ressource.apcSaeRessources %}
+                            <sae>{{ ressource.sae.codeMatiere }}</sae>
+                            {% endfor %}
+                        </saes>
+                        <competences>
+                            {% for competence in ressource.apcRessourceCompetences %}
+                            <competence coefficient="{{ competence.coefficient }}" nom="{{ competence.competence.nomCourt }}"/>
+                            {% endfor %}
+                        </competences>
+                        <prerequis>
+                            {% for res in ressource.ressourcesPreRequises %}
+                            <ressource>{{ res.codeMatiere }}</ressource>
+                            {% endfor %}
+                        </prerequis>
+                        <liste_parcours>
+                            {% for parcours in ressource.apcRessourceParcours %}
+                            <parcours>{{ parcours.parcours.code }}</parcours>
+                            {% endfor %}
+                        </liste_parcours>
+                    </ressource>
+                {% endfor %}
+            </ressources>
+        </semestre>
+        {% endfor %}
+    </referentiel_formation>
+    {% endfor %}
+</programmes>
+{% endautoescape %}
