@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.14.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.14.2...v1.14.3) (2023-06-12)
+
+
+### Features
+
+* Ajout d'ApiPlatform ([155214b](https://github.com/Dannebicque/redigeTonBut/commit/155214b4be36aaa4a6a8f9d0de3b795b9c9ec44d))
+
 ### [1.14.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.14.1...v1.14.2) (2023-06-12)
 
 
