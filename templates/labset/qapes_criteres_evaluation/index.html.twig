@@ -8,6 +8,7 @@
         <thead>
         <tr>
             <th>Libellé</th>
+            <th>Description</th>
             <th>Réponses</th>
             <th>actions</th>
         </tr>
@@ -18,14 +19,19 @@
                 <td>
                     <a href="{{ path('app_qapes_criteres_evaluation_show', {'id': qapes_criteres_evaluation.id}) }}">
                         {{ qapes_criteres_evaluation.libelle }}
-                    </a>
-                    <i>{{ qapes_criteres_evaluation.description }}</i>
+
+                    </a><br>
+                    <i>{{ qapes_criteres_evaluation.libelleAffichage }}</i>
                 </td>
+                <td>{{ qapes_criteres_evaluation.description }}</td>
                 <td>
-                    <ul>
-                    {% for rep in qapes_criteres_evaluation.qapesCritereReponses %}
-                    <li>{{ rep.libelle }}</li>
-                    {% endfor %}
+                    <ul class="list-unstyled">
+                        {% for rep in qapes_criteres_evaluation.qapesCritereReponses %}
+                            <li>
+                                <span class="badge" style="background: {{ rep.couleur }}">&nbsp;</span>
+                                {{ rep.libelle }}
+                            </li>
+                        {% endfor %}
                     </ul>
                 </td>
                 <td>

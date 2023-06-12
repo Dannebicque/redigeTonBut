@@ -8,10 +8,8 @@
                                               tableaux.
         </div>
     {% endif %}
-    <div class="card mb-5 {% if apc_sae.ficheAdaptationLocale == true %} bg-warning text-white{% endif %}">
-        <div class="card-body">
-            {{ include('formation/apc_sae/_detail.html.twig') }}
-        </div>
+    <div class="mb-5 {% if apc_sae.ficheAdaptationLocale == true %} bg-warning text-white{% endif %}">
+        {{ include('formation/apc_sae/_detail.html.twig') }}
     </div>
     {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
         <div class="card bg-warning text-white">

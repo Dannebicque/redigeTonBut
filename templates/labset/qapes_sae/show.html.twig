@@ -18,8 +18,14 @@
                         <dd>{{ qapes.parcours != null ? qapes.parcours.libelle : '-' }}</dd>
                         <dt>SAÉ dans le programme</dt>
                         <dd>
-                          {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
-                          ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
+                          {% if qapes.sae == null %}
+                            -
+                          {% else %}
+                            <a href="{{ path('but_fiche_sae', {'apcSae': qapes.sae.id}) }}">
+                                {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
+                                ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
+                            </a>
+                          {% endif %}
                         </dd>
                         <dt>Auteur(s) de la SAE</dt>
                         <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
@@ -102,8 +108,8 @@
                     {% for critere in qapes.qapesSaeCritereReponse %}
                         <div class="col-md-6 mb-4">
                             <div class="d-flex align-items-center mb-3">
-                                <span class="criterion" style="background-color: #{{ critere.reponse != null ?
-                                critere.reponse.couleur : 'ffffff' }}">
+                                <span class="criterion" style="background-color: {{ critere.reponse != null ?
+                                critere.reponse.couleur : '#ffffff' }}">
                                     {{ critere.reponse != null ? critere.reponse.libelle : 'Non défini' }}
                                 </span>
                                 <h3 class="flex-grow-1">{{ critere.critere.libelleAffichage != null ? critere.critere
