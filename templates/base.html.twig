@@ -107,9 +107,6 @@
             <div class="menu-container flex-grow-1">
                 <ul id="menu" class="menu">
                     {% if is_granted('ROLE_LABSET') %}
-
-
-
                     <li>
                         <a href="#ref_competences" data-href="{{ path('app_labset') }}">
                             <i class="bi bi-wallet2 icon"></i>
@@ -119,6 +116,11 @@
                             <li>
                                 <a href="{{ path('app_labset') }}">
                                     <span class="label">Liste des SAÉ</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_labset_synthese') }}">
+                                    <span class="label">Vue synthétique</span>
                                 </a>
                             </li>
                             <li>

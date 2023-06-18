@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Synthèse des SAÉ évaluées{% endblock %}
+
+{% block content %}
+    <section class="row">
+        {% for critere in criteres %}
+            <div class="col-md-6 mb-4">
+
+                <h3>{{ critere.libelleAffichage != null ? critere
+                    .libelleAffichage : critere.libelle }}</h3>
+                <div>
+                    {{ render_chart(charts[critere.id]) }}
+                </div>
+
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:'',
+            title: 'B.U.T. ',
+        },
+        {
+            href:path('app_labset'),
+            title: 'Liste des SAE',
+        }
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('app_labset') }}" class="btn
+            btn-outline-success
+            btn-icon btn-icon-end
+    w-100
+    w-sm-auto"
+    >
+        <i class="bi bi-pencil"></i>
+        <span>retour</span>
+    </a>
+{% endblock %}
