@@ -1,9 +1,11 @@
 {
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "@symfony/stimulus-bridge": "^2.0.0",
+        "@symfony/stimulus-bridge": "^3.2.0",
         "@symfony/ux-autocomplete": "file:vendor/symfony/ux-autocomplete/assets",
+        "@symfony/ux-chartjs": "file:vendor/symfony/ux-chartjs/assets",
         "@symfony/webpack-encore": "^1.0.0",
+        "chart.js": "^3.4.1",
         "core-js": "^3.0.0",
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.35.0",
@@ -16,7 +18,7 @@
     "author": "David Annebicque",
     "name": "orebut",
     "private": true,
-    "version": "1.15.1",
+    "version": "1.15.2",
     "auto-changelog": {
         "template": "keepachangelog",
         "unreleased": true,
