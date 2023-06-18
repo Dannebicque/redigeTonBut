@@ -81,7 +81,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for qapes in apc_sae.qapesSaes %}
+            {% for qapes in apc_sae.qapesSaes|filter(qapes => qapes.publiee == true) %}
                 <tr>
                     <td>{{ qapes.iutSite != null ? qapes.iutSite.libelle : 'Erreur' }}</td>
                     <td>{{ qapes.intituleSae }}</td>

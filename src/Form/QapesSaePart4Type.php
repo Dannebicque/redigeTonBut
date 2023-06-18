@@ -92,6 +92,13 @@ class QapesSaePart4Type extends AbstractType
                 'label' => 'Témoignages enseignants',
                 'help' => 'Lien(s) et/ou texte'
             ])
+            ->add('publiee', ChoiceType::class, [
+                'choices' => [
+                    'Oui' => true,
+                    'Non' => false,
+                ],
+                'label' => 'L\'évaluation de la SAÉ est publiée sur le fiche SAÉ du BUT ?',
+            ])
 
         ;
     }

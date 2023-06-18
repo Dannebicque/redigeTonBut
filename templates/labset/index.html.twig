@@ -12,6 +12,7 @@
                 <th>IUT</th>
                 <th>Spécialité</th>
                 <th>Parcours</th>
+                <th>Publiée ?</th>
                 <th></th>
             </tr>
             </thead>
@@ -28,6 +29,13 @@
                     </td>
                     <td>{{ sae.specialite ? sae.specialite.sigle : '-' }}</td>
                     <td>{{ sae.parcours ? sae.parcours.libelle : '-' }}</td>
+                    <td>
+                        {% if sae.publiee %}
+                            <span class="badge bg-success">Publiée</span>
+                        {% else %}
+                            <span class="badge bg-danger">Non publiée</span>
+                        {% endif %}
+                    </td>
                     <td class="text-end">
                         <a href="{{ path('app_qapes_sae_edit', {id:sae.id}) }}" class="btn btn-outline-warning btn-sm mb-1">
                             <i class="bi bi-pencil"></i>

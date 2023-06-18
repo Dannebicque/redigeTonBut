@@ -232,6 +232,11 @@ class QapesSae
      */
     private $temoignagesEnseignants;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $publiee = false;
+
     public function __construct(UserInterface $user)
     {
         $this->auteur = new ArrayCollection();
@@ -791,4 +796,22 @@ class QapesSae
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isPubliee(): bool
+    {
+        return $this->publiee;
+    }
+
+    /**
+     * @param bool $publiee
+     */
+    public function setPubliee(bool $publiee): void
+    {
+        $this->publiee = $publiee;
+    }
+
+
 }
