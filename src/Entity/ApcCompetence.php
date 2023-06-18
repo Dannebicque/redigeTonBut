@@ -63,13 +63,13 @@ class ApcCompetence extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read:competence"})
+     * @Groups({"read:competence", "read:ressource", "read:sae"})
      */
     private ?string $libelle;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"read:competence", "read:departement"})
+     * @Groups({"read:competence", "read:departement", "read:ressource", "read:sae"})
      */
     private ?string $nom_court;
 

@@ -68,6 +68,7 @@ class ApcRessource extends AbstractMatiere
 
     /**
      * @ORM\OneToMany(targetEntity=ApcRessourceCompetence::class, mappedBy="ressource", cascade={"persist","remove"} )
+     * @Groups({"read:ressource"})
      */
     private Collection $apcRessourceCompetences;
 
@@ -84,6 +85,7 @@ class ApcRessource extends AbstractMatiere
 
     /**
      * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="ressource", cascade={"persist","remove"}, fetch="EAGER")
+     * @Groups({"read:ressource"})
      */
     private Collection $apcRessourceParcours;
 

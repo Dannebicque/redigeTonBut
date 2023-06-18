@@ -26,13 +26,13 @@ class ApcParcours extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read:departement"})
+     * @Groups({"read:departement","read:ressource"})
      */
     private ?string $libelle;
 
     /**
      * @ORM\Column(type="string", length=10)
-     * @Groups({"read:departement"})
+     * @Groups({"read:departement","read:ressource"})
      */
     private ?string $code;
 

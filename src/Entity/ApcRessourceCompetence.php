@@ -12,6 +12,7 @@ namespace App\Entity;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcRessourceCompetenceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcRessourceCompetenceRepository::class)
@@ -28,6 +29,7 @@ class ApcRessourceCompetence extends BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcRessourceCompetences")
+     * @Groups({"read:ressource"})
      */
     private ?ApcCompetence $competence;
 

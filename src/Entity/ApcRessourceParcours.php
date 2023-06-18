@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ApcRessourceParcoursRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcRessourceParcoursRepository::class)
@@ -24,6 +25,7 @@ class ApcRessourceParcours
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="apcRessourceParcours")
+     * @Groups({"read:ressource"})
      */
     private $parcours;
 
