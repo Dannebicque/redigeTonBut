@@ -62,9 +62,6 @@ class QapesSaeSyntheseController extends AbstractController
                 ],
             ]);
 
-            dump($tabCharts[$critere->getId()]);
-            // die();
-
 //            $tabCharts[$critere->getId()]->setOptions([
 //                'scales' => [
 //                    'y' => [
