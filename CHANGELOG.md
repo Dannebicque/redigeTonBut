@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.15.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.14.3...v1.15.0) (2023-06-18)
+
+
+### Features
+
+* Affichage des SAE évaluées ([06c3976](https://github.com/Dannebicque/redigeTonBut/commit/06c397667995c4d5ef357890afde3404649d7635))
+* Affichage évaluation QAPES uniquement si publiée ([d5e1dd5](https://github.com/Dannebicque/redigeTonBut/commit/d5e1dd5c05853c0cd1a1969195aa0b25344587b9))
+* Ajout d'ApiPlatform ([d0e6980](https://github.com/Dannebicque/redigeTonBut/commit/d0e69801c81a7202e2d19e88bc9defc2794c67f6))
+* Symfony Autocomplète ([268fd42](https://github.com/Dannebicque/redigeTonBut/commit/268fd4284d4c4765c5c6587d71e3efc8d20e4252))
+* Textes d'aides sur la partie QAPES ([90e14b6](https://github.com/Dannebicque/redigeTonBut/commit/90e14b6422268618a5a31b4509e2ac14d577a745))
+
+
+### Bug Fixes
+
+* Ajout utilisateur sans civilité ([cfff1e7](https://github.com/Dannebicque/redigeTonBut/commit/cfff1e757ff79447f1d78872531cccf0d1b3051c))
+* Suppression d'une evaluation SAE ([9200a23](https://github.com/Dannebicque/redigeTonBut/commit/9200a23b8789e711612404521ebcf24451d6a7b8))
+
 ### [1.14.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.14.2...v1.14.3) (2023-06-12)
 
 
