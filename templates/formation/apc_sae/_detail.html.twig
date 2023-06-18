@@ -43,8 +43,8 @@
         <h3 class="mt-5 mb-3">Compétences ciblées</h3>
         {% for competence in apc_sae.apcSaeCompetences %}
             <div class="d-flex mb-2">
-              <span class="badge badge-{{ competence.competence.couleur }} me-2">&nbsp;</span>
-              <div>{{ competence.competence.libelle }}</div>
+                <span class="badge badge-{{ competence.competence.couleur }} me-2">&nbsp;</span>
+                <div>{{ competence.competence.libelle }}</div>
             </div>
         {% endfor %}
 
@@ -69,6 +69,31 @@
         <p>{{ apc_sae.objectifs != null ? apc_sae.objectifs|markdown_to_html : '' }}</p>
         <h3 class="mt-5">Descriptif générique</h3>
         <p>{{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}</p>
+    </div>
+    <div class="col-md-12">
+        <h3 class="mt-4">Exemple de mise en place de SAE</h3>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>IUT</th>
+                <th>Intitulé</th>
+                <th>Voir</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for qapes in apc_sae.qapesSaes %}
+                <tr>
+                    <td>{{ qapes.iutSite != null ? qapes.iutSite.libelle : 'Erreur' }}</td>
+                    <td>{{ qapes.intituleSae }}</td>
+                    <td><a href="{{ path('app_qapes_sae_show', {id: qapes.id}) }}">Voir l'évaluation</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">Aucune évaluation</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 
