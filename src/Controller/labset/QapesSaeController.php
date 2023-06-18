@@ -403,7 +403,7 @@ class QapesSaeController extends AbstractController
         Request $request, QapesSae $qapesSae, QapesSaeRepository $qapesSaeRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $qapesSae->getId(), $request->request->get('_token'))) {
-            foreach ($qapesSae->getQapesSaeCritereReponses() as $qapesSaeCritereReponse)
+            foreach ($qapesSae->getQapesSaeCritereReponse() as $qapesSaeCritereReponse)
             {
                 $entityManager->remove($qapesSaeCritereReponse);
             }
