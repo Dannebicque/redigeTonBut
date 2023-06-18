@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $prenom;
 
     /**
-     * @ORM\Column(type="string", length=3)
+     * @ORM\Column(type="string", length=3, nullable=true)
      */
     private ?string $civilite;
 
@@ -213,7 +213,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->civilite;
     }
 
-    public function setCivilite(string $civilite): self
+    public function setCivilite(?string $civilite): self
     {
         $this->civilite = $civilite;
 
