@@ -14,12 +14,13 @@
             {{ form_row(form.dateEvaluation) }}
         </div>
     </div>
+    <p><strong>La réponse "pas encore" signifie :</strong> La SAÉ ne permet pas encore la mise en œuvre de ce critère, mais des modifications sont prévues pour la prochaine mise en œuvre de façon à l’améliorer. Dans le champ « commentaire », précisez les raisons et les pistes d’amélioration. </p>
 
     {% for critere in criteres %}
         <div class="row mb-5">
             <div class="col-lg-5">
                 <h3 class="h4">{{ critere.libelle }}</h3>
-                <p>{{ critere.description|raw }}</p>
+                <p><i>{{ critere.description|raw }}</i></p>
             </div>
             <div class="col-lg-2">
                 <label for="reponse_{{ critere.id }}">Réponse</label>

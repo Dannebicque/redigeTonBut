@@ -18,7 +18,7 @@ class QapesSaePart4Type extends AbstractType
                 'attr' => ['rows' => 10],
                 'label' => 'Effets et résultats observés',
                 'required' => false,
-                'help' => 'bien-être, développement de compétences, construction de son identité, construction de son projet, intégration d\'un projet de société, etc.'
+                'help' => 'Les effets d’une formation sont multiples. Pour apprécier la qualité de la formation, on va bien entendu prêter attention aux apprentissages effectifs, à leur caractère pérenne, aux usages que les étudiants en ont dans d’autres situations, à la motivation des étudiants traduite en engagement comportemental (participation, persévérance) et engagement cognitif (ne se contente pas d’appliquer sans comprendre), à leurs soucis de l’autre, du travail en équipe, etc. Des données de perception peuvent par exemple être récoltées à l’aide d’un questionnaire d\'avis ou d’un carnet de terrain.'
             ])
             ->add('lienRepertoire',TextareaType::class, [
                 'attr' => ['rows' => 4],
@@ -37,6 +37,7 @@ class QapesSaePart4Type extends AbstractType
                 'attr' => ['rows' => 10],
                 'required' => false,
                 'label' => 'Commentaire coordination des intervenants',
+                'help' => 'Précisez les modalités de coordination des enseignants, les problèmes rencontrés, les solutions mises en œuvre pour y pallier, etc.'
             ])
             ->add('lienDocumentCoordination',TextareaType::class, [
                 'attr' => ['rows' => 4],
@@ -57,22 +58,22 @@ class QapesSaePart4Type extends AbstractType
             ->add('elementsContexte',TextareaType::class, [
                 'attr' => ['rows' => 10],
                 'required' => false,
-                'label' => 'Éléments du contexte qui ont facilité la mise en œuvre de la SAÉ (opportunités)',
+                'label' => 'Éléments du contexte qui ont facilité la mise en œuvre de la SAÉ ',
             ])
             ->add('elementsContextesObstacles',TextareaType::class, [
                 'attr' => ['rows' => 10],
                 'required' => false,
-                'label' => 'Éléments du contexte qui ont constitué un obstacle à la mise en œuvre de la SAÉ (menaces)',
+                'label' => 'Éléments du contexte qui ont constitué un obstacle à la mise en œuvre de la SAÉ',
             ])
             ->add('swatForce',TextareaType::class, [
                 'attr' => ['rows' => 10],
                 'required' => false,
-                'label' => 'Autocritique : éléments positifs (forces)',
+                'label' => 'Autocritique : éléments positifs de la SAÉ ',
             ])
             ->add('swatFaiblesse',TextareaType::class, [
                 'attr' => ['rows' => 10],
                 'required' => false,
-                'label' => 'Autocritique : éléments négatifs (faiblesses)',
+                'label' => 'Autocritique : éléments négatifs de la SAÉ ',
             ])
             ->add('modificationsApportees',TextareaType::class, [
                 'attr' => ['rows' => 10],
