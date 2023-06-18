@@ -159,7 +159,8 @@ class QapesSaePart2Type extends AbstractType
                         ->orderBy('u.nom', 'ASC')
                         ->addOrderBy('u.prenom', 'ASC');
                 },
-                'help' => 'Nom de la (des) personne(s) qui a (ont) conçu la SAÉ. Maintenir ctrl ou cmd pour ajouter plusieurs auteurs',
+                'autocomplete' => true,
+                'help' => 'Nom de la (des) personne(s) qui a (ont) conçu la SAÉ. Saisir les premières lettres pour filtrer. Vous pouvez ajouter plusieurs auteurs.',
                 'multiple' => true,
                 'choice_label' => 'display',
                 'label' => 'Rédacteur(s) de la SAE',

@@ -2,12 +2,14 @@
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/stimulus-bridge": "^2.0.0",
+        "@symfony/ux-autocomplete": "file:vendor/symfony/ux-autocomplete/assets",
         "@symfony/webpack-encore": "^1.0.0",
         "core-js": "^3.0.0",
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.35.0",
         "sass-loader": "^11.0.0",
         "stimulus": "^2.0.0",
+        "tom-select": "^2.2.2",
         "webpack-notifier": "^1.6.0"
     },
     "license": "MPL2.0",

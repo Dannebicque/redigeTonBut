@@ -44,14 +44,16 @@ class QapesSaePart1Type extends AbstractType
                         ->addOrderBy('u.prenom', 'ASC');
                 },
                 'multiple' => true,
+                'autocomplete' => true,
                 'required' => false,
                 'choice_label' => 'display',
                 'label' => 'Auteur(s) de la fiche qualité SAE',
-                'help' => 'Nom de la(des) personne(s) qui a(ont) complété la fiche. En complément de l\'auteur initial. Maintenir ctrl ou cmd pour ajouter plusieurs auteurs',
+                'help' => 'Nom de la(des) personne(s) qui a(ont) complété la fiche. En complément de l\'auteur initial. Saisir les premières lettres pour filtrer. Vous pouvez ajouter plusieurs auteurs.',
             ])
             ->add('iut', EntityType::class, [
                 'class' => Iut::class,
                 'choice_label' => 'libelle',
+                'autocomplete' => true,
                 'label' => 'IUT',
                 'mapped' => false,
                 'attr' => ['data-action' => 'change->qapes#changeIut']
@@ -59,6 +61,7 @@ class QapesSaePart1Type extends AbstractType
             ->add('iutSite', EntityType::class, [
                 'class' => IutSite::class,
                 'choice_label' => 'libelle',
+                'autocomplete' => true,
                 'label' => 'Site de l\'IUT',
                 'required' => false,
                 'attr' => ['data-action' => 'change->qapes#changeSiteIut'],
@@ -67,6 +70,7 @@ class QapesSaePart1Type extends AbstractType
             ->add('specialite', EntityType::class, [
                 'class' => Departement::class,
                 'choice_label' => 'libelle',
+                'autocomplete' => true,
                 'label' => 'Spécialité',
                 'required' => false,
                 'disabled' => !$this->edit,
@@ -80,6 +84,7 @@ class QapesSaePart1Type extends AbstractType
             ])
             ->add('parcours', EntityType::class, [
                 'class' => ApcParcours::class,
+                'autocomplete' => true,
                 'query_builder' => function(ApcParcoursRepository $er) {
                     if ($this->edit === true) {
                         return $er->createQueryBuilder('p')
@@ -102,6 +107,7 @@ class QapesSaePart1Type extends AbstractType
             $builder->add('sae', EntityType::class, [
                 'class' => ApcSae::class,
                 'choice_label' => 'display',
+                'autocomplete' => true,
                 'query_builder' => function(ApcSaeRepository $er) {
                     if ($this->apcParcours !== null) {
                         $er->createQueryBuilder('r')
