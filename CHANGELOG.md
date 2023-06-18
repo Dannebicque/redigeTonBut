@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.1](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.0...v1.15.1) (2023-06-18)
+
+
+### Bug Fixes
+
+* Récupération des SAE sur le tronc commun ([50aff08](https://github.com/Dannebicque/redigeTonBut/commit/50aff08afc0bea8dbf66c6b9dac806c337b6ca71))
+
 ## [1.15.0](https://github.com/Dannebicque/redigeTonBut/compare/v1.14.3...v1.15.0) (2023-06-18)
 
 
