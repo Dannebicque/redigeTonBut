@@ -137,6 +137,7 @@ class QapesSaePart1Type extends AbstractType
                 'choices' => [],
                 'label' => 'SAE',
                 'required' => false,
+                'autocomplete' => true,
                 'disabled' => !$this->edit,
             ]);
         }

@@ -31,6 +31,7 @@ class QapesSaeController extends AbstractController
 
     #[Route('/api', name: 'app_qapes_sae_api', methods: ['GET', 'POST'])]
     public function api(
+        ApcParcoursRepository $apcParcoursRepository,
         ApcSaeRepository $apcSaeRepository,
         DepartementRepository $departementRepository,
         IutSiteParcoursRepository $iutSiteParcoursRepository,
@@ -78,8 +79,17 @@ class QapesSaeController extends AbstractController
 
             case 'saeFromParcours':
                 $iut = $request->query->get('parcours');
+                $parcours = $apcParcoursRepository->find($iut);
                 $siteiut = $apcSaeRepository->findByParcours($iut);
                 $siteiutArray = [];
+                foreach ($siteiut as $site) {
+                    $siteiutArray[] = [
+                        'id' => $site->getId(),
+                        'libelle' => $site->getDisplay(),
+                    ];
+                }
+
+                $siteiut = $apcSaeRepository->findByTroncCommun($parcours->getDepartement());
                 foreach ($siteiut as $site) {
                     $siteiutArray[] = [
                         'id' => $site->getId(),

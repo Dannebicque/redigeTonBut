@@ -14,10 +14,6 @@ export default class extends Controller {
     urlApi: String,
   }
 
-  connect() {
-    console.log('hello from qapes_controller.js')
-  }
-
   changeParcours(event) {
     const parcours = event.target.value
     this._updateSaeFromParcours(parcours)

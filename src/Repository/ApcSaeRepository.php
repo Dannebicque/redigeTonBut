@@ -231,4 +231,20 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByTroncCommun(Departement $departement)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
+            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
+            ->where('a.departement = :departement')
+            ->andWhere('r.ficheAdaptationLocale = false')
+            ->andWhere('r.apcSaeParcours IS EMPTY')
+            ->setParameter('departement', $departement->getId())
+            ->orderBy('r.ordre', 'ASC')
+            ->addOrderBy('r.codeMatiere', 'ASC')
+            ->addOrderBy('r.libelle', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
