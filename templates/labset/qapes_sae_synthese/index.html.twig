@@ -5,14 +5,12 @@
 {% block content %}
     <section class="row">
         {% for critere in criteres %}
-            <div class="col-md-6 mb-4">
-
+            <div class="col-md-6 col-lg-3 mb-5">
                 <h3>{{ critere.libelleAffichage != null ? critere
                     .libelleAffichage : critere.libelle }}</h3>
-                <div>
+                <div class="pe-4">
                     {{ render_chart(charts[critere.id]) }}
                 </div>
-
             </div>
         {% endfor %}
     </section>

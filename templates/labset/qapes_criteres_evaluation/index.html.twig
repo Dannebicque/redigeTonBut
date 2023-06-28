@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block header %}Liste des critères{% endblock %}
+{% block title %}Gestion des critères{% endblock %}
+{% block header %}Gestion des critères{% endblock %}
 
 {% block content %}
 
@@ -59,4 +60,17 @@
         <i class="bi-plus-circle"></i>
         <span>Ajouter un nouveau critère</span>
     </a>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href: '',
+            title: 'B.U.T. ',
+        },
+        {
+            href: path('app_qapes_criteres_evaluation_index'),
+            title: 'Gestion des critères',
+        }
+    ]}) }}
 {% endblock %}

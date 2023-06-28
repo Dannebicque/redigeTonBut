@@ -2,10 +2,10 @@
 
 namespace App\Controller\labset;
 
-
 use App\Entity\QapesCritere;
 use App\Form\QapesCritereType;
 use App\Repository\QapesCritereRepository;
+use App\Repository\QapesSaeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,10 +41,14 @@ class QapesCriteresEvaluationController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_qapes_criteres_evaluation_show', methods: ['GET'])]
-    public function show(QapesCritere $qapesCriteresEvaluation): Response
+    public function show(
+      QapesCritere $qapesCriteresEvaluation,
+      QapesSaeRepository $qapesSaeRepository
+    ): Response
     {
         return $this->render('labset/qapes_criteres_evaluation/show.html.twig', [
             'qapes_criteres_evaluation' => $qapesCriteresEvaluation,
+            'saes' => $qapesSaeRepository->findAll(),
         ]);
     }
 

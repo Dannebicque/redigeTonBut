@@ -1,36 +1,92 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}QapesCriteresEvaluation{% endblock %}
+{% block title %}{{ qapes_criteres_evaluation.libelleAffichage }}{% endblock %}
+{% block header %}{{ qapes_criteres_evaluation.libelleAffichage }}{% endblock %}
 
 {% block content %}
-    <h1>QapesCriteresEvaluation</h1>
-
     <table class="table">
         <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ qapes_criteres_evaluation.id }}</td>
-        </tr>
-        <tr>
-            <th>Libelle</th>
-            <td>{{ qapes_criteres_evaluation.libelle }}</td>
-        </tr>
-        <tr>
-            <th>Libelle pour affichage des résultats</th>
-            <td>{{ qapes_criteres_evaluation.libelleAffichage }}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{ qapes_criteres_evaluation.description }}</td>
-        </tr>
-        <tr>
-
-        </tr>
+          <tr>
+              <th>Id</th>
+              <th>Libelle</th>
+              <th>Description</th>
+          </tr>
+          <tr>
+              <td>{{ qapes_criteres_evaluation.id }}</td>
+              <td>{{ qapes_criteres_evaluation.libelle }}</td>
+              <td>{{ qapes_criteres_evaluation.description }}</td>
+          </tr>
         </tbody>
     </table>
+    <a href="{{ path('app_qapes_criteres_evaluation_edit', {'id': qapes_criteres_evaluation.id}) }}" class="btn btn-primary">Modifier</a>
 
-    <a href="{{ path('app_qapes_criteres_evaluation_index') }}">back to list</a>
+    <h2 class="mt-5">SAÉ</h2>
 
-    <a href="{{ path('app_qapes_criteres_evaluation_edit', {'id': qapes_criteres_evaluation.id}) }}">edit</a>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Qualité</th>
+                <th>Commentaire</th>
+                <th>SAE</th>
+                <th>IUT</th>
+                <th>Spécialité</th>
+                <th>Parcours</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sae in saes %}
+                <tr>
+                    <td>
+                        {% for critere in sae.qapesSaeCritereReponse %}
+                            {% if critere.critere.id == qapes_criteres_evaluation.id %}
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="criterion" style="background-color: {{ critere.reponse != null ?
+                                    critere.reponse.couleur : '#ffffff' }}">
+                                        {{ critere.reponse != null ? critere.reponse.libelle : 'Non défini' }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for critere in sae.qapesSaeCritereReponse %}
+                            {% if critere.critere.id == qapes_criteres_evaluation.id %}
+                                {{ critere.commentaire|raw }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_qapes_sae_show', {id:sae.id}) }}">
+                            {{ sae.intituleSae }} ({{ sae.sae ? sae.sae.libelle : '-' }})
+                        </a>
+                    </td>
+                    <td>{{ sae.iutSite ? (sae.iutSite.iut ? sae.iutSite.iut.libelle : '-') : '-' }} ({{ sae
+                        .iutSite ? sae.iutSite.libelle : '-' }})
+                    </td>
+                    <td>{{ sae.specialite ? sae.specialite.sigle : '-' }}</td>
+                    <td>{{ sae.parcours ? sae.parcours.libelle : '-' }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
 
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href: '',
+            title: 'B.U.T. ',
+        },
+        {
+            href: path('app_qapes_criteres_evaluation_index'),
+            title: 'Gestion des critères',
+        },
+        {
+            href: '',
+            title: qapes_criteres_evaluation.libelleAffichage,
+        }
+    ]}) }}
 {% endblock %}
