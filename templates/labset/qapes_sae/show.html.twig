@@ -149,6 +149,35 @@
                 </div>
             </div>
 
+            <h2 class="h4">SWOT</h2>
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="h5">Forces</h3>
+                    <p>
+                        {{ qapes.swatForce|raw }}
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h3 class="h5">Faiblesses</h3>
+                    <p>
+                        {{ qapes.swatFaiblesse|raw }}
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h3 class="h5">Opportunités</h3>
+                    <p>
+                        {{ qapes.elementsContexte|raw }}
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h3 class="h5">Menaces</h3>
+                    <p>
+                        {{ qapes.elementsContextesObstacles|raw }}
+                    </p>
+                </div>
+            </div>
+
+
             <h2 class="h4">Référentiel de compétences</h2>
             {{ include('labset/qapes_sae/_referentiel.html.twig') }}
         </div
