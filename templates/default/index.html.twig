@@ -4,79 +4,79 @@
 
 {% block content %}
     <p>Bienvenue sur ORéBUT, Outil de Rédaction des B.U.T.</p>
-    {% if is_granted('ROLE_PACD') %}
-        <div class="alert alert-info mb-3">
-            <ul>
-                {% if user_data.departement != null %}
-                    <li>28/01/2022 : Récupération du référentiel de compétences. (<a href="{{ path
-                            ('export_referentiel_competences', {departement:user_data.departement.id}) }}" target="_blank">Télécharger
-                                                                                                                           le
-                                                                                                                           fichier</a>)
-                    </li>
-                {% endif %}
-                <li>23/01/2022 : Possibilité de différencier les ECTS selon les parcours pour les Type 1 et 2 à partir
-                    du
-                    semestre 3.
-                </li>
-                <li>12/01/2022 : Export de "pré-version" du PN, par parcours.</li>
-                <li>07/12/2021 : Affichage dans les tableaux des ressources ou SAE d'adaptation locales. Affichage en
-                    "tableau" des ressources ou SAE. Nouveaux exports
-                </li>
-                <li>11/11/2021 : Harmonisation des couleurs sur les éléments non publiés (adaptation locale => Orange).
-                    Possibilité d'ajouter des fiches SAE/Ressources en AL, non publiées et prises en comptes dans les
-                    tableaux officiels.
-                </li>
-                <li>03/10/2021 : Gestion des accès "CPN". Possibilité d'ajouter plusieurs départements: Contacter david
-                    .annebicque@univ-reims.fr et indiquer le nom du/des collègues et les départements.<br>
-                    Ajout de nouveaux modes d'export (complet Excel ou complet Word)
-                </li>
-                <li>29/09/2021 : Mise en place d'export (<a href="{{ path('export_index') }}">Sur cette page</a>) pour
-                    récupérer des fichiers de travail (tableau croisé, tableau de préconisation, fiches ressources/SAE).
-                    Possibilité d'exporter également le référentiel de compétences.
-                </li>
-                <li>13/09/2021 : Pour les spécialités de type 3 : Saisie de plusieurs tableaux "structurels" selon le
-                    parcours.
-                </li>
-                {#            <li>06/09/2021 : Possibilité d'importer un référentiel de formation avec un format Excel. Voir <a #}
-                {#                        href="{{ path('administration_apc_referentiel_import_formation_index') }}">Importer une référentiel de formation</a></li> #}
-                <li>04/09/2021 : Possibilité de sélectioner ou déselectionner toutes les compétences et AC sur une fiche
-                    ressource ou SAE
-                </li>
-                <li>02/09/2021 : Diverses correctifs (calculs, typo, ...) et améliorations de mise en page. Modification
-                    des formulaires ressources et SAE et affichages des ACs sous les compétences, dans l'ordre du
-                    référentiel.
-                </li>
-                <li>19/07/2021 : Export XML du référentiel de compétences ou de formation.</li>
-                <li>18/07/2021 : Export Word supportant les textes complexes. Export Excel des Apprentissages critiques.
-                    Import XML d'un référentiel de formation (en test).<br>
-                    Sur le tableau global, calcul de l'adaptation locale depuis le pourcentage ou depuis les heures.<br>
-                    Saisir les mentions particulières dans les parcours (selon les spécialités)
-                </li>
-                <li>16-17/07/2018 : Ajout des lignes TP dans le tableau structurel. Correctifs divers sur les tableaux
-                    de
-                    volume horaire
-                </li>
-                <li>15/07/2021 : Tableau de préconisation des heures par semestre fonctionnel et dynamique. Gestion des
-                    compétences associées aux Ressources et SAÉ corrigée et gérée selon les niveaux.
-                </li>
-                <li>14/07/2021 : Modification de l'ordre des compétences et libellés courts, l'ordre des AC, nombre de
-                    semaines et demi-journées dans le tableau structurel, ...
-                </li>
-                <li>13/07/2021 : Erreurs 403 corrigés et problèmes d'accès, ...</li>
-            </ul>
-            <br><br>
-            <strong>Pour toutes questions, idées, bugs, demandes, typos, ... david.annebicque@univ-reims.fr
-                    .</strong><br><br>
-            Les fonctionnalités à venir annoncées : quelques tableaux non complétement dynamique pour le moment. Export
-            excels. "désynchroniser"
-            des fiches ressources ou SAE lorsqu'elles sont sur plusieurs parcours, avoir des fiches SAE/Ressources
-            "adaptation locale" et non publiées, ...<br>
-            <strong>
-                La base sera initialisée lundi matin sauf demande contraire (si vous avez déjà saisi des éléments).
-                J'indiquerai ici l'évolution de l'interface.
-            </strong>
-        </div>
-    {% endif %}
+{#    {% if is_granted('ROLE_PACD') %}#}
+{#        <div class="alert alert-info mb-3">#}
+{#            <ul>#}
+{#                {% if user_data.departement != null %}#}
+{#                    <li>28/01/2022 : Récupération du référentiel de compétences. (<a href="{{ path#}
+{#                            ('export_referentiel_competences', {departement:user_data.departement.id}) }}" target="_blank">Télécharger#}
+{#                                                                                                                           le#}
+{#                                                                                                                           fichier</a>)#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#                <li>23/01/2022 : Possibilité de différencier les ECTS selon les parcours pour les Type 1 et 2 à partir#}
+{#                    du#}
+{#                    semestre 3.#}
+{#                </li>#}
+{#                <li>12/01/2022 : Export de "pré-version" du PN, par parcours.</li>#}
+{#                <li>07/12/2021 : Affichage dans les tableaux des ressources ou SAE d'adaptation locales. Affichage en#}
+{#                    "tableau" des ressources ou SAE. Nouveaux exports#}
+{#                </li>#}
+{#                <li>11/11/2021 : Harmonisation des couleurs sur les éléments non publiés (adaptation locale => Orange).#}
+{#                    Possibilité d'ajouter des fiches SAE/Ressources en AL, non publiées et prises en comptes dans les#}
+{#                    tableaux officiels.#}
+{#                </li>#}
+{#                <li>03/10/2021 : Gestion des accès "CPN". Possibilité d'ajouter plusieurs départements: Contacter david#}
+{#                    .annebicque@univ-reims.fr et indiquer le nom du/des collègues et les départements.<br>#}
+{#                    Ajout de nouveaux modes d'export (complet Excel ou complet Word)#}
+{#                </li>#}
+{#                <li>29/09/2021 : Mise en place d'export (<a href="{{ path('export_index') }}">Sur cette page</a>) pour#}
+{#                    récupérer des fichiers de travail (tableau croisé, tableau de préconisation, fiches ressources/SAE).#}
+{#                    Possibilité d'exporter également le référentiel de compétences.#}
+{#                </li>#}
+{#                <li>13/09/2021 : Pour les spécialités de type 3 : Saisie de plusieurs tableaux "structurels" selon le#}
+{#                    parcours.#}
+{#                </li>#}
+{#                #}{#            <li>06/09/2021 : Possibilité d'importer un référentiel de formation avec un format Excel. Voir <a #}
+{#                #}{#                        href="{{ path('administration_apc_referentiel_import_formation_index') }}">Importer une référentiel de formation</a></li> #}
+{#                <li>04/09/2021 : Possibilité de sélectioner ou déselectionner toutes les compétences et AC sur une fiche#}
+{#                    ressource ou SAE#}
+{#                </li>#}
+{#                <li>02/09/2021 : Diverses correctifs (calculs, typo, ...) et améliorations de mise en page. Modification#}
+{#                    des formulaires ressources et SAE et affichages des ACs sous les compétences, dans l'ordre du#}
+{#                    référentiel.#}
+{#                </li>#}
+{#                <li>19/07/2021 : Export XML du référentiel de compétences ou de formation.</li>#}
+{#                <li>18/07/2021 : Export Word supportant les textes complexes. Export Excel des Apprentissages critiques.#}
+{#                    Import XML d'un référentiel de formation (en test).<br>#}
+{#                    Sur le tableau global, calcul de l'adaptation locale depuis le pourcentage ou depuis les heures.<br>#}
+{#                    Saisir les mentions particulières dans les parcours (selon les spécialités)#}
+{#                </li>#}
+{#                <li>16-17/07/2018 : Ajout des lignes TP dans le tableau structurel. Correctifs divers sur les tableaux#}
+{#                    de#}
+{#                    volume horaire#}
+{#                </li>#}
+{#                <li>15/07/2021 : Tableau de préconisation des heures par semestre fonctionnel et dynamique. Gestion des#}
+{#                    compétences associées aux Ressources et SAÉ corrigée et gérée selon les niveaux.#}
+{#                </li>#}
+{#                <li>14/07/2021 : Modification de l'ordre des compétences et libellés courts, l'ordre des AC, nombre de#}
+{#                    semaines et demi-journées dans le tableau structurel, ...#}
+{#                </li>#}
+{#                <li>13/07/2021 : Erreurs 403 corrigés et problèmes d'accès, ...</li>#}
+{#            </ul>#}
+{#            <br><br>#}
+{#            <strong>Pour toutes questions, idées, bugs, demandes, typos, ... david.annebicque@univ-reims.fr#}
+{#                    .</strong><br><br>#}
+{#            Les fonctionnalités à venir annoncées : quelques tableaux non complétement dynamique pour le moment. Export#}
+{#            excels. "désynchroniser"#}
+{#            des fiches ressources ou SAE lorsqu'elles sont sur plusieurs parcours, avoir des fiches SAE/Ressources#}
+{#            "adaptation locale" et non publiées, ...<br>#}
+{#            <strong>#}
+{#                La base sera initialisée lundi matin sauf demande contraire (si vous avez déjà saisi des éléments).#}
+{#                J'indiquerai ici l'évolution de l'interface.#}
+{#            </strong>#}
+{#        </div>#}
+{#    {% endif %}#}
 
     {% if user_data.departement != null %}
         {% if is_granted('ROLE_PACD') or is_granted('ROLE_LECTEUR') %}
