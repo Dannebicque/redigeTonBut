@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.2...v1.15.3) (2023-06-29)
+
+
+### Features
+
+* Page de synthèse ([a9fdedd](https://github.com/Dannebicque/redigeTonBut/commit/a9fdedd26344cdef45bee10d955343524072bbab))
+* Page de synthèse ([4941d7a](https://github.com/Dannebicque/redigeTonBut/commit/4941d7a618741d9599f0022062da0fa6ff0a92db))
+* Swot sur synthèse ([82e6d86](https://github.com/Dannebicque/redigeTonBut/commit/82e6d866c4e41e3936f556d4574b557f24ef5744))
+
 ### [1.15.2](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.1...v1.15.2) (2023-06-18)
 
 
