@@ -68,6 +68,7 @@ class ApcSae extends AbstractMatiere
 
     /**
      * @ORM\OneToMany(targetEntity=ApcSaeCompetence::class, mappedBy="sae", cascade={"persist","remove"})
+     * @Groups({"read:sae"})
      */
     private Collection $apcSaeCompetences;
 
@@ -84,6 +85,7 @@ class ApcSae extends AbstractMatiere
 
     /**
      * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="sae", cascade={"persist","remove"}, fetch="EAGER")
+     * @Groups({"read:sae"})
      */
     private Collection $apcSaeParcours;
 

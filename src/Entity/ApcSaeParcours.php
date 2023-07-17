@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ApcSaeParcoursRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcSaeParcoursRepository::class)
@@ -14,6 +15,7 @@ class ApcSaeParcours
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read:sae"})
      */
     private $id;
 
@@ -24,6 +26,7 @@ class ApcSaeParcours
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="apcSaeParcours")
+     * @Groups({"read:sae"})
      */
     private ApcParcours $parcours;
 

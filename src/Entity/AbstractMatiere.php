@@ -22,37 +22,37 @@ abstract class AbstractMatiere extends BaseEntity
 {
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read:ressource"})
+     * @Groups({"read:ressource", "read:sae"})
      */
     private string $libelle;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"read:ressource"})
+     * @Groups({"read:ressource", "read:sae"})
      */
     private ?string $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"read:ressource"})
+     * @Groups({"read:ressource", "read:sae"})
      */
     private float $cmPpn = 0;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"read:ressource"})
+     * @Groups({"read:ressource", "read:sae"})
      */
     private float $tdPpn = 0;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"read:ressource"})
+     * @Groups({"read:ressource", "read:sae"})
      */
     private float $heuresTotales = 0;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"read:ressource"})
+     * @Groups({"read:ressource", "read:sae"})
      */
     private float $tpPpn = 0;
 
@@ -63,13 +63,13 @@ abstract class AbstractMatiere extends BaseEntity
 
     /**
      * @ORM\Column(type="string", length=20)
-     * @Groups({"read:ressource"})
+     * @Groups({"read:ressource", "read:sae"})
      */
     private ?string $codeMatiere = '-';
 
     /**
      * @ORM\Column(type="string", length=25, nullable=true)
-     * @Groups({"read:ressource"})
+     * @Groups({"read:ressource", "read:sae"})
      */
     private ?string $libelleCourt;
 

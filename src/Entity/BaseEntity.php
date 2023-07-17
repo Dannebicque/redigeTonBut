@@ -22,7 +22,7 @@ abstract class BaseEntity
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read:departement", "read:ressource", "read:competence"})
+     * @Groups({"read:departement", "read:ressource", "read:competence", "read:sae"})
      * @ApiProperty(identifier=false)
      */
     private ?int $id = null;

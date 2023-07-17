@@ -12,6 +12,7 @@ namespace App\Entity;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcSaeCompetenceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcSaeCompetenceRepository::class)
@@ -28,6 +29,7 @@ class ApcSaeCompetence extends BaseEntity
 
     /**
      * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcSaeCompetences")
+     * @Groups({"read:sae"})
      */
     private ?ApcCompetence $competence;
 

@@ -115,7 +115,7 @@ class ApcCompetence extends BaseEntity
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"read:competence", "read:departement"})
+     * @Groups({"read:competence", "read:departement", "read:ressource", "read:sae"})
      */
     private ?int $numero;
 
