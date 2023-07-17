@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.3...v1.15.4) (2023-07-17)
+
+
+### Bug Fixes
+
+* api sae ([7dd0c53](https://github.com/Dannebicque/redigeTonBut/commit/7dd0c531cec29d3edd5df7478d73efaf7c585a2f))
+* masque des actualités ([e7abc9b](https://github.com/Dannebicque/redigeTonBut/commit/e7abc9b9b3f4d43ff9a252555d218e8231185223))
+
 ### [1.15.3](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.2...v1.15.3) (2023-06-29)
 
 
