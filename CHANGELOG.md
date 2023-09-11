@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.5](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.4...v1.15.5) (2023-09-11)
+
+
+### Bug Fixes
+
+* Coeff ([f7f2970](https://github.com/Dannebicque/redigeTonBut/commit/f7f2970bc072fa6f5922de5f9134f88c9878a21b))
+* parcours dispense ou non ([8cc0940](https://github.com/Dannebicque/redigeTonBut/commit/8cc0940acb7e640d7ee0101293c2b43a430cd7b5))
+
 ### [1.15.4](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.3...v1.15.4) (2023-07-17)
 
 
