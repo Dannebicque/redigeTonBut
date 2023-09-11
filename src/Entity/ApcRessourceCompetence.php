@@ -35,6 +35,7 @@ class ApcRessourceCompetence extends BaseEntity
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read:ressource"})
      */
     private float $coefficient = 0;
 

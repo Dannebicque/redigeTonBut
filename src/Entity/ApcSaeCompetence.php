@@ -35,6 +35,7 @@ class ApcSaeCompetence extends BaseEntity
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read:sae"})
      */
     private float $coefficient = 0;
 
