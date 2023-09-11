@@ -76,6 +76,12 @@ class ApcParcours extends BaseEntity
     private ?int $ordre = 1;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"read:departement"})
+     */
+    private ?bool $dispense = true;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"read:departement"})
      */
@@ -265,6 +271,18 @@ class ApcParcours extends BaseEntity
     public function setOrdre(int $ordre): self
     {
         $this->ordre = $ordre;
+
+        return $this;
+    }
+
+    public function getDispense(): ?bool
+    {
+        return $this->dispense;
+    }
+
+    public function setDispense(bool $dispense): self
+    {
+        $this->dispense = $dispense;
 
         return $this;
     }
