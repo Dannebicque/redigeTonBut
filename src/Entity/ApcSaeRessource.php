@@ -12,6 +12,7 @@ namespace App\Entity;
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcSaeRessourceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ApcSaeRessourceRepository::class)
@@ -30,6 +31,7 @@ class ApcSaeRessource extends BaseEntity
     /**
      * @ORM\ManyToOne(targetEntity=ApcRessource::class, inversedBy="apcSaeRessources")
      * @ORM\OrderBy({"libelle" = "ASC"})
+     * @Groups({"read:sae"})
      */
     private ?ApcRessource $ressource;
 

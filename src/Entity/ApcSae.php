@@ -74,6 +74,7 @@ class ApcSae extends AbstractMatiere
 
     /**
      * @ORM\OneToMany(targetEntity=ApcSaeRessource::class, mappedBy="sae", cascade={"persist","remove"})
+     * @Groups({"read:sae"})
      */
     private Collection $apcSaeRessources;
 
