@@ -40,7 +40,8 @@
 
             <!-- User Menu Start -->
             <div class="user-container d-flex">
-                <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false">
                     <div class="name">{{ app.user.display }}</div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end user-menu wide">
@@ -107,29 +108,29 @@
             <div class="menu-container flex-grow-1">
                 <ul id="menu" class="menu">
                     {% if is_granted('ROLE_LABSET') %}
-                    <li>
-                        <a href="#ref_competences" data-href="{{ path('app_labset') }}">
-                            <i class="bi bi-wallet2 icon"></i>
-                            <span class="label">Qualité SAÉ</span>
-                        </a>
-                        <ul id="ref_competences">
-                            <li>
-                                <a href="{{ path('app_labset') }}">
-                                    <span class="label">Liste des SAÉ</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ path('app_labset_synthese') }}">
-                                    <span class="label">Vue synthétique</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ path('app_qapes_criteres_evaluation_index') }}">
-                                    <span class="label">Gestion des critères</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                        <li>
+                            <a href="#ref_competences" data-href="{{ path('app_labset') }}">
+                                <i class="bi bi-wallet2 icon"></i>
+                                <span class="label">Qualité SAÉ</span>
+                            </a>
+                            <ul id="ref_competences">
+                                <li>
+                                    <a href="{{ path('app_labset') }}">
+                                        <span class="label">Liste des SAÉ</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('app_labset_synthese') }}">
+                                        <span class="label">Vue synthétique</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('app_qapes_criteres_evaluation_index') }}">
+                                        <span class="label">Gestion des critères</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     {% endif %}
                     {% if user_data.departement != null %}
                         {% if is_granted('ROLE_IUT') %}
@@ -141,7 +142,8 @@
                             </li>
                         {% endif %}
                         <li>
-                            <a href="#ref_competences" data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
+                            <a href="#ref_competences"
+                               data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
                                 <i class="bi bi-wallet2 icon"></i>
                                 <span class="label">Info. Spécialité</span>
                             </a>
@@ -209,7 +211,9 @@
                                     <i class="bi bi-calendar3 icon"></i>
                                     <span class="label">B.U.T. {{ annee.ordre }}</span>
                                 </a>
-                                <ul id="but{{ annee.ordre }}" {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}class="row align-items-start row-cols-{{ user_data.departement.apcParcours|length + 1 }} dropdown-menu" data-popper-placement="bottom-start" {% endif %}>
+                                <ul id="but{{ annee.ordre }}"
+                                    {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}class="row align-items-start row-cols-{{ user_data.departement.apcParcours|length + 1 }} dropdown-menu"
+                                    data-popper-placement="bottom-start" {% endif %}>
                                     {% if user_data.departement.typeStructure != 'type3' %}
                                         {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
                                             <li class="dropdown col d-flex flex-column">
@@ -526,7 +530,8 @@
                         <div class="toast-body">
                             <p class="text-white"> {{ message }}</p>
                         </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                                aria-label="Close"></button>
                     </div>
                 </div>
             {% endfor %}
@@ -581,12 +586,27 @@
 
                         <ul class="breadcrumb pt-0 pe-0 mb-0">
                             <li class="breadcrumb-item mb-0 text-medium">
-                                <p class="mb-0 text-muted text-medium">&copy; 2021 David Annebicque -
-                                                                       version {{ user_data.version }}</p>
+                                &copy; MPL-2 - 2021 David Annebicque -
+                                    version {{ user_data.version }}
+                            </li>
+
+                            <li class="breadcrumb-item mb-0">
+                                CC-BY-NS-SA François Georges et Marianne Poumays du <a
+                                        href="https://www.labset.uliege.be/cms/c_15785891/fr/labset">LabSET</a> - pour
+                                    la grille d'encodage des SAE.
                             </li>
                             <li class="breadcrumb-item mb-0 text-medium">
-                                <a href="#" class="btn-link">Docs</a>
+                                CC-BY-NS-SA ADIUT et les enseignant(e)s pour les SAE encodées et les données des
+                                    programmes nationaux
                             </li>
+                            <li class="breadcrumb-item mb-0 text-medium">
+                                    <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png" style="height:30px">
+                                La licence <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr"
+                                              target="_blank">
+                                    https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr
+                                    </a>
+                            </li>
+
                             <li class="breadcrumb-item mb-0 text-medium">
                                 <a href="#" class="btn-link" data-bs-toggle="modal"
                                    data-bs-target="#modalUsageDonnees">Usage des données</a>
@@ -607,14 +627,15 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="examplemodalUsageDonnees">Usage des données</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <p>Ce site n'enregistre aucune données sur votre utilisation de l'outil.</p>
                                     <p>Un seul cookie est utilisé permettant de gérer la connexion (lorsque vous activez
-                                       l'option "se souvenir de moi" sur la page de connexion.</p>
+                                        l'option "se souvenir de moi" sur la page de connexion.</p>
                                     <p>Les fichiers de log (en cas d'erreur ou de problème) sont complètement
-                                       anonymes et sans information personnelles vous concernant.</p>
+                                        anonymes et sans information personnelles vous concernant.</p>
                                 </div>
                             </div>
                         </div>
@@ -632,7 +653,8 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="examplemodalMarkdown">Syntaxe Markdwon</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <p>Les listes</p>
@@ -730,11 +752,13 @@
 </div>
 <!-- Content Container End -->
 <!-- Search Modal Start -->
-<div class="modal fade modal-under-nav modal-search modal-close-out" id="searchPagesModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade modal-under-nav modal-search modal-close-out" id="searchPagesModal" tabindex="-1" role="dialog"
+     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header border-0 p-0">
-                <button type="button" class="btn-close btn btn-icon btn-icon-only btn-foreground" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn btn-icon btn-icon-only btn-foreground"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ps-5 pe-5 pb-0 border-0">
                 <input id="searchPagesInput" class="form-control form-control-xl borderless ps-0 pe-0 mb-1
