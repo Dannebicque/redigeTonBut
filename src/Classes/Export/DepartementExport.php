@@ -57,4 +57,8 @@ class DepartementExport
 
         return $this->exportFichier($xmlContent, $name);
     }
+
+    public function exportAllRefentiel()
+    {
+    }
 }

@@ -196,4 +196,9 @@ class ApcApprentissageCritique extends BaseEntity
         }
         return null;
     }
+
+    public function display(): string
+    {
+        return $this->getCode() . ' | ' . $this->getLibelle();
+    }
 }

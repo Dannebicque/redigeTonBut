@@ -9,6 +9,7 @@
 
 namespace App\Controller;
 
+use App\Classes\Export\AllDepartementsExport;
 use App\Classes\Export\DepartementExport;
 use App\Repository\DepartementRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,13 @@ class ApcExportController extends BaseController
         DepartementExport $departementExport
     ): Response {
         return $departementExport->exportRefentiel($this->getDepartement());
+    }
+
+    #[Route("/competences/all", name:"competence_export_all")]
+    public function exportCompetencesAll(
+        AllDepartementsExport $departementExport
+    ): Response {
+        return $departementExport->exportCompetences();
     }
 
     #[Route('/formation', name: 'formation_export')]

@@ -4,6 +4,17 @@
 {% block header %}Liste des SAÉ{% endblock %}
 
 {% block content %}
+    <div class="row mb-3">
+        <div class="col-2"><label for="iut">IUT</label><select name="iut" id="iut" class="form-select"></select></div>
+        <div class="col-2"><label for="specialite">Spécialité</label><select name="specialite" id="specialite" class="form-select"></select></div>
+        <div class="col-3"><label for="parcours">Parcours</label><select name="parcours" id="parcours" class="form-select"></select></div>
+        <div class="col-2"><label for="semestre">Semestre</label><select name="semestre" id="semestre" class="form-select"></select></div>
+        <div class="col-2"><label for="type_sae">Type de SAE</label><select name="type_sae" id="type_sae" class="form-select"></select></div>
+        <div class="col-1">
+            <button class="btn-outline-primary btn w-100 h-100">Effacer <br>les filtres</button>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -12,12 +23,14 @@
                 <th>IUT</th>
                 <th>Spécialité</th>
                 <th>Parcours</th>
-                <th>Publiée ?</th>
-                <th></th>
+                {% if is_granted('ROLE_LABSET') %}
+                    <th>Publiée ?</th>
+                    <th></th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
-            {% for sae in saes %}
+            {% for sae in saes|filter(sae => (is_granted('ROLE_LABSET') or (not is_granted('ROLE_LABSET') and sae.publiee == true))) %}
                 <tr>
                     <td>
                         <a href="{{ path('app_qapes_sae_show', {id:sae.id}) }}">
@@ -29,28 +42,33 @@
                     </td>
                     <td>{{ sae.specialite ? sae.specialite.sigle : '-' }}</td>
                     <td>{{ sae.parcours ? sae.parcours.libelle : '-' }}</td>
-                    <td>
-                        {% if sae.publiee %}
-                            <span class="badge bg-success">Publiée</span>
-                        {% else %}
-                            <span class="badge bg-danger">Non publiée</span>
-                        {% endif %}
-                    </td>
-                    <td class="text-end">
-                        <a href="{{ path('app_qapes_sae_edit', {id:sae.id}) }}" class="btn btn-outline-warning btn-sm mb-1">
-                            <i class="bi bi-pencil"></i>
-                            Modifier
-                        </a>
-                        <form method="POST" class="d-inline" action="{{ path('app_qapes_sae_delete', {id:sae.id}) }}"
-                              onsubmit="return confirm('Êtes vous sûr de vouloir supprimer cet élément ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sae.id) }}">
-                            <button class="btn btn-sm btn-icon btn-icon-start btn-outline-danger mb-1">
-                                <i class="bi-trash"></i>
-                                <span class="d-none d-xxl-inline-block">Supprimer</span>
-                            </button>
-                        </form>
+                    {% if is_granted('ROLE_LABSET') %}
+                        <td>
+                            {% if sae.publiee %}
+                                <span class="badge bg-success">Publiée</span>
+                            {% else %}
+                                <span class="badge bg-danger">Non publiée</span>
+                            {% endif %}
+                        </td>
 
-                    </td>
+                        <td class="text-end">
+                            <a href="{{ path('app_qapes_sae_edit', {id:sae.id}) }}"
+                               class="btn btn-outline-warning btn-sm mb-1">
+                                <i class="bi bi-pencil"></i>
+                                Modifier
+                            </a>
+                            <form method="POST" class="d-inline"
+                                  action="{{ path('app_qapes_sae_delete', {id:sae.id}) }}"
+                                  onsubmit="return confirm('Êtes vous sûr de vouloir supprimer cet élément ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sae.id) }}">
+                                <button class="btn btn-sm btn-icon btn-icon-start btn-outline-danger mb-1">
+                                    <i class="bi-trash"></i>
+                                    <span class="d-none d-xxl-inline-block">Supprimer</span>
+                                </button>
+                            </form>
+
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

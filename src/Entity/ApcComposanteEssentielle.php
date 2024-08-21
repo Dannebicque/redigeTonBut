@@ -102,4 +102,9 @@ class ApcComposanteEssentielle extends BaseEntity
     {
         return $this->getCompetence()?->getDepartement();
     }
+
+    public function display(): string
+    {
+        return $this->code . ' | ' . $this->libelle;
+    }
 }
