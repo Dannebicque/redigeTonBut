@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Liste des domaines d'email autorisés{% endblock %}
+
+{% block content %}
+    <div class="mb-2">
+        <a href="{{ path('administration_domaine_new') }}" class="btn btn-outline-success
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        >
+            <i class="bi-plus-circle"></i>
+            <span>Ajouter un domaine</span>
+        </a>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Url</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for domaine in domaines %}
+            <tr>
+                <td>{{ domaine.url }}</td>
+                <td>
+                    <a href="{{ path('administration_domaine_edit', {id:domaine.id}) }}" class="btn btn-outline-warning btn-sm
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+                       id="dashboardTourButton">
+                        <i class="bi-pencil-square"></i>
+                        <span>Modifier</span>
+                    </a>
+                    <form method="post" action="{{ path('administration_domaine_delete', {id: domaine.id}) }}"
+                          onsubmit="return confirm('Êtes vous sûr de vouloir supprimer cet élément ?');"
+                          class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ domaine.id) }}">
+                        <button class="btn btn-sm btn-icon btn-icon-start btn-outline-danger ms-1">
+                            <i class="bi-trash"></i>
+                            <span class="d-none d-xxl-inline-block">Supprimer</span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path('administration_domaine_new') }}" class="btn btn-outline-success
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-plus-circle"></i>
+        <span>Ajouter un domaine</span>
+    </a>
+{% endblock %}

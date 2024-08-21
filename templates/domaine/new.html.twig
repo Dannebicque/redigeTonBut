@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Ajouter un domaine{% endblock %}
+
+{% block content %}
+    {% form_theme form 'form/my-form.html.twig' %}
+    {{ include('domaine/_form.html.twig') }}
+
+    <a href="{{ path('administration_domaine_index') }}" class="btn btn-primary">Retour à la liste</a>
+{% endblock %}

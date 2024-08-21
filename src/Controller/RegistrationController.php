@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,10 +27,11 @@ class RegistrationController extends AbstractController
 
     #[Route('/', name: 'app_register')]
     public function register(
-        MailerInterface $mailer,
-        Request $request,
+        MailerInterface             $mailer,
+        Request                     $request,
         UserPasswordHasherInterface $passwordEncoder
-    ): Response {
+    ): Response
+    {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -42,7 +44,18 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-            $user->setIsVerified(true);
+
+            //set email
+            $email = $form->get('email')->getData();
+            //vérifier si pas de @ sinon retirer tout ce qu'il y a, et ajouter le domaine
+            if (str_contains($email, '@')) {
+                //on retire tout ce qu'il y a après le @
+                $email = substr($email, strpos($email, '@'), strlen($email));
+            }
+
+            $user->setEmail($email . '@' . $form->get('domaine')->getData()->getUrl());
+
+            // $user->setIsVerified(true);
             $user->setActif(true);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
@@ -74,6 +87,31 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    #[Route('/confirmation-email/{email}', name: 'app_confirmation_email')]
+    public function confirmationEmail(
+        UserRepository $userRepository,
+        string         $email
+    ): Response
+    {
+        $user = $userRepository->findOneBy(['email' => $email]);
+
+        if ($user === null) {
+            $this->addFlash('danger', 'Aucun utilisateur trouvé avec cet email.');
+            return $this->redirectToRoute('app_register');
+        }
+
+        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            (new TemplatedEmail())
+                ->to($user->getEmail())
+                ->subject('[ORéBUT] Merci de confirmer votre email')
+                ->htmlTemplate('registration/confirmation_email.html.twig')
+                ->context(['user' => $user])
+        );
+
+        $this->addFlash('success', 'Un email de confirmation a été envoyé à ' . $user->getEmail() . '.');
+        return $this->redirectToRoute('app_login');
+    }
+
     #[Route('/attente-validation', name: 'app_register_wait')]
     public function waitFormConfirmation(): Response
     {
@@ -84,7 +122,8 @@ class RegistrationController extends AbstractController
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(
         Request $request
-    ): Response {
+    ): Response
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists

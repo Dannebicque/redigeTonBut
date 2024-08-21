@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+{{ form_label(form.url) }}
+<div class="input-group mb-3">
+    <span class="input-group-text">@</span>
+    {{ form_widget(form.url) }}
+</div>
+{{ form_errors(form) }}
+<button class="btn btn-success mt-2 mb-2">{{ button_label|default('Ajouter') }}</button>
+{{ form_end(form) }}

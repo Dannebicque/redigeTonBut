@@ -7,49 +7,42 @@
         <h2 class="cta-1 mb-0 text-primary">Demander un accès</h2>
     </div>
 
+    <div class="alert alert-info">
+        L'accès à ORéBUT est réservé aux intervenants dans les IUT de France. Si vous êtes un enseignant ou un personnel
+        d'un IUT, vous pouvez demander un accès en remplissant le formulaire ci-dessous.
+    </div>
+
     {% for flashError in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
     {{ form_start(registrationForm) }}
-    <div class="mb-3 filled form-group tooltip-end-top form-floating">
-        {{ form_widget(registrationForm.civilite) }}
-        {{ form_label(registrationForm.civilite) }}
-        {{ form_errors(registrationForm.civilite) }}
-    </div>
-    <div class="mb-3 filled form-group tooltip-end-top form-floating">
-        {{ form_widget(registrationForm.prenom) }}
-        {{ form_label(registrationForm.prenom) }}
-        {{ form_errors(registrationForm.prenom) }}
+    {{ form_row(registrationForm.civilite) }}
 
-    </div>
-    <div class="mb-3 filled form-group tooltip-end-top form-floating">
-        {{ form_widget(registrationForm.nom) }}
-        {{ form_label(registrationForm.nom) }}
-        {{ form_errors(registrationForm.nom) }}
+    {{ form_row(registrationForm.prenom) }}
 
-    </div>
+    {{ form_row(registrationForm.nom) }}
 
-    <div class="mb-3 filled form-group tooltip-end-top form-floating">
+
+    {#    <div class="mb-3 filled form-group tooltip-end-top form-floating"> #}
+    {#        {{ form_widget(registrationForm.email) }} #}
+    {#        {{ form_label(registrationForm.email) }} #}
+    {#        {{ form_errors(registrationForm.email) }} #}
+    {{ form_label(registrationForm.email) }}
+    <div class="input-group mb-3">
         {{ form_widget(registrationForm.email) }}
-        {{ form_label(registrationForm.email) }}
-        {{ form_errors(registrationForm.email) }}
-
+        <span class="input-group-text">@</span>
+        {{ form_widget(registrationForm.domaine) }}
+{#        <input type="text" class="form-control" placeholder="Server" aria-label="Server">#}
     </div>
-    <div class="mb-3 filled form-group tooltip-end-top form-floating">
-        {{ form_widget(registrationForm.departement) }}
-        {{ form_label(registrationForm.departement) }}
-        {{ form_errors(registrationForm.departement) }}
+    {{ form_errors(registrationForm.email) }}
+    {#    </div> #}
+    {#    {{ form_row(registrationForm.departement) }} #}
 
-    </div>
-    <div class="mb-3 filled form-group tooltip-end-top form-floating">
-        {{ form_widget(registrationForm.plainPassword) }}
-        {{ form_label(registrationForm.plainPassword) }}
-        {{ form_errors(registrationForm.plainPassword) }}
+    {{ form_row(registrationForm.plainPassword) }}
 
-    </div>
 
-    <button class="btn btn-lg btn-primary" type="submit">Valider votre demande</button>
+    <button class="btn btn-lg btn-primary mt-3" type="submit">Valider votre demande</button>
     <a href="{{ path('app_login') }}"> Se connecter</a>
     {{ form_end(registrationForm) }}
 {% endblock %}
