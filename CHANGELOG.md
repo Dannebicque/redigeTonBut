@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.6](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.5...v1.15.6) (2024-09-29)
+
+
+### Features
+
+* Mise en place d'une inscription selon le domaine de l'email + CRUD de gestion de ces domaines ([2f9e273](https://github.com/Dannebicque/redigeTonBut/commit/2f9e273a52a1ba5259b16e02a3f9429216466e4d))
+* Mise en place d'une inscription selon le domaine de l'email + CRUD de gestion de ces domaines ([370492b](https://github.com/Dannebicque/redigeTonBut/commit/370492b25b88803913a66d3755b6b941ff9f654e))
+
+
+### Bug Fixes
+
+* Api avec Ressources liées ([ed6148b](https://github.com/Dannebicque/redigeTonBut/commit/ed6148bc9130392177aa8df7787557eed2da60f0))
+* copyright ([28de17e](https://github.com/Dannebicque/redigeTonBut/commit/28de17e160dfc87ee3c0f623b77bdb5c224ef31a))
+* copyright ([5fc559d](https://github.com/Dannebicque/redigeTonBut/commit/5fc559d25ef3b6ae75fe8f29d7a8e828e66b05a5))
+* mises à jours diverses ([51d0554](https://github.com/Dannebicque/redigeTonBut/commit/51d055471125a20bcc074abf517122a09e426de6))
+
 ### [1.15.5](https://github.com/Dannebicque/redigeTonBut/compare/v1.15.4...v1.15.5) (2023-09-11)
 
 
