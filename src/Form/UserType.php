@@ -70,6 +70,15 @@ class UserType extends AbstractType
                     'disabled' => !$options['droit_gt'],
                     'choice_label' => 'sigle']);
 
+        if ($options['droit_gt'] === true) {
+            $builder->add('isVerified', ChoiceType::class,
+                [
+                    'choices' => ['Vérifié' => true, 'Non vérifié' => false],
+                    'expanded' => true,
+                    'label' => 'Vérification de l\'email'
+                ]);
+        }
+
 
         // Data transformer
         $builder->get('roles')

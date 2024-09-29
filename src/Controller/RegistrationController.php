@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,15 +19,9 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 #[Route('/inscription')]
 class RegistrationController extends AbstractController
 {
-    private EmailVerifier $emailVerifier;
-
-    public function __construct(EmailVerifier $emailVerifier)
-    {
-        $this->emailVerifier = $emailVerifier;
-    }
-
-    #[Route('/', name: 'app_register')]
+    #[Route('/demande', name: 'app_register')]
     public function register(
+        EntityManagerInterface       $entityManager,
         MailerInterface             $mailer,
         Request                     $request,
         UserPasswordHasherInterface $passwordEncoder
@@ -55,29 +50,24 @@ class RegistrationController extends AbstractController
 
             $user->setEmail($email . '@' . $form->get('domaine')->getData()->getUrl());
 
-            // $user->setIsVerified(true);
             $user->setActif(true);
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
+
+            $email = (new TemplatedEmail())
+                ->to($user->getEmail())
+                ->subject('[ORéBUT] Merci de confirmer votre email')
+                ->htmlTemplate('registration/confirmation_email.html.twig')
+                ->context([
+                    'user' => $user,
+                    'token' => md5($user->getEmail()),
+                    'expiredAt' => (new \DateTime())->modify('+1 hour')->getTimestamp()
+                    ]);
+
+
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->to($user->getEmail())
-                    ->subject('[ORéBUT] Merci de confirmer votre email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-                    ->context(['user' => $user])
-            );
-//            if ($user->getDepartement() !== null && $user->getDepartement()->getPacd() !== null) {
-//                $email = (new TemplatedEmail())
-//                    ->to($user->getDepartement()->getPacd()->getEmail())
-//                    ->subject('[ORéBUT] Demande d\'accès à l\'application')
-//                    ->htmlTemplate('registration/nouvelle_demande_email.html.twig')
-//                    ->context(['user' => $user]);
-//                $mailer->send($email);
-//            }
-            // do anything else you need here, like send an email
+            $mailer->send($email);
 
             return $this->redirectToRoute('app_login');
         }
@@ -89,6 +79,7 @@ class RegistrationController extends AbstractController
 
     #[Route('/confirmation-email/{email}', name: 'app_confirmation_email')]
     public function confirmationEmail(
+        MailerInterface $mailer,
         UserRepository $userRepository,
         string         $email
     ): Response
@@ -100,13 +91,19 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-            (new TemplatedEmail())
-                ->to($user->getEmail())
-                ->subject('[ORéBUT] Merci de confirmer votre email')
-                ->htmlTemplate('registration/confirmation_email.html.twig')
-                ->context(['user' => $user])
-        );
+        $templEmail = (new TemplatedEmail())
+            ->to($user->getEmail())
+            ->subject('[ORéBUT] Merci de confirmer votre email')
+            ->htmlTemplate('registration/confirmation_email.html.twig')
+            ->context([
+                'user' => $user,
+                'token' => md5($user->getEmail()),
+                'expiredAt' => (new \DateTime())->modify('+1 hour')->getTimestamp()
+            ]);
+
+
+        // generate a signed url and email it to the user
+        $mailer->send($templEmail);
 
         $this->addFlash('success', 'Un email de confirmation a été envoyé à ' . $user->getEmail() . '.');
         return $this->redirectToRoute('app_login');
@@ -119,24 +116,47 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/verify/email', name: 'app_verify_email')]
+    #[Route('/verification-email', name: 'app_verify_email')]
     public function verifyUserEmail(
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
         Request $request
     ): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $email = $request->query->get('email');
+        $user = $userRepository->findOneBy(['email' => $email]);
+        $token = $request->query->get('token');
+        $expiredAt = $request->query->get('expiredAt');
 
-        // validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
-
+        if ($user === null) {
+            $this->addFlash('danger', 'Aucun utilisateur trouvé avec cet email.');
             return $this->redirectToRoute('app_register');
         }
 
+        if (md5($user->getEmail()) !== $token) {
+            $this->addFlash('danger', 'Token invalide.');
+            return $this->redirectToRoute('app_register');
+        }
+
+        //créer un objet DateTime avec la date d'expiration en texte
+        $expiredAt = (new \DateTime())->setTimestamp($expiredAt);
+
+        if ((new \DateTime()) > $expiredAt) {
+            $this->addFlash('danger', 'Le lien a expiré.');
+            return $this->redirectToRoute('app_register');
+        }
+
+        $user->setIsVerified(true);
+        $user->setActif(true);
+
+        $entityManager->flush();
+
+
         $this->addFlash('success', 'Votre adresse email a été vérifée.');
 
-        return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('app_login', [
+            'email' => $user->getEmail(),
+            'message' => 'mail-verified'
+        ]);
     }
 }

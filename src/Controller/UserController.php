@@ -171,6 +171,7 @@ class UserController extends BaseController
         string $role = 'ROLE_LECTEUR'
     ): Response {
         $user->setActif(true);
+        $user->setIsVerified(true);
         if ($role === 'ROLE_LECTEUR' || $role === 'ROLE_EDITEUR') {
             $user->setRoles([$role]);
         }
