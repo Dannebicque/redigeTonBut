@@ -54,7 +54,7 @@ class MyWord
             static function() use ($templateProcessor) {
                 $templateProcessor->saveAs('php://output');
             },
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             [
                 'Content-Description' => 'File Transfer',
                 'Content-Transfer-Encoding' => 'binary',
@@ -96,7 +96,7 @@ class MyWord
             static function() use ($templateProcessor) {
                 $templateProcessor->saveAs('php://output');
             },
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             [
                 'Content-Description' => 'File Transfer',
                 'Content-Transfer-Encoding' => 'binary',

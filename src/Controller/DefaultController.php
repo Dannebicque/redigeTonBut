@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Departement;
+use App\Repository\DepartementRepository;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class DefaultController extends AbstractController
 {
@@ -19,6 +20,21 @@ class DefaultController extends AbstractController
         ]);
     }
 
+    #[Route('/direct/{departement}', name: 'homepage_direct_specialite')]
+    public function directSpecialite(
+        DepartementRepository $departementRepository,
+        RequestStack $requestStack, ?string $departement = null): Response
+    {
+        if( $departement !== null) {
+            $dept = $departementRepository->findOneBy(['sigle' => $departement]);
+            if ($dept) {
+                $requestStack->getSession()->set('departement', $dept->getId());
+            }
+        }
+
+        return $this->redirectToRoute('homepage_specialite');
+    }
+
     #[Route('/specialite', name: 'homepage_specialite')]
     public function indexSpecialite(): Response
     {
@@ -27,11 +43,11 @@ class DefaultController extends AbstractController
     }
 
     #[Route('/change-specialite/{departement}', name: 'change_specialite')]
-    public function changeSpecialite(SessionInterface $session, Departement $departement): Response
+    public function changeSpecialite(RequestStack $requestStack, Departement $departement): Response
     {
         if ($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_IUT') || $this->isGranted('ROLE_CPN_LECTEUR')) {
 
-            $session->set('departement', $departement->getId());
+            $requestStack->getSession()->set('departement', $departement->getId());
 
             if ($this->isGranted('ROLE_IUT')) {
                 return $this->redirectToRoute('homepage_specialite');

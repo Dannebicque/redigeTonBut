@@ -27,16 +27,12 @@ use App\Utils\Convert;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @Route("/referentiel-formation", name="formation_")
- */
+#[Route("/referentiel-formation", name:"formation_")]
 class ApcReferentielFormationController extends BaseController
 {
-    /**
-     * @Route("/grille/{departement}", name="apc_referentiel_formation_grille", methods="GET")
-     */
+    #[Route("/grille/{departement}", name:"apc_referentiel_formation_grille", methods:["GET"])]
     public function grille(Departement $departement)
     {
         return $this->render('formation/referentiel-formation/grille.html.twig',
@@ -66,10 +62,7 @@ class ApcReferentielFormationController extends BaseController
     }
 
 
-    /**
-     * @Route("/ajax-edit/{id}/{competence}/{type}", name="apc_referentiel_formation_ajax", methods={"POST"},
-     *                                               options={"expose":true})
-     */
+    #[Route("/ajax-edit/{id}/{competence}/{type}", name: "apc_referentiel_formation_ajax", methods: ["POST"], options: ["expose" => true])]
     public function ajaxEdit(
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         ApcSaeRepository $apcSaeRepository,

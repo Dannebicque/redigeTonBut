@@ -22,12 +22,10 @@ use App\Form\ApcRessourceType;
 use App\Repository\ApcParcoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @Route("/formation/ressource", name="formation_")
- */
+#[Route("/formation/ressource", name:"formation_")]
 class ApcRessourceController extends BaseController
 {
     #[Route("/new/{semestre}/{parcours}", name: "apc_ressource_new", options: ['expose' => true], methods: [
@@ -95,9 +93,7 @@ class ApcRessourceController extends BaseController
 
     }
 
-    /**
-     * @Route("/{id}/edit", name="apc_ressource_edit", methods={"GET","POST"})
-     */
+    #[Route("/{id}/edit", name: "apc_ressource_edit", methods: ["GET", "POST"])]
     public function edit(
         EventDispatcherInterface $eventDispatcher,
         ApcParcoursRepository $apcParcoursRepository,
@@ -180,9 +176,7 @@ class ApcRessourceController extends BaseController
 
     }
 
-    /**
-     * @Route("/{id}/effacer", name="apc_ressource_delete", methods="post")
-     */
+    #[Route("/{id}/effacer", name: "apc_ressource_delete", methods: ["POST"])]
     public function delete(Request $request, ApcRessource $apcRessource): Response
     {
         if ($this->getDepartement()->getPnBloque() === false) {
@@ -213,9 +207,7 @@ class ApcRessourceController extends BaseController
 
     }
 
-    /**
-     * @Route("/{id}/duplicate", name="apc_ressource_duplicate", methods="GET|POST")
-     */
+   #[Route("/{id}/duplicate", name: "apc_ressource_duplicate", methods: ["GET", "POST"])]
     public function duplicate(
         ApcRessourceAddEdit $apcRessourceAddEdit,
         ApcRessource $apcRessource
@@ -231,9 +223,7 @@ class ApcRessourceController extends BaseController
         return $this->redirectToRoute('homepage');
     }
 
-    /**
-     * @Route("/{id}/deplace/{position}", name="apc_ressource_deplace", methods="GET")
-     */
+   #[Route("/{id}/deplace/{position}", name: "apc_ressource_deplace", methods: ["GET"])]
     public function deplace(
         Request $request,
         ApcRessourceOrdre $apcRessourceOrdre,

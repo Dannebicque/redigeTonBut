@@ -11,7 +11,7 @@ use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/update/codification', name: 'update_codification_')]
 class UpdateCodificationController extends BaseController

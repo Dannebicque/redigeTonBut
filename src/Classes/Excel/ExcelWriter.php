@@ -256,7 +256,7 @@ class ExcelWriter
             static function() use ($writer) {
                 $writer->save('php://output');
             },
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             [
                 'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'Content-Disposition' => 'attachment;filename="' . $name . '.xlsx"',

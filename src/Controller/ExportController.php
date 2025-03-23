@@ -10,7 +10,7 @@ use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ExportController extends BaseController
 {

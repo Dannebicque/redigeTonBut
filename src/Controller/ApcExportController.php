@@ -13,7 +13,7 @@ use App\Classes\Export\AllDepartementsExport;
 use App\Classes\Export\DepartementExport;
 use App\Repository\DepartementRepository;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route("/apc/export/referentiel", name:"administration_apc_referentiel_")]

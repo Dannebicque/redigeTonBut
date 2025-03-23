@@ -7,7 +7,7 @@ use App\Classes\Tableau\Structure;
 use App\Entity\ApcParcours;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/export/excel/', name: 'export_excel_')]
 class ExportExcelController extends BaseController

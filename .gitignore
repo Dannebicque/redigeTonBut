@@ -31,3 +31,6 @@ yarn-error.log
 /public/excel/
 
 .DS_Store
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

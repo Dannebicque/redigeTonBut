@@ -9,8 +9,8 @@ use App\DTO\Tertiaire;
 use App\Entity\Departement;
 use App\Repository\AnneeRepository;
 use App\Repository\DepartementRepository;
-use Composer\InstalledVersions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,34 +20,40 @@ class DataUserSession
     private UserInterface $user;
     private ?Departement $departement = null;
     private AnneeRepository $anneeRepository;
-    private DepartementRepository $departementRepository;
     private string $dir;
+    /**
+     * @var string[]
+     */
+    private array $roleName;
 
 
-    public function __construct(TokenStorageInterface $tokenStorage,
-        SessionInterface $session,
-        KernelInterface $kernel,
-        DepartementRepository $departementRepository,
-        AnneeRepository $anneeRepository) {
+    public function __construct(TokenStorageInterface         $tokenStorage,
+                                private RequestStack          $requestStack,
+                                KernelInterface               $kernel,
+                                private DepartementRepository $departementRepository,
+                                AnneeRepository               $anneeRepository)
+    {
         $this->anneeRepository = $anneeRepository;
-        $this->departementRepository = $departementRepository;
         $this->dir = $kernel->getProjectDir();
         if ($tokenStorage->getToken() !== null) {
             $this->user = $tokenStorage->getToken()->getUser();
-            if (in_array('ROLE_IUT', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_GT', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_CPN', $tokenStorage->getToken()->getRoleNames()) || in_array('ROLE_CPN_LECTEUR', $tokenStorage->getToken()->getRoleNames())) {
-                if ($session->get('departement') !== null) {
-                    $this->departement = $departementRepository->find($session->get('departement'));
-                } else {
-                    $this->departement = null;
-                }
-            } else {
-                $this->departement = $this->user->getDepartement();
-            }
+            $this->roleName = $tokenStorage->getToken()->getRoleNames();
+            $this->getDepartement();
         }
     }
 
     public function getDepartement()
     {
+        if (in_array('ROLE_IUT', $this->roleName) || in_array('ROLE_GT', $this->roleName) || in_array('ROLE_CPN', $this->roleName) || in_array('ROLE_CPN_LECTEUR', $this->roleName)) {
+            if ($this->requestStack->getSession()->has('departement')) {
+                $this->departement = $this->departementRepository->find($this->requestStack->getSession()->get('departement'));
+            } else {
+                $this->departement = null;
+            }
+        } else {
+            $this->departement = $this->user->getDepartement();
+        }
+
         return $this->departement;
     }
 
@@ -79,7 +85,7 @@ class DataUserSession
 
     public function version()
     {
-        $filename = $this->dir.'/package.json';
+        $filename = $this->dir . '/package.json';
         $composerData = json_decode(file_get_contents($filename), true);
 
         return $composerData['version'];

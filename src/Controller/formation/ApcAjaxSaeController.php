@@ -27,16 +27,12 @@ use App\Repository\SemestreRepository;
 use App\Utils\Convert;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @Route("/formation/api/sae", name="formation_")
- */
+#[Route('/formation/api/sae', name: 'formation_')]
 class ApcAjaxSaeController extends BaseController
 {
-    /**
-     * @Route("/ajax-ac", name="apc_sae_ajax_ac", methods={"POST"}, options={"expose":true})
-     */
+    #[Route('/ajax-ac', name: 'apc_sae_ajax_ac', methods: ['POST'], options: ['expose' => true])]
     public function ajaxAc(
         SemestreRepository $semestreRepository,
         ApcSaeApprentissageCritiqueRepository $apcSaeApprentissageCritiqueRepository,
@@ -87,9 +83,7 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(false);
     }
 
-    /**
-     * @Route("/ajax-ressources", name="apc_ressources_ajax", methods={"POST"}, options={"expose":true})
-     */
+    #[Route('/ajax-ressources', name: 'apc_ressources_ajax', methods: ['POST'], options: ['expose' => true])]
     public function ajaxRessources(
         SemestreRepository $semestreRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
@@ -137,9 +131,7 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(false);
     }
 
-    /**
-     * @Route("/ajax-parcours", name="apc_sae_parcours_ajax", methods={"POST"}, options={"expose":true})
-     */
+    #[Route('/ajax-parcours', name: 'apc_sae_parcours_ajax', methods: ['POST'], options: ['expose' => true])]
     public function ajaxParcours(
         SemestreRepository $semestreRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
@@ -177,9 +169,7 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(false);
     }
 
-    /**
-     * @Route("/{sae}/{ac}/update_ajax", name="apc_sae_ac_update_ajax", methods="POST", options={"expose":true})
-     */
+    #[Route('/{sae}/{ac}/update_ajax', name: 'apc_sae_ac_update_ajax', methods: ['POST'], options: ['expose' => true])]
     public function updateAc(
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         ApcSaeApprentissageCritiqueRepository $apcSaeApprentissageCritiqueRepository,
@@ -227,10 +217,7 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(true);
     }
 
-    /**
-     * @Route("/{sae}/{competence}/update_coeff_ajax", name="apc_sae_coeff_update_ajax", methods="POST",
-     *                                                 options={"expose":true})
-     */
+    #[Route('/{sae}/{competence}/update_coeff_ajax', name: 'apc_sae_coeff_update_ajax', methods: ['POST'], options: ['expose' => true])]
     public function updateCoeff(
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         Request $request,
@@ -266,10 +253,7 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(true);
     }
 
-    /**
-     * @Route("/{sae}/{type}/update_heures_ajax", name="apc_sae_heure_update_ajax", methods="POST",
-     *                                            options={"expose":true})
-     */
+    #[Route('/{sae}/{type}/update_heures_ajax', name: 'apc_sae_heure_update_ajax', methods: ['POST'], options: ['expose' => true])]
     public function updateHeures(
         Request $request,
         ApcSae $sae,

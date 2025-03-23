@@ -17,7 +17,7 @@ use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route("/apc/import/referentiel", name: "administration_apc_referentiel_import_")]
 class ApcImportController extends BaseController

@@ -1,4 +1,4 @@
-import { Controller } from 'stimulus'
+import { Controller } from '@hotwired/stimulus'
 
 /*
  * This is an example Stimulus controller!
@@ -12,6 +12,10 @@ import { Controller } from 'stimulus'
 export default class extends Controller {
   static values = {
     urlApi: String,
+  }
+
+  connect() {
+    console.log('connecting...')
   }
 
   changeParcours(event) {

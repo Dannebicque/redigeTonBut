@@ -16,7 +16,7 @@ use App\Repository\ApcSaeCompetenceRepository;
 use App\Repository\SemestreRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/competence/api/competence', name : 'competence_')]
 class ApcAjaxCompetenceController extends BaseController

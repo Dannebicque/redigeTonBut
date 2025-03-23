@@ -11,11 +11,9 @@ namespace App\Controller;
 
 use App\Entity\Semestre;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @Route("/semestre/api/", name="semestre_")
- */
+#[Route("/semestre/api/", name:"semestre_")]
 class AjaxSemestreController extends BaseController
 {
 

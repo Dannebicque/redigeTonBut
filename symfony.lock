@@ -243,6 +243,18 @@
     "phpspec/prophecy": {
         "version": "1.13.0"
     },
+    "phpstan/phpstan": {
+        "version": "1.12",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "5e490cc197fb6bb1ae22e5abbc531ddc633b6767"
+        },
+        "files": [
+            "phpstan.dist.neon"
+        ]
+    },
     "phpunit/php-code-coverage": {
         "version": "9.2.6"
     },
@@ -349,18 +361,6 @@
     },
     "sebastian/version": {
         "version": "3.0.2"
-    },
-    "sensio/framework-extra-bundle": {
-        "version": "5.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "5.2",
-            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
-        },
-        "files": [
-            "config/packages/sensio_framework_extra.yaml"
-        ]
     },
     "setasign/fpdi": {
         "version": "v2.3.6"
@@ -585,13 +585,7 @@
     "symfony/polyfill-mbstring": {
         "version": "v1.23.0"
     },
-    "symfony/polyfill-php73": {
-        "version": "v1.23.0"
-    },
     "symfony/polyfill-php80": {
-        "version": "v1.23.0"
-    },
-    "symfony/polyfill-php81": {
         "version": "v1.23.0"
     },
     "symfony/polyfill-uuid": {
@@ -644,9 +638,6 @@
         "version": "v5.3.1"
     },
     "symfony/security-csrf": {
-        "version": "v5.3.0"
-    },
-    "symfony/security-guard": {
         "version": "v5.3.0"
     },
     "symfony/security-http": {

@@ -16,7 +16,7 @@ use App\Entity\Constantes;
 use App\Form\ApcParcoursType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route("/apc/parcours", name: "administration_")]
 class ApcParcoursController extends BaseController

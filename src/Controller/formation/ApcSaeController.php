@@ -22,12 +22,10 @@ use App\Form\ApcSaeType;
 use App\Repository\ApcParcoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @Route("/formation/sae", name="formation_")
- */
+#[Route('/formation/sae', name: 'formation_')]
 class ApcSaeController extends BaseController
 {
     #[Route('/new/{semestre}/{parcours}', name: 'apc_sae_new', options: ['expose' => true], methods: ['GET', 'POST'])]
@@ -91,9 +89,7 @@ class ApcSaeController extends BaseController
 
     }
 
-    /**
-     * @Route("/{id}/edit", name="apc_sae_edit", methods={"GET","POST"})
-     */
+   #[Route('/{id}/edit', name: 'apc_sae_edit', methods: ['GET', 'POST'])]
     public function edit(
         EventDispatcherInterface $eventDispatcher,
         ApcParcoursRepository $apcParcoursRepository,
@@ -174,9 +170,7 @@ class ApcSaeController extends BaseController
 
     }
 
-    /**
-     * @Route("/{id}/effacer", name="apc_sae_delete", methods={"POST"})
-     */
+    #[Route('/{id}/effacer', name: 'apc_sae_delete', methods: ['POST'])]
     public function delete(Request $request, ApcSae $apcSae): Response
     {
         if ($this->getDepartement()->getPnBloque() === false) {
@@ -207,9 +201,7 @@ class ApcSaeController extends BaseController
 
     }
 
-    /**
-     * @Route("/{id}/duplicate", name="apc_sae_duplicate", methods="GET|POST")
-     */
+    #[Route('/{id}/duplicate', name: 'apc_sae_duplicate', methods: ['GET', 'POST'])]
     public function duplicate(
         ApcSaeAddEdit $addEdit,
         ApcSae $apcSae
@@ -226,9 +218,7 @@ class ApcSaeController extends BaseController
 
     }
 
-    /**
-     * @Route("/{id}/deplace/{position}", name="apc_sae_deplace", methods="GET")
-     */
+    #[Route('/{id}/deplace/{position}', name: 'apc_sae_deplace', methods: ['GET'])]
     public function deplace(
         Request $request,
         ApcSaeOrdre $apcSaeOrdre,

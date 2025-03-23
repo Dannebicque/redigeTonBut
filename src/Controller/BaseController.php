@@ -16,6 +16,7 @@ use App\Repository\DepartementRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -52,17 +53,17 @@ class BaseController extends AbstractController
     /**
      * @required
      */
-    public function setSession(SessionInterface $session): void
+    public function setSession(RequestStack $session): void
     {
-        $this->session = $session;
+        $this->session = $session->getSession();
     }
 
     /**
      * @required
      */
-    public function setFlashBagInterface(FlashBagInterface $flashBag): void
+    public function setFlashBagInterface(RequestStack $session): void
     {
-        $this->flashBag = $flashBag;
+        $this->flashBag = $session->getSession()->getFlashBag();
     }
 
     /**

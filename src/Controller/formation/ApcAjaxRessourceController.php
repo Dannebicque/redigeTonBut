@@ -9,9 +9,6 @@
 
 namespace App\Controller\formation;
 
-use App\Classes\Matieres\RessourceManager;
-use App\Classes\Pdf\MyPDF;
-use App\Classes\Word\MyWord;
 use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcCompetence;
@@ -29,19 +26,14 @@ use App\Repository\ApcSaeRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
 use App\Utils\Convert;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @Route("/formation/api/ressource", name="formation_")
- */
+#[Route("/formation/api/ressource", name:"formation_")]
 class ApcAjaxRessourceController extends BaseController
 {
-    /**
-     * @Route("/ajax-ac", name="apc_ressources_ajax_ac", methods={"POST"}, options={"expose":true})
-     */
+    #[Route("/ajax-ac", name: "apc_ressources_ajax_ac", methods: ["POST"], options: ["expose" => true])]
     public function ajaxAc(
         SemestreRepository $semestreRepository,
         ApcRessourceApprentissageCritiqueRepository $apcRessourceApprentissageCritiqueRepository,
@@ -92,9 +84,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(false);
     }
 
-    /**
-     * @Route("/ajax-sae", name="apc_sae_ajax", methods={"POST"}, options={"expose":true})
-     */
+    #[Route("/ajax-sae", name: "apc_sae_ajax", methods: ["POST"], options: ["expose" => true])]
     public function ajaxSae(
         SemestreRepository $semestreRepository,
         ApcSaeRessourceRepository $apcSaeRessourceRepository,
@@ -142,9 +132,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(false);
     }
 
-    /**
-     * @Route("/ajax-prerequis", name="apc_prerequis_ajax", methods={"POST"}, options={"expose":true})
-     */
+    #[Route("/ajax-prerequis", name: "apc_prerequis_ajax", methods: ["POST"], options: ["expose" => true])]
     public function ajaxPrerequis(
         SemestreRepository $semestreRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
@@ -205,9 +193,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(false);
     }
 
-    /**
-     * @Route("/ajax-parcours", name="apc_ressouce_parcours_ajax", methods={"POST"}, options={"expose":true})
-     */
+   #[Route("/ajax-parcours", name: "apc_ressouce_parcours_ajax", methods: ["POST"], options: ["expose" => true])]
     public
     function ajaxParcours(
         SemestreRepository $semestreRepository,
@@ -247,10 +233,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(false);
     }
 
-    /**
-     * @Route("/{ressource}/{ac}/update_ajax", name="apc_ressource_ac_update_ajax", methods="POST",
-     *                                         options={"expose":true})
-     */
+    #[Route("/{ressource}/{ac}/update_ajax", name: "apc_ressource_ac_update_ajax", methods: ["POST"], options: ["expose" => true])]
     public function updateAc(
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         ApcRessourceApprentissageCritiqueRepository $apcRessourceApprentissageCritiqueRepository,
@@ -299,10 +282,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(true);
     }
 
-    /**
-     * @Route("/{ressource}/{competence}/update_coeff_ajax", name="apc_ressource_coeff_update_ajax", methods="POST",
-     *                                                       options={"expose":true})
-     */
+    #[Route("/{ressource}/{competence}/update_coeff_ajax", name: "apc_ressource_coeff_update_ajax", methods: ["POST"], options: ["expose" => true])]
     public function updateCoeff(
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         Request $request,
@@ -335,10 +315,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(true);
     }
 
-    /**
-     * @Route("/{ressource}/{type}/update_heures_ajax", name="apc_ressource_heure_update_ajax", methods="POST",
-     *                                                  options={"expose":true})
-     */
+    #[Route("/{ressource}/{type}/update_heures_ajax", name: "apc_ressource_heure_update_ajax", methods: ["POST"], options: ["expose" => true])]
     public
     function updateHeures(
         Request $request,
