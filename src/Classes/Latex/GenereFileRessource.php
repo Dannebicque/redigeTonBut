@@ -22,7 +22,7 @@ class GenereFileRessource
     ) {
     }
 
-    public function genereFile(ApcRessource $ressource, string $chemin)
+    public function genereFile(ApcRessource $ressource, string $chemin): string
     {
         $content = $this->twig->render('latex/exemple_ressource.tex.twig', [
             'ressource' => $ressource,

@@ -47,6 +47,7 @@ class DepartementController extends AbstractController
 
     #[Route('/administration/specialite/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(
+        EntityManagerInterface $entityManager,
         Request $request,
         Departement $departement
     ): Response {
@@ -55,7 +56,7 @@ class DepartementController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
             $this->addFlash(
                 Constantes::FLASHBAG_SUCCESS,
                 'Spécialité/Parcours mis à jour avec succès.'
@@ -74,7 +75,7 @@ class DepartementController extends AbstractController
         UserRepository $userRepository,
         Request $request,
         Departement $departement
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -83,7 +84,7 @@ class DepartementController extends AbstractController
         switch ($parametersAsArray['field']) {
             case 'cpn':
                 $us = $departement->getCpn();
-                if ($us !== null) {
+                if ($us instanceof \App\Entity\User) {
                     $us->setRoles(['ROLE_LECTEUR']);
                 }
 
@@ -93,10 +94,11 @@ class DepartementController extends AbstractController
                         $user->setRoles(['ROLE_CPN']);
                     }
                 }
+
                 break;
             case 'pacd':
                 $us = $departement->getPacd();
-                if ($us !== null) {
+                if ($us instanceof \App\Entity\User) {
                     $us->setRoles(['ROLE_LECTEUR']);
                 }
 
@@ -106,6 +108,7 @@ class DepartementController extends AbstractController
                         $user->setRoles(['ROLE_PACD']);
                     }
                 }
+
                 break;
         }
 

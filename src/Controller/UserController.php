@@ -10,6 +10,7 @@ use App\Event\UserEvent;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Security\EmailActivation;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -53,7 +54,7 @@ class UserController extends BaseController
                 $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Liste importée avec succès');
             } else {
                 $this->addFlashBag(Constantes::FLASHBAG_ERROR,
-                    'Erreur lors de l\'import. Vous n\'avez pas les droits requis.');
+                    "Erreur lors de l'import. Vous n'avez pas les droits requis.");
             }
 
             unlink($fichier);
@@ -68,6 +69,7 @@ class UserController extends BaseController
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(
+        EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
         UserPasswordHasherInterface $encoder,
         Request $request
@@ -87,7 +89,6 @@ class UserController extends BaseController
             $password = mb_substr(md5(mt_rand()), 0, 10);
             $user->setPassword($encoder->hashPassword($user, $password));
             $user->setIsVerified(true);
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -146,6 +147,7 @@ class UserController extends BaseController
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(
+        EntityManagerInterface $entityManager,
         Request $request,
         User $user
     ): Response {
@@ -153,7 +155,7 @@ class UserController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('administration_utilisateur_index');
         }
@@ -175,6 +177,7 @@ class UserController extends BaseController
         if ($role === 'ROLE_LECTEUR' || $role === 'ROLE_EDITEUR') {
             $user->setRoles([$role]);
         }
+
         $emailActivation->sendEmailConfirmation($user);
         $this->entityManager->flush();
 
@@ -183,11 +186,11 @@ class UserController extends BaseController
 
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(
+        EntityManagerInterface $entityManager,
         Request $request,
         User $user
     ): Response {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($user);
             $entityManager->flush();
         }

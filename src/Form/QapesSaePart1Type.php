@@ -25,8 +25,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class QapesSaePart1Type extends AbstractType
 {
     private bool $edit;
+
     private ?IutSite $iutSite;
+
     private ?ApcParcours $apcParcours;
+
     private ?Departement $departement;
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -62,7 +65,7 @@ class QapesSaePart1Type extends AbstractType
                 'class' => IutSite::class,
                 'choice_label' => 'libelle',
                 'autocomplete' => true,
-                'label' => 'Site de l\'IUT',
+                'label' => "Site de l'IUT",
                 'required' => false,
                 'attr' => ['data-action' => 'change->qapes#changeSiteIut'],
                 'disabled' => !$this->edit,
@@ -86,7 +89,7 @@ class QapesSaePart1Type extends AbstractType
                 'class' => ApcParcours::class,
                 'autocomplete' => true,
                 'query_builder' => function(ApcParcoursRepository $er) {
-                    if ($this->edit === true) {
+                    if ($this->edit) {
                         return $er->createQueryBuilder('p')
                             ->innerJoin(IutSiteParcours::class, 'isp', 'WITH', 'p.id = isp.parcours')
                             ->where('isp.site = :site')
@@ -109,7 +112,7 @@ class QapesSaePart1Type extends AbstractType
                 'choice_label' => 'display',
                 'autocomplete' => true,
                 'query_builder' => function(ApcSaeRepository $er) {
-                    if ($this->apcParcours !== null) {
+                    if ($this->apcParcours instanceof \App\Entity\ApcParcours) {
                         $er->createQueryBuilder('r')
                             ->join('r.apcSaeParcours', 'p')
                             ->where('p.parcours = :parcours')

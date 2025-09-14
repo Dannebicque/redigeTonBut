@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Modification du niveau : {{ apc_niveau.libelle }}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {{ form_start(form) }}
+            {% form_theme form 'form/my-form.html.twig' %}
+            {{ form_rest(form) }}
+            <button class="btn btn-success">Sauvegarder</button>
+            <button class="btn btn-success" value="redirect_to_index" name="btn_update">
+                Sauvegarder et revenir au référentiel de compétences
+            </button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href: path('administration_apc_referentiel_index', {departement:apc_niveau.competence.departement.id}),
+            title: 'Référentiel de compétences',
+        },
+    ]}) }}
+{% endblock %}
+
+{% block bouton_header %}
+    {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+        {{ include('form/_delete_form.html.twig', {
+            path: path('administration_apc_niveau_delete',
+            {id: apc_niveau.id}), id: apc_niveau.id, texte : 'Êtes-vous sûr de vouloir supprimer ce niveau et les apprentissages critiques associés ?'}) }}
+    {% endif %}
+
+    <a href="{{ path('administration_apc_referentiel_index', {departement:apc_niveau.competence.departement.id}) }}"
+       class="btn btn-sm btn-outline-info
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-arrow-left-circle"></i>
+        <span>Retour</span>
+    </a>
+{% endblock %}
+
+

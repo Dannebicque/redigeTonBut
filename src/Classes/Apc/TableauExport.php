@@ -18,13 +18,21 @@ class TableauExport
 {
 
     protected ExcelWriter $excelWriter;
+
     protected SemestreRepository $semestreRepository;
+
     protected TableauCroise $tableauCroise;
+
     protected TableauPreconisation $tableauPreconisation;
+
     protected ApcSaeRepository $apcSaeRepository;
+
     protected ApcRessourceRepository $apcRessourceRepository;
+
     protected ApcSaeParcoursRepository $apcSaeParcoursRepository;
+
     protected ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
+
     protected VolumesHoraires $volumesHoraires;
 
     public function __construct(
@@ -52,7 +60,7 @@ class TableauExport
 
     public function exportTableauCroise(Annee $annee, ?ApcParcours $parcours = null, $displayCoeff = false)
     {
-        if ($parcours === null || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof \App\Entity\ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -71,6 +79,7 @@ class TableauExport
                 $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
                 $col++;
             }
+
             $col++;
 
             foreach ($this->tableauCroise->getRessources() as $ressource) {
@@ -80,6 +89,7 @@ class TableauExport
 
                 $col++;
             }
+
             $ligne++;
             $col = 4;
 
@@ -101,8 +111,10 @@ class TableauExport
                                 $this->tableauCroise->getTab()['saes'][$sae->getId()])) {
                             $this->excelWriter->writeCellXY($col, $ligne, 'X');
                         }
+
                         $col++;
                     }
+
                     $col++;
 
                     foreach ($this->tableauCroise->getRessources() as $ressource) {
@@ -111,8 +123,10 @@ class TableauExport
                                 $this->tableauCroise->getTab()['ressources'][$ressource->getId()])) {
                             $this->excelWriter->writeCellXY($col, $ligne, 'X');
                         }
+
                         $col++;
                     }
+
                     $ligne++;
                     $col = 4;
                 }
@@ -128,8 +142,10 @@ class TableauExport
                         } else {
                             $this->excelWriter->writeCellXY($col, $ligne, 0);
                         }
+
                         $col++;
                     }
+
                     $col++;
 
                     foreach ($this->tableauCroise->getRessources() as $ressource) {
@@ -141,9 +157,11 @@ class TableauExport
                         } else {
                             $this->excelWriter->writeCellXY($col, $ligne, 0);
                         }
+
                         $col++;
                     }
                 }
+
                 $ligne++;
                 $this->excelWriter->getColumnsAutoSizeInt(1, $col);
                 $col = 4;
@@ -158,7 +176,7 @@ class TableauExport
     public function exportTableauHoraire(Annee $annee, ?ApcParcours $parcours)
     {
 
-        if ($parcours === null || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof \App\Entity\ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -168,7 +186,7 @@ class TableauExport
 
         $this->excelWriter->nouveauFichier('');
         foreach ($semestres as $semestre) {
-            if ($parcours === null) {
+            if (!$parcours instanceof \App\Entity\ApcParcours) {
                 $saes = $this->apcSaeRepository->findBySemestre($semestre);
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {
@@ -192,6 +210,7 @@ class TableauExport
                     $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
                     $col++;
                 }
+
                 $this->excelWriter->writeCellXY(2, $ligne + 1, '', ['bgcolor' => 'ebb71a']);
                 $this->excelWriter->mergeCellsCaR(2, $ligne + 1, 2 + $nbSaes - 1, $ligne + 1);
                 $this->excelWriter->writeCellXY(2, $ligne + 2, '', ['bgcolor' => 'ebb71a']);
@@ -212,6 +231,7 @@ class TableauExport
                     ['style' => 'HORIZONTAL_CENTER']);
                 $col++;
             }
+
             $colonneTotal = $col;
             $this->excelWriter->writeCellXY($colonneTotal, $ligne, 'Total');
             $this->excelWriter->writeCellXY($colonneTotal, $ligne + 1,
@@ -242,6 +262,7 @@ class TableauExport
                 $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
                 $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
             }
+
             $this->excelWriter->writeCellXY($colonneTotal, $ligne,
                 $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleEnseignement'],
                 ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
@@ -285,7 +306,7 @@ class TableauExport
             $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresRessourceSae(),
                 ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
             $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
-                'rappel volume total d\'enseignement issu du tableau global des 6 semestres',
+                "rappel volume total d'enseignement issu du tableau global des 6 semestres",
                 ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
             $ligne++;
             $this->excelWriter->writeCellXY($col, $ligne, 'Dont TP',
@@ -309,6 +330,7 @@ class TableauExport
                     ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
                 $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
             }
+
             $this->excelWriter->writeCellXY($colonneTotal, $ligne,
                 $donnees[$semestre->getOrdreLmd()]['totalProjetTutore'],
                 ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
@@ -340,7 +362,7 @@ class TableauExport
     {
 
 
-        if ($parcours === null || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof \App\Entity\ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -360,6 +382,7 @@ class TableauExport
                 $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
                 $col++;
             }
+
             $col++;
 
             foreach ($this->tableauPreconisation->getRessources() as $ressource) {
@@ -368,6 +391,7 @@ class TableauExport
                 $this->excelWriter->orientationCellXY($col, $ligne, 'vertical');
                 $col++;
             }
+
             $this->excelWriter->writeCellXY($col, $ligne, 'ECTS');
             $col++;
             $this->excelWriter->writeCellXY($col, $ligne, 'Coefficients / UE');
@@ -398,8 +422,10 @@ class TableauExport
                     } else {
                         $this->excelWriter->writeCellXY($col, $ligne, 0);
                     }
+
                     $col++;
                 }
+
                 $col++;
 
                 foreach ($this->tableauPreconisation->getRessources() as $ressource) {
@@ -413,6 +439,7 @@ class TableauExport
                     } else {
                         $this->excelWriter->writeCellXY($col, $ligne, 0);
                     }
+
                     $col++;
                 }
 
@@ -425,6 +452,7 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $col++;
                 if (array_key_exists($semestre->getOrdreLmd(), $preconisation) &&
                     array_key_exists($niveau->getCompetence()->getId(),
@@ -435,6 +463,7 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $col++;
                 if (array_key_exists($semestre->getOrdreLmd(), $preconisation) &&
                     array_key_exists($niveau->getCompetence()->getId(),
@@ -445,8 +474,10 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $ligne++;
             }
+
             $this->excelWriter->writeCellXY(1, $ligne, 'Poids chaque SAÉ ou ressource');
             $this->excelWriter->mergeCellsCaR(1, $ligne, 2, $ligne);
             $col = 4;
@@ -460,8 +491,10 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $col++;
             }
+
             $col++;
 
             foreach ($this->tableauPreconisation->getRessources() as $ressource) {
@@ -474,6 +507,7 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $col++;
             }
 
@@ -516,13 +550,14 @@ class TableauExport
         return $this->excelWriter->genereFichier('tableau_croise__volumes_horaires_' . $departement->getSigle());
     }
 
-    private function afficheParcours($ligne, $parcours, $semestre, $semestres)
+    private function afficheParcours(int|float $ligne, ?\App\Entity\ApcParcours $parcours, \App\Entity\Semestre $semestre, array $semestres): int|float
     {
         $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
         $ligne++;
         $this->tableauCroise->getDatas($semestre, $parcours);
         $this->excelWriter->writeCellXY(1, $ligne, 'Compétences');
         $this->excelWriter->writeCellXY(2, $ligne, 'Apprentissages critiques');
+
         $col = 3;
         foreach ($this->tableauCroise->getSaes() as $sae) {
             $this->excelWriter->writeCellXY($col, $ligne,
@@ -539,6 +574,7 @@ class TableauExport
 
             $col++;
         }
+
         $ligne++;
         $col = 3;
 
@@ -560,6 +596,7 @@ class TableauExport
                             $this->tableauCroise->getTab()['saes'][$sae->getId()])) {
                         $this->excelWriter->writeCellXY($col, $ligne, 'X');
                     }
+
                     $col++;
                 }
 
@@ -569,8 +606,10 @@ class TableauExport
                             $this->tableauCroise->getTab()['ressources'][$ressource->getId()])) {
                         $this->excelWriter->writeCellXY($col, $ligne, 'X');
                     }
+
                     $col++;
                 }
+
                 $ligne++;
                 $col = 3;
             }
@@ -585,8 +624,10 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $col++;
             }
+
             //  $col++;
 
             foreach ($this->tableauCroise->getRessources() as $ressource) {
@@ -598,12 +639,15 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $col++;
             }
+
             $ligne++;
             $this->excelWriter->getColumnsAutoSizeInt(1, $col);
             $col = 3;
         }
+
         $ligne++;
         //-------------------------
         // TABLEAU VOLUMES HORAIRES
@@ -631,6 +675,7 @@ class TableauExport
                 ['style' => 'HORIZONTAL_CENTER']);
             $col++;
         }
+
         $colonneTotal = $col;
         $this->excelWriter->writeCellXY($colonneTotal, $ligne + 1,
             $donnees[$semestre->getOrdreLmd()]['totalEnseignementRessources'],
@@ -662,6 +707,7 @@ class TableauExport
             $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
             $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
         }
+
         $this->excelWriter->writeCellXY($colonneTotal, $ligne,
             $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleEnseignement'],
             ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
@@ -706,7 +752,7 @@ class TableauExport
         $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresRessourceSae(),
             ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
         $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
-            'rappel volume total d\'enseignement issu du tableau global des 6 semestres',
+            "rappel volume total d'enseignement issu du tableau global des 6 semestres",
             ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
         $ligne++;
         $this->excelWriter->writeCellXY($col, $ligne, 'Dont TP',
@@ -732,6 +778,7 @@ class TableauExport
                 ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
             $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
         }
+
         $this->excelWriter->writeCellXY($colonneTotal, $ligne,
             $donnees[$semestre->getOrdreLmd()]['totalProjetTutore'],
             ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
@@ -759,11 +806,12 @@ class TableauExport
         return $ligne;
     }
 
-    private function affichePasParcours($ligne, $semestre, $semestres)
+    private function affichePasParcours(int $ligne, \App\Entity\Semestre $semestre, array $semestres): int
     {
         $this->tableauCroise->getDatas($semestre);
         $this->excelWriter->writeCellXY(1, $ligne, 'Compétences');
         $this->excelWriter->writeCellXY(2, $ligne, 'Apprentissages critiques');
+
         $col = 3;
         foreach ($this->tableauCroise->getSaes() as $sae) {
             $this->excelWriter->writeCellXY($col, $ligne,
@@ -780,6 +828,7 @@ class TableauExport
 
             $col++;
         }
+
         $ligne++;
         $col = 3;
 
@@ -801,6 +850,7 @@ class TableauExport
                             $this->tableauCroise->getTab()['saes'][$sae->getId()])) {
                         $this->excelWriter->writeCellXY($col, $ligne, 'X');
                     }
+
                     $col++;
                 }
 
@@ -810,8 +860,10 @@ class TableauExport
                             $this->tableauCroise->getTab()['ressources'][$ressource->getId()])) {
                         $this->excelWriter->writeCellXY($col, $ligne, 'X');
                     }
+
                     $col++;
                 }
+
                 $ligne++;
                 $col = 3;
             }
@@ -826,6 +878,7 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $col++;
             }
 
@@ -838,12 +891,15 @@ class TableauExport
                 } else {
                     $this->excelWriter->writeCellXY($col, $ligne, 0);
                 }
+
                 $col++;
             }
+
             $ligne++;
             $this->excelWriter->getColumnsAutoSizeInt(1, $col);
             $col = 3;
         }
+
         $ligne++;
         //-------------------------
         // TABLEAU VOLUMES HORAIRES
@@ -871,6 +927,7 @@ class TableauExport
                 ['style' => 'HORIZONTAL_CENTER']);
             $col++;
         }
+
         $colonneTotal = $col;
         $this->excelWriter->writeCellXY($colonneTotal, $ligne + 1,
             $donnees[$semestre->getOrdreLmd()]['totalEnseignementRessources'],
@@ -902,6 +959,7 @@ class TableauExport
             $this->excelWriter->mergeCellsCaR($col, $ligne, $col + $nbSaes - 1, $ligne);
             $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
         }
+
         $this->excelWriter->writeCellXY($colonneTotal, $ligne,
             $donnees[$semestre->getOrdreLmd()]['totalAdaptationLocaleEnseignement'],
             ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
@@ -946,7 +1004,7 @@ class TableauExport
         $this->excelWriter->writeCellXY($colonneTotal + 1, $ligne, $semestre->getNbHeuresRessourceSae(),
             ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'ebb71a']);
         $this->excelWriter->writeCellXY($colonneTotal + 2, $ligne,
-            'rappel volume total d\'enseignement issu du tableau global des 6 semestres',
+            "rappel volume total d'enseignement issu du tableau global des 6 semestres",
             ['style' => 'HORIZONTAL_LEFT', 'bgcolor' => 'ebb71a']);
         $ligne++;
         $this->excelWriter->writeCellXY($col, $ligne, 'Dont TP',
@@ -972,6 +1030,7 @@ class TableauExport
                 ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);
             $this->excelWriter->mergeCellsCaR($col + $nbSaes, $ligne, $colonneTotal - 1, $ligne);
         }
+
         $this->excelWriter->writeCellXY($colonneTotal, $ligne,
             $donnees[$semestre->getOrdreLmd()]['totalProjetTutore'],
             ['style' => 'HORIZONTAL_CENTER', 'bgcolor' => 'CED4D7']);

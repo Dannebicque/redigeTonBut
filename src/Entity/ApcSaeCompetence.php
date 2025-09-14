@@ -14,29 +14,21 @@ use App\Repository\ApcSaeCompetenceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcSaeCompetenceRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcSaeCompetenceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcSaeCompetence extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcSae::class, inversedBy="apcSaeCompetences")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcSae::class, inversedBy: 'apcSaeCompetences')]
     private ?ApcSae $sae;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcSaeCompetences")
-     * @Groups({"read:sae"})
-     */
+    #[ORM\ManyToOne(targetEntity: ApcCompetence::class, inversedBy: 'apcSaeCompetences')]
+    #[Groups(['read:sae'])]
     private ?ApcCompetence $competence;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[Groups(['read:sae'])]
     private float $coefficient = 0;
 
     public function __construct(ApcSae $sae, ApcCompetence $competence)

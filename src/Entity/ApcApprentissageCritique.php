@@ -16,45 +16,37 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcApprentissageCritiqueRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcApprentissageCritiqueRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcApprentissageCritique extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\Column(type="text")
-     * @Groups({"read:competence", "read:ressource","read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    #[Groups(['read:competence', 'read:ressource', 'read:sae'])]
     private ?string $libelle;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcNiveau::class, inversedBy="apcApprentissageCritiques")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcNiveau::class, inversedBy: 'apcApprentissageCritiques')]
     private ?ApcNiveau $niveau;
 
-    /**
-     * @ORM\Column(type="string", length=20)
-     * @Groups({"read:competence", "read:ressource","read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20)]
+    #[Groups(['read:competence', 'read:ressource', 'read:sae'])]
     private ?string $code;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceApprentissageCritique::class, mappedBy="apprentissageCritique")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceApprentissageCritique>
      */
+    #[ORM\OneToMany(targetEntity: ApcRessourceApprentissageCritique::class, mappedBy: 'apprentissageCritique')]
     private Collection $apcRessourceApprentissageCritiques;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeApprentissageCritique::class, mappedBy="apprentissageCritique")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeApprentissageCritique>
      */
+    #[ORM\OneToMany(targetEntity: ApcSaeApprentissageCritique::class, mappedBy: 'apprentissageCritique')]
     private Collection $apcSaeApprentissageCritiques;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:competence"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:competence'])]
     private ?int $ordre;
 
     /**
@@ -62,7 +54,7 @@ class ApcApprentissageCritique extends BaseEntity
      *
      * @param $niveau
      */
-    public function __construct($niveau = null)
+    public function __construct(?\App\Entity\ApcNiveau $niveau = null)
     {
         $this->niveau = $niveau;
         $this->apcRessourceApprentissageCritiques = new ArrayCollection();
@@ -127,11 +119,9 @@ class ApcApprentissageCritique extends BaseEntity
     public function removeApcRessourceApprentissageCritique(
         ApcRessourceApprentissageCritique $apcRessourceApprentissageCritique
     ): self {
-        if ($this->apcRessourceApprentissageCritiques->removeElement($apcRessourceApprentissageCritique)) {
-            // set the owning side to null (unless already changed)
-            if ($apcRessourceApprentissageCritique->getApprentissageCritique() === $this) {
-                $apcRessourceApprentissageCritique->setApprentissageCritique(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcRessourceApprentissageCritiques->removeElement($apcRessourceApprentissageCritique) && $apcRessourceApprentissageCritique->getApprentissageCritique() === $this) {
+            $apcRessourceApprentissageCritique->setApprentissageCritique(null);
         }
 
         return $this;
@@ -157,11 +147,9 @@ class ApcApprentissageCritique extends BaseEntity
 
     public function removeApcSaeApprentissageCritique(ApcSaeApprentissageCritique $apcSaeApprentissageCritique): self
     {
-        if ($this->apcSaeApprentissageCritiques->removeElement($apcSaeApprentissageCritique)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSaeApprentissageCritique->getApprentissageCritique() === $this) {
-                $apcSaeApprentissageCritique->setApprentissageCritique(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSaeApprentissageCritiques->removeElement($apcSaeApprentissageCritique) && $apcSaeApprentissageCritique->getApprentissageCritique() === $this) {
+            $apcSaeApprentissageCritique->setApprentissageCritique(null);
         }
 
         return $this;
@@ -169,7 +157,7 @@ class ApcApprentissageCritique extends BaseEntity
 
     public function getCompetence(): ?ApcCompetence
     {
-        if (null !== $this->getNiveau()) {
+        if ($this->getNiveau() instanceof \App\Entity\ApcNiveau) {
             return $this->getNiveau()->getCompetence();
         }
 
@@ -190,10 +178,11 @@ class ApcApprentissageCritique extends BaseEntity
 
     public function getDepartement(): ?Departement
     {
-        if ($this->getCompetence() !== null)
+        if ($this->getCompetence() instanceof ApcCompetence)
         {
             return $this->getCompetence()->getDepartement();
         }
+
         return null;
     }
 

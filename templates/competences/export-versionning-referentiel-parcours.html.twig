@@ -1,0 +1,32 @@
+{{ include('pdf/versionning/pageCompetencesComposantes.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
+<div style="page-break-after: always"></div>
+{{ include('pdf/versionning/pageSituationProfessionnelles.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
+<div style="page-break-after: always"></div>
+{% set width = (100 / competencesParcours[parcour.id]|length)-2 %}
+{{ include('pdf/versionning/pagePageNiveaux.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id],
+    width:width
+}) }}
+
+    <ul class="nav nav-pills responsive-tabs nav-justified mb-4" role="tablist">
+        {% for competence in competencesParcours[parcour.id] %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if loop.first %}active{% endif %} "
+                        data-bs-toggle="tab"
+                        data-bs-target="#comp_{{ parcour.id }}_{{ competence.id }}" role="tab" aria-selected="false"
+                        type="button">{{ competence.libelle }}</button>
+            </li>
+        {% endfor %}
+    </ul>
+
+<div class="tab-content">
+
+{% for competence in competencesParcours[parcour.id] %}
+    <div class="tab-pane {% if loop.first %}fade active show{% endif %}" id="comp_{{ parcour.id }}_{{ competence.id }}">
+        {{ include('pdf/versionning/pageCompetence.html.twig', {
+            parcours: parcour,
+            competences: competencesParcours[parcour.id],
+            competence: competence,
+        }) }}
+    </div>
+{% endfor %}
+</div>

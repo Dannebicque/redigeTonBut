@@ -11,6 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SaeSubscriber implements EventSubscriberInterface
 {
     protected EntityManagerInterface $entityManager;
+
     protected ApcSaeParcoursRepository $apcSaeRepository;
 
     public function __construct(EntityManagerInterface $entityManager,ApcSaeParcoursRepository $apcSaeRepository)
@@ -27,14 +28,12 @@ class SaeSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onUpdateCodification(SaeEvent $saeEvent)
+    public function onUpdateCodification(SaeEvent $saeEvent): void
     {
         $sae = $saeEvent->getApcSae();
         $parcours = $this->apcSaeRepository->findSaeWithParcours($sae->getId());
-        if ($sae !== null) {
-            $sae->setCodeMatiere(Codification::codeSae($sae, $parcours));
-            $this->entityManager->flush();
-        }
+        $sae->setCodeMatiere(Codification::codeSae($sae, $parcours));
+        $this->entityManager->flush();
     }
 
 

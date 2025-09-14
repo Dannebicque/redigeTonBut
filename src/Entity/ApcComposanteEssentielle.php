@@ -14,35 +14,25 @@ use App\Repository\ApcComposanteEssentielleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcComposanteEssentielleRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcComposanteEssentielleRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcComposanteEssentielle extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"read:competence"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[Groups(['read:competence'])]
     private ?string $libelle;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcComposanteEssentielles")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcCompetence::class, inversedBy: 'apcComposanteEssentielles')]
     private ?ApcCompetence $competence;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:competence"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:competence'])]
     private ?int $ordre;
 
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     * @Groups({"read:competence"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 10, nullable: true)]
+    #[Groups(['read:competence'])]
     private ?string $code;
 
     public function __construct(?ApcCompetence $competence = null)

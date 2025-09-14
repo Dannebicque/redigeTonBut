@@ -1,8 +1,12 @@
+<div class="alert alert-info mt-2">
+    <strong>Pour supprimer un élément</strong>, vous devez le modifier et cliquer sur le bouton "Supprimer" en haut à droite du formulaire.
+</div>
+
 <div class="d-flex align-items-stretch mt-3">
     <div class="col-3 competence ">
         <div class="p-3 comp competence{{ competence.couleur }}">
             {{ competence.nomCourt }}
-            {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+            {% if is_granted('COMPETENCES_EDIT', competence) and user_data.departement.verouilleCompetences == false %}
                 <a href="{{ path('administration_apc_competence_edit', {id: competence.id}) }}" class="text-white
                 text-small"><i
                             class="bi
@@ -13,7 +17,7 @@
     <div class="col-3 competencelongue  ms-3">
         <div class="p-3 competencelongue{{ competence.couleur }}">
             {{ competence.libelle }}
-            {% if is_granted('ROLE_PACD') and user_data
+            {% if is_granted('COMPETENCES_EDIT', competence) and user_data
             .departement.verouilleCompetences == false %}<br>
             <a href="{{ path('administration_apc_composante_essentielle_new',
                 {competence:competence.id}) }}" class="text-white text-small">
@@ -25,7 +29,7 @@
     <div class="col-6 composantesessentielles{{ competence.couleur }}">
         <ul>
             {% for composante in competence.apcComposanteEssentielles %}
-                <li>{{ composante.code }} | {{ composante.libelle }} {% if is_granted('ROLE_PACD') and user_data
+                <li>{{ composante.code }} | {{ composante.libelle }} {% if is_granted('COMPETENCES_EDIT', competence) and user_data
                     .departement.verouilleCompetences == false %}
                         <a href="{{ path('administration_apc_composante_essentielle_edit',
                             {id:composante.id}) }}" class="text-black text-small">
@@ -46,7 +50,7 @@
     <div class="col-9 ms-3 situationliste">
         <div class="p-3 situationliste{{ competence.couleur }}">
             {% for situation in competence.apcSituationProfessionnelles %}
-                <p>{{ situation.libelle }} {% if is_granted('ROLE_PACD') and user_data
+                <p>{{ situation.libelle }} {% if is_granted('COMPETENCES_EDIT', competence) and user_data
                     .departement.verouilleCompetences == false %}
                         <a href="{{ path('administration_apc_situation_professionnelle_edit',
                             {id:situation.id}) }}" class="text-black text-small">
@@ -54,7 +58,7 @@
                         </a>
                     {% endif %}</p>
             {% endfor %}
-            {% if is_granted('ROLE_PACD') and user_data
+            {% if is_granted('COMPETENCES_EDIT', competence) and user_data
             .departement.verouilleCompetences == false %}<br>
                 <a href="{{ path('administration_apc_situation_professionnelle_new',
                     {competence:competence.id}) }}" class="text-black text-small">
@@ -82,6 +86,13 @@
             <div class="p-3 niveaucourt ">
                 B.U.T. {{ niveau.annee.ordre }}</div>
             <div class="p-3 niveaulong">{{ niveau.libelle }}
+                {% if is_granted('COMPETENCES_EDIT', competence)
+                    and user_data.departement.verouilleCompetences == false %}<br>
+                    <a href="{{ path('administration_apc_niveau_edit',
+                        {id:niveau.id}) }}" class="text-black text-small">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                {% endif %}
             </div>
         </div>
         <div class="col-flex-9 ms-3" style="padding-right:15px;">
@@ -89,7 +100,7 @@
                 <ul>
                     {% for ac in niveau.apcApprentissageCritiques %}
                         <li>{{ ac.code }} | {{ ac.libelle }}
-                            {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+                            {% if is_granted('COMPETENCES_EDIT', competence) and user_data.departement.verouilleCompetences == false %}
                                 <a href="{{ path('administration_apc_apprentissage_critique_edit',
                                     {id:ac.id}) }}" class="text-black text-small">
                                     <i class="bi bi-pencil"></i>
@@ -106,7 +117,7 @@
                             {% endif %}
                         </li>
                     {% endfor %}
-                    {% if is_granted('ROLE_PACD') and user_data
+                    {% if is_granted('COMPETENCES_EDIT', competence) and user_data
                     .departement.verouilleCompetences == false %}<br>
                         <a href="{{ path('administration_apc_apprentissage_critique_new',
                             {niveau:niveau.id}) }}" class="text-black text-small">

@@ -107,13 +107,174 @@
             <!-- Menu Start -->
             <div class="menu-container flex-grow-1">
                 <ul id="menu" class="menu">
-                    {% if is_granted('ROLE_LABSET') %}
+                    <!-- 1. Accueil/Département -->
+                    {% if user_data.departement != null and is_granted('ROLE_IUT') %}
                         <li>
-                            <a href="#ref_competences" data-href="{{ path('app_labset') }}">
-                                <i class="bi bi-wallet2 icon"></i>
-                                <span class="label">Qualité SAÉ</span>
+                            <a href="{{ path('homepage_specialite') }}">
+                                <i class="bi bi-house-door icon"></i>
+                                <span class="label">Accueil {{ user_data.departement.sigle }}</span>
                             </a>
-                            <ul id="ref_competences">
+                        </li>
+                    {% endif %}
+
+                    <!-- 2. Référentiel de formation -->
+                    <li>
+                        <a href="#formation" data-href="formation">
+                            <i class="bi bi-journal-text icon"></i>
+                            <span class="label">Compétences et parcours</span>
+                        </a>
+                        <ul id="formation">
+                            {% if user_data.departement != null %}
+                                <li>
+                                    <a href="{{ path('administration_apc_referentiel_index', {departement: user_data.departement.id}) }}">
+                                        <span class="label">Référentiel de compétences</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('administration_apc_apprentissage_critique_index', {departement: user_data.departement.id}) }}">
+                                        <span class="label">Liste des AC</span>
+                                    </a>
+                                </li>
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_GT') or is_granted('ROLE_CPN') or is_granted('ROLE_CPN_LECTEUR') or is_granted('ROLE_PACD') or is_granted('ROLE_EDITEUR') %}
+                                    <li>
+                                        <a href="{{ path('administration_departement_edit', {id: user_data.departement.id}) }}">
+                                            <span class="label">Texte descriptif de la spécialité</span>
+                                        </a>
+                                    </li>
+                                    {% for parcours in user_data.departement.apcParcours %}
+                                        <li>
+                                            <a href="{{ path('administration_apc_parcours_edit', {id:parcours.id}) }}">
+                                                <span class="label">Texte du parcours : {{ parcours.libelle }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li>
+                                        <a href="{{ path('administration_departement_lecteur_show', {id: user_data.departement.id}) }}">
+                                            <span class="label">Consulter le texte descriptif de la spécialité</span>
+                                        </a>
+                                    </li>
+                                    {% for parcours in user_data.departement.apcParcours %}
+                                        <li>
+                                            <a href="{{ path('administration_apc_parcours_show', {id:parcours.id}) }}">
+                                                <span class="label">Consulter le texte du parcours : {{ parcours.libelle }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </li>
+
+                    <!-- 3. Années B.U.T. -->
+                    {% if user_data.departement != null and user_data.annees|length > 0 %}
+                        <li>
+                            <a href="#annees_but" data-href="annees_but">
+                                <i class="bi bi-calendar3 icon"></i>
+                                <span class="label">Années B.U.T.</span>
+                            </a>
+                            <ul id="annees_but">
+                                {% for annee in user_data.annees %}
+                                    <li>
+                                        <a href="#but{{ annee.ordre }}">
+                                            <span class="label">B.U.T. {{ annee.ordre }}</span>
+                                        </a>
+                                        <ul id="but{{ annee.ordre }}">
+                                            <li>
+                                                <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
+                                                    <span class="label">Ressources</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
+                                                    <span class="label">SAÉ</span>
+                                                </a>
+                                            </li>
+
+                                            {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+                                                {% for parcours in user_data.departement.apcParcours %}
+                                                    <li>
+                                                        <a href="#parcours{{ parcours.id }}_{{ annee.ordre }}">
+                                                            <span class="label">Parcours {{ parcours.code }}</span>
+                                                        </a>
+                                                        <ul id="parcours{{ parcours.id }}_{{ annee.ordre }}">
+                                                            <li>
+                                                                <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                                    <span class="label">Ressources</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                                    <span class="label">SAÉ</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </ul>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    <!-- 4. Tableaux et analyses -->
+                    {% if user_data.departement != null %}
+                        <li>
+                            <a href="#tableaux" data-href="tableaux">
+                                <i class="bi bi-table icon"></i>
+                                <span class="label">Tableaux et analyses</span>
+                            </a>
+                            <ul id="tableaux">
+                                <li>
+                                    <a href="{{ path('tableau_structure') }}">
+                                        <span class="label">Structure des 3 années</span>
+                                    </a>
+                                </li>
+                                {% for annee in user_data.annees %}
+                                    <li>
+                                        <a href="#tableaux_annee{{ annee.ordre }}">
+                                            <span class="label">Tableaux B.U.T. {{ annee.ordre }}</span>
+                                        </a>
+                                        <ul id="tableaux_annee{{ annee.ordre }}">
+                                            <li>
+                                                <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
+                                                    <span class="label">Tableau croisé par semestre</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
+                                                    <span class="label">Préconisations par semestre</span>
+                                                </a>
+                                            </li>
+                                            {% if is_granted('ROLE_PACD') %}
+                                                <li>
+                                                    <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">
+                                                        <span class="label">Volumes horaires par semestre</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
+                                                        <span class="label">Validation des AC par les SAÉ</span>
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    <!-- 5. Qualité SAÉ -->
+                    <li>
+                        <a href="#qualite_sae" data-href="{{ is_granted('ROLE_LABSET') ? path('app_labset') : path('app_labset_public') }}">
+                            <i class="bi bi-award icon"></i>
+                            <span class="label">Qualité SAÉ</span>
+                        </a>
+                        <ul id="qualite_sae">
+                            {% if is_granted('ROLE_LABSET') %}
                                 <li>
                                     <a href="{{ path('app_labset') }}">
                                         <span class="label">Liste des SAÉ</span>
@@ -129,367 +290,131 @@
                                         <span class="label">Gestion des critères</span>
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                    {% if user_data.departement != null %}
-                        {% if is_granted('ROLE_IUT') %}
-                            <li>
-                                <a href="{{ path('homepage_specialite') }}">
-                                    <i class="bi bi-house-door icon"></i>
-                                    <span class="label">{{ user_data.departement.sigle }}</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a href="#ref_competences"
-                               data-href="{{ path('administration_apc_referentiel_index', {departement:1}) }}">
-                                <i class="bi bi-wallet2 icon"></i>
-                                <span class="label">Info. Spécialité</span>
-                            </a>
-                            <ul id="ref_competences">
+                            {% else %}
                                 <li>
-                                    <a href="{{ path('administration_apc_referentiel_index', {departement: user_data
-                                    .departement.id}) }}">
-                                        <span class="label">Consulter</span>
+                                    <a href="{{ path('app_labset_public') }}">
+                                        <span class="label">Liste des SAÉ</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ path('administration_apc_apprentissage_critique_index', {departement:
-                                        user_data.departement.id}) }}">
-                                        <span class="label">Liste des AC</span>
-                                    </a>
-                                </li>
-                                {% if is_granted('ROLE_GT') or is_granted('ROLE_CPN') or is_granted('ROLE_CPN_LECTEUR')
-                                    or is_granted('ROLE_PACD') or is_granted('ROLE_EDITEUR') %}
-                                    <li>
-                                        <a href="{{ path('administration_departement_edit', {id: user_data.departement
-                                        .id}) }}">
-                                            <span class="label">Texte descriptif de la spécialité</span>
-                                        </a>
-                                    </li>
-                                    {% for parcours in user_data.departement.apcParcours %}
-                                        <li>
-                                            <a href="{{ path('administration_apc_parcours_edit', {id:parcours.id}) }}">
-                                                <span class="label">texte du parcours : {{ parcours.libelle }}</span>
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                {% else %}
-                                    <li>
-                                        <a href="{{ path('administration_departement_lecteur_show', {id: user_data.departement.id}) }}">
-                                            <span class="label">Consulter le Texte descriptif de la spécialité</span>
-                                        </a>
-                                    </li>
-                                    {% for parcours in user_data.departement.apcParcours %}
-                                        <li>
-                                            <a href="{{ path('administration_apc_parcours_show', {id:parcours.id}) }}">
-                                                <span class="label">Consulter le  texte du parcours : {{ parcours
-                                                    .libelle }}</span>
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                {% endif %}
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#tableaux" data-href="tableaux">
-                                <i class="bi bi-table icon"></i>
-                                <span class="label">Tableaux</span>
-                            </a>
-                            <ul id="tableaux">
-                                <li>
-                                    <a href="{{ path('tableau_structure') }}">
-                                        <span class="label">Structure des 3 années</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {% for annee in user_data.annees %}
-                            <li {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}class="mega dropdown"{% endif %}>
-                                <a href="#but{{ annee.ordre }}" data-href="{{ path('but_annee', {annee: annee.id}) }}">
-                                    <i class="bi bi-calendar3 icon"></i>
-                                    <span class="label">B.U.T. {{ annee.ordre }}</span>
-                                </a>
-                                <ul id="but{{ annee.ordre }}"
-                                    {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}class="row align-items-start row-cols-{{ user_data.departement.apcParcours|length + 1 }} dropdown-menu"
-                                    data-popper-placement="bottom-start" {% endif %}>
-                                    {% if user_data.departement.typeStructure != 'type3' %}
-                                        {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
-                                            <li class="dropdown col d-flex flex-column">
-                                                <a href="#tronc" class="dropdown-toggle
-                                    active">
-                                                    <span class="label">Toutes les ressources/SAÉ</span>
-                                                </a>
-                                                <ul id="tronc">
-                                                    <li>
-                                                        <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
-                                                            <span class="label">Ressources</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
-                                                            <span class="label">SAÉ</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        {% else %}
-                                            <li>
-                                                <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
-                                                    <span class="label">Ressources</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('but_sae_annee', {annee: annee.id}) }}">
-                                                    <span class="label">SAÉ</span>
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                    {% endif %}
-
-                                    {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
-                                        {% for parcours in user_data.departement.apcParcours %}
-                                            <li>
-                                                <a href="#parcours{{ parcours.id }}">
-                                                    <span class="label"><abbr title="{{ parcours.libelle }}">{{ parcours
-                                                            .code }}</abbr></span>
-                                                </a>
-                                                <ul id="parcours{{ parcours.id }}">
-                                                    <li>
-                                                        <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                            <span class="label">Ressources du parcours</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                            <span class="label">SAÉ du parcours</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li>
-                                                        <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                            <span class="label">Tableau croisé par semestre</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                            <span class="label">
-                                                                Préconisations par semestre
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                    {% if is_granted('ROLE_PACD') %}
-                                                        <li>
-                                                            <a href="{{ path('tableau_horaire_annee', {annee: annee.id,
-                                                                parcours: parcours.id}) }}">
-                                                                <span class="label">Volumes horaires par semestre</span>
-                                                            </a>
-                                                        </li>
-
-                                                        <li>
-                                                            <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id,
-                                                                parcours: parcours.id}) }}">
-                                                                <span class="label">Validation des AC par les SAÉ</span>
-                                                            </a>
-                                                        </li>
-                                                    {% endif %}
-                                                </ul>
-                                            </li>
-                                        {% endfor %}
-                                    {% else %}
-
-                                        <li>
-                                            <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
-                                                <span class="label">Tableau croisé par semestre</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
-                                                <span class="label">Préconisations par semestre</span>
-                                            </a>
-                                        </li>
-                                        {% if is_granted('ROLE_PACD') %}
-                                            <li>
-                                                <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">
-                                                    <span class="label">Volumes horaires par semestre</span>
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
-                                                    <span class="label">Validation des AC par les SAÉ</span>
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                    {% endif %}
-                                </ul>
-                            </li>
-                        {% endfor %}
-                    {% endif %}
-                    <li>
-                        <a href="#export" data-href="export">
-                            <i class="bi bi-cloud-download icon"></i>
-                            <span class="label">Export.</span>
-                        </a>
-                        <ul id="export">
-                            <li>
-                                <a href="{{ path('administration_apc_referentiel_competence_export') }}">
-                                    <span class="label">Sauvegarder le référentiel de compétences (XML)</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ path('administration_apc_referentiel_formation_export') }}">
-                                    <span class="label">Sauvegarder le référentiel de formation (XML)</span>
-                                </a>
-                            </li>
+                            {% endif %}
                         </ul>
                     </li>
+
+                    <!-- 6. Gestion et administration -->
                     {% if is_granted('ROLE_PACD') %}
                         <li>
-                            <a href="#admin" data-href="admin">
+                            <a href="{{ path('admin') }}">
                                 <i class="bi bi-gear icon"></i>
-                                <span class="label">Admin.</span>
+                                <span class="label">Administration</span>
                             </a>
-                            <ul id="admin">
-                                {% if is_granted('ROLE_GT') %}
-                                    {#                                <li> #}
-                                    {#                                    <a href="{{ path('administration_apc_referentiel_import') }}"> #}
-                                    {#                                        <span class="label">Importer des référentiels</span> #}
-                                    {#                                    </a> #}
-                                    {#                                </li> #}
-                                    <li>
-                                        <a href="{{ path('administration_apc_referentiel_export') }}">
-                                            <span class="label">Exporter</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administration_departement_index') }}">
-                                            <span class="label">Gestion des spécialités</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('administration_domaine_index') }}">
-                                            <span class="label">Domaines autorisés</span>
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                <li>
-                                    <a href="{{ path('administration_utilisateur_index') }}">
-                                        <span class="label">Gérer les accès</span>
-                                    </a>
-                                </li>
 
-                                <li>
-                                    <a href="{{ path('update_codification_index') }}">
-                                        <span class="label">MàJ codification</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('export_index') }}">
-                                        <span class="label">Exporter</span>
-                                    </a>
-                                </li>
-                                {#                            {% if not is_granted('ROLE_GT') %} #}
+{#                            <ul id="administration">#}
+{#                                {% if is_granted('ROLE_GT') %}#}
+{#                                    <li>#}
+{#                                        <a href="{{ path('administration_domaine_index') }}">#}
+{#                                            <span class="label">Domaines autorisés</span>#}
+{#                                        </a>#}
+{#                                    </li>#}
+{#                                {% endif %}#}
+{#                                <li>#}
+{#                                    <a href="{{ path('update_codification_index') }}">#}
+{#                                        <span class="label">MàJ codification</span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                                <li>#}
+{#                                    <a href="{{ path('export_index') }}">#}
+{#                                        <span class="label">Exporter</span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                                <li>#}
+{#                                    <a href="{{ path('administration_apc_referentiel_competence_export') }}">#}
+{#                                        <span class="label">Sauvegarder le référentiel de compétences</span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                                <li>#}
+{#                                    <a href="{{ path('administration_apc_referentiel_formation_export') }}">#}
+{#                                        <span class="label">Sauvegarder le référentiel de formation</span>#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                            </ul>#}
+                        </li>
+                    {% else %}
+                        <!-- 6. Export pour les non-admin -->
+                        <li>
+                            <a href="#export" data-href="export">
+                                <i class="bi bi-cloud-download icon"></i>
+                                <span class="label">Export</span>
+                            </a>
+                            <ul id="export">
                                 <li>
                                     <a href="{{ path('administration_apc_referentiel_competence_export') }}">
-                                        <span class="label">Sauvegarder le référentiel de compétences</span>
+                                        <span class="label">Référentiel de compétences (XML)</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ path('administration_apc_referentiel_formation_export') }}">
-                                        <span class="label">Sauvegarder le référentiel de formation</span>
+                                        <span class="label">Référentiel de formation (XML)</span>
                                     </a>
                                 </li>
+                            </ul>
+                        </li>
+                    {% endif %}
 
-                                {#                            {% endif %} #}
-                                {#                            <li> #}
-                                {#                                <a href="{{ path('administration_apc_referentiel_import_formation_index') }}"> #}
-                                {#                                    <span class="label">Importer le référentiel de formation</span> #}
-                                {#                                </a> #}
-                                {#                            </li> #}
-                            </ul>
-                        </li>
-                    {% endif %}
-                    {% if (is_granted('ROLE_GT') or is_granted('ROLE_IUT')) %}
+                    <!-- 7. Sélection de spécialité (pour les rôles qui peuvent changer de spécialité) -->
+                    {% if (is_granted('ROLE_GT') or is_granted('ROLE_IUT') or user_data.user.isCpn) %}
                         <li class="mega dropdown">
-                            <a href="#ref_formation" data-href="ref_formation">
+                            <a href="#specialites" data-href="specialites">
                                 <i class="bi bi-shuffle icon"></i>
-                                <span class="label">B.U.T.</span>
+                                <span class="label">Spécialités B.U.T.</span>
                             </a>
-                            <ul id="ref_formation" class="row align-items-start row-cols-2 dropdown-menu"
+                            <ul id="specialites" class="row align-items-start row-cols-2 dropdown-menu"
                                 data-popper-placement="bottom-start">
                                 <li class="dropdown col d-flex flex-column">
                                     <a href="#tertiaires" data-href="tertiaires" class="dropdown-toggle">
                                         <span class="label">Tertiaires</span>
                                     </a>
                                     <ul id="tertiaires">
-                                        {% for specialite in user_data.specialites|filter(specialite => specialite
-                                        .typeDepartement == 'tertiaire') %}
-                                            <li class="col d-flex flex-column">
-                                                <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
-                                                    <span class="label">{{ specialite.sigle }}</span>
-                                                </a>
-                                            </li>
-                                        {% endfor %}
+                                        {% if is_granted('ROLE_GT') or is_granted('ROLE_IUT') %}
+                                            {% for specialite in user_data.specialites|filter(specialite => specialite.typeDepartement == 'tertiaire') %}
+                                                <li class="col d-flex flex-column">
+                                                    <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
+                                                        <span class="label">{{ specialite.sigle }}</span>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        {% elseif user_data.user.isCpn %}
+                                            {% for specialite in user_data.user.cpnDepartements|filter(specialite => specialite.typeDepartement == 'tertiaire') %}
+                                                <li class="col d-flex flex-column">
+                                                    <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
+                                                        <span class="label">{{ specialite.sigle }}</span>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        {% endif %}
                                     </ul>
                                 </li>
                                 <li class="dropdown col d-flex flex-column">
-                                    <a href="#Secondaires" class="dropdown-toggle" data-href="Secondaires">
+                                    <a href="#secondaires" class="dropdown-toggle" data-href="secondaires">
                                         <span class="label">Secondaires</span>
                                     </a>
-                                    <ul id="Secondaires">
-                                        {% for specialite in user_data.specialites|filter(specialite => specialite
-                                        .typeDepartement == 'secondaire') %}
-                                            <li class="col d-flex flex-column">
-                                                <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
-                                                    <span class="label">{{ specialite.sigle }}</span>
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                    {% if user_data.user.isCpn %}
-                        <li class="mega dropdown">
-                            <a href="#ref_formation" data-href="ref_formation">
-                                <i class="bi bi-shuffle icon"></i>
-                                <span class="label">B.U.T.</span>
-                            </a>
-                            <ul id="ref_formation" class="row align-items-start row-cols-2 dropdown-menu"
-                                data-popper-placement="bottom-start">
-                                <li class="dropdown col d-flex flex-column">
-                                    <a href="#tertiaires" data-href="tertiaires" class="dropdown-toggle">
-                                        <span class="label">Tertiaires</span>
-                                    </a>
-                                    <ul id="tertiaires">
-                                        {% for specialite in user_data.user.cpnDepartements|filter(specialite =>
-                                            specialite
-                                            .typeDepartement == 'tertiaire') %}
-                                            <li class="col d-flex flex-column">
-                                                <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
-                                                    <span class="label">{{ specialite.sigle }}</span>
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                                <li class="dropdown col d-flex flex-column">
-                                    <a href="#Secondaires" class="dropdown-toggle" data-href="Secondaires">
-                                        <span class="label">Secondaires</span>
-                                    </a>
-                                    <ul id="Secondaires">
-                                        {% for specialite in user_data.user.cpnDepartements|filter(specialite =>
-                                            specialite
-                                            .typeDepartement == 'secondaire') %}
-                                            <li class="col d-flex flex-column">
-                                                <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
-                                                    <span class="label">{{ specialite.sigle }}</span>
-                                                </a>
-                                            </li>
-                                        {% endfor %}
+                                    <ul id="secondaires">
+                                        {% if is_granted('ROLE_GT') or is_granted('ROLE_IUT') %}
+                                            {% for specialite in user_data.specialites|filter(specialite => specialite.typeDepartement == 'secondaire') %}
+                                                <li class="col d-flex flex-column">
+                                                    <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
+                                                        <span class="label">{{ specialite.sigle }}</span>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        {% elseif user_data.user.isCpn %}
+                                            {% for specialite in user_data.user.cpnDepartements|filter(specialite => specialite.typeDepartement == 'secondaire') %}
+                                                <li class="col d-flex flex-column">
+                                                    <a href="{{ path('change_specialite', {departement:specialite.id}) }}">
+                                                        <span class="label">{{ specialite.sigle }}</span>
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        {% endif %}
                                     </ul>
                                 </li>
                             </ul>

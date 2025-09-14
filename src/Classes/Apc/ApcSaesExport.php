@@ -14,9 +14,13 @@ use ZipArchive;
 class ApcSaesExport
 {
     protected ApcSaeParcoursRepository $apcSaeParcoursRepository;
+
     protected ApcSaeRepository $apcSaeRepository;
+
     protected MyWord $myWord;
+
     protected mixed $saes;
+
     private string $dir;
 
     public function __construct(
@@ -34,7 +38,7 @@ class ApcSaesExport
 
     public function export(Annee $annee, string $_format, ?ApcParcours $parcours)
     {
-        if ($parcours !== null) {
+        if ($parcours instanceof \App\Entity\ApcParcours) {
             $this->saes = $this->apcSaeParcoursRepository->findByAnneeArray($annee, $parcours);
         } else {
             $this->saes = $this->apcSaeRepository->findByAnneeArray($annee);
@@ -47,11 +51,12 @@ class ApcSaesExport
                 break;
 
         }
+        return null;
 
 
     }
 
-    private function exportZipWord()
+    private function exportZipWord(): \Symfony\Component\HttpFoundation\Response
     {
         $zip = new ZipArchive();
         $fileName = 'saes-' . date('YmdHis') . '.zip';
@@ -61,7 +66,7 @@ class ApcSaesExport
         $zip->open($zipName, ZipArchive::CREATE);
         $tabFiles = [];
 
-        foreach ($this->saes as $key => $saes) {
+        foreach ($this->saes as $saes) {
             /** @var \App\Entity\ApcSae $sae */
             foreach ($saes as $sae) {
                 if ($sae->getFicheAdaptationLocale() === false) {

@@ -1,0 +1,51 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    Choix des exports
+{% endblock %}
+
+{% block main %}
+    <div class="row" {{ stimulus_controller('update-departement', {
+        url: path('administration_versionning_competences_update'),
+    }) }}>
+        <div class="col-sm-12">
+            <div class="card-title">
+                <h2 class="small-title">Choisir la spécialité</h2>
+            </div>
+            <div class="card mb-5">
+
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="departement">Spécialité</label>
+                        <select class="form-control" name="departement" id="departement"
+                                {{ stimulus_action('update-departement', 'changeRefCompetence') }}
+                        >
+                            <option value="">Choisir</option>
+                            {% for departement in departements %}
+                                <option value="{{ departement.id }}">{{ departement.display }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="card-title">
+                <h2 class="small-title">Comparaison</h2>
+            </div>
+            <div class="card mb-5">
+
+                <div class="card-body" {{ stimulus_target('update-departement', 'zoneDiff') }}>
+                    <div class="alert alert-info">
+                        Choisir une spécialité pour comparer les référentiels de compétences
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+    {% block head_javascript %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('admin') }}
+    {% endblock %}

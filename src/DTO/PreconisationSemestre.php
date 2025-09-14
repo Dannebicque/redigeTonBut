@@ -11,10 +11,15 @@ use App\Entity\Semestre;
 class PreconisationSemestre
 {
     private array $tCompetences = [];
+
     private array $tRessources = [];
+
     private array $tRessourcesAl = [];
+
     private array $tSaes = [];
+
     private array $tSaesAl = [];
+
     private array $tSemestre = [];
 
     public function __construct(Semestre $semestre, array $competences, array $ressources, array $saes, array $ressourcesAl, array $saesAl, ?ApcParcours $parcours = null)
@@ -43,7 +48,7 @@ class PreconisationSemestre
 
         foreach ($semestre->getApcCompetenceSemestres() as $apc) {
             if (array_key_exists($apc->getCompetence()->getId(), $this->tCompetences)) {
-                if ($parcours !== null && $semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+                if ($parcours instanceof \App\Entity\ApcParcours && $semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
                     //On est donc en S3->S6, hors type 3. Donc on peut différencier les ECTS
                     $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getEctsParcours() !== null ? $apc->getEctsParcours()[$parcours->getId()] : 0;
                     $this->tSemestre['nb_ects'] += $apc->getEctsParcours() !== null ? $apc->getEctsParcours()[$parcours->getId()] : 0;
@@ -75,6 +80,7 @@ class PreconisationSemestre
                     if (!array_key_exists($comp->getCompetence()->getId(), $this->tSaes[$sae->getId()])) {
                         $this->tSaes[$sae->getId()][$comp->getCompetence()->getId()] = [];
                     }
+
                     $this->tSaes[$sae->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
                     $this->tSaes[$sae->getId()]['total'] += $comp->getCoefficient();
                     $this->tCompetences[$comp->getCompetence()->getId()]['total'] += $comp->getCoefficient();
@@ -105,6 +111,7 @@ class PreconisationSemestre
                     if (!array_key_exists($comp->getCompetence()->getId(), $this->tSaesAl[$sae->getId()])) {
                         $this->tSaesAl[$sae->getId()][$comp->getCompetence()->getId()] = [];
                     }
+
                     $this->tSaesAl[$sae->getId()][$comp->getCompetence()->getId()]['coefficient'] = $comp->getCoefficient();
                     $this->tSaesAl[$sae->getId()]['total'] += $comp->getCoefficient();
                     $this->tCompetences[$comp->getCompetence()->getId()]['totalAl'] += $comp->getCoefficient();
@@ -112,6 +119,7 @@ class PreconisationSemestre
                 }
             }
         }
+
         foreach ($ressources as $ressource) {
             $this->tRessources[$ressource->getId()] = [];
             $this->tRessources[$ressource->getId()]['total'] = 0;
@@ -180,7 +188,7 @@ class PreconisationSemestre
         }
     }
 
-    public function getJson()
+    public function getJson(): array
     {
         return [
             'saes' => $this->tSaes,

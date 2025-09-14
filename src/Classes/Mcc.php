@@ -40,6 +40,7 @@ class Mcc
         $tabRefParcours = [];
         $this->tabRefTotalParcours = [];
         $tabRefTotalParcours = [];
+
         $tabRefCompetences = [];
 
 
@@ -62,6 +63,7 @@ class Mcc
                 $sheetModele->setCellValue('M1', 'Droit, Economie, Gestion, Sciences sociale');
                 $sheetModele1->setCellValue('M1', 'Droit, Economie, Gestion, Sciences sociale');
             }
+
             $sheetModele->setCellValue('M4', $departement->getLibelle());
             $sheetModele1->setCellValue('M4', $departement->getLibelle());
 
@@ -106,11 +108,13 @@ class Mcc
                             $sheetModele->getStyle($cellCopy)->applyFromArray($styleArray);
                             $sheetModele->duplicateStyle($sheetModele->getStyle($cellBase), $cellCopy);
                         }
+
                         $ligneBase++;
                     }
 
 
                 }
+
                 $tabRefParcours[$parc->getId()] = $col + $i;
 
                 // partie heures
@@ -198,12 +202,14 @@ class Mcc
                 $rowTotal += 5;
                 $i++;
             }
+
             if ($i > 1) {
                 $sheetModele->mergeCellsByColumnAndRow($col, 16, $col + $i - 1, 16);
                 $cellDebut = Coordinate::StringFromColumnIndex($col) . '16';
                 $cellFin = Coordinate::StringFromColumnIndex($col + $i - 1) . '16';
                 $sheetModele = $this->borderInsideOutside($cellDebut, $cellFin, $sheetModele);
             }
+
             $sheetModele->getStyle(Coordinate::StringFromColumnIndex($col) . '16')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
             $cellDebut = Coordinate::StringFromColumnIndex($col) . '17';
@@ -253,6 +259,7 @@ class Mcc
                             $sheet->duplicateStyle($sheet->getStyle($cellBase), $cellCopy);
                         }
                     }
+
                     $sheet->setCellValueByColumnAndRow($debutCompetences + $i, 17, 'BC' . ($i + 1));
                     $sheet->setCellValueByColumnAndRow($debutCompetences + $i, 18,
                         $competence->getCompetence()->getNomCourt());
@@ -267,6 +274,7 @@ class Mcc
 
                     $i++;
                 }
+
                 $sheet->mergeCellsByColumnAndRow($debutCompetences, 16, $debutCompetences + $i - 1, 16);
                 $cellDebut = Coordinate::StringFromColumnIndex($debutCompetences) . '16';
                 $cellFin = Coordinate::StringFromColumnIndex($debutCompetences + $i - 1) . '16';
@@ -328,8 +336,10 @@ class Mcc
                             }
                         }
                     }
+
                     $ligne++;
                 }
+
                 $ligne++;
 
                 //Ajout des SAE
@@ -405,7 +415,7 @@ class Mcc
 
                         }
                     } else {
-                        $finTableau = $finTableau > 49 ? $finTableau : 49;
+                        $finTableau = max($finTableau, 49);
                         $colComp = Coordinate::stringFromColumnIndex($tabRefCompetences[$competence->getCompetence()->getId()]);
                         $sheet->setCellValue($colComp . ($finTableau + 3),
                             '=SUM(' . $colComp . '22:' . $colComp . $finTableau . ')');
@@ -447,14 +457,14 @@ class Mcc
         $excelWriter->setSpreadsheet($spreadsheet, true);
 
 
-        if ($fi === true) {
+        if ($fi) {
             return $excelWriter->genereFichier('mcc_fi_' . $departement->getSigle());
         }
 
         return $excelWriter->genereFichier('mcc_fc_' . $departement->getSigle());
     }
 
-    private function borderInsideOutside($cellDebut, $cellFin, $sheet)
+    private function borderInsideOutside(string $cellDebut, string $cellFin, $sheet)
     {
         $sheet->getStyle($cellDebut . ':' . $cellFin)->getBorders()->getInside()->setBorderStyle(Border::BORDER_THIN);
         $sheet->getStyle($cellDebut . ':' . $cellFin)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM);

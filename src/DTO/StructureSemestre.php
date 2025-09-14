@@ -9,26 +9,43 @@ use App\Entity\Semestre;
 class StructureSemestre
 {
     public float $nbHeuresRessourcesSae;
+
     public float $pourcentageAdaptationLocale;
 
     public float $nbSemaines;
+
     public float $nbSemainesConges;
+
     public int $nbSemainesStageMin;
+
     public int $nbSemainesStageMax;
+
     public int $nbSemainesCoursProjet;
+
     public float $nbHeuresProjet;
+
     public float $nbHeuresCoursProjet;
+
     public float $nbDemiJournees;
+
     public float $dureeHebdo;
+
     public float $nbMoyenneHeuresDemiJournee;
+
     public float $nbHeuresCoursHebdo;
+
     public float $nbHeuresHebdoProjet;
 
     public float $nbHeuresEnseignementLocale;
+
     public float $nbHeuresEnseignementSaeLocale;
+
     public float $nbHeuresEnseignementRessourceLocale;
+
     public float $nbHeuresEnseignementRessourceNational;
+
     public float $nbHeuresTpNational;
+
     public float $nbHeuresTpLocale;
 
 
@@ -59,7 +76,7 @@ class StructureSemestre
 
     }
 
-    public function getJson()
+    public function getJson(): array
     {
         return [
             'nbHeuresRessourcesSae' => round($this->nbHeuresRessourcesSae, 2),

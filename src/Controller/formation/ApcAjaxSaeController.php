@@ -65,7 +65,7 @@ class ApcAjaxSaeController extends BaseController
                 $b['id'] = $d->getId();
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCode();
-                $b['checked'] = true === in_array($d->getId(), $tabAcSae);
+                $b['checked'] = in_array($d->getId(), $tabAcSae);
                 if (null !== $d->getNiveau()) {
                     $key = $d->getNiveau()->getCompetence();
                     if (null !== $key && !array_key_exists($key->getId(),
@@ -121,7 +121,7 @@ class ApcAjaxSaeController extends BaseController
                 $b['id'] = $d->getId();
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCodeMatiere();
-                $b['checked'] = true === in_array($d->getId(), $tabAcSae);
+                $b['checked'] = in_array($d->getId(), $tabAcSae);
                 $t[] = $b;
             }
 
@@ -158,7 +158,7 @@ class ApcAjaxSaeController extends BaseController
                     $b['id'] = $d->getId();
                     $b['libelle'] = $d->getLibelle();
                     $b['code'] = $d->getCode();
-                    $b['checked'] = true === in_array($d->getId(), $tabSaeParcours);
+                    $b['checked'] = in_array($d->getId(), $tabSaeParcours);
                     $t[] = $b;
                 }
 
@@ -176,7 +176,7 @@ class ApcAjaxSaeController extends BaseController
         Request $request,
         ApcSae $sae,
         ApcApprentissageCritique $ac
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -193,25 +193,23 @@ class ApcAjaxSaeController extends BaseController
             if ((bool)$parametersAsArray['value'] === false) {
                 $this->entityManager->remove($acSae);
             }
-        } else {
+        } elseif ((bool)$parametersAsArray['value']) {
             //selon la valeur, on ajoute
-            if ((bool)$parametersAsArray['value'] === true) {
-                $acSae = new ApcSaeApprentissageCritique($sae, $ac);
-                $this->entityManager->persist($acSae);
-
-                $comp = $ac->getCompetence();
-                if ($comp !== null) {
-                    $cp = $apcSaeCompetenceRepository->findOneBy([
-                        'competence' => $comp->getId(),
-                        'sae' => $sae->getId()
-                    ]);
-                    if ($cp === null) {
-                        $competence = new ApcSaeCompetence($sae, $comp);
-                        $this->entityManager->persist($competence);
-                    }
+            $acSae = new ApcSaeApprentissageCritique($sae, $ac);
+            $this->entityManager->persist($acSae);
+            $comp = $ac->getCompetence();
+            if ($comp instanceof \App\Entity\ApcCompetence) {
+                $cp = $apcSaeCompetenceRepository->findOneBy([
+                    'competence' => $comp->getId(),
+                    'sae' => $sae->getId()
+                ]);
+                if ($cp === null) {
+                    $competence = new ApcSaeCompetence($sae, $comp);
+                    $this->entityManager->persist($competence);
                 }
             }
         }
+
         $this->entityManager->flush();
 
         return $this->json(true);
@@ -223,7 +221,7 @@ class ApcAjaxSaeController extends BaseController
         Request $request,
         ApcSae $sae,
         ApcCompetence $competence
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -258,7 +256,7 @@ class ApcAjaxSaeController extends BaseController
         Request $request,
         ApcSae $sae,
         string $type
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -275,6 +273,7 @@ class ApcAjaxSaeController extends BaseController
                 $sae->setProjetPpn(Convert::convertToFloat($parametersAsArray['valeur']));
                 break;
         }
+
         $this->entityManager->flush();
 
         return $this->json(true);

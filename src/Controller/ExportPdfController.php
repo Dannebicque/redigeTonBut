@@ -149,7 +149,7 @@ class ExportPdfController extends BaseController
 
         $header = $this->renderView('export_pdf/_header.html.twig',
             ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
-        $footer = $this->renderView('export_pdf/_footer.html.twig');
+        $this->renderView('export_pdf/_footer.html.twig');
 
         return new PdfResponse(
             $knpSnappyPdf->getOutputFromHtml($html,
@@ -204,7 +204,7 @@ class ExportPdfController extends BaseController
 
         $header = $this->renderView('export_pdf/_header.html.twig',
             ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
-        $footer = $this->renderView('export_pdf/_footer.html.twig');
+        $this->renderView('export_pdf/_footer.html.twig');
 
         return new PdfResponse(
             $knpSnappyPdf->getOutputFromHtml($html,

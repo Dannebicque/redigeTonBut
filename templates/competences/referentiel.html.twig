@@ -134,12 +134,44 @@
 {% endblock %}
 
 {% block bouton_header %}
-    <a href="{{ path('export_referentiel_competences', {departement:departement.id}) }}" class="btn btn-sm
+    <a href="{{ path('administration_apc_parcours_new') }}" class="btn btn-sm
     btn-outline-success
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >
-        <i class="bi-download"></i>
-        <span>Export PDF</span>
+        <i class="bi-plus"></i>
+        <span>Ajouter un parcours</span>
     </a>
+
+    <a href="{{ path('administration_apc_competence_new') }}" class="btn btn-sm
+    btn-outline-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-plus"></i>
+        <span>Ajouter une compétence</span>
+    </a>
+
+        <a href="{{ path('voir_versionning_referentiel_competences', {departement:departement.id}) }}" class="btn btn-sm
+        btn-outline-success
+            btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        >
+            <i class="bi-download"></i>
+            <span>Voir différences</span>
+        </a>
+
+{#    <a href="{{ path('export_versionning_referentiel_competences', {departement:departement.id}) }}" class="btn btn-sm#}
+{#    btn-outline-success#}
+{#        btn-icon btn-icon-end w-100 w-sm-auto mx-2"#}
+{#    >#}
+{#        <i class="bi-download"></i>#}
+{#        <span>Export versionning PDF</span>#}
+{#    </a>#}
+
+{#    <a href="{{ path('export_referentiel_competences', {departement:departement.id}) }}" class="btn btn-sm#}
+{#    btn-success#}
+{#        btn-icon btn-icon-end w-100 w-sm-auto mx-2"#}
+{#    >#}
+{#        <i class="bi-download"></i>#}
+{#        <span>Export PDF</span>#}
+{#    </a>#}
 {% endblock %}
 

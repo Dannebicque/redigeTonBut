@@ -36,7 +36,7 @@ class UpdatePppCommand extends Command
                     case 1:
                     case 2:
                         $ppp = '- S’approprier la démarche PPP : connaissance de soi (intérêt, curiosité, aspirations, motivations), accompagner les étudiants dans la définition d’une stratégie personnelle permettant la réalisation du projet professionnel' . "\r\n" .
-                            '- S\'approprier la formation' . "\r\n" .
+                            "- S'approprier la formation" . "\r\n" .
                             '- Découvrir les métiers et connaître le territoire' . "\r\n" .
                             '- Se projeter dans un environnement professionnel';
                         break;
@@ -54,6 +54,7 @@ class UpdatePppCommand extends Command
                             '- S\'approprier le processus et s\'adapter aux différents types de recrutement';
                         break;
                 }
+
                 $description = $ressource->getDescription();
                 $ressource->setDescription($ppp . "\r\n \r\n". $description);
                 $this->entityManager->flush();

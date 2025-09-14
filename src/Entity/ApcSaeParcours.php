@@ -6,28 +6,20 @@ use App\Repository\ApcSaeParcoursRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcSaeParcoursRepository::class)
- */
+#[ORM\Entity(repositoryClass: ApcSaeParcoursRepository::class)]
 class ApcSaeParcours
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     * @Groups({"read:sae"})
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:sae'])]
+    private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcSae::class, inversedBy="apcSaeParcours")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcSae::class, inversedBy: 'apcSaeParcours')]
     private ApcSae $sae;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="apcSaeParcours")
-     * @Groups({"read:sae"})
-     */
+    #[ORM\ManyToOne(targetEntity: ApcParcours::class, inversedBy: 'apcSaeParcours')]
+    #[Groups(['read:sae'])]
     private ApcParcours $parcours;
 
     public function __construct(ApcSae $sae, ApcParcours $parcours)

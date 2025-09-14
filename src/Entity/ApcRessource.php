@@ -20,8 +20,6 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 use App\Controller\api\GetRessourcesSpecialite;
 
 /**
- * @ORM\Entity(repositoryClass=ApcRessourceRepository::class)
- * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
  *     normalizationContext={"groups"={"read:ressource"}},
  *     collectionOperations={
@@ -48,81 +46,75 @@ use App\Controller\api\GetRessourcesSpecialite;
  *     itemOperations={"get"}
  * )
  */
+#[ORM\Entity(repositoryClass: ApcRessourceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcRessource extends AbstractMatiere
 {
     use LifeCycleTrait;
 
     public const SOURCE = 'ressource';
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="apcRessources")
-     * @Groups({"read:ressource"})
-     */
+    #[ORM\ManyToOne(targetEntity: Semestre::class, inversedBy: 'apcRessources')]
+    #[Groups(['read:ressource'])]
     private ?Semestre $semestre;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"read:ressource"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[Groups(['read:ressource'])]
     private ?string $motsCles;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceCompetence::class, mappedBy="ressource", cascade={"persist","remove"} )
-     * @Groups({"read:ressource"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceCompetence>
      */
+    #[ORM\OneToMany(targetEntity: ApcRessourceCompetence::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
+    #[Groups(['read:ressource'])]
     private Collection $apcRessourceCompetences;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceApprentissageCritique::class, mappedBy="ressource", cascade={"persist","remove"})
-     * @Groups({"read:ressource"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceApprentissageCritique>
      */
+    #[ORM\OneToMany(targetEntity: ApcRessourceApprentissageCritique::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
+    #[Groups(['read:ressource'])]
     private Collection $apcRessourceApprentissageCritiques;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeRessource::class, mappedBy="ressource", cascade={"persist","remove"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeRessource>
      */
+    #[ORM\OneToMany(targetEntity: ApcSaeRessource::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
     private Collection $apcSaeRessources;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="ressource", cascade={"persist","remove"}, fetch="EAGER")
-     * @Groups({"read:ressource"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceParcours>
      */
+    #[ORM\OneToMany(targetEntity: ApcRessourceParcours::class, mappedBy: 'ressource', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    #[Groups(['read:ressource'])]
     private Collection $apcRessourceParcours;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:ressource"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:ressource'])]
     private ?int $ordre = 1;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ApcRessource::class, inversedBy="apcRessources")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessource>
      */
+    #[ORM\ManyToMany(targetEntity: ApcRessource::class, inversedBy: 'apcRessources')]
     private Collection $ressourcesPreRequises;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ApcRessource::class, mappedBy="ressourcesPreRequises")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessource>
      */
+    #[ORM\ManyToMany(targetEntity: ApcRessource::class, mappedBy: 'ressourcesPreRequises')]
     private Collection $apcRessources;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
     private bool $ficheAdaptationLocale = false;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT, nullable: true)]
     private ?float $cmPreco = 0;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT, nullable: true)]
     private ?float $tdPreco = 0;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT, nullable: true)]
     private ?float $tpPreco = 0;
 
     public function __construct()
@@ -179,11 +171,9 @@ class ApcRessource extends AbstractMatiere
 
     public function removeApcRessourceCompetence(ApcRessourceCompetence $apcRessourceCompetence): self
     {
-        if ($this->apcRessourceCompetences->removeElement($apcRessourceCompetence)) {
-            // set the owning side to null (unless already changed)
-            if ($apcRessourceCompetence->getRessource() === $this) {
-                $apcRessourceCompetence->setRessource(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcRessourceCompetences->removeElement($apcRessourceCompetence) && $apcRessourceCompetence->getRessource() === $this) {
+            $apcRessourceCompetence->setRessource(null);
         }
 
         return $this;
@@ -209,11 +199,9 @@ class ApcRessource extends AbstractMatiere
 
     public function removeApcRessourceApprentissageCritique(ApcRessourceApprentissageCritique $apcRessourceApprentissageCritique): self
     {
-        if ($this->apcRessourceApprentissageCritiques->removeElement($apcRessourceApprentissageCritique)) {
-            // set the owning side to null (unless already changed)
-            if ($apcRessourceApprentissageCritique->getRessource() === $this) {
-                $apcRessourceApprentissageCritique->setRessource(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcRessourceApprentissageCritiques->removeElement($apcRessourceApprentissageCritique) && $apcRessourceApprentissageCritique->getRessource() === $this) {
+            $apcRessourceApprentissageCritique->setRessource(null);
         }
 
         return $this;
@@ -235,6 +223,7 @@ class ApcRessource extends AbstractMatiere
                 $t[$sae->getSae()->getOrdre()] = $sae->getSae();
             }
         }
+
         ksort($t);
         return $t;
     }
@@ -251,11 +240,9 @@ class ApcRessource extends AbstractMatiere
 
     public function removeApcSaeRessource(ApcSaeRessource $apcSaeRessource): self
     {
-        if ($this->apcSaeRessources->removeElement($apcSaeRessource)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSaeRessource->getRessource() === $this) {
-                $apcSaeRessource->setRessource(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSaeRessources->removeElement($apcSaeRessource) && $apcSaeRessource->getRessource() === $this) {
+            $apcSaeRessource->setRessource(null);
         }
 
         return $this;
@@ -327,11 +314,9 @@ class ApcRessource extends AbstractMatiere
 
     public function removeApcRessourceParcour(ApcRessourceParcours $apcRessourceParcour): self
     {
-        if ($this->apcRessourceParcours->removeElement($apcRessourceParcour)) {
-            // set the owning side to null (unless already changed)
-            if ($apcRessourceParcour->getRessource() === $this) {
-                $apcRessourceParcour->setRessource(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcRessourceParcours->removeElement($apcRessourceParcour) && $apcRessourceParcour->getRessource() === $this) {
+            $apcRessourceParcour->setRessource(null);
         }
 
         return $this;
@@ -453,7 +438,7 @@ class ApcRessource extends AbstractMatiere
         return $this;
     }
 
-    public function getSlugName()
+    public function getSlugName(): \Symfony\Component\String\AbstractUnicodeString
     {
         $slugger = new AsciiSlugger();
         return $slugger->slug($this->getCodeMatiere());
@@ -461,9 +446,10 @@ class ApcRessource extends AbstractMatiere
 
     public function isGoodParcours(?ApcParcours $apcParcours = null): bool
     {
-        if ($apcParcours === null) {
+        if (!$apcParcours instanceof \App\Entity\ApcParcours) {
             return true;
         }
+
         if ($this->apcRessourceParcours->count() === 0) {
             //pas de parcours dans la SAE, donc tous les parcours
             return true;
@@ -489,6 +475,7 @@ class ApcRessource extends AbstractMatiere
                 $t[$ressource->getOrdre()] = $ressource;
             }
         }
+
         ksort($t);
         return $t;
 
@@ -501,9 +488,10 @@ class ApcRessource extends AbstractMatiere
             return false;
         }
 
-        if ($apcParcours === null) {
+        if (!$apcParcours instanceof \App\Entity\ApcParcours) {
             return true;
         }
+
         if ($this->apcRessourceParcours->count() === 0) {
             //pas de parcours dans la SAE, donc tous les parcours
             return true;
@@ -528,13 +516,16 @@ class ApcRessource extends AbstractMatiere
                 if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $t)) {
                     $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];
                 }
+
                 $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()][$ac->getApprentissageCritique()->getOrdre()] = $ac->getApprentissageCritique();
             }
         }
+
         ksort($t);
-        foreach ($t as $couleur => $acs) {
+        foreach (array_keys($t) as $couleur) {
             ksort($t[$couleur]);
         }
+
         return $t;
     }
 }

@@ -14,12 +14,12 @@ class DomaineType extends AbstractType
     {
         $builder
             ->add('url', TextType::class, [
-                'label' => 'Domaine de l\'email que vous souhaitez autoriser (sans le @)',
+                'label' => "Domaine de l'email que vous souhaitez autoriser (sans le @)",
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'univ-reims.fr',
                 ],
-                'help' => 'Saisir le domaine de l\'email que vous souhaitez autoriser sans le @',
+                'help' => "Saisir le domaine de l'email que vous souhaitez autoriser sans le @",
             ])
         ;
     }

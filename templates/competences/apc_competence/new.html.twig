@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    {{ 'adm.apc_competence.new.heading'|trans }}
+    Ajout d'une compétence au référentiel de compétences de : {{ departement.sigle }}
 {% endblock %}
 
 {% block content %}
     <div class="card">
-        <h4 class="card-title">{{ 'adm.apc_competence.new.heading'|trans }}</h4>
+        <h4 class="card-title">Ajout d'une compétence au référentiel de compétences de : {{ departement.sigle }}</h4>
         <div class="card-body">
             {{ include('composants/adm-form.html.twig') }}
         </div>

@@ -44,7 +44,7 @@ class ApcRessourceController extends BaseController
             $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
             $apcRessource = new ApcRessource();
 
-            if ($semestre !== null) {
+            if ($semestre instanceof \App\Entity\Semestre) {
                 $apcRessource->setSemestre($semestre);
                 $apcRessource->setOrdre($apcRessourceOrdre->getOrdreSuivant($semestre));
             }
@@ -68,7 +68,7 @@ class ApcRessourceController extends BaseController
                     'Ressource ajoutée avec succès.'
                 );
 
-                if ($parcours !== null) {
+                if ($parcours instanceof \App\Entity\ApcParcours) {
                     return $this->redirectToRoute('but_ressources_annee',
                         [
                             'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
@@ -89,6 +89,7 @@ class ApcRessourceController extends BaseController
                 'form' => $form->createView(),
             ]);
         }
+
         return $this->redirectToRoute('homepage');
 
     }
@@ -132,7 +133,7 @@ class ApcRessourceController extends BaseController
                     'Ressource modifiée avec succès.'
                 );
 
-                if (null !== $request->request->get('btn_update') && null !== $apcRessource->getSemestre() && null !== $apcRessource->getSemestre()->getAnnee()) {
+                if (null !== $request->request->get('btn_update') && $apcRessource->getSemestre() instanceof \App\Entity\Semestre && $apcRessource->getSemestre()->getAnnee() instanceof \App\Entity\Annee) {
 
                     if ($parcours === null) {
                         return $this->redirectToRoute('but_ressources_annee',
@@ -172,6 +173,7 @@ class ApcRessourceController extends BaseController
                 'parcours' => $parcours->getId()
             ]);
         }
+
         return $this->redirectToRoute('homepage');
 
     }
@@ -203,6 +205,7 @@ class ApcRessourceController extends BaseController
 
             return $this->redirect($request->headers->get('referer'));
         }
+
         return $this->redirectToRoute('homepage');
 
     }
@@ -220,6 +223,7 @@ class ApcRessourceController extends BaseController
 
             return $this->redirectToRoute('formation_apc_ressource_edit', ['id' => $newApcRessource->getId()]);
         }
+
         return $this->redirectToRoute('homepage');
     }
 
@@ -235,6 +239,7 @@ class ApcRessourceController extends BaseController
             $apcRessourceOrdre->deplaceRessource($apcRessource, $position);
             return $this->redirect($request->headers->get('referer'));
         }
+
         return $this->redirectToRoute('homepage');
     }
 }

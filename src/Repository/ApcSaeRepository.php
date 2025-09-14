@@ -30,12 +30,12 @@ class ApcSaeRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcSae::class);
     }
 
-    public function findBySemestre(Semestre $semestre)
+    public function findBySemestre(Semestre $semestre): mixed
     {
         return $this->getBySemestre($semestre, false);
     }
 
-    public function findBySemestreAL(Semestre $semestre)
+    public function findBySemestreAL(Semestre $semestre): mixed
     {
         return $this->getBySemestre($semestre, true);
     }
@@ -82,7 +82,10 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByDepartementToSemestreArray(?Departement $departement)
+    /**
+     * @return mixed[]
+     */
+    public function findByDepartementToSemestreArray(?Departement $departement): array
     {
         $tab = [];
         foreach ($departement->getSemestres() as $semestre) {
@@ -92,7 +95,10 @@ class ApcSaeRepository extends ServiceEntityRepository
         return $tab;
     }
 
-    public function findByDepartementArray(?Departement $departement)
+    /**
+     * @return mixed[]
+     */
+    public function findByDepartementArray(?Departement $departement): array
     {
         $saes = $this->findByDepartement($departement);
         $tab = [];
@@ -103,7 +109,10 @@ class ApcSaeRepository extends ServiceEntityRepository
         return $tab;
     }
 
-    public function findByAnneeArray(Annee $annee)
+    /**
+     * @return mixed[][]
+     */
+    public function findByAnneeArray(Annee $annee): array
     {
         $query = $this->findByAnnee($annee);
 

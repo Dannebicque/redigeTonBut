@@ -22,7 +22,7 @@ class ApcRessourceApprentissageCritiqueType extends AbstractType
 {
     protected ?Departement $departement;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $this->departement = $options['departement'];
@@ -38,7 +38,7 @@ class ApcRessourceApprentissageCritiqueType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => ApcRessourceApprentissageCritique::class,

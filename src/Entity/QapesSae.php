@@ -8,234 +8,157 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass=QapesSaeRepository::class)
- */
+#[ORM\Entity(repositoryClass: QapesSaeRepository::class)]
 class QapesSae
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @var \Doctrine\Common\Collections\ArrayCollection
      */
-    private $id;
+    public $qapesSaeCritereReponses;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="qapesSaesAuteurs")
-     * @ORM\JoinTable(name="qapes_sae_auteur")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\User>
      */
-    private $auteur;
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'qapesSaesAuteurs')]
+    #[ORM\JoinTable(name: 'qapes_sae_auteur')]
+    private \Doctrine\Common\Collections\Collection $auteur;
+
+    #[ORM\ManyToOne(targetEntity: IutSite::class, inversedBy: 'qapesSaes')]
+    private ?\App\Entity\IutSite $iutSite = null;
+
+    #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: 'qapesSaes')]
+    private ?\App\Entity\Departement $specialite = null;
+
+    #[ORM\ManyToOne(targetEntity: ApcParcours::class, inversedBy: 'qapesSaes')]
+    private ?\App\Entity\ApcParcours $parcours = null;
+
+    #[ORM\ManyToOne(targetEntity: ApcSae::class, inversedBy: 'qapesSaes')]
+    private ?\App\Entity\ApcSae $sae = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity=IutSite::class, inversedBy="qapesSaes")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\User>
      */
-    private $iutSite;
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'qapesSaesRedacteurs')]
+    #[ORM\JoinTable(name: 'qapes_sae_redacteur')]
+    private \Doctrine\Common\Collections\Collection $redacteur;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    private ?string $intituleSae = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    private ?string $lien  = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $aEpingler  = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $anneeCreation = 0;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 5, nullable: true)]
+    private ?string $version = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 100, nullable: true)]
+    private ?string $dateVersion = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20, nullable: true)]
+    private ?string $modeDispense = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    private ?float $nbEcts = 0;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20, nullable: true)]
+    private ?string $typeSae = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20, nullable: true)]
+    private ?string $saeGroupeIndividuelle = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20, nullable: true)]
+    private ?string $publicCible = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $publicCibleCommentaire = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $nbEtudiants = 0;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $nbEncadrants = 0;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT, nullable: true)]
+    private ?float $nbHeuresAutonomie = 0;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT, nullable: true)]
+    private ?float $nbHeuresDirigees = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $objectifsSae = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $deroulementSae = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $lienLigneDuTemps = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $evaluations = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20, nullable: true)]
+    private ?string $dateEvaluation = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="qapesSaes")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\QapesSaeCritereReponse>
      */
-    private $specialite;
+    #[ORM\OneToMany(targetEntity: QapesSaeCritereReponse::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
+    private \Doctrine\Common\Collections\Collection $qapesSaeCritereReponse;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="qapesSaes")
-     */
-    private $parcours;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $effetsObserves = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcSae::class, inversedBy="qapesSaes")
-     */
-    private $sae;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    private ?string $lienRepertoire = null;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="qapesSaesRedacteurs")
-     * @ORM\JoinTable(name="qapes_sae_redacteur")
-     */
-    private $redacteur;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $coordinationIntervenant = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $intituleSae = null;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $isCoordinationIntervenant = false;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $lien  = null;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $lienDocumentCoordination = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $aEpingler  = null;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $consignesCommuniquees = false;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $anneeCreation = 0;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $lienConsignes = null;
 
-    /**
-     * @ORM\Column(type="string", length=5, nullable=true)
-     */
-    private $version;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $elementsContexte = null;
 
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $dateVersion;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $elementsContextesObstacles = null;
 
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $modeDispense;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $swatForce = null;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $nbEcts = 0;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $swatFaiblesse = null;
 
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $typeSae;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $modificationsApportees = null;
 
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $saeGroupeIndividuelle;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $temoignagesEtudiants = null;
 
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $publicCible;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $temoignagesEnseignants = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $publicCibleCommentaire;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $nbEtudiants = 0;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $nbEncadrants = 0;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $nbHeuresAutonomie = 0;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $nbHeuresDirigees;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $objectifsSae;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $deroulementSae;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $lienLigneDuTemps;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $evaluations;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $dateEvaluation;
-
-    /**
-     * @ORM\OneToMany(targetEntity=QapesSaeCritereReponse::class, mappedBy="sae", cascade={"persist", "remove"})
-     */
-    private $qapesSaeCritereReponse;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $effetsObserves;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $lienRepertoire;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $coordinationIntervenant;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isCoordinationIntervenant = false;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $lienDocumentCoordination;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $consignesCommuniquees = false;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $lienConsignes;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $elementsContexte;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $elementsContextesObstacles;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $swatForce;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $swatFaiblesse;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $modificationsApportees;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $temoignagesEtudiants;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $temoignagesEnseignants;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $publiee = false;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $publiee = false;
 
     public function __construct(UserInterface $user)
     {
@@ -619,11 +542,9 @@ class QapesSae
 
     public function removeQapesSaeCritereReponse(QapesSaeCritereReponse $qapesSaeCritereReponse): self
     {
-        if ($this->qapesSaeCritereReponse->removeElement($qapesSaeCritereReponse)) {
-            // set the owning side to null (unless already changed)
-            if ($qapesSaeCritereReponse->getSae() === $this) {
-                $qapesSaeCritereReponse->setSae(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->qapesSaeCritereReponse->removeElement($qapesSaeCritereReponse) && $qapesSaeCritereReponse->getSae() === $this) {
+            $qapesSaeCritereReponse->setSae(null);
         }
 
         return $this;
@@ -797,17 +718,11 @@ class QapesSae
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPubliee(): bool
     {
         return $this->publiee;
     }
 
-    /**
-     * @param bool $publiee
-     */
     public function setPubliee(bool $publiee): void
     {
         $this->publiee = $publiee;

@@ -30,7 +30,7 @@ class UpdateCodificationController extends BaseController
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         Semestre $semestre, ApcParcours $parcours = null): Response
     {
-        if ($parcours === null) {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $ressources = $apcRessourceRepository->findBySemestre($semestre);
         } else {
             $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
@@ -52,7 +52,7 @@ class UpdateCodificationController extends BaseController
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         Semestre $semestre, ApcParcours $parcours = null): Response
     {
-        if ($parcours === null) {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $saes = $apcSaeRepository->findBySemestre($semestre);
         } else {
             $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
@@ -80,6 +80,7 @@ class UpdateCodificationController extends BaseController
         {
             $ac->setCode(Codification::codeApprentissageCritique($ac));
         }
+
         $this->entityManager->flush();
 
         return $this->redirectToRoute('update_codification_index');

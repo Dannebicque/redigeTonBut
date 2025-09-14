@@ -1,0 +1,13 @@
+Bonjour {{ user.display }},
+
+Merci de confirmer votre adresse email pour activer votre compte en suivant le lien ci-dessous :
+
+{{ url('app_verify_email', {token: token, expiredAt: expiredAt, email: user.email}) }}
+
+Ce lien expire dans 1 heure.
+
+Cordialement,
+Application ORéBUT
+
+---
+Email envoyé automatiquement par l'application ORéBUT.

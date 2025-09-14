@@ -37,7 +37,7 @@ class GenereRefCompetenceCommand extends Command
         $arg1 = $input->getArgument('specialite');
 
         if ($arg1 === 'all') {
-            $io->note(sprintf('Génération pour toutes les spécialités'));
+            $io->note('Génération pour toutes les spécialités');
             //toutes les spécialites
             $specialites = $this->departementRepository->findAll();
             foreach ($specialites as $specialite) {

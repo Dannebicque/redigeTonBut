@@ -22,7 +22,7 @@ class AjaxSemestreController extends BaseController
         Request $request,
         Semestre $semestre,
         string $type
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         if ($this->getDepartement()->getVerouilleStructure() === false) {
             $parametersAsArray = [];
             if ($content = $request->getContent()) {
@@ -43,10 +43,12 @@ class AjaxSemestreController extends BaseController
                     $semestre->setNbHeuresProjet($parametersAsArray['valeur']);
                     break;
             }
+
             $this->entityManager->flush();
 
             return $this->json(true);
         }
+
         return $this->json(false);
     }
 }

@@ -17,9 +17,8 @@ class FichesExtension extends AbstractExtension
         ];
     }
 
-    public function keyWords($text)
+    public function keyWords($text): string|array
     {
-        $text = str_replace([', ', ';', ','], [' - ',' - ',' - '], $text);
-        return $text;
+        return str_replace([', ', ';', ','], [' - ',' - ',' - '], $text);
     }
 }

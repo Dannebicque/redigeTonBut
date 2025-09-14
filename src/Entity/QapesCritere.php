@@ -7,43 +7,35 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\QapesCritereRepository;
 
-/**
- * @ORM\Entity(repositoryClass=QapesCritereRepository::class)
- */
+#[ORM\Entity(repositoryClass: QapesCritereRepository::class)]
 class QapesCritere
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=200)
-     */
-    private $libelle;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 200)]
+    private ?string $libelle = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
 
     /**
-     * @ORM\OneToMany(targetEntity=QapesSaeCritereReponse::class, mappedBy="critere")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\QapesSaeCritereReponse>
      */
-    private $qapesSaeCritereReponses;
+    #[ORM\OneToMany(targetEntity: QapesSaeCritereReponse::class, mappedBy: 'critere')]
+    private \Doctrine\Common\Collections\Collection $qapesSaeCritereReponses;
 
     /**
-     * @ORM\OneToMany(targetEntity=QapesCritereReponse::class, mappedBy="qapesCritere", cascade={"persist","remove"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\QapesCritereReponse>
      */
-    private $qapesCritereReponses;
+    #[ORM\OneToMany(targetEntity: QapesCritereReponse::class, mappedBy: 'qapesCritere', cascade: ['persist', 'remove'])]
+    private \Doctrine\Common\Collections\Collection $qapesCritereReponses;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $libelleAffichage;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    private ?string $libelleAffichage = null;
 
     public function __construct()
     {
@@ -88,11 +80,9 @@ class QapesCritere
 
     public function removeQapesSaeCritereReponse(QapesSaeCritereReponse $qapesSaeCritereReponse): self
     {
-        if ($this->qapesSaeCritereReponses->removeElement($qapesSaeCritereReponse)) {
-            // set the owning side to null (unless already changed)
-            if ($qapesSaeCritereReponse->getCritere() === $this) {
-                $qapesSaeCritereReponse->setCritere(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->qapesSaeCritereReponses->removeElement($qapesSaeCritereReponse) && $qapesSaeCritereReponse->getCritere() === $this) {
+            $qapesSaeCritereReponse->setCritere(null);
         }
 
         return $this;
@@ -118,11 +108,9 @@ class QapesCritere
 
     public function removeQapesCritereReponse(QapesCritereReponse $qapesCritereReponse): self
     {
-        if ($this->qapesCritereReponses->removeElement($qapesCritereReponse)) {
-            // set the owning side to null (unless already changed)
-            if ($qapesCritereReponse->getQapesCritere() === $this) {
-                $qapesCritereReponse->setQapesCritere(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->qapesCritereReponses->removeElement($qapesCritereReponse) && $qapesCritereReponse->getQapesCritere() === $this) {
+            $qapesCritereReponse->setQapesCritere(null);
         }
 
         return $this;

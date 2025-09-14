@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GetSaesSpecialite extends AbstractController
 {
-    private $apcSaeRepository;
+    private \App\Repository\ApcSaeRepository $apcSaeRepository;
 
     public function __construct(ApcSaeRepository $apcSaeRepository)
     {

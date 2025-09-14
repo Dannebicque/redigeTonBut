@@ -45,7 +45,7 @@ class TableauController extends BaseController
         SemestreRepository $semestreRepository,
         ?ApcParcours $parcours = null
     ): Response {
-        if ($parcours !== null && $this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+        if ($parcours instanceof \App\Entity\ApcParcours && $this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
             $semestres = $semestreRepository->findByParcours($parcours);
         } else {
             $semestres = $semestreRepository->findByDepartement($this->getDepartement());
@@ -62,7 +62,7 @@ class TableauController extends BaseController
         SemestreRepository $semestreRepository,
         ApcParcours $parcours = null
     ): Response {
-        if ($parcours === null) {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $semestres = $semestreRepository->findByDepartement($this->getDepartement());
         } else {
             $semestres = $semestreRepository->findByDepartementParcours($this->getDepartement(), $parcours);
@@ -79,7 +79,7 @@ class TableauController extends BaseController
         SemestreRepository $semestreRepository,
         ApcParcours $parcours = null
     ): Response {
-        if ($parcours === null) {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $semestres = $semestreRepository->findByDepartement($this->getDepartement());
         } else {
             $semestres = $semestreRepository->findByDepartementParcours($this->getDepartement(), $parcours);
@@ -95,19 +95,20 @@ class TableauController extends BaseController
         SemestreRepository $semestreRepository,
         Request $request,
         ?ApcParcours $parcours = null
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         if ($this->getDepartement()->getVerouilleStructure() === false) {
             $parametersAsArray = [];
             if ($content = $request->getContent()) {
                 $parametersAsArray = json_decode($content, true);
             }
 
-            if ($parcours === null) {
+            if (!$parcours instanceof \App\Entity\ApcParcours) {
                 $semestre = $semestreRepository->findSemestre($this->getDepartement(), $parametersAsArray['semestre']);
             } else {
                 $semestre = $semestreRepository->findSemestreParcours($this->getDepartement(),
                     $parametersAsArray['semestre'], $parcours);
             }
+
             if ($semestre !== null) {//todo: et vériifer lien semestre/département
 
                 switch ($parametersAsArray['champ']) {
@@ -178,7 +179,7 @@ class TableauController extends BaseController
         ApcParcours $parcours = null
     ): Response {
 
-        if ($parcours === null || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof \App\Entity\ApcParcours || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -198,7 +199,7 @@ class TableauController extends BaseController
         ApcParcours $parcours = null
     ): Response {
 
-        if ($parcours === null || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof \App\Entity\ApcParcours || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -229,7 +230,7 @@ class TableauController extends BaseController
         Annee $annee,
         ApcParcours $parcours = null
     ): Response {
-        if ($parcours === null || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof \App\Entity\ApcParcours || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -246,7 +247,7 @@ class TableauController extends BaseController
         TableauCroise $tableauCroise,
         Semestre $semestre,
         ?ApcParcours $parcours = null
-    ) {
+    ): \Symfony\Component\HttpFoundation\Response {
         $tableauCroise->getDatas($semestre, $parcours);
 
         return $this->render('tableau/_grilleSemestre.html.twig',
@@ -270,8 +271,8 @@ class TableauController extends BaseController
         ApcRessourceRepository $apcRessourceRepository,
         Semestre $semestre,
         ?ApcParcours $parcours = null
-    ) {
-        if ($parcours === null) {
+    ): \Symfony\Component\HttpFoundation\Response {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $saes = $apcSaeRepository->findBySemestre($semestre);
             $ressources = $apcRessourceRepository->findBySemestre($semestre);
         } else {
@@ -294,9 +295,9 @@ class TableauController extends BaseController
         ApcSaeRepository $apcSaeRepository,
         Annee $annee,
         ApcParcours $parcours = null
-    ) {
+    ): \Symfony\Component\HttpFoundation\Response {
 
-        if ($parcours === null) {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $niveaux = $annee->getApcNiveaux();
             $saes = $apcSaeRepository->findByAnnee($annee);
         } else {
@@ -304,7 +305,7 @@ class TableauController extends BaseController
             $saes = $apcSaeParcoursRepository->findByAnnee($annee, $parcours);
         }
 
-        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours !== null) {
+        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours instanceof \App\Entity\ApcParcours) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
@@ -314,6 +315,7 @@ class TableauController extends BaseController
         foreach ($annee->getSemestres() as $sem) {
             $tSaeSemestre[$sem->getOrdreLmd()] = [];
         }
+
         foreach ($saes as $sae) {
             if ($sae->getFicheAdaptationLocale() === false) {
                 $tSaeSemestre[$sae->getSemestre()->getOrdreLmd()][] = $sae;
@@ -349,7 +351,7 @@ class TableauController extends BaseController
         TableauPreconisation $tableauPreconisation,
         Semestre $semestre,
         ApcParcours $parcours = null,
-    ) {
+    ): \Symfony\Component\HttpFoundation\Response {
         $tableauPreconisation->getDatas($semestre, $parcours);
 
         return $this->render('tableau/_preconisationsSemestre.html.twig',

@@ -24,6 +24,7 @@ class ApcSituationProfessionnelleController extends BaseController
 
         $apcSituationProfessionnelle = new ApcSituationProfessionnelle();
         $apcSituationProfessionnelle->setCompetence($competence);
+
         $form = $this->createForm(ApcSituationProfessionnelleType::class, $apcSituationProfessionnelle);
         $form->handleRequest($request);
 

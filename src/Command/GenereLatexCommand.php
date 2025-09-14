@@ -52,6 +52,7 @@ class GenereLatexCommand extends Command
 
                 return Command::FAILURE;
             }
+
             $this->genereFile->genereFile($departement, $this->kernel->getProjectDir() . '/public/latex/');
 
         }

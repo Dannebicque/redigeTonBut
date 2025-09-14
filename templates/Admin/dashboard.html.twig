@@ -1,0 +1,33 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Interface d'administration{% endblock %}
+{% block content_title %}Interface d'administration{% endblock %}
+
+{% block main %}
+    {% set url_departement = ea_url()
+        .setController('App\\Controller\\Admin\\DepartementCrudController')
+        .setAction('index') %}
+    {% set url_parcours = ea_url()
+        .setController('App\\Controller\\Admin\\ApcParcoursCrudController')
+        .setAction('index') %}
+
+    {% set url_user = ea_url()
+        .setController('App\\Controller\\Admin\\UserCrudController')
+        .setAction('index') %}
+
+
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">Tableau de bord</h1>
+        </div>
+        <div class="card-body">
+            <p>Vous pouvez gérer les textes descriptifs de votre <a href="{{ url_departement }}">spécialité</a> et des <a href="{{ url_parcours }}">parcours</a> dans les parties dédiées.</p>
+            <p> Dans cette partie, vous pouvez gérer qui peut accéder à l'application et ses droits associés (rubique <a href="{{ url_user }}">utilisateurs</a>).</p>
+            <p>Vous pouvez voir les différences entre la version 2021 et vos modifications dans la partie <a href="{{ path('administration_versionning_competences') }}">"ref de compétences"</a>.</p>
+            <div class="alert alert-info">
+                Toutes les modifications des référentiels de compétences et de formations se font directement dans le <a href="{{ path('homepage') }}">site principal</a>.
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

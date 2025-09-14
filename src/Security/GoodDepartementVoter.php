@@ -15,7 +15,9 @@ class GoodDepartementVoter extends Voter
 {
     // these strings are just invented: you can use anything
     public const NEW = 'new';
+
     public const DUPLICATE = 'duplicate';
+
     public const CONSULTE = 'consulte';
 
     private Security $security;
@@ -31,13 +33,8 @@ class GoodDepartementVoter extends Voter
         if (!in_array($attribute, [self::NEW, self::CONSULTE])) {
             return false;
         }
-
         // only vote on `ApcRessource` or ApcRessource objects
-        if (!($subject instanceof Semestre || $subject instanceof Annee || $subject instanceof Departement)) {
-            return false;
-        }
-
-        return true;
+        return $subject instanceof Semestre || $subject instanceof Annee || $subject instanceof Departement;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -71,13 +68,9 @@ class GoodDepartementVoter extends Voter
     private function canConsulte(Semestre|Annee|Departement $post, User $user): bool
     {
         // if they can edit, they can view
-        if ($this->canAdd($post, $user)) {
-            return true;
-        }
-
         // the Post object could have, for example, a method `isPrivate()`
         //todo: ajouter champ blocage édition sur ??? département ??? tableaux ???
-        return true;
+        return $this->canAdd($post, $user);
     }
 
     private function canAdd(Semestre|Annee|Departement $post, User $user): bool
@@ -86,7 +79,7 @@ class GoodDepartementVoter extends Voter
             return false;
         }
 
-        if ($user->getDepartement() === null) {
+        if (!$user->getDepartement() instanceof \App\Entity\Departement) {
             return false;
         }
 
@@ -102,7 +95,7 @@ class GoodDepartementVoter extends Voter
             return $user->getDepartement()->getId() === $post->getId();
         }
 
-        if ($post instanceof Annee && $post->getDepartement() !== null) {
+        if ($post instanceof Annee && $post->getDepartement() instanceof \App\Entity\Departement) {
             if (in_array('ROLE_CPN', $user->getRoles())) {
                 foreach ($user->getCpnDepartements() as $dpt) {
                     if ($dpt->getId() === $post->getDepartement()->getId()) {

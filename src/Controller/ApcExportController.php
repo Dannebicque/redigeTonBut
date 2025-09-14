@@ -44,13 +44,14 @@ class ApcExportController extends BaseController
     public function export(
         DepartementRepository $departementRepository
     ): Response {
-        if (! $this->isGranted('ROLE_GT')) {
+        if (! $this->isGranted('ROLE_CPN')) {
             throw new AccessDeniedException();
         }
 
         return $this->render(
             'apc_export/index.html.twig', [
-                'departements' => $departementRepository->findAll()
+                'departements' =>
+                    $this->isGranted('ROLE_GT') ? $departementRepository->findAll() : $departementRepository->findByUser($this->getUser())
             ]
         );
     }

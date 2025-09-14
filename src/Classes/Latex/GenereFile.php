@@ -14,9 +14,28 @@ use Twig\Environment;
 
 class GenereFile
 {
+    /**
+     * @var \App\Repository\ApcRessourceRepository
+     */
+    public $apcRessourceRepository;
+    /**
+     * @var \App\Repository\ApcRessourceParcoursRepository
+     */
+    public $apcRessourceParcoursRepository;
+    /**
+     * @var \App\Repository\ApcSaeRepository
+     */
+    public $apcSaeRepository;
+    /**
+     * @var \App\Repository\ApcSaeParcoursRepository
+     */
+    public $apcSaeParcoursRepository;
     protected Departement $departement;
+
     protected Environment $twig;
+
     protected ApcStructure $apcStructure;
+
     protected string $chemin;
 
 
@@ -36,7 +55,7 @@ class GenereFile
         $this->apcSaeParcoursRepository = $apcSaeParcoursRepository;
     }
 
-    public function genereFile(Departement $departement, string $chemin)
+    public function genereFile(Departement $departement, string $chemin): string
     {
         $parcours = $departement->getApcParcours();
         $tParcours = $this->apcStructure->parcoursNiveaux($departement);
@@ -46,6 +65,7 @@ class GenereFile
         foreach ($competences as $comp) {
             $tComp[$comp->getId()] = $comp;
         }
+
         $competencesParcours = [];
         $tSemestres = [];
 
@@ -67,6 +87,7 @@ class GenereFile
                 $tSemestres[$semestre->getApcParcours()->getId()][$semestre->getOrdreLmd()]['saes'] = $this->apcSaeParcoursRepository->findBySemestre($semestre, $semestre->getApcParcours());
                 $tSemestres[$semestre->getApcParcours()->getId()][$semestre->getOrdreLmd()]['ressources'] = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $semestre->getApcParcours());
             }
+
             $content = $this->twig->render('latex/annexe_specialite.tex.twig', [
                 'departement' => $departement,
                 'semestres' => $tSemestres,

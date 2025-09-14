@@ -5,89 +5,71 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
- */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ["email"], message: "There is already an account with this email")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id;
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private ?string $email;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: Types::STRING)]
     private string $password;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
+    #[ORM\Column(type: Types::STRING, length: 50)]
     private ?string $nom;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
+    #[ORM\Column(type: Types::STRING, length: 50)]
     private ?string $prenom;
 
-    /**
-     * @ORM\Column(type="string", length=3, nullable=true)
-     */
+    #[ORM\Column(type: Types::STRING, length: 3, nullable: true)]
     private ?string $civilite;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isVerified = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="users", fetch="EAGER")
-     */
+    #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: 'users', fetch: 'EAGER')]
     private ?Departement $departement = null;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $actif = false;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Departement::class, inversedBy="cpns")
+     * @var Collection<int, \App\Entity\Departement>
      */
-    private $CpnDepartements;
+    #[ORM\ManyToMany(targetEntity: Departement::class, inversedBy: 'cpns')]
+    private Collection $CpnDepartements;
 
-    /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     */
+    #[ORM\Column(type: Types::STRING, length: 50, nullable: true)]
     private ?string $login;
 
     /**
-     * @ORM\ManyToMany(targetEntity=QapesSae::class, mappedBy="auteur")
+     * @var Collection<int, \App\Entity\QapesSae>
      */
-    private $qapesSaesAuteurs;
+    #[ORM\ManyToMany(targetEntity: QapesSae::class, mappedBy: 'auteur')]
+    private Collection $qapesSaesAuteurs;
 
     /**
-     * @ORM\ManyToMany(targetEntity=QapesSae::class, mappedBy="redacteur")
+     * @var Collection<int, \App\Entity\QapesSae>
      */
-    private $qapesSaesRedacteurs;
+    #[ORM\ManyToMany(targetEntity: QapesSae::class, mappedBy: 'redacteur')]
+    private Collection $qapesSaesRedacteurs;
 
     public function __construct()
     {
@@ -130,7 +112,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        if (count($roles) === 0) {
+        if ($roles === []) {
             $roles[] = 'ROLE_IUT';
         }
 
@@ -173,13 +155,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
 
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->getEmail();
     }
@@ -232,9 +214,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function display()
+    public function display(): string
     {
         return ucfirst($this->prenom).' '.mb_strtoupper($this->nom);
+    }
+
+    public function __toString(): string
+    {
+        return $this->display();
     }
 
     public function getDepartement(): ?Departement
@@ -261,12 +248,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isPacd()
+    public function isPacd(): bool
     {
         return in_array('ROLE_PACD', $this->getRoles(), true);
     }
 
-    public function isCpn()
+    public function isCpn(): bool
     {
         return in_array('ROLE_CPN', $this->getRoles(), true) || in_array('ROLE_CPN_LECTEUR', $this->getRoles(), true);
     }

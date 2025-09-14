@@ -59,6 +59,7 @@ class UpdatePortfolioCommand extends Command
                         $description = 'Prenant n\'importe quelle forme, littérale, analogique ou numérique, la démarche portfolio pourra être menée dans le cadre d\'ateliers au cours desquels l\'étudiant retracera la trajectoire individuelle qui a été la sienne durant la troisième année du B.U.T. au prisme du référentiel de compétences et du parcours suivi, tout en adoptant une posture propice à une analyse distanciée et intégrative de l\'ensemble des SAÉ.';
                         break;
                 }
+
                 $sae->setDescription($description);
                 $sae->setObjectifs($objectifs);
                 $sae->setCodeMatiere('PORTFOLIO');

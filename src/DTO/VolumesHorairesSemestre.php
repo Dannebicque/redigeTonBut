@@ -9,23 +9,39 @@ use App\Entity\Semestre;
 class VolumesHorairesSemestre
 {
     public Semestre $semestre;
+
     public array $ressources = [];
+
     public float $vhNbHeuresEnseignementSae = 0;
+
     public float $vhNbHeureeEnseignementSaeRessource = 0;
+
     public float $vhNbHeuresDontTpSaeRessource = 0;
+
     public float $vhNbHeuresProjetTutores = 0;
+
     public float $totalEnseignementRessources = 0;
+
     public float $totalDontTpRessources = 0;
+
     public float $totalAdaptationLocaleEnseignement = 0;
+
     public float $totalAdaptationLocaleDontTp = 0;
+
     public float $totalEnseignements = 0;
+
     public float $totalDontTp = 0;
+
     public float $totalProjetTutore = 0;
+
     public float $totalEnseignementProjetTutore = 0;
 
     public float $cibleNbHeureeEnseignementSaeRessource = 0;
+
     public float $cibleNbHeureProjet = 0;
+
     public float $cibleNbHeureTotal = 0;
+
     private float $cibleNbHeureTpTotal = 0;
 
 
@@ -59,7 +75,7 @@ class VolumesHorairesSemestre
 
     }
 
-    public function getJson()
+    public function getJson(): array
     {
         return [
             'ressources' => $this->ressources,
@@ -87,22 +103,22 @@ class VolumesHorairesSemestre
         ];
     }
 
-    private function getPourcentageAdaptationLocaleCalcule()
+    private function getPourcentageAdaptationLocaleCalcule(): float|int
     {
         return $this->totalEnseignements !== 0.0 ? $this->totalAdaptationLocaleEnseignement / $this->totalEnseignements * 100 : 0;
     }
 
-    private function getPourcentageTpNational()
+    private function getPourcentageTpNational(): float|int
     {
         return $this->totalEnseignementRessources !== 0.0 ? $this->totalDontTpRessources / $this->totalEnseignementRessources * 100 : 0;
     }
 
-    private function getPourcentageTpLocalement()
+    private function getPourcentageTpLocalement(): float|int
     {
         return $this->totalAdaptationLocaleEnseignement !== 0.0 ? $this->totalAdaptationLocaleDontTp / $this->totalAdaptationLocaleEnseignement * 100 : 0;
     }
 
-    private function getPourcentageTpLocalementNationalement()
+    private function getPourcentageTpLocalementNationalement(): float|int
     {
         return $this->totalAdaptationLocaleEnseignement + $this->totalEnseignementRessources !== 0.0 ? ($this->totalAdaptationLocaleDontTp + $this->totalDontTpRessources) / ($this->totalAdaptationLocaleEnseignement + $this->totalEnseignementRessources) * 100 : 0;
     }

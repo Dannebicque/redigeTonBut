@@ -23,7 +23,10 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcRessourceParcours::class);
     }
 
-    public function findArrayIdRessource(mixed $ressource)
+    /**
+     * @return mixed[]
+     */
+    public function findArrayIdRessource(mixed $ressource): array
     {
 
         $query = $this->createQueryBuilder('a')
@@ -51,7 +54,10 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
         return $this->getBySemestre($semestre, $parcours, true);
     }
 
-    private function getBySemestre(Semestre $semestre, ApcParcours $parcours, bool $al)
+    /**
+     * @return mixed[]
+     */
+    private function getBySemestre(Semestre $semestre, ApcParcours $parcours, bool $al): array
     {
         $req = $this->createQueryBuilder('p')
             ->innerJoin(ApcRessource::class, 's', 'WITH', 'p.ressource = s.id')
@@ -76,7 +82,10 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findByAnnee(Annee $annee, ApcParcours $parcours)
+    /**
+     * @return mixed[]
+     */
+    public function findByAnnee(Annee $annee, ApcParcours $parcours): array
     {
         $req = $this->createQueryBuilder('p')
             ->innerJoin(ApcRessource::class, 'a', 'WITH', 'p.ressource = a.id')
@@ -100,7 +109,10 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findByAnneeArray(Annee $annee, ApcParcours $parcours)
+    /**
+     * @return mixed[][]
+     */
+    public function findByAnneeArray(Annee $annee, ApcParcours $parcours): array
     {
 
         $query = $this->findByAnnee($annee, $parcours);
@@ -151,7 +163,10 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBySemestreArray(Semestre $semestre, ApcParcours $parcours)
+    /**
+     * @return mixed[]
+     */
+    public function findBySemestreArray(Semestre $semestre, ApcParcours $parcours): array
     {
         $req = $this->createQueryBuilder('p')
             ->innerJoin(ApcRessource::class, 'a', 'WITH', 'p.ressource = a.id')

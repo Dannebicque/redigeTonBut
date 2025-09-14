@@ -32,7 +32,9 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 class ReferentielCompetenceImport
 {
     private string $fichier;
+
     private Departement $departement;
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -40,7 +42,7 @@ class ReferentielCompetenceImport
         $this->entityManager = $entityManager;
     }
 
-    public function import(Departement $departement, string $fichier, $type)
+    public function import(Departement $departement, string $fichier, $type): void
     {
         $this->fichier = $fichier;
         $this->departement = $departement;
@@ -70,7 +72,7 @@ class ReferentielCompetenceImport
         }
     }
 
-    private function importCompetenceExcel()
+    private function importCompetenceExcel(): void
     {
         $annees = $this->entityManager->getRepository(Annee::class)->findByDepartement($this->departement);
         $tAnnees = [];
@@ -145,8 +147,10 @@ class ReferentielCompetenceImport
                     $this->entityManager->persist($app);
                     break;
             }
+
             $ligne++;
         }
+
         $sheet = $excel->getSheet(1);
 
         $tParcour = [];
@@ -175,12 +179,14 @@ class ReferentielCompetenceImport
                 }
 
             }
+
             $ligne++;
         }
+
         $this->entityManager->flush();
     }
 
-    private function importCompetence()
+    private function importCompetence(): void
     {
         $annees = $this->entityManager->getRepository(Annee::class)->findByDepartement($this->departement);
         $tAnnees = [];
@@ -206,6 +212,7 @@ class ReferentielCompetenceImport
                 $sit->setCompetence($comp);
                 $this->entityManager->persist($sit);
             }
+
             $or = 1;
             foreach ($competence->composantes_essentielles->composante as $composante) {
                 $compos = new ApcComposanteEssentielle();
@@ -228,6 +235,7 @@ class ReferentielCompetenceImport
                         $niv->setAnnee($tAnnees[$cle]);
                     }
                 }
+
                 $niv->setLibelle($niveau['libelle']);
                 $niv->setOrdre((int)$niveau['ordre']);
                 $niv->setCompetence($comp);
@@ -245,6 +253,7 @@ class ReferentielCompetenceImport
                 }
             }
         }
+
         $i = 1;
         foreach ($xml->parcours->parcour as $parcour) {
             $parc = new ApcParcours($this->departement);
@@ -262,11 +271,12 @@ class ReferentielCompetenceImport
                 }
             }
         }
+
         $this->entityManager->flush();
 
     }
 
-    private function openXmlFile()
+    private function openXmlFile(): \SimpleXMLElement|false
     {
         if (file_exists($this->fichier)) {
             return simplexml_load_string(file_get_contents($this->fichier));
@@ -275,7 +285,7 @@ class ReferentielCompetenceImport
         throw new FileNotFoundException();
     }
 
-    private function importFormation()
+    private function importFormation(): void
     {
         $xml = $this->openXmlFile();
         $tAcs = $this->entityManager->getRepository(ApcApprentissageCritique::class)->findOneByDepartementArray($this->departement);
@@ -338,9 +348,11 @@ class ReferentielCompetenceImport
                             if (!array_key_exists($ar->getCodeMatiere(), $tabPrerequis)) {
                                 $tabPrerequis[$ar->getCodeMatiere()] = [];
                             }
+
                             $tabPrerequis[$ar->getCodeMatiere()][] = trim($r); //on sauvegarde et on trairera à la fin des ressources;
                         }
                     }
+
                     //parcours
                     if ($ressource->liste_parcours !== null && $ressource->liste_parcours->parcours !== null) {
                         foreach ($ressource->liste_parcours->parcours as $parcours) {
@@ -350,6 +362,7 @@ class ReferentielCompetenceImport
                             }
                         }
                     }
+
                     //les saes seront ajoutée par les SAE
                 }
 
@@ -389,6 +402,7 @@ class ReferentielCompetenceImport
                             }
                         }
                     }
+
                     //Ressources
                     if ($sae->ressources !== null && $sae->ressources->ressource !== null) {
                         foreach ($sae->ressources->ressource as $comp) {
@@ -398,6 +412,7 @@ class ReferentielCompetenceImport
                             }
                         }
                     }
+
                     //Parcours
                     if ($sae->liste_parcours !== null && $sae->liste_parcours->parcours) {
                         foreach ($sae->liste_parcours->parcours as $parcours) {
@@ -435,14 +450,14 @@ class ReferentielCompetenceImport
 
     }
 
-    private function openExcelFile()
+    private function openExcelFile(): \PhpOffice\PhpSpreadsheet\Spreadsheet
     {
         $reader = new Xlsx();
 
         return $reader->load($this->fichier);
     }
 
-    private function importFormationExcel()
+    private function importFormationExcel(): void
     {
         $tSemestres = $this->entityManager->getRepository(Semestre::class)->findByDepartementArray($this->departement);
         $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findByDepartementArray($this->departement);
@@ -495,6 +510,7 @@ class ReferentielCompetenceImport
                     }
                 }
             }
+
             //ressources (13)
             if ($sheet->getCellByColumnAndRow(13, $ligne)->getValue() !== null) {
                 $ressources = explode(';', $sheet->getCellByColumnAndRow(13, $ligne)->getValue());
@@ -534,6 +550,7 @@ class ReferentielCompetenceImport
             $tabRessources[$res->getCodeMatiere()] = $res;
             $ligne++;
         }
+
         $this->entityManager->flush();
 
         //Ajout des SAE
@@ -579,6 +596,7 @@ class ReferentielCompetenceImport
                     }
                 }
             }
+
             $sae->setObjectifs(trim($sheet->getCellByColumnAndRow(14, $ligne)->getValue()));
             $sae->setDescription(trim($sheet->getCellByColumnAndRow(15, $ligne)->getValue()));
             $sae->setHeuresTotales(Convert::convertToFloat($sheet->getCellByColumnAndRow(16,
@@ -610,6 +628,7 @@ class ReferentielCompetenceImport
                     }
                 }
             }
+
             $this->entityManager->flush();
             $ligne++;
         }

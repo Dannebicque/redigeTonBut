@@ -3,39 +3,28 @@
 namespace App\Entity;
 
 use App\Repository\ApcCompetenceSemestreRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=ApcCompetenceSemestreRepository::class)
- */
+#[ORM\Entity(repositoryClass: ApcCompetenceSemestreRepository::class)]
 class ApcCompetenceSemestre
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcCompetenceSemestres")
-     */
-    private $competence;
+    #[ORM\ManyToOne(targetEntity: ApcCompetence::class, inversedBy: 'apcCompetenceSemestres')]
+    private ?ApcCompetence $competence = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="apcCompetenceSemestres")
-     */
-    private $semestre;
+    #[ORM\ManyToOne(targetEntity: Semestre::class, inversedBy: 'apcCompetenceSemestres')]
+    private ?Semestre $semestre = null;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $ECTS;
+    #[ORM\Column(type: Types::FLOAT)]
+    private ?float $ECTS = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $ectsParcours = "";
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private ?string $ectsParcours = "";
 
     public function getId(): ?int
     {

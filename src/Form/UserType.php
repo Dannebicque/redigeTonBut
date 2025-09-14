@@ -15,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $choix = [
             'IUT' => 'ROLE_IUT',
@@ -85,16 +85,16 @@ class UserType extends AbstractType
             ->addModelTransformer(new CallbackTransformer(
                 function($rolesArray) {
                     // transform the array to a string
-                    return count($rolesArray) ? $rolesArray[0] : null;
+                    return count($rolesArray) > 0 ? $rolesArray[0] : null;
                 },
-                function($rolesString) {
+                function($rolesString): array {
                     // transform the string back to an array
                     return [$rolesString];
                 }
             ));
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,

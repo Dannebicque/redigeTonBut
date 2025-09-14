@@ -17,10 +17,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserImport
 {
     private EntityManagerInterface $entityManager;
+
     private EventDispatcherInterface $eventDispatcher;
+
     private UserRepository $userRepository;
+
     private $departements;
-    private $users = [];
+
+    private array $users = [];
 
     private UserPasswordHasherInterface $encoder;
 
@@ -40,13 +44,14 @@ class UserImport
         foreach ($departements as $departement) {
             $this->departements[$departement->getSigle()] = $departement;
         }
+
         $users = $userRepository->findAll();
         foreach ($users as $user) {
             $this->users[] = $user->getEmail();
         }
     }
 
-    public function import(?string $fichier)
+    public function import(?string $fichier): void
     {
         //spécificité de l'import pour les directeur d'IUT
         $excel = $this->openExcelFile($fichier);
@@ -66,27 +71,24 @@ class UserImport
                 $user->setIsVerified(true);
                 $user->setRoles(['ROLE_IUT']);
                 $password = trim($sheet->getCellByColumnAndRow(8, $ligne)->getValue());
-               // $user->setPassword($password);
+                // $user->setPassword($password);
                 $user->setPassword($this->encoder->hashPassword($user, $password));
                 $this->entityManager->persist($user);
-            } else {
-                if ($user->getRoles()[0] !== 'ROLE_IUT') {
-
-                    $user->setNom(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
-                    $user->setPrenom(trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue()));
-                    $user->setCivilite(trim($sheet->getCellByColumnAndRow(9, $ligne)->getValue()));
-                    $user->setEmail($email);
-                    $user->setLogin(trim($sheet->getCellByColumnAndRow(7, $ligne)->getValue()));
-                    $user->setActif(true);
-                    $user->setIsVerified(true);
-                    $user->setRoles(['ROLE_IUT']);
-                    $password = trim($sheet->getCellByColumnAndRow(8, $ligne)->getValue());
-                    // $user->setPassword($password);
-
-                    $user->setPassword($this->encoder->hashPassword($user, $password));
-                    $this->entityManager->persist($user);
-                }
+            } elseif ($user->getRoles()[0] !== 'ROLE_IUT') {
+                $user->setNom(trim($sheet->getCellByColumnAndRow(3, $ligne)->getValue()));
+                $user->setPrenom(trim($sheet->getCellByColumnAndRow(4, $ligne)->getValue()));
+                $user->setCivilite(trim($sheet->getCellByColumnAndRow(9, $ligne)->getValue()));
+                $user->setEmail($email);
+                $user->setLogin(trim($sheet->getCellByColumnAndRow(7, $ligne)->getValue()));
+                $user->setActif(true);
+                $user->setIsVerified(true);
+                $user->setRoles(['ROLE_IUT']);
+                $password = trim($sheet->getCellByColumnAndRow(8, $ligne)->getValue());
+                // $user->setPassword($password);
+                $user->setPassword($this->encoder->hashPassword($user, $password));
+                $this->entityManager->persist($user);
             }
+
             $this->entityManager->flush();
             $ligne++;
         }
@@ -137,7 +139,7 @@ class UserImport
 //
 //    }
 
-    public function importDepartement(?string $fichier, Departement $departement)
+    public function importDepartement(?string $fichier, Departement $departement): void
     {
         $excel = $this->openExcelFile($fichier);
         $sheet = $excel->getSheet(0);
@@ -168,13 +170,14 @@ class UserImport
                 $event->setPassword($password);
                 $this->eventDispatcher->dispatch($event, UserEvent::CREATION_COMPTE);
             }
+
             $ligne++;
         }
 
         $this->entityManager->flush();
     }
 
-    private function openExcelFile($fichier)
+    private function openExcelFile(?string $fichier): \PhpOffice\PhpSpreadsheet\Spreadsheet
     {
         $reader = new Xlsx();
 

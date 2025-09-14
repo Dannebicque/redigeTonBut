@@ -43,10 +43,11 @@ class Codification
             $texte =  'STAGE.'.self::codeParcoursSae($parcours);
             return substr($texte, 0, -1);
         }
+
         return 'SAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).self::codeSurDeuxChiffres($apcSae->getOrdre());
     }
 
-    private static function codeSurDeuxChiffres(?int $ordre)
+    private static function codeSurDeuxChiffres(?int $ordre): string|int
     {
         if ($ordre < 10) {
             return '0'.$ordre;
@@ -59,29 +60,29 @@ class Codification
     {
         $nbParcoursAC = $apcApprentissageCritique->getNiveau()?->getApcParcoursNiveaux();
         $nbParcoursComp = $apcApprentissageCritique->getCompetence()->getDepartement()->getApcParcours();
-        if ( $apcApprentissageCritique->getCompetence()->getDepartement()->getTypeStructure() === Departement::TYPE1)
+        if ( $apcApprentissageCritique->getCompetence()->getDepartement()->getTypeStructure() === Departement::TYPE1 && count($nbParcoursComp) !== count($nbParcoursAC))
         {
-            if (count($nbParcoursComp) !== count($nbParcoursAC))
-            {
-                if (count($nbParcoursAC) === 1) {
-                    return $nbParcoursAC[0]->getParcours()->getCode();
-                }
+            if (count($nbParcoursAC) === 1) {
+                return $nbParcoursAC[0]->getParcours()->getCode();
             }
         }
+        return null;
     }
 
-    private static function codeParcoursSae($parcours)
+    private static function codeParcoursSae($parcours): ?string
     {
         if (count($parcours) === 1 && $parcours !== null) {
             return $parcours[0]->getParcours()->getCode().'.';
         }
+        return null;
     }
 
-    private static function codeParcoursRessource($parcours)
+    private static function codeParcoursRessource($parcours): ?string
     {
         if (count($parcours) === 1 && $parcours !== null) {
             return $parcours[0]->getParcours()->getCode().'.';
         }
+        return null;
     }
 
 }

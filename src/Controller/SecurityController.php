@@ -15,7 +15,7 @@ class SecurityController extends AbstractController
         Request $request,
         AuthenticationUtils $authenticationUtils): Response
     {
-         if ($this->getUser()) {
+         if ($this->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
              return $this->redirectToRoute('homepage');
          }
 
@@ -28,10 +28,8 @@ class SecurityController extends AbstractController
             $lastUsername = $request->query->get('email');
         }
 
-        if ($request->query->has('message')) {
-            if ($request->query->get('message') === 'mail-verified') {
-                $success = 'Votre adresse email a été vérifiée. Vous pouvez vous connecter.';
-            }
+        if ($request->query->has('message') && $request->query->get('message') === 'mail-verified') {
+            $success = 'Votre adresse email a été vérifiée. Vous pouvez vous connecter.';
         }
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'success' => $success ?? null]);

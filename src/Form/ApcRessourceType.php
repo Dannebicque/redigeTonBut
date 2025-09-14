@@ -26,12 +26,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ApcRessourceType extends AbstractType
 {
     protected ?Departement $departement;
+
     protected bool $editable;
+
     protected bool $verouille_croise;
+
     protected ?ApcParcours $parcours;
 
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->departement = $options['departement'];
         $this->editable = !$options['editable'];
@@ -42,7 +45,7 @@ class ApcRessourceType extends AbstractType
             ->add('codeMatiere', TextType::class,
                 ['label' => 'Code Ressource', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
             ->add('ficheAdaptationLocale', ChoiceType::class, [
-                'label' => 'Fiche d\'adaptation locale ?',
+                'label' => "Fiche d'adaptation locale ?",
                 'expanded' => true,
                 'choices' => ['Oui' => true, 'Non' => false,],
                 'attr' => ['class' => 'text-white'],
@@ -106,7 +109,7 @@ class ApcRessourceType extends AbstractType
                 'disabled' => $this->verouille_croise,
                 'choice_label' => 'display',
                 'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
-                'query_builder' => function(SemestreRepository $semestreRepository) {
+                'query_builder' => function(SemestreRepository $semestreRepository): \Doctrine\ORM\QueryBuilder {
                     return $semestreRepository->findByDepartementParcoursBuilder($this->departement,
                         $this->parcours);
                 },
@@ -120,7 +123,7 @@ class ApcRessourceType extends AbstractType
                 'disabled' => $this->verouille_croise,
                 'choice_label' => 'display',
                 'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
-                'query_builder' => function(SemestreRepository $semestreRepository) {
+                'query_builder' => function(SemestreRepository $semestreRepository): \Doctrine\ORM\QueryBuilder {
                     return $semestreRepository->findByDepartementParcoursBuilder($this->departement,
                         $this->parcours);
                 },
@@ -130,7 +133,7 @@ class ApcRessourceType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => ApcRessource::class,

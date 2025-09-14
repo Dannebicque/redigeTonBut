@@ -23,7 +23,7 @@ class GenereFileSae
     ) {
     }
 
-    public function genereFile(ApcSae $sae, string $chemin)
+    public function genereFile(ApcSae $sae, string $chemin): string
     {
         $content = $this->twig->render('latex/exemple_sae.tex.twig', [
             'sae' => $sae,

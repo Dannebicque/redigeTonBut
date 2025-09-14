@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Constantes;
 use App\Form\ProfilType;
 use App\Form\UserType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,13 +19,14 @@ class ProfilController extends BaseController
 {
     #[Route('/', name: 'profil')]
     public function profil(
+        EntityManagerInterface $entityManager,
         Request $request
     ): Response {
         $form = $this->createForm(ProfilType::class, $this->getUser());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('profil_profil');
         }
@@ -72,6 +74,7 @@ class ProfilController extends BaseController
                 $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Le mot de passe saisie ne correspond pas');
             }
         }
+
         return $this->render('profil/password.html.twig', [
             'form' => $formPassword->createView()
         ]);

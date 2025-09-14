@@ -13,14 +13,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class DataUserSession
 {
     private UserInterface $user;
+
     private ?Departement $departement = null;
+
     private AnneeRepository $anneeRepository;
+
     private string $dir;
+
     /**
      * @var string[]
      */
@@ -35,7 +40,7 @@ class DataUserSession
     {
         $this->anneeRepository = $anneeRepository;
         $this->dir = $kernel->getProjectDir();
-        if ($tokenStorage->getToken() !== null) {
+        if ($tokenStorage->getToken() instanceof TokenInterface) {
             $this->user = $tokenStorage->getToken()->getUser();
             $this->roleName = $tokenStorage->getToken()->getRoleNames();
             $this->getDepartement();
@@ -44,7 +49,7 @@ class DataUserSession
 
     public function getDepartement()
     {
-        if (in_array('ROLE_IUT', $this->roleName) || in_array('ROLE_GT', $this->roleName) || in_array('ROLE_CPN', $this->roleName) || in_array('ROLE_CPN_LECTEUR', $this->roleName)) {
+        if (in_array('ROLE_ADMIN', $this->roleName) || in_array('ROLE_IUT', $this->roleName) || in_array('ROLE_GT', $this->roleName) || in_array('ROLE_CPN', $this->roleName) || in_array('ROLE_CPN_LECTEUR', $this->roleName)) {
             if ($this->requestStack->getSession()->has('departement')) {
                 $this->departement = $this->departementRepository->find($this->requestStack->getSession()->get('departement'));
             } else {
@@ -64,19 +69,20 @@ class DataUserSession
 
     public function getAnnees()
     {
-        if ($this->departement !== null) {
+        if ($this->departement instanceof \App\Entity\Departement) {
             return $this->anneeRepository->findByDepartement($this->departement);
         }
+
         return null;
     }
 
-    public function getCaracteristiques()
+    public function getCaracteristiques(): Tertiaire|Secondaire|null
     {
-        if ($this->getDepartement()->isTertiaire()) {
+        if ($this->getDepartement()?->isTertiaire()) {
             return new Tertiaire();
         }
 
-        if ($this->getDepartement()->isSecondaire()) {
+        if ($this->getDepartement()?->isSecondaire()) {
             return new Secondaire();
         }
 
@@ -91,9 +97,6 @@ class DataUserSession
         return $composerData['version'];
     }
 
-    /**
-     * @return string|\Stringable|\Symfony\Component\Security\Core\User\UserInterface
-     */
     public function getUser(): UserInterface|\Stringable|string
     {
         return $this->user;

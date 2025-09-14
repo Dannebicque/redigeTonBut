@@ -6,6 +6,7 @@ namespace App\Security;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
+use App\Entity\Departement;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -15,8 +16,11 @@ class ReferentielVoter extends Voter
 {
     // these strings are just invented: you can use anything
     public const VIEW = 'view';
+
     public const EDIT = 'edit';
+
     public const DUPLICATE = 'duplicate';
+
     public const DELETE = 'delete';
 
     private Security $security;
@@ -32,13 +36,8 @@ class ReferentielVoter extends Voter
         if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::DUPLICATE])) {
             return false;
         }
-
         // only vote on `ApcRessource` or ApcRessource objects
-        if (!($subject instanceof ApcRessource || $subject instanceof ApcSae || $subject instanceof ApcApprentissageCritique)) {
-            return false;
-        }
-
-        return true;
+        return $subject instanceof ApcRessource || $subject instanceof ApcSae || $subject instanceof ApcApprentissageCritique;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -74,13 +73,9 @@ class ReferentielVoter extends Voter
     private function canView(ApcSae|ApcRessource $post, User $user): bool
     {
         // if they can edit, they can view
-        if ($this->canEdit($post, $user)) {
-            return true;
-        }
-
         // the Post object could have, for example, a method `isPrivate()`
         //todo: ajouter champ blocage édition sur ??? département ??? tableaux ???
-        return true;
+        return $this->canEdit($post, $user);
     }
 
     private function canEdit(ApcSae|ApcRessource $post, User $user): bool
@@ -89,9 +84,10 @@ class ReferentielVoter extends Voter
             return false;
         }
 
-        if ($user->getDepartement() === null || $post->getDepartement() === null) {
+        if (!$user->getDepartement() instanceof Departement || !$post->getDepartement() instanceof Departement) {
             return false;
         }
+
         // this assumes that the Post object has a `getOwner()` method
         if (in_array('ROLE_CPN', $user->getRoles())) {
             foreach ($user->getCpnDepartements() as $dpt) {
@@ -106,11 +102,11 @@ class ReferentielVoter extends Voter
 
     private function canDelete(ApcSae|ApcRessource|ApcApprentissageCritique $post, User $user): bool
     {
-        if (!(in_array('ROLE_PACD', $user->getRoles()) || in_array('ROLE_CPN', $user->getRoles()))) {
+        if (!in_array('ROLE_PACD', $user->getRoles()) && !in_array('ROLE_CPN', $user->getRoles())) {
             return false;
         }
 
-        if ($user->getDepartement() === null || $post->getDepartement() === null) {
+        if (!$user->getDepartement() instanceof Departement || !$post->getDepartement() instanceof Departement) {
             return false;
         }
 
@@ -121,6 +117,7 @@ class ReferentielVoter extends Voter
                 }
             }
         }
+
         // this assumes that the Post object has a `getOwner()` method
         return $user->getDepartement()->getId() === $post->getDepartement()->getId();
     }

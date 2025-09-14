@@ -13,18 +13,16 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\MappedSuperclass
- */
+#[ORM\MappedSuperclass]
 abstract class BaseEntity
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     * @Groups({"read:departement", "read:ressource", "read:competence", "read:sae"})
      * @ApiProperty(identifier=false)
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:departement', 'read:ressource', 'read:competence', 'read:sae'])]
     private ?int $id = null;
 
     public function getId(): ?int

@@ -13,96 +13,85 @@ use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcParcoursRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcParcoursRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcParcoursRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcParcours extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"read:departement","read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[Groups(['read:departement', 'read:ressource', 'read:sae'])]
     private ?string $libelle;
 
-    /**
-     * @ORM\Column(type="string", length=10)
-     * @Groups({"read:departement","read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 10)]
+    #[Groups(['read:departement', 'read:ressource', 'read:sae'])]
     private ?string $code;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcParcoursNiveau::class, mappedBy="parcours")
-     * @Groups({"read:departement"})
+     * @var Collection<int, \App\Entity\ApcParcoursNiveau>
      */
+    #[ORM\OneToMany(targetEntity: ApcParcoursNiveau::class, mappedBy: 'parcours')]
+    #[Groups(['read:departement'])]
     private Collection $apcParcoursNiveaux;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="apcParcours")
-     */
+    #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: 'apcParcours')]
     private ?Departement $departement;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="parcours")
+     * @var Collection<int, \App\Entity\ApcSaeParcours>
      */
+    #[ORM\OneToMany(targetEntity: ApcSaeParcours::class, mappedBy: 'parcours')]
     private Collection $apcSaeParcours;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceParcours::class, mappedBy="parcours")
+     * @var Collection<int, \App\Entity\ApcRessourceParcours>
      */
+    #[ORM\OneToMany(targetEntity: ApcRessourceParcours::class, mappedBy: 'parcours')]
     private Collection $apcRessourceParcours;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read:departement'])]
     private ?string $textePresentation;
 
-    /**
-     * @ORM\Column(type="string", length=20)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 20)]
+    #[Groups(['read:departement'])]
     private ?string $couleur;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(['read:departement'])]
     private ?int $ordre = 1;
 
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    #[Groups(['read:departement'])]
     private ?bool $dispense = true;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read:departement'])]
     private ?string $modalitesParticulieres;
 
     /**
-     * @ORM\OneToMany(targetEntity=Semestre::class, mappedBy="apcParcours")
+     * @var Collection<int, \App\Entity\Semestre>
      */
-    private $semestres;
+    #[ORM\OneToMany(targetEntity: Semestre::class, mappedBy: 'apcParcours')]
+    private Collection $semestres;
 
     /**
-     * @ORM\OneToMany(targetEntity=IutSiteParcours::class, mappedBy="parcours")
+     * @var Collection<int, \App\Entity\IutSiteParcours>
      */
-    private $iutSiteParcours;
+    #[ORM\OneToMany(targetEntity: IutSiteParcours::class, mappedBy: 'parcours')]
+    private Collection $iutSiteParcours;
 
     /**
-     * @ORM\OneToMany(targetEntity=QapesSae::class, mappedBy="parcours")
+     * @var Collection<int, \App\Entity\QapesSae>
      */
-    private $qapesSaes;
+    #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: 'parcours')]
+    private Collection $qapesSaes;
 
-    public function __construct(Departement $departement)
+    public function __construct(?Departement $departement = null)
     {
         $this->setDepartement($departement);
         $this->apcParcoursNiveaux = new ArrayCollection();
@@ -157,11 +146,9 @@ class ApcParcours extends BaseEntity
 
     public function removeApcParcoursNiveau(ApcParcoursNiveau $apcParcoursNiveaux): self
     {
-        if ($this->apcParcoursNiveaux->removeElement($apcParcoursNiveaux)) {
-            // set the owning side to null (unless already changed)
-            if ($apcParcoursNiveaux->getParcours() === $this) {
-                $apcParcoursNiveaux->setParcours(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcParcoursNiveaux->removeElement($apcParcoursNiveaux) && $apcParcoursNiveaux->getParcours() === $this) {
+            $apcParcoursNiveaux->setParcours(null);
         }
 
         return $this;
@@ -199,11 +186,9 @@ class ApcParcours extends BaseEntity
 
     public function removeApcSaeParcour(ApcSaeParcours $apcSaeParcour): self
     {
-        if ($this->apcSaeParcours->removeElement($apcSaeParcour)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSaeParcour->getParcours() === $this) {
-                $apcSaeParcour->setParcours(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSaeParcours->removeElement($apcSaeParcour) && $apcSaeParcour->getParcours() === $this) {
+            $apcSaeParcour->setParcours(null);
         }
 
         return $this;
@@ -229,11 +214,9 @@ class ApcParcours extends BaseEntity
 
     public function removeApcRessourceParcour(ApcRessourceParcours $apcRessourceParcour): self
     {
-        if ($this->apcRessourceParcours->removeElement($apcRessourceParcour)) {
-            // set the owning side to null (unless already changed)
-            if ($apcRessourceParcour->getParcours() === $this) {
-                $apcRessourceParcour->setParcours(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcRessourceParcours->removeElement($apcRessourceParcour) && $apcRessourceParcour->getParcours() === $this) {
+            $apcRessourceParcour->setParcours(null);
         }
 
         return $this;
@@ -319,17 +302,18 @@ class ApcParcours extends BaseEntity
 
     public function removeSemestre(Semestre $semestre): self
     {
-        if ($this->semestres->removeElement($semestre)) {
-            // set the owning side to null (unless already changed)
-            if ($semestre->getApcParcours() === $this) {
-                $semestre->setApcParcours(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->semestres->removeElement($semestre) && $semestre->getApcParcours() === $this) {
+            $semestre->setApcParcours(null);
         }
 
         return $this;
     }
 
-    public function getSemestresArray()
+    /**
+     * @return mixed[]
+     */
+    public function getSemestresArray(): array
     {
 
         $semestres = [];
@@ -362,11 +346,9 @@ class ApcParcours extends BaseEntity
 
     public function removeIutSiteParcour(IutSiteParcours $iutSiteParcour): self
     {
-        if ($this->iutSiteParcours->removeElement($iutSiteParcour)) {
-            // set the owning side to null (unless already changed)
-            if ($iutSiteParcour->getParcours() === $this) {
-                $iutSiteParcour->setParcours(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->iutSiteParcours->removeElement($iutSiteParcour) && $iutSiteParcour->getParcours() === $this) {
+            $iutSiteParcour->setParcours(null);
         }
 
         return $this;
@@ -392,13 +374,16 @@ class ApcParcours extends BaseEntity
 
     public function removeQapesSae(QapesSae $qapesSae): self
     {
-        if ($this->qapesSaes->removeElement($qapesSae)) {
-            // set the owning side to null (unless already changed)
-            if ($qapesSae->getParcours() === $this) {
-                $qapesSae->setParcours(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->qapesSaes->removeElement($qapesSae) && $qapesSae->getParcours() === $this) {
+            $qapesSae->setParcours(null);
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getLibelle(). ' ('.$this->getDepartement()?->getSigle().')';
     }
 }

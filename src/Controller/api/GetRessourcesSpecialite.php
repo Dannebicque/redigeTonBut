@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GetRessourcesSpecialite extends AbstractController
 {
-    private $apcRessourceRepository;
+    private \App\Repository\ApcRessourceRepository $apcRessourceRepository;
 
     public function __construct(ApcRessourceRepository $apcRessourceRepository)
     {

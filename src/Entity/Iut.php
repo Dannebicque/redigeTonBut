@@ -7,32 +7,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=IutRepository::class)
- */
+#[ORM\Entity(repositoryClass: IutRepository::class)]
 class Iut
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    private ?string $libelle = null;
+
+    #[ORM\ManyToOne(targetEntity: IutUniversite::class, inversedBy: 'iuts')]
+    private ?\App\Entity\IutUniversite $universite = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\IutSite>
      */
-    private $libelle;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=IutUniversite::class, inversedBy="iuts")
-     */
-    private $universite;
-
-    /**
-     * @ORM\OneToMany(targetEntity=IutSite::class, mappedBy="iut")
-     */
-    private $iutSites;
+    #[ORM\OneToMany(targetEntity: IutSite::class, mappedBy: 'iut')]
+    private \Doctrine\Common\Collections\Collection $iutSites;
 
     public function __construct()
     {
@@ -88,11 +81,9 @@ class Iut
 
     public function removeIutSite(IutSite $iutSite): self
     {
-        if ($this->iutSites->removeElement($iutSite)) {
-            // set the owning side to null (unless already changed)
-            if ($iutSite->getIut() === $this) {
-                $iutSite->setIut(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->iutSites->removeElement($iutSite) && $iutSite->getIut() === $this) {
+            $iutSite->setIut(null);
         }
 
         return $this;

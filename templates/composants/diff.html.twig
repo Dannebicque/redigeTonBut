@@ -1,0 +1,29 @@
+<ul style="list-style-type: none; padding-left: 1em;">
+    {% for key, value in data %}
+        {% if value is iterable and value['typeDiff'] is defined %}
+            <li>
+                {% if value.typeDiff == 'identique' %}
+                    <strong>{{ key }}</strong> : {{ value.valeur|json_encode(constant('JSON_UNESCAPED_UNICODE')) }}
+                {% elseif value.typeDiff == 'modification' %}
+                    <strong class="text-danger">{{ key }}</strong> : <span class="text-danger">{{ value.ancien|json_encode(constant('JSON_UNESCAPED_UNICODE')) }}</span> => <span class="text-success">{{ value.actuel|json_encode(constant('JSON_UNESCAPED_UNICODE')) }}</span>
+                {% elseif value.typeDiff == 'ajout' %}
+                    <strong class="text-success">{{ key }}</strong> : <span class="text-success">{{ value.actuel|json_encode(constant('JSON_UNESCAPED_UNICODE')) }}</span>
+                {% elseif value.typeDiff == 'suppression' %}
+                    <strong class="text-danger">{{ key }}</strong> : <span class="text-danger">{{ value.ancien|json_encode(constant('JSON_UNESCAPED_UNICODE')) }}</span>
+                {% else %}
+                    ??
+                {% endif %}
+                <small style="color: #666; font-style: italic;">({{ value.typeDiff }})</small>
+            </li>
+        {% elseif value is iterable %}
+            <li>
+                <strong>{{ key }}</strong> :
+                {% include 'composants/diff.html.twig' with { data: value } only %}
+            </li>
+        {% else %}
+            <li>
+                <strong>{{ key }}</strong> : {{ value }}
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

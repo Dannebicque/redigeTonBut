@@ -35,12 +35,12 @@ class CompileLatexCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        new SymfonyStyle($input, $output);
         $arg1 = $input->getArgument('arg1');
         $arg2 = $input->getArgument('arg2');
 
         $chemin = $this->kernel->getProjectDir().'/public/pdf/'.$arg1.'/';
-        $text = shell_exec('pdflatex -output-directory ' . $chemin.' '.$arg2);
+        shell_exec('pdflatex -output-directory ' . $chemin.' '.$arg2);
         //$io->note($text);
         return Command::SUCCESS;
     }

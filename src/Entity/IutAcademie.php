@@ -7,32 +7,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=IutAcademieRepository::class)
- */
+#[ORM\Entity(repositoryClass: IutAcademieRepository::class)]
 class IutAcademie
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 100)]
+    private ?string $libelle = null;
+
+    #[ORM\ManyToOne(targetEntity: IutRegion::class, inversedBy: 'iutAcademies')]
+    private ?\App\Entity\IutRegion $region = null;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\IutUniversite>
      */
-    private $libelle;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=IutRegion::class, inversedBy="iutAcademies")
-     */
-    private $region;
-
-    /**
-     * @ORM\OneToMany(targetEntity=IutUniversite::class, mappedBy="academie")
-     */
-    private $iutUniversites;
+    #[ORM\OneToMany(targetEntity: IutUniversite::class, mappedBy: 'academie')]
+    private \Doctrine\Common\Collections\Collection $iutUniversites;
 
     public function __construct()
     {
@@ -88,11 +81,9 @@ class IutAcademie
 
     public function removeIutUniversite(IutUniversite $iutUniversite): self
     {
-        if ($this->iutUniversites->removeElement($iutUniversite)) {
-            // set the owning side to null (unless already changed)
-            if ($iutUniversite->getAcademie() === $this) {
-                $iutUniversite->setAcademie(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->iutUniversites->removeElement($iutUniversite) && $iutUniversite->getAcademie() === $this) {
+            $iutUniversite->setAcademie(null);
         }
 
         return $this;

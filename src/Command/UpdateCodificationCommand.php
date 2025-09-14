@@ -19,6 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class UpdateCodificationCommand extends Command
 {
     private DepartementRepository $departementRepository;
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(
@@ -77,6 +78,7 @@ class UpdateCodificationCommand extends Command
                     $r->setCodeMatiere(Codification::codeSae($r, $r->getApcSaeParcours()));
                 }
            }
+
             $this->entityManager->flush();
         }
 

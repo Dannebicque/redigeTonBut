@@ -22,7 +22,7 @@ class MyPdfLatex
     ) {
     }
 
-    public function exportRessource(ApcRessource $ressource)
+    public function exportRessource(ApcRessource $ressource): \Symfony\Component\HttpFoundation\Response
     {
         $output = $this->kernel->getProjectDir() . '/public/pdf/' . $ressource->getDepartement()->getNumeroAnnexe() . '/';
         $fichierLatex = $this->genereFileRessource->genereFile($ressource, $output);
@@ -33,6 +33,7 @@ class MyPdfLatex
         chmod($fichierLatex, 0744);
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
+
         $input = new ArrayInput([
             'command' => 'app:compile-latex',
             // (optional) define the value of command arguments
@@ -46,7 +47,7 @@ class MyPdfLatex
         $application->run($input, $outputBuffer);
 
         // return the output, don't use if you used NullOutput()
-        $contentBuffer = $outputBuffer->fetch();
+        $outputBuffer->fetch();
 
         sleep(3);
         $response = new Response(file_get_contents($output . $name . '.pdf'));
@@ -57,7 +58,7 @@ class MyPdfLatex
         return $response;
     }
 
-    public function exportSae(ApcSae $sae)
+    public function exportSae(ApcSae $sae): \Symfony\Component\HttpFoundation\Response
     {
         $output = $this->kernel->getProjectDir() . '/public/pdf/' . $sae->getDepartement()->getNumeroAnnexe() . '/';
         $fichierLatex = $this->genereFileSae->genereFile($sae, $output);
@@ -65,7 +66,7 @@ class MyPdfLatex
         sleep(1);
         $name = 'PN-BUT-' . $sae->getDepartement()->getSigle() . '-' . $sae->getSlugName();
         chmod($fichierLatex, 0744);
-        $text = shell_exec('/usr/bin/pdflatex/pdftex -output-directory /var/www/redigeTonBut/public/pdf/1/ ' . $fichierLatex);
+        shell_exec('/usr/bin/pdflatex/pdftex -output-directory /var/www/redigeTonBut/public/pdf/1/ ' . $fichierLatex);
 //        $text = shell_exec('php ' . $this->kernel->getProjectDir() . '/public/pdf/compileLatex.php ' . $fichierLatex . ' ' . $this->kernel->getProjectDir() . '/public/pdf/' . $sae->getDepartement()->getNumeroAnnexe());
         sleep(3);
         $response = new Response(file_get_contents($output . $name . '.pdf'));

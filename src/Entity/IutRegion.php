@@ -7,32 +7,28 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=IutRegionRepository::class)
- */
+#[ORM\Entity(repositoryClass: IutRegionRepository::class)]
 class IutRegion
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 100)]
+    private ?string $libelle = null;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\IutAcademie>
      */
-    private $libelle;
+    #[ORM\OneToMany(targetEntity: IutAcademie::class, mappedBy: 'region')]
+    private \Doctrine\Common\Collections\Collection $iutAcademies;
 
     /**
-     * @ORM\OneToMany(targetEntity=IutAcademie::class, mappedBy="region")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\IutVille>
      */
-    private $iutAcademies;
-
-    /**
-     * @ORM\OneToMany(targetEntity=IutVille::class, mappedBy="region")
-     */
-    private $iutVilles;
+    #[ORM\OneToMany(targetEntity: IutVille::class, mappedBy: 'region')]
+    private \Doctrine\Common\Collections\Collection $iutVilles;
 
     public function __construct()
     {
@@ -77,11 +73,9 @@ class IutRegion
 
     public function removeIutAcademy(IutAcademie $iutAcademy): self
     {
-        if ($this->iutAcademies->removeElement($iutAcademy)) {
-            // set the owning side to null (unless already changed)
-            if ($iutAcademy->getRegion() === $this) {
-                $iutAcademy->setRegion(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->iutAcademies->removeElement($iutAcademy) && $iutAcademy->getRegion() === $this) {
+            $iutAcademy->setRegion(null);
         }
 
         return $this;
@@ -107,11 +101,9 @@ class IutRegion
 
     public function removeIutVille(IutVille $iutVille): self
     {
-        if ($this->iutVilles->removeElement($iutVille)) {
-            // set the owning side to null (unless already changed)
-            if ($iutVille->getRegion() === $this) {
-                $iutVille->setRegion(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->iutVilles->removeElement($iutVille) && $iutVille->getRegion() === $this) {
+            $iutVille->setRegion(null);
         }
 
         return $this;

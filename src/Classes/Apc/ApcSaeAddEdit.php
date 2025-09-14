@@ -18,9 +18,13 @@ use Doctrine\ORM\EntityManagerInterface;
 class ApcSaeAddEdit
 {
     private EntityManagerInterface $entityManager;
+
     private ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository;
+
     private ApcParcoursRepository $apcParcoursRepository;
+
     private ApcRessourceRepository $apcRessourceRepository;
+
     private ApcComptenceRepository $apcComptenceRepository;
 
     private array $tabCoeffs = [];
@@ -40,7 +44,7 @@ class ApcSaeAddEdit
     }
 
 
-    public function addOrEdit(ApcSae $apcSae, $request, $verouille = false)
+    public function addOrEdit(ApcSae $apcSae, $request, $verouille = false): void
     {
         $this->entityManager->persist($apcSae);
         $tabAcComp = [];
@@ -66,6 +70,7 @@ class ApcSaeAddEdit
                 if (array_key_exists($idCompetence, $this->tabCoeffs)) {
                     $saeAc->setCoefficient($this->tabCoeffs[$idCompetence]);
                 }
+
                 $this->entityManager->persist($saeAc);
             }
 
@@ -98,7 +103,7 @@ class ApcSaeAddEdit
         $this->entityManager->flush();
     }
 
-    public function removeLiens(ApcSae $apcSae, $verouille = false)
+    public function removeLiens(ApcSae $apcSae, $verouille = false): void
     {
 //on supprimer ceux présent
         if ($verouille === false) {
@@ -152,6 +157,7 @@ class ApcSaeAddEdit
             $newAc = new ApcSaeRessource($sae, $ac->getRessource());
             $this->entityManager->persist($newAc);
         }
+
         $this->entityManager->flush();
 
         return $sae;

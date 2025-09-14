@@ -11,6 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RessourceSubscriber implements EventSubscriberInterface
 {
     protected EntityManagerInterface $entityManager;
+
     protected ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
 
     public function __construct(EntityManagerInterface $entityManager,ApcRessourceParcoursRepository $apcRessourceParcoursRepository)
@@ -27,13 +28,11 @@ class RessourceSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onUpdateCodification(RessourceEvent $ressourceEvent)
+    public function onUpdateCodification(RessourceEvent $ressourceEvent): void
     {
         $ressource = $ressourceEvent->getApcRessource();
         $parcours = $this->apcRessourceParcoursRepository->findSaeWithParcours($ressourceEvent->getApcRessource()->getId());
-        if ($ressource !== null) {
-            $ressource->setCodeMatiere(Codification::codeRessource($ressource, $parcours));
-            $this->entityManager->flush();
-        }
+        $ressource->setCodeMatiere(Codification::codeRessource($ressource, $parcours));
+        $this->entityManager->flush();
     }
 }

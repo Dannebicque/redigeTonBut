@@ -14,25 +14,19 @@ use App\Repository\ApcSaeRessourceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcSaeRessourceRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcSaeRessourceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcSaeRessource extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcSae::class, inversedBy="apcSaeRessources")
-     * @ORM\OrderBy({"libelle" = "ASC"})
-     */
+    #[ORM\ManyToOne(targetEntity: ApcSae::class, inversedBy: 'apcSaeRessources')]
+    #[ORM\OrderBy(['libelle' => 'ASC'])]
     private ?ApcSae $sae;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcRessource::class, inversedBy="apcSaeRessources")
-     * @ORM\OrderBy({"libelle" = "ASC"})
-     * @Groups({"read:sae"})
-     */
+    #[ORM\ManyToOne(targetEntity: ApcRessource::class, inversedBy: 'apcSaeRessources')]
+    #[ORM\OrderBy(['libelle' => 'ASC'])]
+    #[Groups(['read:sae'])]
     private ?ApcRessource $ressource;
 
     public function __construct(ApcSae $sae, ApcRessource $ressource)

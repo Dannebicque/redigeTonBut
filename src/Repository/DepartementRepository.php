@@ -12,6 +12,7 @@ namespace App\Repository;
 use App\Entity\Departement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Departement|null find($id, $lockMode = null, $lockVersion = null)
@@ -43,5 +44,24 @@ class DepartementRepository extends ServiceEntityRepository
             ->groupBy('departement.id')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findByUser(?UserInterface $user)
+    {
+        if ($user === null) {
+            return [];
+        }
+
+        // tester si l'utilisateur est pacd du département
+        if ($user->ispacd()) {
+            return [$user->getDepartement()];
+        }
+
+        $qb = $this->createquerybuilder('departement') //todo: ajouter le pacd
+            ->andwhere(':user member of departement.cpns')
+            ->setparameter('user', $user);
+
+
+        return $qb->getquery()->getresult();
     }
 }

@@ -29,22 +29,15 @@ class MyUpload
     {
         $extension = $this->getExtension($fichier);
         $dir = $this->valideDir($destination);
-
-        if (null !== $fichier) {
-            if ((\count($extensions) > 0) && !\in_array($extension, $extensions, true)) {
-                throw new Exception();
-            }
-
-            $nomfile = random_int(1, 99999) . '_' . date('YmdHis') . '.' . $extension;
-            $fichier->move($this->dir . $dir, $nomfile);
-
-            return $this->dir . $dir . $nomfile;
+        if (($extensions !== []) && !\in_array($extension, $extensions, true)) {
+            throw new Exception();
         }
-
-        return null;
+        $nomfile = random_int(1, 99999) . '_' . date('YmdHis') . '.' . $extension;
+        $fichier->move($this->dir . $dir, $nomfile);
+        return $this->dir . $dir . $nomfile;
     }
 
-    private function valideDir($dir)
+    private function valideDir(string $dir): string
     {
         if ('/' === $dir[0]) {
             $dir = mb_substr($dir, 1, mb_strlen($dir));

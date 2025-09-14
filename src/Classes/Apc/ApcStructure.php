@@ -42,6 +42,7 @@ class ApcStructure
                             $tParcours[$parcours->getId()])) {
                         $tParcours[$parcours->getId()][$niv->getCompetence()->getId()] = [];
                     }
+
                     if (null !== $niv->getAnnee()) {
                         $tParcours[$parcours->getId()][$niv->getCompetence()->getId()][$niv->getAnnee()->getOrdre()] = $niv;
                     }

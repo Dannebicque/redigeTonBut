@@ -39,8 +39,8 @@ class GenereMatrixCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $arg1 = $input->getArgument('specialite');
 
-        if ($arg1 === '' or $arg1 === null) {
-            $io->error(sprintf('Aucune spécialité précisée'));
+        if ($arg1 === '' || $arg1 === null) {
+            $io->error('Aucune spécialité précisée');
         }
 
         $departement = $this->departementRepository->findOneBy(['sigle' => $arg1]);

@@ -18,14 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait LifeCycleTrait
 {
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $created;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $updated;
 
     public function getCreated(): ?DateTimeInterface
@@ -48,18 +44,14 @@ trait LifeCycleTrait
         $this->updated = $updated;
     }
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function setUpdatedValue(): void
     {
         $this->updated = new DateTime();
     }
 
-    /**
-     * @ORM\PrePersist()
-     */
+    #[ORM\PrePersist]
     public function setCreatedValue(): void
     {
         $this->created = new DateTime();

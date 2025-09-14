@@ -30,7 +30,10 @@ class ApcRessourceApprentissageCritiqueRepository extends ServiceEntityRepositor
         parent::__construct($registry, ApcRessourceApprentissageCritique::class);
     }
 
-    public function findArrayIdAc($ressource)
+    /**
+     * @return mixed[]
+     */
+    public function findArrayIdAc($ressource): array
     {
         $query = $this->createQueryBuilder('a')
             ->where('a.ressource = :ressource')

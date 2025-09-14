@@ -16,49 +16,41 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcNiveauRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcNiveauRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcNiveau extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"read:competence"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[Groups(['read:competence'])]
     private ?string $libelle;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcNiveaux")
-     * @Groups({"read:departement"})
-     */
+    #[ORM\ManyToOne(targetEntity: ApcCompetence::class, inversedBy: 'apcNiveaux')]
+    #[Groups(['read:departement'])]
     private ?ApcCompetence $competence;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:competence", "read:departement"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:competence', 'read:departement'])]
     private ?int $ordre;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Annee::class, inversedBy="apcNiveaux")
-     * @Groups({"read:competence", "read:departement"})
-     */
+    #[ORM\ManyToOne(targetEntity: Annee::class, inversedBy: 'apcNiveaux')]
+    #[Groups(['read:competence', 'read:departement'])]
     private ?Annee $annee;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcApprentissageCritique::class, mappedBy="niveau", cascade={"persist","remove"})
-     * @ORM\OrderBy({"code"="ASC"})
-     * @Groups({"read:competence"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcApprentissageCritique>
      */
+    #[ORM\OneToMany(targetEntity: ApcApprentissageCritique::class, mappedBy: 'niveau', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['code' => 'ASC'])]
+    #[Groups(['read:competence'])]
     private Collection $apcApprentissageCritiques;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcParcoursNiveau::class, mappedBy="niveau")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcParcoursNiveau>
      */
-    private $apcParcoursNiveaux;
+    #[ORM\OneToMany(targetEntity: ApcParcoursNiveau::class, mappedBy: 'niveau')]
+    private \Doctrine\Common\Collections\Collection $apcParcoursNiveaux;
 
     public function __construct(ApcCompetence $competence = null)
     {
@@ -166,17 +158,15 @@ class ApcNiveau extends BaseEntity
 
     public function removeApcParcoursNiveau(ApcParcoursNiveau $apcParcoursNiveaux): self
     {
-        if ($this->apcParcoursNiveaux->removeElement($apcParcoursNiveaux)) {
-            // set the owning side to null (unless already changed)
-            if ($apcParcoursNiveaux->getNiveau() === $this) {
-                $apcParcoursNiveaux->setNiveau(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcParcoursNiveaux->removeElement($apcParcoursNiveaux) && $apcParcoursNiveaux->getNiveau() === $this) {
+            $apcParcoursNiveaux->setNiveau(null);
         }
 
         return $this;
     }
 
-    public function display()
+    public function display(): string
     {
         switch ($this->ordre) {
             case 1:

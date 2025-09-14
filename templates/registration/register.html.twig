@@ -1,6 +1,6 @@
 {% extends 'base-speciale.html.twig' %}
 
-{% block header %}Demande d'accès{% endblock %}
+{% block title %}Demande d'accès{% endblock %}
 
 {% block content %}
     <div class="mb-5">
@@ -23,24 +23,15 @@
 
     {{ form_row(registrationForm.nom) }}
 
-
-    {#    <div class="mb-3 filled form-group tooltip-end-top form-floating"> #}
-    {#        {{ form_widget(registrationForm.email) }} #}
-    {#        {{ form_label(registrationForm.email) }} #}
-    {#        {{ form_errors(registrationForm.email) }} #}
     {{ form_label(registrationForm.email) }}
     <div class="input-group mb-3">
         {{ form_widget(registrationForm.email) }}
         <span class="input-group-text">@</span>
         {{ form_widget(registrationForm.domaine) }}
-{#        <input type="text" class="form-control" placeholder="Server" aria-label="Server">#}
     </div>
     {{ form_errors(registrationForm.email) }}
-    {#    </div> #}
-    {#    {{ form_row(registrationForm.departement) }} #}
 
     {{ form_row(registrationForm.plainPassword) }}
-
 
     <button class="btn btn-lg btn-primary mt-3" type="submit">Valider votre demande</button>
     <a href="{{ path('app_login') }}"> Se connecter</a>

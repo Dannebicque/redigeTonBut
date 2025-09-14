@@ -14,7 +14,7 @@ use App\Entity\ApcSae;
 
 class ApcCoefficient
 {
-    public function calculsCoefficients(mixed $saes, mixed $ressources)
+    public function calculsCoefficients(mixed $saes, mixed $ressources): array
     {
         $tabs = [];
         $tabs['saes'] = [];
@@ -31,6 +31,7 @@ class ApcCoefficient
                     $tabs['competences'][$competence->getCompetence()->getId()]['totalSaes'] = 0;
                     $tabs['competences'][$competence->getCompetence()->getId()]['totalRessources'] = 0;
                 }
+
                 $tabs['competences'][$competence->getCompetence()->getId()]['total'] += $competence->getCoefficient();
                 $tabs['competences'][$competence->getCompetence()->getId()]['totalSaes'] += $competence->getCoefficient();
             }
@@ -50,6 +51,7 @@ class ApcCoefficient
                     $tabs['competences'][$competence->getCompetence()->getId()]['totalSaes'] = 0;
                     $tabs['competences'][$competence->getCompetence()->getId()]['totalRessources'] = 0;
                 }
+
                 $tabs['competences'][$competence->getCompetence()->getId()]['total'] += $competence->getCoefficient();
                 $tabs['competences'][$competence->getCompetence()->getId()]['totalRessources'] += $competence->getCoefficient();
             }

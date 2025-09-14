@@ -37,7 +37,7 @@ class QapesSaeController extends AbstractController
         IutSiteParcoursRepository $iutSiteParcoursRepository,
         IutSiteRepository $iutSiteRepository,
         Request $request
-    ) {
+    ): ?\Symfony\Component\HttpFoundation\JsonResponse {
         $action = $request->query->get('action');
         switch ($action) {
             case 'siteIut':
@@ -113,6 +113,7 @@ class QapesSaeController extends AbstractController
 
                 return new JsonResponse($siteiutArray);
         }
+        return null;
 
     }
 
@@ -152,6 +153,7 @@ class QapesSaeController extends AbstractController
                     }
                 }
             }
+
             //iutSite
             $iutSite = $iutSiteRepository->find($data['iutSite'] );
             $qapesSae->setIutSite($iutSite);
@@ -326,14 +328,6 @@ class QapesSaeController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'app_qapes_sae_show', methods: ['GET'])]
-    public function show(QapesSae $qapesSae): Response
-    {
-        return $this->render('labset/qapes_sae/show.html.twig', [
-            'qapes' => $qapesSae,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_qapes_sae_edit', methods: ['GET', 'POST'])]
     public function edit(
         UserRepository $userRepository,
@@ -417,6 +411,7 @@ class QapesSaeController extends AbstractController
             {
                 $entityManager->remove($qapesSaeCritereReponse);
             }
+
             $entityManager->flush();
             $qapesSaeRepository->remove($qapesSae);
         }

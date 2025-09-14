@@ -15,7 +15,7 @@ class ImageController extends AbstractController
     public function index(KernelInterface $kernel,
         ApcSaeRepository $apcSaeRepository,
         ApcRessourceRepository $apcRessourceRepository,
-        $id, $type): Response
+        string $id, string $type): Response
     {
         $im = imagecreate(50, 200);
         if ($type === 'sae') {

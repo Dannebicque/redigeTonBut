@@ -15,7 +15,7 @@ class DepartementType extends AbstractType
 {
     private bool $droit;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->droit =  $options['droit'];
         $builder
@@ -32,13 +32,13 @@ class DepartementType extends AbstractType
             ->add('typeStructure', ChoiceType::class,
                 ['choices' => ['Type 1' => Departement::TYPE1, 'Type 2' => Departement::TYPE2, 'Type 3' => Departement::TYPE3], 'disabled' => $this->droit])
             ->add('textePresentation', TextareaType::class,
-                ['label' => 'Texte descriptif figurant dans l\'annexe',
+                ['label' => "Texte descriptif figurant dans l'annexe",
                     'help' => 'Objectifs du diplôme, intitulé des parcours, métiers et secteurs d’activités visés, compétences visées.',
                     'attr' => ['rows' => 50]])
            ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Departement::class,

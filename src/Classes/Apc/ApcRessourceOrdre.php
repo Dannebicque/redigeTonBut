@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class ApcRessourceOrdre
 {
     private EntityManagerInterface $entityManager;
+
     private ApcRessourceRepository $apcRessourceRepository;
 
 
@@ -28,7 +29,7 @@ class ApcRessourceOrdre
         return $ordreMax[0]['ordreMax'] === null ? 1 : ++$ordreMax[0]['ordreMax'];
     }
 
-    public function deplaceRessource(ApcRessource $apcRessource, int $position)
+    public function deplaceRessource(ApcRessource $apcRessource, int $position): bool
     {
         //modifie l'ordre de la ressource
         $ordreInitial = $apcRessource->getOrdre();

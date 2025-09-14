@@ -32,7 +32,10 @@ class ApcParcoursRepository extends ServiceEntityRepository
         return $this->findBy([], ['ordre' => 'ASC', 'libelle' => 'ASC']);
     }
 
-    public function findOneByDepartementArray(Departement $departement)
+    /**
+     * @return mixed[]
+     */
+    public function findOneByDepartementArray(Departement $departement): array
     {
         $t = [];
         foreach ($departement->getApcParcours() as $parcours)

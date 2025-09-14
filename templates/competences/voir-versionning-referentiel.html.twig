@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h2 class="small-title">Parcours de la spécialité {{ departement.sigle }}
+    </h2>
+    <div class="card mb-3">
+        <div class="card-body">
+            <ul class="nav nav-pills responsive-tabs nav-justified mb-4" role="tablist">
+                {% for parcour in parcours %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {% if loop.first %}active{% endif %} "
+                                data-bs-toggle="tab"
+                                data-bs-target="#parcour_comp_{{ parcour.id }}" role="tab" aria-selected="false"
+                                type="button">{{ parcour.libelle }}</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="tab-content">
+        {% for parcour in parcours %}
+        <div class="tab-pane {% if loop.first %}fade active show{% endif %}" id="parcour_comp_{{ parcour.id }}">
+            {{ include('competences/export-versionning-referentiel-parcours.html.twig', {
+                garde:false,
+                parcours: parcour,
+            }) }}
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block header %}
+    Différences // Référentiel de compétences de : {{ departement.sigle }}
+{% endblock %}
+

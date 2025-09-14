@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
@@ -28,53 +29,48 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BaseController extends AbstractController
 {
     protected EntityManagerInterface $entityManager;
+
     protected DepartementRepository $dptRepository;
+
     protected TranslatorInterface $translator;
+
     protected FlashBagInterface $flashBag;
+
     protected SessionInterface $session;
+
     private ?Departement $departement;
 
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setDepartementRepository(DepartementRepository $dptRepository): void
     {
         $this->dptRepository = $dptRepository;
     }
 
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setSession(RequestStack $session): void
     {
         $this->session = $session->getSession();
     }
 
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setFlashBagInterface(RequestStack $session): void
     {
         $this->flashBag = $session->getSession()->getFlashBag();
     }
 
-    /**
-     * @required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }
 
-    public function getCaracteristiques()
+    public function getCaracteristiques(): \App\DTO\Tertiaire|\App\DTO\Secondaire|null
     {
         if ($this->getDepartement()->isTertiaire()) {
             return new Tertiaire();
@@ -83,28 +79,29 @@ class BaseController extends AbstractController
         if ($this->getDepartement()->isSecondaire()) {
             return new Secondaire();
         }
+        return null;
     }
 
     public function getDepartement(): Departement|RedirectResponse|null
     {
-        if ($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_IUT') || $this->isGranted('ROLE_CPN_LECTEUR')) {
+        if (
+            $this->isGranted('ROLE_ADMIN') ||
+            $this->isGranted('ROLE_GT') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_IUT') || $this->isGranted('ROLE_CPN_LECTEUR')) {
             if ($this->session->get('departement') !== null) {
                 $this->departement = $this->dptRepository->find($this->session->get('departement'));
             } else {
                 $this->departement = null;
             }
+        } elseif ($this->getUser() instanceof UserInterface && $this->getUser()->getDepartement()!== null) {
+            $this->departement = $this->getUser()->getDepartement();
         } else {
-            if ($this->getUser() !== null and $this->getUser()->getDepartement()!== null) {
-                $this->departement = $this->getUser()->getDepartement();
-            } else {
-                return $this->redirectToRoute('app_login');//pas de département??
-            }
+            return $this->redirectToRoute('app_login');//pas de département??
         }
 
         return $this->departement;
     }
 
-    public function addFlashBag(string $type, string $message)
+    public function addFlashBag(string $type, string $message): void
     {
         $this->flashBag->add($type, $message);
     }

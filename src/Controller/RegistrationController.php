@@ -58,6 +58,7 @@ class RegistrationController extends AbstractController
                 ->to($user->getEmail())
                 ->subject('[ORéBUT] Merci de confirmer votre email')
                 ->htmlTemplate('registration/confirmation_email.html.twig')
+                ->textTemplate('registration/confirmation_email.txt.twig')
                 ->context([
                     'user' => $user,
                     'token' => md5($user->getEmail()),

@@ -15,158 +15,108 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\SemestreRepository")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: \App\Repository\SemestreRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Semestre extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"read:ressource","read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private ?string $libelle;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:ressource","read:sae"})
-     */
-    private int $ordreAnnee; //dans l'année
-
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:ressource","read:sae"})
-     */
-    private int $ordreLmd; //dans le LMD
-
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Semestre")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:ressource', 'read:sae'])]
+    private int $ordreAnnee;
+     //dans l'année
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:ressource', 'read:sae'])]
+    private int $ordreLmd;
+     //dans le LMD
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Semestre::class)]
     private ?Semestre $precedent;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Semestre")
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Semestre::class)]
     private ?Semestre $suivant;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Annee", inversedBy="semestres")
-     * @Groups({"semestre"})
-     */
+    #[ORM\ManyToOne(targetEntity: \App\Entity\Annee::class, inversedBy: 'semestres')]
+    #[Groups(['semestre'])]
     private ?Annee $annee;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessource::class, mappedBy="semestre")
-     * @ORM\OrderBy({"ordre":"ASC"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessource>
      */
+    #[ORM\OneToMany(targetEntity: ApcRessource::class, mappedBy: 'semestre')]
+    #[ORM\OrderBy(['ordre' => 'ASC'])]
     private Collection $apcRessources;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSae::class, mappedBy="semestre")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSae>
      */
+    #[ORM\OneToMany(targetEntity: ApcSae::class, mappedBy: 'semestre')]
     private Collection $apcSaes;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbHeuresRessourceSae = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $pourcentageAdaptationLocale = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbHeuresProjet = 0;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
     private int $nbSemaineStageMin = 0;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
     private int $nbSemainesStageMax = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcCompetenceSemestre::class, mappedBy="semestre")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcCompetenceSemestre>
      */
+    #[ORM\OneToMany(targetEntity: ApcCompetenceSemestre::class, mappedBy: 'semestre')]
     private Collection $apcCompetenceSemestres;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbHeuresEnseignementSaeLocale = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbHeuresEnseignementLocale = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbHeuresEnseignementRessourceLocale = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbHeuresEnseignementRessourceNational = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbSemaines = 20;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbSemainesConges = 3;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbDemiJournees = 9;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $vhNbHeuresEnseignementSae = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $vhNbHeuresEnseignementSaeRessource = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $vhNbHeuresDontTpSaeRessource = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $vhNbHeuresProjetTutore = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbHeuresTpNational = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
     private float $nbHeuresTpLocale = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="semestres")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcParcours::class, inversedBy: 'semestres')]
     private ?ApcParcours $apcParcours;
 
     public function __construct()
@@ -181,7 +131,7 @@ class Semestre extends BaseEntity
         return $this->libelle;
     }
 
-    public function setLibelle($libelle): void
+    public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
     }
@@ -229,7 +179,7 @@ class Semestre extends BaseEntity
 
     public function display(): string
     {
-        if (null !== $this->getAnnee()) {
+        if ($this->getAnnee() instanceof \App\Entity\Annee) {
             return $this->libelle . ' | ' . $this->getAnnee()->getLibelle();
         }
 
@@ -382,11 +332,9 @@ class Semestre extends BaseEntity
 
     public function removeApcCompetenceSemestre(ApcCompetenceSemestre $apcCompetenceSemestre): self
     {
-        if ($this->apcCompetenceSemestres->removeElement($apcCompetenceSemestre)) {
-            // set the owning side to null (unless already changed)
-            if ($apcCompetenceSemestre->getSemestre() === $this) {
-                $apcCompetenceSemestre->setSemestre(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcCompetenceSemestres->removeElement($apcCompetenceSemestre) && $apcCompetenceSemestre->getSemestre() === $this) {
+            $apcCompetenceSemestre->setSemestre(null);
         }
 
         return $this;
@@ -565,7 +513,7 @@ class Semestre extends BaseEntity
         return $this;
     }
 
-    public function ordreAnneeXml()
+    public function ordreAnneeXml(): ?int
     {
         switch ($this->ordreLmd) {
             case 1:
@@ -577,5 +525,6 @@ class Semestre extends BaseEntity
             case 6:
                 return 2;
         }
+        return null;
     }
 }

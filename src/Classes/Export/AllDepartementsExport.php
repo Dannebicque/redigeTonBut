@@ -63,6 +63,7 @@ class AllDepartementsExport
                             $this->excelWriter->writeCellXY('E', $ligne, $composanteEssentielle->getLibelle());
                             $ligne++;
                         }
+
                         $ligne = $ligneCompetence;
                         foreach ($tParcours[$apcParcour->getId()][$apcCompetence->getId()] as $niveau) {
                             foreach ($niveau->getApcApprentissageCritiques() as $apprentissageCritique) {
@@ -74,6 +75,7 @@ class AllDepartementsExport
                     }
                 }
             }
+
             $this->excelWriter->getColumnsAutoSizeInt(1, 10);
         }
 

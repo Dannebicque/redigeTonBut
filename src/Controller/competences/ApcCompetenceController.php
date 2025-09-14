@@ -13,6 +13,8 @@ use App\Classes\Apc\ApcCompetenceOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcCompetenceSemestre;
+use App\Entity\ApcNiveau;
+use App\Entity\ApcParcours;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Entity\Semestre;
@@ -27,6 +29,39 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route("/apc/competence")]
 class ApcCompetenceController extends BaseController
 {
+    //création de la compétence
+    #[Route("/new", name:"administration_apc_competence_new", methods:["GET","POST"])]
+    public function new(Request $request): Response
+    {
+        $apcCompetence = new ApcCompetence($this->getDepartement());
+        $form = $this->createForm(ApcCompetenceType::class, $apcCompetence, [
+            'new' => true,
+            'departement' => $this->getDepartement(),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // par défaut, on met au dernier ordre disponible
+            $lastCompetence = $this->entityManager->getRepository(ApcCompetence::class)->findLastByDepartement($apcCompetence->getDepartement());
+            $apcCompetence->setNumero($lastCompetence->getNumero() + 1);
+            $apcCompetence->setNumeroIdentifiant($lastCompetence->getNumero() + 1);
+            $apcCompetence->setCouleur('c' . $apcCompetence->getNumero());
+            $this->entityManager->persist($apcCompetence);
+            $this->entityManager->flush();
+            $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence créée avec succès.');
+
+            return $this->redirectToRoute('administration_apc_referentiel_index',
+                ['departement' => $apcCompetence->getDepartement()?->getId()]);
+        }
+
+        return $this->render('competences/apc_competence/new.html.twig', [
+            'apc_competence' => $apcCompetence,
+            'form' => $form->createView(),
+            'departement' => $this->getDepartement()
+        ]);
+    }
+
+
      #[Route("/{id}/detail", name:"administration_apc_competence_show", methods:["GET"])]
     public function show(ApcCompetence $apcCompetence): Response
     {
@@ -41,7 +76,10 @@ class ApcCompetenceController extends BaseController
         Request $request, ApcCompetence $apcCompetence): Response
     {
         $ordre = $apcCompetence->getCouleur();
-        $form = $this->createForm(ApcCompetenceType::class, $apcCompetence);
+        $form = $this->createForm(ApcCompetenceType::class, $apcCompetence, [
+            'new' => false,
+            'departement' => $this->getDepartement(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -66,7 +104,7 @@ class ApcCompetenceController extends BaseController
     public function updateEcts(
         ApcParcoursRepository $apcParcoursRepository,
         ApcCompetenceSemestreRepository $apcCompetenceSemestreRepository,
-        Request $request, Semestre $semestre, ApcCompetence $competence) {
+        Request $request, Semestre $semestre, ApcCompetence $competence): \Symfony\Component\HttpFoundation\JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -99,16 +137,88 @@ class ApcCompetenceController extends BaseController
                 foreach ($semestre->getDepartement()->getApcParcours() as $parc) {
                     $tab[$parc->getId()] = 0;
                 }
+
                 $apcCompSemetre->setECTS(0);
                 $tab[$parcours->getId()] = Convert::convertToFloat($parametersAsArray['valeur']);
                 $apcCompSemetre->setEctsParcours($tab);
             } else {
                 $apcCompSemetre->setECTS(Convert::convertToFloat($parametersAsArray['valeur']));
             }
+
             $this->entityManager->persist($apcCompSemetre);
         }
+
         $this->entityManager->flush();
 
         return $this->json(true);
+    }
+
+    #[Route('/{id}/delete', name: 'administration_apc_competence_delete', methods: ['POST'])]
+    public function delete(
+        Request $request,
+        ApcCompetence $apcCompetence
+    ): Response {
+
+        $this->denyAccessUnlessGranted('COMPETENCES_DELETE', $apcCompetence);
+
+        if ($this->isCsrfTokenValid('delete'.$apcCompetence->getId(), $request->request->get('_token'))) {
+            $departement = $apcCompetence->getDepartement();
+            if ($departement === null) {
+                throw $this->createNotFoundException('Departement introuvable');
+            }
+
+            if ($departement->getVerouilleCompetences() === true) {
+                $this->addFlashBag('warning', 'Le référentiel est verrouillé, vous ne pouvez pas supprimer une compétence');
+                return $this->redirectToRoute('administration_apc_referentiel_index', ['departement' => $departement->getId()]);
+            }
+
+            foreach ($apcCompetence->getApcNiveaux() as $apcNiveau) {
+                foreach ($apcNiveau->getApcApprentissageCritiques() as $apcApprentissageCritique) {
+                    foreach ($apcApprentissageCritique->getApcRessourceApprentissageCritiques() as $apcRessourceApprentissageCritique) {
+                        $this->entityManager->remove($apcRessourceApprentissageCritique);
+                    }
+                    foreach ($apcApprentissageCritique->getApcSaeApprentissageCritiques() as $apcSaeApprentissageCritique) {
+                        $this->entityManager->remove($apcSaeApprentissageCritique);
+                    }
+                    $this->entityManager->remove($apcApprentissageCritique);
+                }
+
+
+                foreach ($apcNiveau->getApcParcoursNiveaux() as $apcParcoursNiveau) {
+                    $this->entityManager->remove($apcParcoursNiveau);
+                }
+                $this->entityManager->remove($apcNiveau);
+            }
+
+            foreach ($apcCompetence->getApcComposanteEssentielles() as $apcComposanteEssentielle) {
+                $this->entityManager->remove($apcComposanteEssentielle);
+            }
+
+            foreach ($apcCompetence->getApcSituationProfessionnelles() as $apcSituationProfessionnelle) {
+                $this->entityManager->remove($apcSituationProfessionnelle);
+            }
+
+            foreach ($apcCompetence->getApcRessourceCompetences() as $apcRessourceCompetence) {
+                $apcRessourceCompetence->getCompetence()?->removeApcRessourceCompetence($apcRessourceCompetence);
+
+                $this->entityManager->remove($apcRessourceCompetence);
+            }
+
+            foreach ($apcCompetence->getApcSaeCompetences() as $apcSaeCompetence) {
+                $apcSaeCompetence->getCompetence()?->removeApcSaeCompetence($apcSaeCompetence);
+                $this->entityManager->remove($apcSaeCompetence);
+            }
+
+            foreach ($apcCompetence->getApcCompetenceSemestres() as $apcCompetenceSemestre) {
+                $this->entityManager->remove($apcCompetenceSemestre);
+            }
+
+            $this->entityManager->remove($apcCompetence);
+            $this->entityManager->flush();
+
+            $this->addFlashBag('success', 'Compétence supprimée, avec l\'ensemble des liens vers les ressources, SAE et parcours');
+
+            return $this->redirectToRoute('administration_apc_referentiel_index', ['departement' => $departement->getId()]);
+        }
     }
 }

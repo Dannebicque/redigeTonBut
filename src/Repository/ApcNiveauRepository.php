@@ -43,7 +43,7 @@ class ApcNiveauRepository extends ServiceEntityRepository
             ->orderBy('n.ordre', 'ASC')
             ->addOrderBy('c.couleur', 'ASC');
 
-        if ($semestre->getApcParcours() !== null) {
+        if ($semestre->getApcParcours() instanceof \App\Entity\ApcParcours) {
             $query->innerJoin(ApcParcoursNiveau::class, 'pn', 'WITH', 'n.id = pn.niveau')
                 ->andWhere('pn.parcours = :parcours')
                 ->setParameter('parcours', $semestre->getApcParcours()->getId());
@@ -63,7 +63,10 @@ class ApcNiveauRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBySemestreArrayCompetence(Semestre $semestre)
+    /**
+     * @return mixed[]
+     */
+    public function findBySemestreArrayCompetence(Semestre $semestre): array
     {
         $query = $this->findBySemestre($semestre);
 

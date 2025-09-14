@@ -14,23 +14,17 @@ use App\Repository\ApcSituationProfessionnelleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcSituationProfessionnelleRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcSituationProfessionnelleRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcSituationProfessionnelle extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\Column(type="text")
-     * @Groups({"read:competence"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    #[Groups(['read:competence'])]
     private ?string $libelle;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcSituationProfessionnelles")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcCompetence::class, inversedBy: 'apcSituationProfessionnelles')]
     private ?ApcCompetence $competence;
 
     public function getLibelle(): ?string
@@ -57,7 +51,7 @@ class ApcSituationProfessionnelle extends BaseEntity
         return $this;
     }
 
-    public function getDepartement()
+    public function getDepartement(): ?\App\Entity\Departement
     {
         return $this->getCompetence()?->getDepartement();
     }

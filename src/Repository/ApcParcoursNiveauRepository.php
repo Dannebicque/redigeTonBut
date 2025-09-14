@@ -42,7 +42,10 @@ class ApcParcoursNiveauRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findNiveauByParcoursArray(ApcParcours $parcours)
+    /**
+     * @return mixed[]
+     */
+    public function findNiveauByParcoursArray(ApcParcours $parcours): array
     {
         $query = $this->createQueryBuilder('p')
             ->where('p.parcours = :parcours')
@@ -61,7 +64,10 @@ class ApcParcoursNiveauRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findBySemestre(Semestre $semestre, ApcParcours $parcours)
+    /**
+     * @return mixed[]
+     */
+    public function findBySemestre(Semestre $semestre, ApcParcours $parcours): array
     {
         $n = $this->createQueryBuilder('n')
             ->innerJoin(ApcNiveau::class, 'niv', 'WITH', 'n.niveau = niv.id')
@@ -98,7 +104,10 @@ class ApcParcoursNiveauRepository extends ServiceEntityRepository
 
     }
 
-    public function findParcoursSemestreCompetence(Semestre $semestre, ApcParcours $apcParcours)
+    /**
+     * @return mixed[]
+     */
+    public function findParcoursSemestreCompetence(Semestre $semestre, ApcParcours $apcParcours): array
     {
         $query = $this->createQueryBuilder('p')
             ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'p.niveau = n.id')

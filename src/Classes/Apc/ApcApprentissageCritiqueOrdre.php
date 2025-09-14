@@ -9,7 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 class ApcApprentissageCritiqueOrdre
 {
     private EntityManagerInterface $entityManager;
+
     private Codification $codification;
+
     private ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository;
 
 
@@ -20,7 +22,7 @@ class ApcApprentissageCritiqueOrdre
         $this->apcApprentissageCritiqueRepository = $apcApprentissageCritiqueRepository;
     }
 
-    public function deplaceApprentissageCritique(ApcApprentissageCritique $apcApprentissageCritique, int $ordreInitial)
+    public function deplaceApprentissageCritique(ApcApprentissageCritique $apcApprentissageCritique, int $ordreInitial): bool
     {
         //modifie l'ordre de la ressource
         $ordreFinal = $apcApprentissageCritique->getOrdre();
@@ -52,7 +54,7 @@ class ApcApprentissageCritiqueOrdre
     public function deplaceApprentissageCritiquePosition(
         ApcApprentissageCritique $apcApprentissageCritique,
         int $position
-    ) {
+    ): bool {
         //modifie l'ordre de la ressource
         $ordreInitial = $apcApprentissageCritique->getOrdre();
 

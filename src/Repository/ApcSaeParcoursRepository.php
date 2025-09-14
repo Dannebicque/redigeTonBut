@@ -23,7 +23,10 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcSaeParcours::class);
     }
 
-    public function findArrayIdSae(mixed $sae)
+    /**
+     * @return mixed[]
+     */
+    public function findArrayIdSae(mixed $sae): array
     {
         $query = $this->createQueryBuilder('a')
             ->where('a.sae = :sae')
@@ -39,17 +42,20 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findBySemestre(Semestre $semestre, ApcParcours $parcours)
+    public function findBySemestre(Semestre $semestre, ApcParcours $parcours): array
     {
         return $this->getBySemestre($parcours, $semestre, false);
     }
 
-    public function findBySemestreAl(Semestre $semestre, ApcParcours $parcours)
+    public function findBySemestreAl(Semestre $semestre, ApcParcours $parcours): array
     {
         return $this->getBySemestre($parcours, $semestre, true);
     }
 
-    public function findByAnneeArray(Annee $annee, ApcParcours $parcours)
+    /**
+     * @return mixed[][]
+     */
+    public function findByAnneeArray(Annee $annee, ApcParcours $parcours): array
     {
 
         $query = $this->findByAnnee($annee, $parcours);
@@ -68,7 +74,10 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findByAnnee(Annee $annee, ApcParcours $parcours)
+    /**
+     * @return mixed[]
+     */
+    public function findByAnnee(Annee $annee, ApcParcours $parcours): array
     {
         $req = $this->createQueryBuilder('p')
             ->innerJoin(ApcSae::class, 'a', 'WITH', 'p.sae = a.id')
@@ -102,12 +111,7 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @param \App\Entity\ApcParcours $parcours
-     * @param \App\Entity\Semestre    $semestre
-     *
-     * @return array
-     */
+    
     private function getBySemestre(ApcParcours $parcours, Semestre $semestre, bool $al): array
     {
         $req = $this->createQueryBuilder('p')
@@ -133,7 +137,10 @@ class ApcSaeParcoursRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findBySemestreArray(Semestre $semestre, ApcParcours $parcours)
+    /**
+     * @return mixed[]
+     */
+    public function findBySemestreArray(Semestre $semestre, ApcParcours $parcours): array
     {
         $req = $this->createQueryBuilder('p')
             ->innerJoin(ApcSae::class, 'a', 'WITH', 'p.sae = a.id')

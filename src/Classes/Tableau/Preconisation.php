@@ -15,16 +15,27 @@ use App\Repository\ApcSaeRepository;
 
 class Preconisation
 {
+    /**
+     * @var \App\Repository\ApcSaeParcoursRepository
+     */
+    public $apcSaeParcoursRepository;
+    /**
+     * @var \App\Repository\ApcRessourceParcoursRepository
+     */
+    public $apcRessourceParcoursRepository;
     private array $semestres;
-    private array $competences;
     private array $donneesSemestres;
 
     private ApcRessourceRepository $apcRessourceRepository;
+
     private ApcSaeRepository $apcSaeRepository;
 
     private PreconisationDepartement $donneesDepartement;
+
     private ?ApcParcours $apcParcours;
+
     private ApcParcoursNiveauRepository $apcParcoursNiveauRepository;
+
     private ApcNiveauRepository $apcNiveauRepository;
 
     public function __construct(
@@ -45,7 +56,7 @@ class Preconisation
     }
 
 
-    public function setSemestresCompetences(array $semestres, ?ApcParcours $apcParcours = null)
+    public function setSemestresCompetences(array $semestres, ?ApcParcours $apcParcours = null): static
     {
         $this->semestres = $semestres;
         $this->apcParcours = $apcParcours;
@@ -53,13 +64,16 @@ class Preconisation
         return $this;
     }
 
-    public function getDataJson()
+    /**
+     * @return mixed[]
+     */
+    public function getDataJson(): array
     {
         $this->donneesSemestres = [];
         $this->donneesDepartement = new PreconisationDepartement();
         $json = [];
         foreach ($this->semestres as $semestre) {
-            if ($this->apcParcours !== null) {
+            if ($this->apcParcours instanceof \App\Entity\ApcParcours) {
                 $competences = $this->apcParcoursNiveauRepository->findParcoursSemestreCompetence($semestre, $this->apcParcours);
                 $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->apcParcours);
                 $ressourcesAl = $this->apcRessourceParcoursRepository->findBySemestreAl($semestre, $this->apcParcours);

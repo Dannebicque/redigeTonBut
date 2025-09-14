@@ -9,7 +9,11 @@
 
 namespace App\Form;
 
+use App\Entity\Annee;
 use App\Entity\ApcNiveau;
+use App\Entity\Departement;
+use App\Repository\AnneeRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -18,12 +22,29 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApcNiveauType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    protected ?Departement $departement;
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $this->departement = $options['departement'];
         $builder
             ->add('libelle')
             ->add('ordre', ChoiceType::class,
-                ['choices' => ['B.U.T. 1' => 1, 'B.U.T. 2' => 2, 'B.U.T. 3' => 3], 'expanded' => true])
+                ['choices' => ['Niveau 1' => 1, 'Niveau 2' => 2, 'Niveau 3' => 3], 'expanded' => true])
+            ->add('annee', EntityType::class, [
+                'class' => Annee::class,
+                'label' => 'Année de BUT',
+                'choice_label' => 'libelle',
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true,
+                'query_builder' => function (AnneeRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->where('a.departement = :departement')
+                        ->setParameter('departement', $this->departement)
+                        ->orderBy('a.libelle', 'ASC');
+                }
+            ])
             ->add('apcApprentissageCritiques', CollectionType::class, [
                 'entry_type' => ApcApprentissageCritiqueType::class,
                 'entry_options' => ['label' => false],
@@ -40,10 +61,11 @@ class ApcNiveauType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => ApcNiveau::class,
+            'departement' => null
         ]);
     }
 }

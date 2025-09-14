@@ -7,36 +7,34 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=IutUniversiteRepository::class)
- */
+#[ORM\Entity(repositoryClass: IutUniversiteRepository::class)]
 class IutUniversite
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    private ?string $libelle = null;
+
+    #[ORM\ManyToOne(targetEntity: IutAcademie::class, inversedBy: 'iutUniversites')]
+    private ?\App\Entity\IutAcademie $academie = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Iut>
      */
-    private $libelle;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=IutAcademie::class, inversedBy="iutUniversites")
-     */
-    private $academie;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Iut::class, mappedBy="universite")
-     */
-    private $iuts;
+    #[ORM\OneToMany(targetEntity: Iut::class, mappedBy: 'universite')]
+    private \Doctrine\Common\Collections\Collection $iuts;
 
     public function __construct()
     {
         $this->iuts = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->libelle;
     }
 
     public function getId(): ?int
@@ -88,11 +86,9 @@ class IutUniversite
 
     public function removeIut(Iut $iut): self
     {
-        if ($this->iuts->removeElement($iut)) {
-            // set the owning side to null (unless already changed)
-            if ($iut->getUniversite() === $this) {
-                $iut->setUniversite(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->iuts->removeElement($iut) && $iut->getUniversite() === $this) {
+            $iut->setUniversite(null);
         }
 
         return $this;

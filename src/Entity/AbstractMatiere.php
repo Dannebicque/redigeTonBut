@@ -15,62 +15,43 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class AbstractMatiere.
- *
- * @ORM\MappedSuperclass
  */
+#[ORM\MappedSuperclass]
 abstract class AbstractMatiere extends BaseEntity
 {
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private string $libelle;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private ?string $description;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private float $cmPpn = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private float $tdPpn = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private float $heuresTotales = 0;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private float $tpPpn = 0;
 
-    /**
-     * @ORM\Column(type="text",nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
     private ?string $commentaire = '';
 
-    /**
-     * @ORM\Column(type="string", length=20)
-     * @Groups({"read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private ?string $codeMatiere = '-';
 
-    /**
-     * @ORM\Column(type="string", length=25, nullable=true)
-     * @Groups({"read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 25, nullable: true)]
+    #[Groups(['read:ressource', 'read:sae'])]
     private ?string $libelleCourt;
 
     public function getCmPpn(): float
@@ -143,7 +124,7 @@ abstract class AbstractMatiere extends BaseEntity
         return $this->libelle;
     }
 
-    public function setLibelle($libelle): void
+    public function setLibelle(string $libelle): void
     {
         $this->libelle = $libelle;
     }

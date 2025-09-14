@@ -4,8 +4,22 @@
 
 {% block content %}
     <p>Bienvenue sur ORéBUT, Outil de Rédaction des B.U.T.</p>
-{#    {% if is_granted('ROLE_PACD') %}#}
-{#        <div class="alert alert-info mb-3">#}
+    {% if is_granted('ROLE_PACD') %}
+    {% if user_data.departement == null %}
+            <div class="alert alert-danger mb-3">
+                <strong>Attention !</strong>
+                <p>Vous devez choisir au moins une spécialité (menu "spécialité B.U.T.")</p>
+            </div>
+        {% else %}
+        <div class="alert alert-info mb-3">
+            <strong>Guide</strong>
+            <ul>
+                <li>Préalablement choisir l'une des spécialités de votre CPN</li>
+                <li><strong>Référentiel de compétences : </strong> Choisir "competences et parcours" puis "référentiel de compétences" pour éditer les éléments du référentiel de compétence (compétences, parcours, AC, ..)</li>
+                <li><strong>Gestion des accès : </strong> La gestion des accès se fait dans administration. Vous pouvez modifier les droits sur votre spécialité et celles de votre CPN.</li>
+            </ul>
+
+
 {#            <ul>#}
 {#                {% if user_data.departement != null %}#}
 {#                    <li>28/01/2022 : Récupération du référentiel de compétences. (<a href="{{ path#}
@@ -75,8 +89,9 @@
 {#                La base sera initialisée lundi matin sauf demande contraire (si vous avez déjà saisi des éléments).#}
 {#                J'indiquerai ici l'évolution de l'interface.#}
 {#            </strong>#}
-{#        </div>#}
-{#    {% endif %}#}
+        </div>
+   {% endif %}
+   {% endif %}
 
     {% if user_data.departement != null %}
         {% if is_granted('ROLE_PACD') or is_granted('ROLE_LECTEUR') %}

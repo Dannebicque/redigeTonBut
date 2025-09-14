@@ -15,50 +15,40 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\AnneeRepository")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: \App\Repository\AnneeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Annee extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20, nullable: true)]
     private ?string $codeEtape;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"read:competence", "read:departement"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[Groups(['read:competence', 'read:departement'])]
     private ?string $libelle;
 
-    /**
-     * @ORM\Column(name="ordre", type="integer")
-     */
+    #[ORM\Column(name: 'ordre', type: \Doctrine\DBAL\Types\Types::INTEGER)]
     private int $ordre = 1;
 
-    /**
-     * @ORM\Column(type="string", length=150, nullable=true)
-     * @Groups({"annee"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 150, nullable: true)]
+    #[Groups(['annee'])]
     private ?string $libelleLong;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Semestre", mappedBy="annee")
-     * @ORM\OrderBy({"ordreLmd"="ASC"})
+     * @var Collection<int, Semestre>
      */
+    #[ORM\OneToMany(targetEntity: Semestre::class, mappedBy: 'annee')]
+    #[ORM\OrderBy(['ordreLmd' => 'ASC'])]
     private Collection $semestres;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcNiveau::class, mappedBy="annee")
+     * @var Collection<int, \App\Entity\ApcNiveau>
      */
+    #[ORM\OneToMany(targetEntity: ApcNiveau::class, mappedBy: 'annee')]
     private Collection $apcNiveaux;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="annees")
-     */
+    #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: 'annees')]
     private ?Departement $departement;
 
     public function __construct()
@@ -72,7 +62,7 @@ class Annee extends BaseEntity
         return $this->libelle;
     }
 
-    public function setLibelle($libelle): void
+    public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
     }
@@ -165,7 +155,7 @@ class Annee extends BaseEntity
         return $this->codeEtape;
     }
 
-    public function setCodeEtape($codeEtape): void
+    public function setCodeEtape(?string $codeEtape): void
     {
         $this->codeEtape = $codeEtape;
     }

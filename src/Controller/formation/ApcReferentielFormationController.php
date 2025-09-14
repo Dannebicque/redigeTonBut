@@ -33,7 +33,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ApcReferentielFormationController extends BaseController
 {
     #[Route("/grille/{departement}", name:"apc_referentiel_formation_grille", methods:["GET"])]
-    public function grille(Departement $departement)
+    public function grille(Departement $departement): \Symfony\Component\HttpFoundation\Response
     {
         return $this->render('formation/referentiel-formation/grille.html.twig',
             [
@@ -47,7 +47,7 @@ class ApcReferentielFormationController extends BaseController
         ApcSaeRepository $apcSaeRepository,
         ApcRessourceRepository $apcRessourceRepository,
         Semestre $semestre
-    ) {
+    ): \Symfony\Component\HttpFoundation\Response {
         $saes = $apcSaeRepository->findBySemestre($semestre);
         $ressources = $apcRessourceRepository->findBySemestre($semestre);
 
@@ -89,12 +89,14 @@ class ApcReferentielFormationController extends BaseController
                 } else {
                     $obj->setCoefficient(Convert::convertToFloat($value));
                 }
+
                 $this->entityManager->flush();
             } else {
                 $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la modification du coefficient');
 
                 return new JsonResponse(false, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
+
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Coefficient modifié');
 
             return new JsonResponse(true, Response::HTTP_OK);
@@ -111,16 +113,19 @@ class ApcReferentielFormationController extends BaseController
                 } else {
                     $obj->setCoefficient(Convert::convertToFloat($value));
                 }
+
                 $this->entityManager->flush();
             } else {
                 $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la modification du coefficient');
 
                 return new JsonResponse(false, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
+
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Coefficient modifié');
 
             return new JsonResponse(true, Response::HTTP_OK);
         }
+
         $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Type inexistant');
 
         return new JsonResponse(false, Response::HTTP_INTERNAL_SERVER_ERROR);

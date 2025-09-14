@@ -27,6 +27,7 @@ class ApcComposanteEssentielleController extends BaseController
 
         $apcComposanteEssentielle = new ApcComposanteEssentielle();
         $apcComposanteEssentielle->setCompetence($competence);
+
         $form = $this->createForm(ApcComposanteEssentielleType::class, $apcComposanteEssentielle);
         $form->handleRequest($request);
 

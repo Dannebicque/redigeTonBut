@@ -13,24 +13,25 @@ class GenereMatrix
 {
 
     private string $dir;
+
     private array $tParcours;
+
     private array $competencesParcours;
+
     private Departement $departement;
-    private $competences;
-    private Filesystem $filesystem;
+
+    private ?\Doctrine\Common\Collections\Collection $competences = null;
 
     public function __construct(
         KernelInterface $kernel,
-        private ApcStructure $apcStructure,
-        private Environment $twig
+        private ApcStructure $apcStructure
 
     ) {
         $this->dir = $kernel->getProjectDir() . '/public/matrix/';
-        $this->filesystem = new Filesystem();
 
     }
 
-    public function genereSpecialite(Departement $departement)
+    public function genereSpecialite(Departement $departement): void
     {
         $this->departement = $departement;
         $this->getDataReferentiel();
@@ -108,6 +109,7 @@ class GenereMatrix
                     }
                 }
             }
+
             $tab['standards'] = $standards;
             $tab['standardelements'] = $substandards;
             $json['framework'] = $tab;
@@ -115,7 +117,7 @@ class GenereMatrix
         }
     }
 
-    private function getDataReferentiel()
+    private function getDataReferentiel(): void
     {
         $this->tParcours = $this->apcStructure->parcoursNiveaux($this->departement);
         $this->competences = $this->departement->getApcCompetences();
@@ -123,6 +125,7 @@ class GenereMatrix
         foreach ($this->competences as $comp) {
             $tComp[$comp->getId()] = $comp;
         }
+
         $this->competencesParcours = [];
 
         foreach ($this->tParcours as $key => $parc) {

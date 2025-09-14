@@ -16,6 +16,9 @@ class SearchController extends BaseController
         ApcRessourceRepository $apcRessourceRepository
     ): Response
     {
+        if ($this->getDepartement() === null) {
+            return $this->json([]);
+        }
         $t = [];
         $saes = $apcSaeRepository->findByDepartement($this->getDepartement());
         $ressources = $apcRessourceRepository->findByDepartement($this->getDepartement());

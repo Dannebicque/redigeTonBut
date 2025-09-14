@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class GenereTableauxCommand extends Command
 {
     private string $dir;
+
     private Filesystem $filesystem;
 
     public function __construct(

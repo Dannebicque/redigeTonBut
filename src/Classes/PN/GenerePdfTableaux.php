@@ -18,7 +18,12 @@ use Twig\Environment;
 class GenerePdfTableaux
 {
 
+    /**
+     * @var \Symfony\Component\HttpKernel\KernelInterface
+     */
+    public $kernel;
     private string $dir;
+
     private Departement $departement;
 
     public function __construct(
@@ -70,6 +75,7 @@ class GenerePdfTableaux
                         } else {
                             $sems = $semestres;
                         }
+
                         $this->afficheParcours($parcour, $semestre, $sems);
                     }
                 } else {
@@ -81,11 +87,6 @@ class GenerePdfTableaux
     }
 
     /**
-     * @param array                        $semestres
-     * @param \App\Entity\Departement      $departement
-     * @param \App\Entity\ApcParcours|null $parcours
-     *
-     * @return void
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
@@ -102,7 +103,7 @@ class GenerePdfTableaux
             'donnees' => $json,
             'parcours' => $parcours,
         ]);
-        if ($parcours === null) {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $name = 'tableau-structure.pdf';
             //  $nameHtml = 'tableau-structure.html';
         } else {
@@ -123,7 +124,7 @@ class GenerePdfTableaux
         file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/tableaux/' . $name, $output);
     }
 
-    private function afficheParcours(ApcParcours $parcours, Semestre $semestre, array $semestres)
+    private function afficheParcours(ApcParcours $parcours, Semestre $semestre, array $semestres): void
     {
         $this->tableauCroise->getDatas($semestre, $parcours);
         $donnees = $this->volumesHoraires->setSemestres($semestres, $parcours)->getDataJson();
@@ -131,7 +132,7 @@ class GenerePdfTableaux
         $this->generePdfCroise($this->tableauCroise, $donnees, $name, $semestre, $parcours);
     }
 
-    private function affichePasParcours(Semestre $semestre, array $semestres)
+    private function affichePasParcours(Semestre $semestre, array $semestres): void
     {
         $this->tableauCroise->getDatas($semestre);
         $donnees = $this->volumesHoraires->setSemestres($semestres)->getDataJson();
@@ -139,7 +140,7 @@ class GenerePdfTableaux
         $this->generePdfCroise($this->tableauCroise, $donnees, $name, $semestre);
     }
 
-    private function generePdfCroise($tableauCroise, $donnees, $name, Semestre $semestre, ?ApcParcours $parcours = null)
+    private function generePdfCroise(\App\Classes\Apc\TableauCroise $tableauCroise, $donnees, string $name, Semestre $semestre, ?ApcParcours $parcours = null): void
     {
         $this->genereImage($tableauCroise->getRessources(), $tableauCroise->getSaes(), $this->departement);
         $html = $this->twig->render('pdf/tableau-croise.html.twig', [
@@ -167,15 +168,11 @@ class GenerePdfTableaux
         file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/tableaux/' . $name, $output);
     }
 
-    private function genereImage($getRessources, $getSaes, Departement $departement)
+    private function genereImage($getRessources, $getSaes, Departement $departement): void
     {
         foreach ($getRessources as $ressource) {
             $texte = $ressource->getCodeMatiere() . ' ' . $ressource->getLibelle();
-            if (strlen($texte) < 30) {
-                $size = 10;
-            } else {
-                $size = 8;
-            }
+            $size = strlen($texte) < 30 ? 10 : 8;
 
             $texte = $this->adaptTexte($texte, $size);
 
@@ -194,11 +191,7 @@ class GenerePdfTableaux
 
         foreach ($getSaes as $sae) {
             $texte = $sae->getCodeMatiere() . ' ' . $sae->getLibelle();
-            if (strlen($texte) < 30) {
-                $size = 10;
-            } else {
-                $size = 8;
-            }
+            $size = strlen($texte) < 30 ? 10 : 8;
 
             $texte = $this->adaptTexte($texte, $size);
             $response = new Response();
@@ -216,7 +209,7 @@ class GenerePdfTableaux
         }
     }
 
-    private function adaptTexte(string $texte, int $size)
+    private function adaptTexte(string $texte, int $size): string
     {
         if ($size === 10) {
             return wordwrap($texte, 28, "\n", false);

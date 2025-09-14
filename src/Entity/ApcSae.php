@@ -20,8 +20,6 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 use App\Controller\api\GetSaesSpecialite;
 
 /**
- * @ORM\Entity(repositoryClass=ApcSaeRepository::class)
- * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
  *     normalizationContext={"groups"={"read:sae"}},
  *     collectionOperations={
@@ -48,87 +46,78 @@ use App\Controller\api\GetSaesSpecialite;
  *     itemOperations={"get"}
  * )
  */
+#[ORM\Entity(repositoryClass: ApcSaeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcSae extends AbstractMatiere
 {
     use LifeCycleTrait;
 
     public const SOURCE = 'sae';
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Semestre::class, inversedBy="apcSaes")
-     * @Groups({"read:sae"})
-     */
+    #[ORM\ManyToOne(targetEntity: Semestre::class, inversedBy: 'apcSaes')]
+    #[Groups(['read:sae'])]
     private ?Semestre $semestre;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[Groups(['read:sae'])]
     private float $projetPpn = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeCompetence::class, mappedBy="sae", cascade={"persist","remove"})
-     * @Groups({"read:sae"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeCompetence>
      */
+    #[ORM\OneToMany(targetEntity: ApcSaeCompetence::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
+    #[Groups(['read:sae'])]
     private Collection $apcSaeCompetences;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeRessource::class, mappedBy="sae", cascade={"persist","remove"})
-     * @Groups({"read:sae"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeRessource>
      */
+    #[ORM\OneToMany(targetEntity: ApcSaeRessource::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
+    #[Groups(['read:sae'])]
     private Collection $apcSaeRessources;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeApprentissageCritique::class, mappedBy="sae", cascade={"persist","remove"})
-     * @Groups({"read:sae"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeApprentissageCritique>
      */
+    #[ORM\OneToMany(targetEntity: ApcSaeApprentissageCritique::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
+    #[Groups(['read:sae'])]
     private Collection $apcSaeApprentissageCritiques;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeParcours::class, mappedBy="sae", cascade={"persist","remove"}, fetch="EAGER")
-     * @Groups({"read:sae"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeParcours>
      */
+    #[ORM\OneToMany(targetEntity: ApcSaeParcours::class, mappedBy: 'sae', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    #[Groups(['read:sae'])]
     private Collection $apcSaeParcours;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[Groups(['read:sae'])]
     private ?int $ordre;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[Groups(['read:sae'])]
     private ?string $objectifs;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[Groups(['read:sae'])]
     private ?string $exemples;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
     private ?bool $ficheAdaptationLocale = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    #[Groups(['read:sae'])]
     private ?bool $portfolio = false;
 
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"read:sae"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    #[Groups(['read:sae'])]
     private ?bool $stage = false;
 
     /**
-     * @ORM\OneToMany(targetEntity=QapesSae::class, mappedBy="sae")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\QapesSae>
      */
-    private $qapesSaes;
+    #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: 'sae')]
+    private \Doctrine\Common\Collections\Collection $qapesSaes;
 
     public function __construct()
     {
@@ -176,11 +165,9 @@ class ApcSae extends AbstractMatiere
 
     public function removeApcSaeCompetence(ApcSaeCompetence $apcSaeCompetence): self
     {
-        if ($this->apcSaeCompetences->removeElement($apcSaeCompetence)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSaeCompetence->getSae() === $this) {
-                $apcSaeCompetence->setSae(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSaeCompetences->removeElement($apcSaeCompetence) && $apcSaeCompetence->getSae() === $this) {
+            $apcSaeCompetence->setSae(null);
         }
 
         return $this;
@@ -206,11 +193,9 @@ class ApcSae extends AbstractMatiere
 
     public function removeApcSaeRessource(ApcSaeRessource $apcSaeRessource): self
     {
-        if ($this->apcSaeRessources->removeElement($apcSaeRessource)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSaeRessource->getSae() === $this) {
-                $apcSaeRessource->setSae(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSaeRessources->removeElement($apcSaeRessource) && $apcSaeRessource->getSae() === $this) {
+            $apcSaeRessource->setSae(null);
         }
 
         return $this;
@@ -275,11 +260,9 @@ class ApcSae extends AbstractMatiere
 
     public function removeApcSaeApprentissageCritique(ApcSaeApprentissageCritique $apcSaeApprentissageCritique): self
     {
-        if ($this->apcSaeApprentissageCritiques->removeElement($apcSaeApprentissageCritique)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSaeApprentissageCritique->getSae() === $this) {
-                $apcSaeApprentissageCritique->setSae(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSaeApprentissageCritiques->removeElement($apcSaeApprentissageCritique) && $apcSaeApprentissageCritique->getSae() === $this) {
+            $apcSaeApprentissageCritique->setSae(null);
         }
 
         return $this;
@@ -317,11 +300,9 @@ class ApcSae extends AbstractMatiere
 
     public function removeApcSaeParcour(ApcSaeParcours $apcSaeParcour): self
     {
-        if ($this->apcSaeParcours->removeElement($apcSaeParcour)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSaeParcour->getSae() === $this) {
-                $apcSaeParcour->setSae(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSaeParcours->removeElement($apcSaeParcour) && $apcSaeParcour->getSae() === $this) {
+            $apcSaeParcour->setSae(null);
         }
 
         return $this;
@@ -404,7 +385,7 @@ class ApcSae extends AbstractMatiere
         return $this;
     }
 
-    public function getSlugName()
+    public function getSlugName(): \Symfony\Component\String\AbstractUnicodeString
     {
         $slugger = new AsciiSlugger();
         return $slugger->slug($this->getCodeMatiere());
@@ -412,9 +393,10 @@ class ApcSae extends AbstractMatiere
 
     public function isGoodParcours(?ApcParcours $apcParcours = null): bool
     {
-        if ($apcParcours === null) {
+        if (!$apcParcours instanceof \App\Entity\ApcParcours) {
             return true;
         }
+
         if ($this->apcSaeParcours->count() === 0) {
             //pas de parcours dans la SAE, donc tous les parcours
             return true;
@@ -440,6 +422,7 @@ class ApcSae extends AbstractMatiere
                 $t[$ressource->getRessource()->getOrdre()] = $ressource->getRessource();
             }
         }
+
         ksort($t);
         return $t;
     }
@@ -454,13 +437,16 @@ class ApcSae extends AbstractMatiere
                 if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $t)) {
                     $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];
                 }
+
                 $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()][$ac->getApprentissageCritique()->getOrdre()] = $ac->getApprentissageCritique();
             }
         }
+
         ksort($t);
-        foreach ($t as $couleur => $acs) {
+        foreach (array_keys($t) as $couleur) {
             ksort($t[$couleur]);
         }
+
         return $t;
     }
 
@@ -484,11 +470,9 @@ class ApcSae extends AbstractMatiere
 
     public function removeQapesSae(QapesSae $qapesSae): self
     {
-        if ($this->qapesSaes->removeElement($qapesSae)) {
-            // set the owning side to null (unless already changed)
-            if ($qapesSae->getSae() === $this) {
-                $qapesSae->setSae(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->qapesSaes->removeElement($qapesSae) && $qapesSae->getSae() === $this) {
+            $qapesSae->setSae(null);
         }
 
         return $this;

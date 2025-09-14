@@ -22,12 +22,11 @@ class DurableController extends AbstractController
 
         $keyWords = [];
         foreach ($request->request as $key => $value) {
-            if (str_starts_with($key, 'name_')) {
-                if (trim($value) !== '') {
-                    $keyWords[] = trim($value);
-                }
+            if (str_starts_with($key, 'name_') && trim($value) !== '') {
+                $keyWords[] = trim($value);
             }
         }
+
         if ($request->isMethod('POST')) {
             if (in_array('ressource', (array)$request->request->get('type'), true)) {
                 $ressources = $apcRessourceRepository->findByKeywords($keyWords);

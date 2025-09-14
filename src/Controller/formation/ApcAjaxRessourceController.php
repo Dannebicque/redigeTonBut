@@ -65,7 +65,7 @@ class ApcAjaxRessourceController extends BaseController
                 $b['id'] = $d->getId();
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCode();
-                $b['checked'] = true === in_array($d->getId(), $tabAcSae);
+                $b['checked'] = in_array($d->getId(), $tabAcSae);
 
                 if (null !== $d->getNiveau()) {
                     $key = $d->getNiveau()->getCompetence();
@@ -122,7 +122,7 @@ class ApcAjaxRessourceController extends BaseController
                 $b['id'] = $d->getId();
                 $b['libelle'] = $d->getLibelle();
                 $b['code'] = $d->getCodeMatiere();
-                $b['checked'] = true === in_array($d->getId(), $tabAcSae);
+                $b['checked'] = in_array($d->getId(), $tabAcSae);
                 $t[] = $b;
             }
 
@@ -164,6 +164,7 @@ class ApcAjaxRessourceController extends BaseController
             } else {
                 $datas = $apcRessourceRepository->findBySemestreEtPrecedent($semestre, $this->getDepartement()->getSemestres());
             }
+
             $t = [];
             foreach ($datas as $d) {
                     if ($this->getDepartement()?->getTypeStructure() === Departement::TYPE3 && $d->getRessource() !== null) {
@@ -172,18 +173,16 @@ class ApcAjaxRessourceController extends BaseController
                             $b['id'] = $d->getRessource()->getId();
                             $b['libelle'] = $d->getRessource()->getLibelle();
                             $b['code'] = $d->getRessource()->getCodeMatiere();
-                            $b['checked'] = true === in_array($d->getRessource()->getId(), $tabPrerequis);
+                            $b['checked'] = in_array($d->getRessource()->getId(), $tabPrerequis);
                             $t[] = $b;
                         }
-                    } else {
-                        if ($ressource === null || $d->getId() !== $ressource->getId()) {
-                            $b = [];
-                            $b['id'] = $d->getId();
-                            $b['libelle'] = $d->getLibelle();
-                            $b['code'] = $d->getCodeMatiere();
-                            $b['checked'] = true === in_array($d->getId(), $tabPrerequis);
-                            $t[] = $b;
-                        }
+                    } elseif ($ressource === null || $d->getId() !== $ressource->getId()) {
+                        $b = [];
+                        $b['id'] = $d->getId();
+                        $b['libelle'] = $d->getLibelle();
+                        $b['code'] = $d->getCodeMatiere();
+                        $b['checked'] = in_array($d->getId(), $tabPrerequis);
+                        $t[] = $b;
                     }
             }
 
@@ -222,7 +221,7 @@ class ApcAjaxRessourceController extends BaseController
                     $b['id'] = $d->getId();
                     $b['libelle'] = $d->getLibelle();
                     $b['code'] = $d->getCode();
-                    $b['checked'] = true === in_array($d->getId(), $tabRessourceParcours);
+                    $b['checked'] = in_array($d->getId(), $tabRessourceParcours);
                     $t[] = $b;
                 }
 
@@ -240,7 +239,7 @@ class ApcAjaxRessourceController extends BaseController
         Request $request,
         ApcRessource $ressource,
         ApcApprentissageCritique $ac
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -257,26 +256,26 @@ class ApcAjaxRessourceController extends BaseController
             if ((bool)$parametersAsArray['value'] === false) {
                 $this->entityManager->remove($acRessource);
             }
+
             //todo: vérifier si la compétence est associée et qu'il n'y a plus d'AC, donc supprimer ?
-        } else {
+        } elseif ((bool)$parametersAsArray['value']) {
             //selon la valeur, on ajoute
-            if ((bool)$parametersAsArray['value'] === true) {
-                $acRessource = new ApcRessourceApprentissageCritique($ressource, $ac);
-                $this->entityManager->persist($acRessource);
-                //vérifier si la compétence est déjà associée dans le cas contraire, ajouter.
-                $comp = $ac->getCompetence();
-                if ($comp !== null) {
-                    $cp = $apcRessourceCompetenceRepository->findOneBy([
-                        'competence' => $comp->getId(),
-                        'ressource' => $ressource->getId()
-                    ]);
-                    if ($cp === null) {
-                        $competence = new ApcRessourceCompetence($ressource,$comp);
-                        $this->entityManager->persist($competence);
-                    }
+            $acRessource = new ApcRessourceApprentissageCritique($ressource, $ac);
+            $this->entityManager->persist($acRessource);
+            //vérifier si la compétence est déjà associée dans le cas contraire, ajouter.
+            $comp = $ac->getCompetence();
+            if ($comp instanceof \App\Entity\ApcCompetence) {
+                $cp = $apcRessourceCompetenceRepository->findOneBy([
+                    'competence' => $comp->getId(),
+                    'ressource' => $ressource->getId()
+                ]);
+                if ($cp === null) {
+                    $competence = new ApcRessourceCompetence($ressource,$comp);
+                    $this->entityManager->persist($competence);
                 }
             }
         }
+
         $this->entityManager->flush();
 
         return $this->json(true);
@@ -288,7 +287,7 @@ class ApcAjaxRessourceController extends BaseController
         Request $request,
         ApcRessource $ressource,
         ApcCompetence $competence
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -310,6 +309,7 @@ class ApcAjaxRessourceController extends BaseController
             $this->entityManager->persist($acRessource);
 
         }
+
         $this->entityManager->flush();
 
         return $this->json(true);
@@ -321,7 +321,7 @@ class ApcAjaxRessourceController extends BaseController
         Request $request,
         ApcRessource $ressource,
         string $type
-    ) {
+    ): \Symfony\Component\HttpFoundation\JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -335,6 +335,7 @@ class ApcAjaxRessourceController extends BaseController
                 $ressource->setTpPpn(Convert::convertToFloat($parametersAsArray['valeur']));
                 break;
         }
+
         $this->entityManager->flush();
 
         return $this->json(true);

@@ -32,12 +32,12 @@ class ApcRessourceRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcRessource::class);
     }
 
-    public function findBySemestre(Semestre $semestre)
+    public function findBySemestre(Semestre $semestre): mixed
     {
         return $this->getBySemestre($semestre, false);
     }
 
-    public function findBySemestreAl(Semestre $semestre)
+    public function findBySemestreAl(Semestre $semestre): mixed
     {
         return $this->getBySemestre($semestre, true);
     }
@@ -84,7 +84,10 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByAnneeArray(Annee $annee)
+    /**
+     * @return mixed[][]
+     */
+    public function findByAnneeArray(Annee $annee): array
     {
         $query = $this->findByAnnee($annee);
 
@@ -148,7 +151,10 @@ class ApcRessourceRepository extends ServiceEntityRepository
     }
 
 
-    public function findByDepartementArray(Departement $departement)
+    /**
+     * @return mixed[]
+     */
+    public function findByDepartementArray(Departement $departement): array
     {
         $ressources = $this->findByDepartement($departement);
         $tab = [];

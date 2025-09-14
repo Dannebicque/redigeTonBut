@@ -41,7 +41,7 @@ class ApcSaeController extends BaseController
             $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
             $apcSae = new ApcSae();
 
-            if ($semestre !== null) {
+            if ($semestre instanceof \App\Entity\Semestre) {
                 $apcSae->setSemestre($semestre);
                 $apcSae->setOrdre($apcSaeOrdre->getOrdreSuivant($semestre));
             }
@@ -65,7 +65,7 @@ class ApcSaeController extends BaseController
                     'SAÉ ajoutée avec succès.'
                 );
 
-                if ($parcours !== null) {
+                if ($parcours instanceof \App\Entity\ApcParcours) {
                     return $this->redirectToRoute('but_sae_annee',
                         [
                             'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
@@ -85,6 +85,7 @@ class ApcSaeController extends BaseController
                 'form' => $form->createView(),
             ]);
         }
+
         return $this->redirectToRoute('homepage');
 
     }
@@ -129,7 +130,7 @@ class ApcSaeController extends BaseController
                 $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
 
 
-                if (null !== $request->request->get('btn_update') && null !== $apcSae->getSemestre() && null !== $apcSae->getSemestre()->getAnnee()) {
+                if (null !== $request->request->get('btn_update') && $apcSae->getSemestre() instanceof \App\Entity\Semestre && $apcSae->getSemestre()->getAnnee() instanceof \App\Entity\Annee) {
                     if ($parcours === null) {
                         return $this->redirectToRoute('but_sae_annee', [
                             'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
@@ -166,6 +167,7 @@ class ApcSaeController extends BaseController
                 'parcours' => $parcours->getId()
             ]);
         }
+
         return $this->redirectToRoute('homepage');
 
     }
@@ -197,6 +199,7 @@ class ApcSaeController extends BaseController
 
             return $this->redirect($request->headers->get('referer'));
         }
+
         return $this->redirectToRoute('homepage');
 
     }
@@ -214,6 +217,7 @@ class ApcSaeController extends BaseController
 
             return $this->redirectToRoute('formation_apc_sae_edit', ['id' => $newApcSae->getId()]);
         }
+
         return $this->redirectToRoute('homepage');
 
     }
@@ -231,6 +235,7 @@ class ApcSaeController extends BaseController
             return $this->redirect($request->headers->get('referer'));
 
         }
+
         return $this->redirectToRoute('homepage');
 
     }

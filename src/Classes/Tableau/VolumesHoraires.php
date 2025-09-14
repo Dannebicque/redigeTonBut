@@ -13,11 +13,13 @@ use App\Repository\ApcRessourceRepository;
 class VolumesHoraires
 {
     private array $semestres;
+
     private ?ApcParcours $parcours = null;
 
     private array $donneesSemestres;
 
     private ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
+
     private ApcRessourceRepository $apcRessourceRepository;
 
     public function __construct(
@@ -28,7 +30,7 @@ class VolumesHoraires
         $this->apcRessourceRepository = $apcRessourceRepository;
     }
 
-    public function setSemestres(array $semestres, ApcParcours $parcours = null)
+    public function setSemestres(array $semestres, ApcParcours $parcours = null): static
     {
         $this->semestres = $semestres;
         $this->parcours = $parcours;
@@ -36,14 +38,17 @@ class VolumesHoraires
         return $this;
     }
 
-    public function getDataJson()
+    /**
+     * @return mixed[]
+     */
+    public function getDataJson(): array
     {
         $this->donneesSemestres = [];
         $json = [];
         /** @var \App\Entity\Semestre $semestre */
         foreach ($this->semestres as $semestre)
         {
-            if ($this->parcours === null) {
+            if (!$this->parcours instanceof \App\Entity\ApcParcours) {
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {
                 $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->parcours);
@@ -61,6 +66,7 @@ class VolumesHoraires
         if (array_key_exists($i, $this->donneesSemestres)) {
             return $this->donneesSemestres[$i];
         }
+
         return null;
     }
 }

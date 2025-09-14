@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block content %}
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i> La suppression d'une compétence entraine la suppression des
+        éléments qui lui sont associés et les références dans les fiches ressources et SAE (sans supprimer ces
+        dernières).
+    </div>
     <div class="card">
         <div class="card-body">
             {{ form_start(form) }}
@@ -28,6 +33,11 @@
 {% endblock %}
 
 {% block bouton_header %}
+    {% if is_granted('COMPETENCES_DELETE', apc_competence) and user_data.departement.verouilleCompetences == false %}
+        {{ include('form/_delete_form.html.twig', {path: path('administration_apc_competence_delete',
+            {id: apc_competence.id, }), id: apc_competence.id}) }}
+    {% endif %}
+
     <a href="{{ path('administration_apc_referentiel_index', {departement:apc_competence.departement.id}) }}"
        class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"

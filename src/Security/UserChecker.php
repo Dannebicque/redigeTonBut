@@ -13,6 +13,7 @@ class UserChecker implements UserCheckerInterface
     public function __construct(private RouterInterface $router)
     {
     }
+
     public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof AppUser) {

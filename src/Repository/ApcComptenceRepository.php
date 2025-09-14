@@ -90,4 +90,15 @@ class ApcComptenceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findLastByDepartement(?Departement $getDepartement): ?ApcCompetence
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.departement = :departement')
+            ->setParameter('departement', $getDepartement?->getId())
+            ->orderBy('c.numero', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

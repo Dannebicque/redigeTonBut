@@ -21,7 +21,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class ExcelWriter
 {
     protected Spreadsheet $spreadsheet;
+
     protected ?Worksheet $sheet;
+
     protected string $dir;
 
     public function __construct(KernelInterface $kernel)
@@ -29,7 +31,7 @@ class ExcelWriter
         $this->dir = $kernel->getProjectDir().'/public/excel/';
     }
 
-    public function nouveauFichier($libelle = '')
+    public function nouveauFichier($libelle = ''): void
     {
         $this->spreadsheet = new Spreadsheet();
         $this->spreadsheet->removeSheetByIndex(0);
@@ -61,7 +63,7 @@ class ExcelWriter
         $this->sheet->setCellValue([$col, $row], $value);
         //traiter les options
         //style n'est pas un tableau
-        if (is_array($options) && $this->sheet->getCell([$col,
+        if ($this->sheet->getCell([$col,
                 $row])) {
             foreach ($options as $key => $valeur) {
                 switch ($key) {
@@ -80,6 +82,7 @@ class ExcelWriter
                                     $row])->getStyle()->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
                                 break;
                         }
+
                         break;
                     case 'valign':
                         switch ($valeur) {
@@ -96,6 +99,7 @@ class ExcelWriter
                                     $row])->getStyle()->getAlignment()->setVertical(Alignment::VERTICAL_BOTTOM);
                                 break;
                         }
+
                         break;
                     case 'number_format':
                         $this->sheet->getCell([$col,
@@ -113,6 +117,7 @@ class ExcelWriter
                         if (0 === mb_strpos($valeur, '#')) {
                             $valeur = mb_substr($valeur, 1, mb_strlen($valeur));
                         }
+
                         $this->sheet->getCell([$col,
                             $row])->getStyle()->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($valeur);
                         break;
@@ -141,7 +146,7 @@ class ExcelWriter
     {
         $this->sheet->setCellValue($adresse, $value);
 
-        if (is_array($options) && array_key_exists('style', $options)) {
+        if (array_key_exists('style', $options)) {
             //style n'est pas un tableau
             switch ($options['style']) {
                 case 'HORIZONTAL_RIGHT':
@@ -160,20 +165,20 @@ class ExcelWriter
         }
     }
 
-    public function colorCellXY($col, $lig, $couleur): void
+    public function colorCellXY($col, string $lig, $couleur): void
     {
         $cell = Coordinate::stringFromColumnIndex($col).$lig;
         $this->colorCells($cell, $couleur);
     }
 
-    public function colorCells($cells, $couleur): void
+    public function colorCells($cells, ?string $couleur): void
     {
         $this->sheet->getStyle($cells)->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()->setARGB($couleur);
     }
 
-    public function borderCellsRange($col1, $lig1, $col2, $lig2): void
+    public function borderCellsRange($col1, string $lig1, $col2, string $lig2): void
     {
         if ($col1 < $col2) {
             $cell1 = Coordinate::stringFromColumnIndex($col1) . $lig1;
@@ -197,7 +202,7 @@ class ExcelWriter
         $this->sheet->getColumnDimension($col)->setWidth($taille);
     }
 
-    public function mergeCellsCaR($col1, $lig1, $col2, $lig2): void
+    public function mergeCellsCaR($col1, string $lig1, $col2, string $lig2): void
     {
         if ($col1 < $col2) {
             $cell1 = Coordinate::stringFromColumnIndex($col1) . $lig1;
@@ -211,7 +216,7 @@ class ExcelWriter
         $this->sheet->mergeCells($cells);
     }
 
-    public function borderBottomCellsRange($col1, $lig1, $col2, $lig2, array $array)
+    public function borderBottomCellsRange($col1, string $lig1, $col2, string $lig2, array $array): void
     {
         $color = $array['color'];
         if (0 === mb_strpos($color, '#')) {
@@ -223,14 +228,14 @@ class ExcelWriter
         $this->sheet->getStyle($cell1.':'.$cell2)->getBorders()->getBottom()->setBorderStyle($array['size'])->getColor()->setARGB('FF'.$color);
     }
 
-    public function getColumnsAutoSize(string $depart, string $fin)
+    public function getColumnsAutoSize(string $depart, string $fin): void
     {
         foreach (range($depart, $fin) as $columnID) {
             $this->sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
     }
 
-    public function getColumnsAutoSizeInt(int $depart, int $fin)
+    public function getColumnsAutoSizeInt(int $depart, int $fin): void
     {
         for($columnID = $depart; $columnID <= $fin; $columnID++) {
             $this->sheet->getColumnDimension(Coordinate::stringFromColumnIndex($columnID))->setAutoSize(true);
@@ -240,7 +245,7 @@ class ExcelWriter
     public function setSpreadsheet(Spreadsheet $sheet, bool $mcc = false): void
     {
         $this->spreadsheet = $sheet;
-       if ($mcc === true) {
+       if ($mcc) {
            foreach ($this->spreadsheet->getAllSheets() as $sh) {
                $sh->setShowGridlines(false);
                $sh->getProtection()->setSheet(true);
@@ -248,12 +253,12 @@ class ExcelWriter
        }
     }
 
-    public function genereFichier($name) {
+    public function genereFichier(string $name): \Symfony\Component\HttpFoundation\StreamedResponse {
         $this->pageSetup($name);
         $writer = new Xlsx($this->spreadsheet);
 
         return new StreamedResponse(
-            static function() use ($writer) {
+            static function() use ($writer): void {
                 $writer->save('php://output');
             },
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
@@ -264,7 +269,7 @@ class ExcelWriter
         );
     }
 
-    public function pageSetup($name): void
+    public function pageSetup(string $name): void
     {
         $this->spreadsheet->getProperties()->setTitle($name);
         $this->spreadsheet->getActiveSheet()->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A4);
@@ -293,15 +298,12 @@ class ExcelWriter
         return $reader->load($inputFileName);
     }
 
-    public function orientationCellXY(int $col, int $ligne, string $orientation)
+    public function orientationCellXY(int $col, int $ligne, string $orientation): void
     {
         $cell1 = Coordinate::stringFromColumnIndex($col).$ligne;
-        switch ($orientation)
-        {
-            case 'vertical':
-                $this->sheet->getStyle($cell1)->getAlignment()->setTextRotation(90);
-                $this->sheet->getStyle($cell1)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                break;
+        if ($orientation === 'vertical') {
+            $this->sheet->getStyle($cell1)->getAlignment()->setTextRotation(90);
+            $this->sheet->getStyle($cell1)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         }
     }
 }

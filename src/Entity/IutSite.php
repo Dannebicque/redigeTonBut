@@ -7,42 +7,34 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=IutSiteRepository::class)
- */
+#[ORM\Entity(repositoryClass: IutSiteRepository::class)]
 class IutSite
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    private ?string $libelle = null;
+
+    #[ORM\ManyToOne(targetEntity: Iut::class, inversedBy: 'iutSites')]
+    private ?\App\Entity\Iut $iut = null;
+
+    #[ORM\ManyToOne(targetEntity: IutVille::class, inversedBy: 'iutSites')]
+    private ?\App\Entity\IutVille $ville = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\IutSiteParcours>
      */
-    private $libelle;
+    #[ORM\OneToMany(targetEntity: IutSiteParcours::class, mappedBy: 'site')]
+    private \Doctrine\Common\Collections\Collection $iutSiteParcours;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Iut::class, inversedBy="iutSites")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\QapesSae>
      */
-    private $iut;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=IutVille::class, inversedBy="iutSites")
-     */
-    private $ville;
-
-    /**
-     * @ORM\OneToMany(targetEntity=IutSiteParcours::class, mappedBy="site")
-     */
-    private $iutSiteParcours;
-
-    /**
-     * @ORM\OneToMany(targetEntity=QapesSae::class, mappedBy="iutSite")
-     */
-    private $qapesSaes;
+    #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: 'iutSite')]
+    private \Doctrine\Common\Collections\Collection $qapesSaes;
 
     public function __construct()
     {
@@ -111,11 +103,9 @@ class IutSite
 
     public function removeIutSiteParcour(IutSiteParcours $iutSiteParcour): self
     {
-        if ($this->iutSiteParcours->removeElement($iutSiteParcour)) {
-            // set the owning side to null (unless already changed)
-            if ($iutSiteParcour->getSite() === $this) {
-                $iutSiteParcour->setSite(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->iutSiteParcours->removeElement($iutSiteParcour) && $iutSiteParcour->getSite() === $this) {
+            $iutSiteParcour->setSite(null);
         }
 
         return $this;
@@ -141,13 +131,16 @@ class IutSite
 
     public function removeQapesSae(QapesSae $qapesSae): self
     {
-        if ($this->qapesSaes->removeElement($qapesSae)) {
-            // set the owning side to null (unless already changed)
-            if ($qapesSae->getIutSite() === $this) {
-                $qapesSae->setIutSite(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->qapesSaes->removeElement($qapesSae) && $qapesSae->getIutSite() === $this) {
+            $qapesSae->setIutSite(null);
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->libelle . ' - ' . $this->iut->getLibelle() . ' - ' . $this->ville->getLibelle();
     }
 }

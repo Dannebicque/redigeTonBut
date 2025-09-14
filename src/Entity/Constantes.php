@@ -18,11 +18,15 @@ class Constantes
 
 
     public const FLASHBAG_SUCCESS = 'success';
+
     public const FLASHBAG_INFO = 'info';
+
     public const FLASHBAG_NOTICE = 'warning';
+
     public const FLASHBAG_ERROR = 'danger';
 
 
     public const CIVILITE_HOMME = 'M.';
+
     public const CIVILITE_FEMME = 'Mme';
 }

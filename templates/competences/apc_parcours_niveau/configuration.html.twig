@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Confuguration des niveaux pour le parcours : {{ parcours.libelle }}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Compétence</th>
+                    <th>niveau 1</th>
+                    <th>niveau 2</th>
+                    <th>niveau 3</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for competence in comptences %}
+                    <tr>
+                        <td>
+                            <span class="badge bg-lg badge-{{ competence.couleur }}">
+                                {{ competence.nomCourt }}
+                            </span>
+                        </td>
+                        {% for i in 1..3 %}
+                            <td>
+                                {% for niveau in competence.apcNiveaux|filter(niveau => niveau.ordre == i) %}
+                                    <label>
+                                        <input type="checkbox"
+                                               name="niveaux[]"
+                                               value="{{ niveau.id }}"
+                                               class="checkNiveau"
+                                               {% if tabNiveauxId[niveau.id] is defined %}checked="checked"{% endif %}
+                                               data-parcours="{{ parcours.id }}">
+                                        {{ niveau.libelle }}
+                                    </label>
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('administration_apc_referentiel_index', {departement:departement.id}) }}"
+       class="btn btn-sm btn-outline-info
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-arrow-left-circle"></i>
+        <span>Retour</span>
+    </a>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+     document.addEventListener('change', function (e) {
+              if (e.target.classList.contains('checkNiveau')) {
+                let etat = e.target.checked ? 1 : 0;
+                const parcours = e.target.getAttribute('data-parcours');
+                const niveau = e.target.value;
+                const url = Routing.generate('administration_apc_parcours_niveau_ajax', {
+                  parcours: parcours,
+                  etat: etat,
+                  niveau: niveau,
+                });
+                fetch(url)
+                  .then(response => response.json())
+                  .then(data => {
+                    // Traitement de la réponse si nécessaire
+                  });
+              }
+            });
+    </script>
+{% endblock %}

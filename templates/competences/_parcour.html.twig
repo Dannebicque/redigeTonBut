@@ -1,11 +1,28 @@
+{% if is_granted('COMPETENCES_DELETE', parcour) and user_data.departement.verouilleCompetences == false %}
+    <div class="alert alert-danger mt-2">
+        La suppression d'un parcours entraine la suppression de tous les éléments associés et des références dans les
+        fiches ressources ou SAE sans supprimer ces dernières. La suppression est définitive.
+
+        {{ include('form/_delete_form.html.twig', {path: path('administration_apc_parcours_delete',
+            {id: parcour.id, }), id: parcour.id, label : 'Supprimer le parcours "'~parcour.libelle~'"' }) }}
+    </div>
+{% endif %}
+
+{% if is_granted('COMPETENCES_EDIT', parcour) and user_data.departement.verouilleCompetences == false %}
+<a href="{{ path('administration_parcours_niveau_config', {parcours:parcour.id}) }}" class="btn btn-outline-warning">Modifier le lien niveaux/parcours</a>
+{% endif %}
+
+
 {% if parcoursNiveaux[parcour.id] is defined %}
     {% for competence in parcoursNiveaux[parcour.id] %}
         <div class="d-flex align-items-stretch mt-3">
             {% for i in 1..3 %}
                 <div class="col-4 ">
                     {% if competence[i] is defined %}
-                        <div class="p-3 comp competence{{ competence[i].competence.couleur }}">{{ competence[i].competence.nomCourt }}
-                            niveau {{ competence[i].ordre }}</div>
+                        <div class="p-3 comp competence{{ competence[i].competence.couleur }}">
+                            {{ competence[i].competence.nomCourt }}
+                            niveau {{ competence[i].ordre }}
+                        </div>
                     {% endif %}
                 </div>
             {% endfor %}

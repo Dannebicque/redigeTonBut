@@ -15,17 +15,27 @@ use App\Repository\ApcSaeRepository;
 class TableauPreconisation
 {
     protected ApcSaeRepository $apcSaeRepository;
+
     protected ApcParcoursNiveauRepository $apcParcoursNiveauRepository;
+
     protected ApcRessourceRepository $apcRessourceRepository;
+
     protected ApcSaeParcoursRepository $apcSaeParcoursRepository;
+
     protected ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
+
     protected ApcNiveauRepository $apcNiveauRepository;
+
     protected Preconisation $preconisation;
 
     private mixed $saes;
+
     private mixed $saesAl;
+
     private mixed $ressources;
+
     private mixed $ressourcesAl;
+
     private mixed $niveaux;
 
     public function getSaes(): mixed
@@ -71,9 +81,9 @@ class TableauPreconisation
         $this->preconisation = $preconisation;
     }
 
-    public function getDatas(Semestre $semestre, ?ApcParcours $parcours)
+    public function getDatas(Semestre $semestre, ?ApcParcours $parcours): void
     {
-        if ($parcours === null) {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $this->saes = $this->apcSaeRepository->findBySemestre($semestre);
             $this->saesAl = $this->apcSaeRepository->findBySemestreAl($semestre);
             $this->ressources = $this->apcRessourceRepository->findBySemestre($semestre);
@@ -88,7 +98,7 @@ class TableauPreconisation
         }
     }
 
-    public function getPreconisation($semestres, $parcours)
+    public function getPreconisation(array $semestres, ?\App\Entity\ApcParcours $parcours): array
     {
         return $this->preconisation->setSemestresCompetences($semestres, $parcours)->getDataJson();
     }

@@ -26,11 +26,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ApcSaeType extends AbstractType
 {
     protected ?Departement $departement;
+
     protected ?ApcParcours $parcours;
+
     private bool $editable;
+
     private bool $verouille_croise;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->departement = $options['departement'];
         $this->editable = !$options['editable'];
@@ -41,7 +44,7 @@ class ApcSaeType extends AbstractType
             ->add('codeMatiere', TextType::class,
                 ['label' => 'Code SAÉ', 'disabled' => $this->editable, 'help' => 'Code généré automatiquement'])
             ->add('ficheAdaptationLocale', ChoiceType::class, [
-                'label' => 'Fiche d\'adaptation locale ?',
+                'label' => "Fiche d'adaptation locale ?",
                 'expanded' => true,
                 'choices' => ['Oui' => true, 'Non' => false,],
                 'attr' => ['class' => 'text-white'],
@@ -129,7 +132,7 @@ class ApcSaeType extends AbstractType
                 'required' => true,
                 'choice_label' => 'display',
                 'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
-                'query_builder' => function(SemestreRepository $semestreRepository) {
+                'query_builder' => function(SemestreRepository $semestreRepository): \Doctrine\ORM\QueryBuilder {
                     return $semestreRepository->findByDepartementParcoursBuilder($this->departement, $this->parcours);
                 },
                 'label' => 'Semestre',
@@ -141,7 +144,7 @@ class ApcSaeType extends AbstractType
                 'required' => true,
                 'choice_label' => 'display',
                 'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
-                'query_builder' => function(SemestreRepository $semestreRepository) {
+                'query_builder' => function(SemestreRepository $semestreRepository): \Doctrine\ORM\QueryBuilder {
                     return $semestreRepository->findByDepartementParcoursBuilder($this->departement, $this->parcours);
                 },
                 'label' => 'Semestre',
@@ -151,7 +154,7 @@ class ApcSaeType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => ApcSae::class,

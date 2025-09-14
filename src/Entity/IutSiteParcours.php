@@ -5,27 +5,19 @@ namespace App\Entity;
 use App\Repository\IutSiteParcoursRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=IutSiteParcoursRepository::class)
- */
+#[ORM\Entity(repositoryClass: IutSiteParcoursRepository::class)]
 class IutSiteParcours
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=IutSite::class, inversedBy="iutSiteParcours")
-     */
-    private $site;
+    #[ORM\ManyToOne(targetEntity: IutSite::class, inversedBy: 'iutSiteParcours')]
+    private ?\App\Entity\IutSite $site = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="iutSiteParcours")
-     */
-    private $parcours;
+    #[ORM\ManyToOne(targetEntity: ApcParcours::class, inversedBy: 'iutSiteParcours')]
+    private ?\App\Entity\ApcParcours $parcours = null;
 
     public function getId(): ?int
     {

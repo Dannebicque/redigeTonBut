@@ -17,7 +17,7 @@ class QapesSaeSyntheseController extends AbstractController
         QapesSaeCritereReponseRepository $qapesSaeCritereReponseRepository,
         QapesCritereRepository           $qapesCritereRepository,
         ChartBuilderInterface            $chartBuilder
-    )
+    ): \Symfony\Component\HttpFoundation\Response
     {
         $total = [];
         $reponses = $qapesSaeCritereReponseRepository->findAll();
@@ -48,7 +48,8 @@ class QapesSaeSyntheseController extends AbstractController
             foreach ($critere->getQapesCritereReponses() as $reponse) {
                 $labels[$reponse->getId()] = $reponse->getLibelle();
                 $data[$reponse->getId()] = $total[$critere->getId()][$reponse->getId()] ?? 0;
-                $color = list($r, $g, $b) = sscanf($reponse->getCouleur(), "#%02x%02x%02x");
+                $color = sscanf($reponse->getCouleur(), "#%02x%02x%02x");
+                list($r, $g, $b) = $color;
                 $backgroundColor[$reponse->getId()] = 'rgb(' . $r . ',' . $g . ',' . $b . ')';
             }
 

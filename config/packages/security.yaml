@@ -1,10 +1,12 @@
 security:
   role_hierarchy:
+    ROLE_ADMIN: ROLE_GT
     ROLE_LABSET: ROLE_IUT
     ROLE_GT: ROLE_CPN
     ROLE_CPN: ROLE_PACD
     ROLE_PACD: ROLE_EDITEUR
-    #ROLE_EDITEUR: ROLE_LECTEUR
+    ROLE_EDITEUR: ROLE_IUT
+
   password_hashers:
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
@@ -52,6 +54,7 @@ security:
     - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/logout, roles: PUBLIC_ACCESS }
     - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+    - { path: ^/labset-public/, roles: [ ROLE_IUT ] }
     - { path: ^/labset, roles: [ ROLE_LABSET ] }
     - { path: ^/administration, roles: [ ROLE_GT, ROLE_PACD, ROLE_CPN ] }
     - { path: ^/, roles: [ ROLE_GT, ROLE_PACD, ROLE_CPN, ROLE_CPN_LECTEUR, ROLE_IUT, ROLE_EDITEUR, ROLE_LECTEUR ] }

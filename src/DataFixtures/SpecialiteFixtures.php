@@ -200,9 +200,11 @@ class SpecialiteFixtures extends Fixture
         $gt->setPrenom('David');
         $gt->setIsVerified(true);
         $gt->setActif(true);
+
         $pass = $this->encoder->hashPassword($gt, 'test');
         $gt->setPassword($pass);
         $gt->setRoles(['ROLE_GT']);
+
         $manager->persist($gt);
 
         foreach ($specialites as $specialite) {
@@ -234,6 +236,7 @@ class SpecialiteFixtures extends Fixture
                     $manager->persist($semestre);
                     $orLmd++;
                 }
+
                 $manager->flush();
             }
 
@@ -245,6 +248,7 @@ class SpecialiteFixtures extends Fixture
         $departement->setTypeDepartement('secondaire');
         $departement->setTypeStructure(Departement::TYPE2);
         $departement->setNumeroAnnexe(19);
+
         $manager->persist($departement);
         $manager->flush();
         for ($i = 1; $i <= 3; $i++) {
@@ -266,6 +270,7 @@ class SpecialiteFixtures extends Fixture
                 $manager->persist($semestre);
                 $orLmd++;
             }
+
             $manager->flush();
         }
 
@@ -276,10 +281,12 @@ class SpecialiteFixtures extends Fixture
         $pacd->setPrenom('David');
         $pacd->setActif(true);
         $pacd->setIsVerified(true);
+
         $pass = $this->encoder->hashPassword($pacd, 'test');
         $pacd->setPassword($pass);
         $pacd->setDepartement($departement);
         $pacd->setRoles(['ROLE_PACD']);
+
         $manager->persist($pacd);
 
         $manager->flush();

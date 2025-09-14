@@ -11,7 +11,9 @@ use Doctrine\ORM\EntityManagerInterface;
 class ApcComposanteEssentielleOrdre
 {
     private EntityManagerInterface $entityManager;
+
     private Codification $codification;
+
     private ApcComposanteEssentielleRepository $apcComposanteEssentielleRepository;
 
 
@@ -22,7 +24,7 @@ class ApcComposanteEssentielleOrdre
         $this->apcComposanteEssentielleRepository = $apcComposanteEssentielleRepository;
     }
 
-    public function deplaceApcComposanteEssentielle(ApcComposanteEssentielle $apcComposanteEssentielle, int $ordreInitial)
+    public function deplaceApcComposanteEssentielle(ApcComposanteEssentielle $apcComposanteEssentielle, int $ordreInitial): bool
     {
         //modifie l'ordre de la ressource
         $ordreFinal = $apcComposanteEssentielle->getOrdre();

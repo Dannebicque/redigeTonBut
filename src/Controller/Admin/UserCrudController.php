@@ -1,0 +1,266 @@
+<?php
+
+namespace App\Controller\Admin;
+
+use App\Entity\User;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ArrayFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Mailer\MailerInterface;
+
+class UserCrudController extends BaseCrudController
+{
+    private array $roles = [];
+
+    public function __construct(
+        private AdminUrlGenerator $adminUrlGenerator,
+        private MailerInterface   $mailer,
+        private RequestStack      $requestStack,
+        private readonly UserRepository $userRepository,
+        private readonly \Symfony\Component\Security\Core\Security $security,
+        private readonly EntityManagerInterface $entityManager)
+    {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $this->roles = [
+                'Admin' => 'ROLE_ADMIN',
+                'GT' => 'ROLE_GT',
+                'IUT' => 'ROLE_IUT',
+                'Labset' => 'ROLE_LABSET',
+                'Editeur' => 'ROLE_EDITEUR',
+                'Lecteur' => 'ROLE_LECTEUR',
+                'Secrétaire de CPN (lecture/écriture)' => 'ROLE_CPN',
+                'Membre CPN (lecture)' => 'ROLE_CPN_LECTEUR',
+                'PACD' => 'ROLE_PACD',
+            ];
+        } else if ($this->security->isGranted('ROLE_GT')) {
+            $this->roles = [
+                'GT' => 'ROLE_GT',
+                'IUT' => 'ROLE_IUT',
+                'Labset' => 'ROLE_LABSET',
+                'Editeur' => 'ROLE_EDITEUR',
+                'Lecteur' => 'ROLE_LECTEUR',
+                'Secrétaire de CPN (lecture/écriture)' => 'ROLE_CPN',
+                'Membre CPN (lecture)' => 'ROLE_CPN_LECTEUR',
+                'PACD' => 'ROLE_PACD',
+            ];
+        } else if($this->security->isGranted('ROLE_CPN')) {
+            $this->roles = [
+                'IUT' => 'ROLE_IUT',
+                'Editeur' => 'ROLE_EDITEUR',
+                'Lecteur' => 'ROLE_LECTEUR',
+                'PACD' => 'ROLE_PACD',
+            ];
+        } else if($this->security->isGranted('ROLE_PACD')) {
+            $this->roles = [
+                'IUT' => 'ROLE_IUT',
+                'Editeur' => 'ROLE_EDITEUR',
+                'Lecteur' => 'ROLE_LECTEUR',
+
+            ];
+        } else {
+            $this->roles = [
+                'IUT' => 'ROLE_IUT',
+                'Lecteur' => 'ROLE_LECTEUR'
+            ];
+        }
+    }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        $qb = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        $user = $this->security->getUser();
+
+        if ($this->security->isGranted('ROLE_ADMIN') || $this->security->isGranted('ROLE_GT')) {
+            // Pas de filtre, accès à tout
+            return $qb;
+        }
+
+        if ($this->security->isGranted('ROLE_PACD')) {
+            // Filtrer par spécialité de l'utilisateur courant
+            $departement = $user->getDepartement();
+            $qb->andWhere('entity.departement = :departement')
+                ->setParameter('departement', $departement);
+        }
+
+        if ($this->security->isGranted('ROLE_CPN')) {
+            //peut se cumuler avec ROLE_PACD
+            // un membre CPN peut voir tous les utilisateurs de ses départements
+            $departements = $user->getCpnDepartements(); // À adapter selon ton modèle
+            if ($departements) {
+                $qb->orWhere('entity.departement IN (:departements)')
+                    ->setParameter('departements', $departements);
+            }
+
+//            // Filtrer par un ensemble de spécialités accessibles
+//            $specialites = $user->getCpnDepartements(); // À adapter selon ton modèle
+//            $qb->andWhere('entity.departement IN (:specialites)')
+//                ->setParameter('specialites', $specialites);
+        }
+
+        return $qb;
+    }
+
+    public static function getEntityFqcn(): string
+    {
+        return User::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('Utilisateur')
+            ->setEntityLabelInPlural('Utilisateurs')
+            ->setDefaultSort(['nom' => 'ASC'])
+            ->setSearchFields(['nom', 'prenom', 'email']);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        $actions = parent::configureActions($actions);
+
+        $resendPassword = Action::new('resendPassword', 'Renvoyer le mot de passe')
+            ->linkToCrudAction('resendPassword')
+            ->setCssClass('text-warning');
+
+        return $actions
+            ->add(Crud::PAGE_INDEX, $resendPassword)
+            ->add(Crud::PAGE_EDIT, Action::SAVE_AND_ADD_ANOTHER)
+            ->disable(Action::BATCH_DELETE) // Désactive l'action batch de suppression
+            ->add(Crud::PAGE_DETAIL, $resendPassword)
+            ->reorder(Crud::PAGE_INDEX, [Action::DETAIL, Action::EDIT, 'resendPassword', Action::DELETE]); // Ordre des actions
+
+    }
+
+    public function configureFields(string $pageName): iterable
+    {
+        $fields = [
+            IdField::new('id')->hideOnIndex()->hideOnForm(),
+            TextField::new('nom')->setLabel('Nom'),
+            TextField::new('prenom')->setLabel('Prénom'),
+            TextField::new('email')->setLabel('Email'),
+            TextField::new('login')->setLabel('Login'),
+            BooleanField::new('isVerified')->setLabel('Vérifié'),
+            BooleanField::new('actif')->setLabel('Actif'),
+            AssociationField::new('departement')->setLabel('Département')->setCrudController(DepartementCrudController::class), // Affiche le département
+            ChoiceField::new('roles')
+                ->setLabel('Rôles')
+                ->setChoices($this->roles)
+                ->allowMultipleChoices(true)
+                ->setFormTypeOption('attr', [
+                    'class' => 'roles-field'
+                ]),
+        ];
+
+        if (
+            $this->security->isGranted('ROLE_ADMIN') // Pour l'admin qui édite
+            || (isset($_POST['roles']) && in_array('ROLE_CPN', (array)$_POST['roles']))
+        ) {
+            $fields[] = AssociationField::new('CpnDepartements')
+                ->setLabel('Départements CPN')
+                ->setCrudController(DepartementCrudController::class)
+                ->setFormTypeOption('multiple', true)
+                ->setRequired(false);
+        }
+
+        return $fields;
+    }
+
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance instanceof User) {
+            parent::persistEntity($entityManager, $entityInstance);
+            return;
+        }
+
+        // Générer un mot de passe aléatoire
+        $newPassword = bin2hex(random_bytes(6));
+        $entityInstance->setPassword(password_hash($newPassword, PASSWORD_BCRYPT));
+
+        parent::persistEntity($entityManager, $entityInstance);
+
+        // Envoyer l'email
+        $email = (new TemplatedEmail())
+            ->from('orebut@iut.fr')
+            ->to($entityInstance->getEmail())
+            ->subject('[ORéBUT] Votre compte a été créé')
+            ->htmlTemplate('email/send_password.html.twig')
+            ->context([
+                'user' => $entityInstance,
+                'newPassword' => $newPassword,
+            ]);
+        $this->mailer->send($email);
+    }
+
+    public function resendPassword(): RedirectResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if (!$request || !$request->query->has('entityId')) {
+            $this->addFlash('danger', 'Aucun utilisateur sélectionné.');
+            $url = $this->adminUrlGenerator->setController(self::class)->setAction(Crud::PAGE_INDEX)->generateUrl();
+            return $this->redirect($url);
+        }
+
+        $userId = $request->query->get('entityId');
+        $user = $this->userRepository->find($userId);
+
+        if ($user) {
+            // Générer un nouveau mot de passe sécurisé
+            $newPassword = bin2hex(random_bytes(6));
+            $user->setPassword(password_hash($newPassword, PASSWORD_BCRYPT));
+            $this->entityManager->flush();
+
+            $email = (new TemplatedEmail())
+                ->from('orebut@iut.fr')
+                ->to($user->getEmail())
+                ->subject('[ORéBUT] Réinitialisation de votre mot de passe')
+                ->htmlTemplate('email/resend_password.html.twig')
+                ->context([
+                    'user' => $user,
+                    'newPassword' => $newPassword,
+                ]);
+
+            $this->mailer->send($email);
+
+            $this->addFlash('success', 'Le mot de passe a été renvoyé avec succès.');
+        } else {
+            $this->addFlash('danger', 'Utilisateur introuvable.');
+        }
+
+        $url = $this->adminUrlGenerator->setController(self::class)->setAction(Crud::PAGE_INDEX)->generateUrl();
+        return $this->redirect($url);
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(EntityFilter::new('departement'))
+            ->add(BooleanFilter::new('isVerified'))
+            ->add(BooleanFilter::new('actif'))
+            ->add(
+                ArrayFilter::new('roles')
+                    ->setChoices($this->roles)
+            );
+    }
+}

@@ -14,13 +14,12 @@ use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcComptenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\api\GetCompetenceSpecialite;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ORM\Entity(repositoryClass=ApcComptenceRepository::class)
- * @ORM\HasLifecycleCallbacks()
  * @ApiResource(
  *     normalizationContext={"groups"={"read:competence"}},
  *     collectionOperations={
@@ -47,6 +46,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     itemOperations={"get"}
  * )
  */
+#[ORM\Entity(repositoryClass: ApcComptenceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcCompetence extends BaseEntity
 {
     use LifeCycleTrait;
@@ -61,67 +62,66 @@ class ApcCompetence extends BaseEntity
             'c6' => '007F1F53',
         ];
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"read:competence", "read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[Groups(['read:competence', 'read:ressource', 'read:sae'])]
     private ?string $libelle;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     * @Groups({"read:competence", "read:departement", "read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 50)]
+    #[Groups(['read:competence', 'read:departement', 'read:ressource', 'read:sae'])]
     private ?string $nom_court;
 
-    /**
-     * @ORM\Column(type="string", length=20)
-     * @Groups({"read:competence"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 20)]
+    #[Groups(['read:competence'])]
     private ?string $couleur;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcComposanteEssentielle::class, mappedBy="competence", cascade={"persist","remove"})
-     * @Groups({"read:competence"})
+     * @var Collection<int, ApcComposanteEssentielle>
      */
+    #[ORM\OneToMany(mappedBy: 'competence', targetEntity: ApcComposanteEssentielle::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:competence'])]
     private Collection $apcComposanteEssentielles;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcNiveau::class, mappedBy="competence", cascade={"persist","remove"})
-     * @Groups({"read:competence"})
+     * @var Collection<int, ApcNiveau>
      */
+    #[ORM\OneToMany(mappedBy: 'competence', targetEntity: ApcNiveau::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:competence'])]
     private Collection $apcNiveaux;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcRessourceCompetence::class, mappedBy="competence")
+     * @var Collection<int, ApcRessourceCompetence>
      */
+    #[ORM\OneToMany(mappedBy: 'competence', targetEntity: ApcRessourceCompetence::class)]
     private Collection $apcRessourceCompetences;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSaeCompetence::class, mappedBy="competence")
+     * @var Collection<int, ApcSaeCompetence>
      */
+    #[ORM\OneToMany(mappedBy: 'competence', targetEntity: ApcSaeCompetence::class)]
     private Collection $apcSaeCompetences;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcSituationProfessionnelle::class, mappedBy="competence",
-     *                                                                 cascade={"persist","remove"})
-     * @Groups({"read:competence"})
+     * @var Collection<int, ApcSituationProfessionnelle>
      */
+    #[ORM\OneToMany(mappedBy: 'competence', targetEntity: ApcSituationProfessionnelle::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:competence'])]
     private Collection $apcSituationProfessionnelles;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="apcCompetences")
-     */
+    #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: 'apcCompetences')]
     private ?Departement $departement;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:competence", "read:departement", "read:ressource", "read:sae"})
-     */
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(['read:competence', 'read:departement', 'read:ressource', 'read:sae'])]
     private ?int $numero;
 
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(['read:competence', 'read:departement', 'read:ressource', 'read:sae'])]
+    private ?int $numeroIdentifiant;
+
     /**
-     * @ORM\OneToMany(targetEntity=ApcCompetenceSemestre::class, mappedBy="competence")
+     * @var Collection<int, ApcCompetenceSemestre>
      */
+    #[ORM\OneToMany(mappedBy: 'competence', targetEntity: ApcCompetenceSemestre::class)]
     private Collection $apcCompetenceSemestres;
 
 
@@ -254,11 +254,9 @@ class ApcCompetence extends BaseEntity
 
     public function removeApcRessourceCompetence(ApcRessourceCompetence $apcRessourceCompetence): self
     {
-        if ($this->apcRessourceCompetences->removeElement($apcRessourceCompetence)) {
-            // set the owning side to null (unless already changed)
-            if ($apcRessourceCompetence->getCompetence() === $this) {
-                $apcRessourceCompetence->setCompetence(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcRessourceCompetences->removeElement($apcRessourceCompetence) && $apcRessourceCompetence->getCompetence() === $this) {
+            $apcRessourceCompetence->setCompetence(null);
         }
 
         return $this;
@@ -284,11 +282,9 @@ class ApcCompetence extends BaseEntity
 
     public function removeApcSaeCompetence(ApcSaeCompetence $apcSaeCompetence): self
     {
-        if ($this->apcSaeCompetences->removeElement($apcSaeCompetence)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSaeCompetence->getCompetence() === $this) {
-                $apcSaeCompetence->setCompetence(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSaeCompetences->removeElement($apcSaeCompetence) && $apcSaeCompetence->getCompetence() === $this) {
+            $apcSaeCompetence->setCompetence(null);
         }
 
         return $this;
@@ -314,11 +310,9 @@ class ApcCompetence extends BaseEntity
 
     public function removeApcSituationProfessionnelle(ApcSituationProfessionnelle $apcSituationProfessionnelle): self
     {
-        if ($this->apcSituationProfessionnelles->removeElement($apcSituationProfessionnelle)) {
-            // set the owning side to null (unless already changed)
-            if ($apcSituationProfessionnelle->getCompetence() === $this) {
-                $apcSituationProfessionnelle->setCompetence(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcSituationProfessionnelles->removeElement($apcSituationProfessionnelle) && $apcSituationProfessionnelle->getCompetence() === $this) {
+            $apcSituationProfessionnelle->setCompetence(null);
         }
 
         return $this;
@@ -348,6 +342,18 @@ class ApcCompetence extends BaseEntity
         return $this;
     }
 
+    public function getNumeroIdentifiant(): ?int
+    {
+        return $this->numeroIdentifiant;
+    }
+
+    public function setNumeroIdentifiant(int $numeroIdentifiant): self
+    {
+        $this->numeroIdentifiant = $numeroIdentifiant;
+
+        return $this;
+    }
+
     /**
      * @return Collection|ApcCompetenceSemestre[]
      */
@@ -368,11 +374,9 @@ class ApcCompetence extends BaseEntity
 
     public function removeApcCompetenceSemestre(ApcCompetenceSemestre $apcCompetenceSemestre): self
     {
-        if ($this->apcCompetenceSemestres->removeElement($apcCompetenceSemestre)) {
-            // set the owning side to null (unless already changed)
-            if ($apcCompetenceSemestre->getCompetence() === $this) {
-                $apcCompetenceSemestre->setCompetence(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcCompetenceSemestres->removeElement($apcCompetenceSemestre) && $apcCompetenceSemestre->getCompetence() === $this) {
+            $apcCompetenceSemestre->setCompetence(null);
         }
 
         return $this;
@@ -385,7 +389,7 @@ class ApcCompetence extends BaseEntity
 
     public function isGoodParcours(?ApcParcours $apcParcours = null): bool
     {
-        if ($apcParcours === null) {
+        if (!$apcParcours instanceof \App\Entity\ApcParcours) {
             return true;
         }
 

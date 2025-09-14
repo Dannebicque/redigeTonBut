@@ -11,8 +11,11 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class Structure
 {
     private array $semestres;
+
     private array $donneesSemestres;
+
     private StructureDepartement $donneesDepartement;
+
     private Departement $departement;
 
     public function setDepartement(Departement $departement): Structure
@@ -47,6 +50,7 @@ class Structure
         if (array_key_exists($i, $this->donneesSemestres)) {
             return $this->donneesSemestres[$i];
         }
+
         return null;
     }
 
@@ -66,6 +70,7 @@ class Structure
             $json[$semestre->getOrdreLmd()] = $sem->getJson();
             $this->donneesDepartement->addSemestre($sem);
         }
+
         $json['departement'] = $this->donneesDepartement->getJson();
 
         return $json;
@@ -77,11 +82,7 @@ class Structure
         ?ApcParcours $parcours = null
     ): StreamedResponse {
         $this->departement = $departement;
-        if ($parcours === null) {
-            $this->semestres = $departement->getSemestres();
-        } else {
-            $this->semestres = $parcours->getSemestresArray();
-        }
+        $this->semestres = $parcours instanceof \App\Entity\ApcParcours ? $parcours->getSemestresArray() : $departement->getSemestres();
 
         $this->getDataTableau();
         $spreadsheet = $excelWriter->createFromTemplate('tableau_structure.xlsx');
@@ -91,9 +92,10 @@ class Structure
         if ($sheet !== null) {
             $sheet->getCell('B4')->setValue('BUT ' . $this->departement->getSigle());
             $sheet->getCell('C4')->setValue($this->departement->getTypeDepartement());
-            if ($parcours !== null) {
+            if ($parcours instanceof \App\Entity\ApcParcours) {
                 $sheet->getCell('B5')->setValue('PARCOURS '.$parcours->getLibelle());
             }
+
             for ($i = 1; $i <= 6; $i++) {
                 $sheet->getCellByColumnAndRow(2 + $i, 7)->setValue($this->donneesSemestres[$i]->nbHeuresRessourcesSae);
                 $sheet->getCellByColumnAndRow(2 + $i, 9)->setValue($this->donneesSemestres[$i]->pourcentageAdaptationLocale / 100);
@@ -113,6 +115,7 @@ class Structure
                 }
             }
         }
+
         $excelWriter->setSpreadsheet($spreadsheet);
         return $excelWriter->genereFichier('structure_'.$departement->getSigle());
 

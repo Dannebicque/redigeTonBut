@@ -25,7 +25,7 @@ class UserCreateCompteSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onCreationCompte(UserEvent $userEvent)
+    public function onCreationCompte(UserEvent $userEvent): void
     {
         $user =$userEvent->getUser();
         $email = (new TemplatedEmail())
@@ -36,7 +36,7 @@ class UserCreateCompteSubscriber implements EventSubscriberInterface
         $this->mailer->send($email);
     }
 
-    public function onInitPassword(UserEvent $userEvent)
+    public function onInitPassword(UserEvent $userEvent): void
     {
         $user =$userEvent->getUser();
         $email = (new TemplatedEmail())

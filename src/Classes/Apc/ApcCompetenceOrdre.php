@@ -10,7 +10,9 @@ use Doctrine\ORM\EntityManagerInterface;
 class ApcCompetenceOrdre
 {
     private EntityManagerInterface $entityManager;
+
     private ApcComptenceRepository $apcComptenceRepository;
+
     private ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository;
 
 
@@ -22,7 +24,7 @@ class ApcCompetenceOrdre
 
     }
 
-    public function deplaceCompetence(ApcCompetence $apcCompetence, string $ordreInitial)
+    public function deplaceCompetence(ApcCompetence $apcCompetence, string $ordreInitial): bool
     {
         //modifie l'ordre de la ressource
         $ordreDestination = $apcCompetence->getCouleur();
@@ -55,7 +57,7 @@ class ApcCompetenceOrdre
         return true;
     }
 
-    private function codifieAc(ApcCompetence $competence)
+    private function codifieAc(ApcCompetence $competence): void
     {
         $acs = $this->apcApprentissageCritiqueRepository->findByCompetence($competence);
 
@@ -63,6 +65,7 @@ class ApcCompetenceOrdre
         {
             $ac->setCode(Codification::codeApprentissageCritique($ac));
         }
+
         $this->entityManager->flush();
     }
 }

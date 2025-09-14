@@ -14,24 +14,18 @@ use App\Repository\ApcRessourceApprentissageCritiqueRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcRessourceApprentissageCritiqueRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcRessourceApprentissageCritiqueRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcRessourceApprentissageCritique extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcRessource::class, inversedBy="apcRessourceApprentissageCritiques")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcRessource::class, inversedBy: 'apcRessourceApprentissageCritiques')]
     private ?ApcRessource $ressource;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcApprentissageCritique::class, inversedBy="apcRessourceApprentissageCritiques")
-     * @ORM\OrderBy({"code":"ASC"})
-     * @Groups({"read:ressource"})
-     */
+    #[ORM\ManyToOne(targetEntity: ApcApprentissageCritique::class, inversedBy: 'apcRessourceApprentissageCritiques')]
+    #[ORM\OrderBy(['code' => 'ASC'])]
+    #[Groups(['read:ressource'])]
     private ?ApcApprentissageCritique $apprentissageCritique;
 
     public function __construct(ApcRessource $ressource, ApcApprentissageCritique $apprentissageCritique)

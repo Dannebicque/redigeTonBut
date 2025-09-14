@@ -14,29 +14,21 @@ use App\Repository\ApcRessourceCompetenceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcRessourceCompetenceRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcRessourceCompetenceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcRessourceCompetence extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcRessource::class, inversedBy="apcRessourceCompetences")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcRessource::class, inversedBy: 'apcRessourceCompetences')]
     private ?ApcRessource $ressource;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcCompetence::class, inversedBy="apcRessourceCompetences")
-     * @Groups({"read:ressource"})
-     */
+    #[ORM\ManyToOne(targetEntity: ApcCompetence::class, inversedBy: 'apcRessourceCompetences')]
+    #[Groups(['read:ressource'])]
     private ?ApcCompetence $competence;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:ressource"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[Groups(['read:ressource'])]
     private float $coefficient = 0;
 
     public function __construct(ApcRessource $ressource, ApcCompetence $competence)

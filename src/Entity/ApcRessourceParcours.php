@@ -6,28 +6,20 @@ use App\Repository\ApcRessourceParcoursRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcRessourceParcoursRepository::class)
- */
+#[ORM\Entity(repositoryClass: ApcRessourceParcoursRepository::class)]
 class ApcRessourceParcours
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcRessource::class, inversedBy="apcRessourceParcours")
-     */
-    private $ressource;
+    #[ORM\ManyToOne(targetEntity: ApcRessource::class, inversedBy: 'apcRessourceParcours')]
+    private ?\App\Entity\ApcRessource $ressource = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="apcRessourceParcours")
-     * @Groups({"read:ressource"})
-     */
-    private $parcours;
+    #[ORM\ManyToOne(targetEntity: ApcParcours::class, inversedBy: 'apcRessourceParcours')]
+    #[Groups(['read:ressource'])]
+    private ?\App\Entity\ApcParcours $parcours = null;
 
     /**
      * ApcRessourceParcours constructor.

@@ -39,10 +39,12 @@ class ApcApprentissageCritiqueExport
                         $this->excelWriter->writeCellXY(3+$col, $ligne, $parc->getParcours()->getLibelle());
                         $col++;
                     }
+
                     $ligne++;
                 }
             }
         }
+
         return $this->excelWriter->genereFichier('Export_acs');
     }
 }

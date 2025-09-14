@@ -14,9 +14,13 @@ use ZipArchive;
 class ApcRessourcesExport
 {
     protected ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
+
     protected ApcRessourceRepository $apcRessourceRepository;
+
     protected MyWord $myWord;
+
     protected mixed $ressources;
+
     private string $dir;
 
     public function __construct(
@@ -34,7 +38,7 @@ class ApcRessourcesExport
 
     public function export(Annee $annee, string $_format, ?ApcParcours $parcours)
     {
-        if ($parcours !== null) {
+        if ($parcours instanceof \App\Entity\ApcParcours) {
             $this->ressources = $this->apcRessourceParcoursRepository->findByAnneeArray($annee, $parcours);
         } else {
             $this->ressources = $this->apcRessourceRepository->findByAnneeArray($annee);
@@ -43,16 +47,16 @@ class ApcRessourcesExport
         switch ($_format) {
             case 'docx':
                 return $this->exportZipWord();
-                break;
             case 'pdf':
                 break;
 
         }
+        return null;
 
 
     }
 
-    private function exportZipWord()
+    private function exportZipWord(): \Symfony\Component\HttpFoundation\Response
     {
         $zip = new ZipArchive();
         $fileName = 'ressources-' . date('YmdHis') . '.zip';
@@ -62,7 +66,7 @@ class ApcRessourcesExport
         $zip->open($zipName, ZipArchive::CREATE);
         $tabFiles = [];
 
-        foreach ($this->ressources as $key => $ressources) {
+        foreach ($this->ressources as $ressources) {
             /** @var \App\Entity\ApcRessource $ressource */
             foreach ($ressources as $ressource) {
                 if ($ressource->getFicheAdaptationLocale() === false) {

@@ -21,11 +21,17 @@ class ApcRessourceAddEdit
 
 
     private EntityManagerInterface $entityManager;
+
     private ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository;
+
     private ApcSaeRepository $apcSaeRepository;
+
     private ApcParcoursRepository $apcParcoursRepository;
+
     private ApcRessourceRepository $apcRessourceRepository;
+
     private ApcComptenceRepository $apcComptenceRepository;
+
     private array $tabCoeffs = [];
 
     public function __construct(
@@ -45,7 +51,7 @@ class ApcRessourceAddEdit
     }
 
 
-    public function addOrEdit(ApcRessource $apcRessource, $request, $verouillee = false)
+    public function addOrEdit(ApcRessource $apcRessource, $request, $verouillee = false): void
     {
         $this->entityManager->persist($apcRessource);
 
@@ -72,6 +78,7 @@ class ApcRessourceAddEdit
                 if (array_key_exists($idCompetence, $this->tabCoeffs)) {
                     $saeAc->setCoefficient($this->tabCoeffs[$idCompetence]);
                 }
+
                 $this->entityManager->persist($saeAc);
 
             }
@@ -108,7 +115,7 @@ class ApcRessourceAddEdit
         $this->entityManager->flush();
     }
 
-    public function removeLiens(ApcRessource $apcRessource, $verouille = false)
+    public function removeLiens(ApcRessource $apcRessource, $verouille = false): void
     {
         if ($verouille === false) {
             foreach ($apcRessource->getApcRessourceApprentissageCritiques() as $ac) {
@@ -130,9 +137,11 @@ class ApcRessourceAddEdit
             $apcRessource->removeRessourcesPreRequise($ac);
             $ac->removeApcRessource($apcRessource);
         }
+
         foreach ($apcRessource->getApcSaeRessources() as $ac) {
             $this->entityManager->remove($ac);
         }
+
         $this->entityManager->flush();
     }
 
@@ -168,6 +177,7 @@ class ApcRessourceAddEdit
             $newAc = new ApcSaeRessource($ac->getSae(), $ressource);
             $this->entityManager->persist($newAc);
         }
+
         $this->entityManager->flush();
 
         return $ressource;

@@ -191,3 +191,8 @@ $colorsApcMedium: (
   }
 }
 
+.diff-ajout { color: green; }
+.diff-modification { color: orange; }
+.diff-suppression { text-decoration: line-through; color: red; }
+.diff-ordre { color: blue; }
+

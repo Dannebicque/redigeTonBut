@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        {{ include('pdf/stylepdf.css.twig') }}
+    </style>
+    <title>PDF - Référentiel de compétences {{ departement.sigle }}</title>
+</head>
+<body>
+
+<!--Conteneur principal -->
+<div class="container-fluid" id="content">
+    {% for parcour in parcours %}
+        {% if (garde is defined and garde != false) or garde is not defined %}
+            {{ include('pdf/versionning/pageDeGardeParcours.html.twig', {parcours: parcour}) }}
+            <div style="page-break-after: always"></div>
+        {% endif %}
+        {{ include('pdf/versionning/pageCompetencesComposantes.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
+        <div style="page-break-after: always"></div>
+        {{ include('pdf/versionning/pageSituationProfessionnelles.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
+        <div style="page-break-after: always"></div>
+        {% set width = (100 / competencesParcours[parcour.id]|length)-2 %}
+        {{ include('pdf/versionning/pagePageNiveaux.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id],
+            width:width
+        }) }}
+        <div style="page-break-after: always"></div>
+        {% for competence in competencesParcours[parcour.id] %}
+            <div>
+                {{ include('pdf/versionning/pageCompetence.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
+            </div>
+            <div style="page-break-after: always"></div>
+        {% endfor %}
+    {% endfor %}
+</div><!-- fin conteneur principal-->
+
+</body>
+</html>
+

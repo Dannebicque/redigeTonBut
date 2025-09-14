@@ -16,20 +16,33 @@ use App\Repository\ApcSaeRepository;
 class TableauCroise
 {
     protected ApcSaeParcoursRepository $apcSaeParcoursRepository;
+
     protected ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
+
     protected ApcSaeCompetenceRepository $apcSaeCompetenceRepository;
+
     protected ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository;
+
     protected ApcParcoursNiveauRepository $apcParcoursNiveauRepository;
+
     protected ApcNiveauRepository $apcNiveauRepository;
+
     protected ApcSaeRepository $apcSaeRepository;
+
     protected ApcRessourceRepository $apcRessourceRepository;
+
     private array $tab;
+
     private array $coefficients;
 
     private mixed $saes;
+
     private mixed $saesAl;
+
     private mixed $ressources;
+
     private mixed $ressourcesAl;
+
     private mixed $niveaux;
 
     public function __construct(
@@ -52,9 +65,9 @@ class TableauCroise
         $this->apcRessourceRepository = $apcRessourceRepository;
     }
 
-    public function getDatas(Semestre $semestre, ?ApcParcours $parcours = null)
+    public function getDatas(Semestre $semestre, ?ApcParcours $parcours = null): void
     {
-        if ($parcours === null) {
+        if (!$parcours instanceof \App\Entity\ApcParcours) {
             $this->saes = $this->apcSaeRepository->findBySemestre($semestre);
             $this->saesAl = $this->apcSaeRepository->findBySemestreAl($semestre);
             $this->ressources = $this->apcRessourceRepository->findBySemestre($semestre);
@@ -114,6 +127,7 @@ class TableauCroise
                 $this->coefficients[$comp->getCompetence()->getId()]['ressources'] = [];
                 $this->coefficients[$comp->getCompetence()->getId()]['ressourcesAl'] = [];
             }
+
             if ($comp->getSae()->getFicheAdaptationLocale() === true) {
                 $this->coefficients[$comp->getCompetence()->getId()]['saesAl'][$comp->getSae()->getId()] = $comp->getCoefficient();
             } else {

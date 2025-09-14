@@ -15,10 +15,15 @@ class GenerePdfCompetences
 {
 
     private string $dir;
+
     private array $tParcours;
+
     private array $competencesParcours;
+
     private Departement $departement;
-    private $competences;
+
+    private ?\Doctrine\Common\Collections\Collection $competences = null;
+
     private Filesystem $filesystem;
 
     public function __construct(
@@ -57,9 +62,6 @@ class GenerePdfCompetences
         }
     }
 
-    /**
-     * @param \App\Entity\Departement $departement
-     */
     public function generePdfCompetencesComplet(Departement $departement): void
     {
         $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe().'/ref-competences/') ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe().'/ref-competences/');
@@ -86,7 +88,7 @@ class GenerePdfCompetences
 
     }
 
-    private function getDataReferentiel()
+    private function getDataReferentiel(): void
     {
         $this->tParcours = $this->apcStructure->parcoursNiveaux($this->departement);
         $this->competences = $this->departement->getApcCompetences();
@@ -94,6 +96,7 @@ class GenerePdfCompetences
         foreach ($this->competences as $comp) {
             $tComp[$comp->getId()] = $comp;
         }
+
         $this->competencesParcours = [];
 
         foreach ($this->tParcours as $key => $parc) {
@@ -104,7 +107,7 @@ class GenerePdfCompetences
         }
     }
 
-    private function generePagePdf(string $name, string $template, array $data)
+    private function generePagePdf(string $name, string $template, array $data): void
     {
         $html = $this->twig->render('pdf/' . $template . '.html.twig', $data);
 
@@ -118,7 +121,7 @@ class GenerePdfCompetences
         file_put_contents($this->dir .  $this->departement->getNumeroAnnexe().'/ref-competences/' . $name . '.pdf', $output);
     }
 
-    private function generePageDeGarde(ApcParcours $parcours)
+    private function generePageDeGarde(ApcParcours $parcours): void
     {
         $this->generePagePdf('page_1_garde_' . $parcours->getId(), 'pageDeGardeParcours', [
             'parcours' => $parcours,
@@ -126,7 +129,7 @@ class GenerePdfCompetences
         ]);
     }
 
-    private function generePageCompetencesComposantes(ApcParcours $parcours)
+    private function generePageCompetencesComposantes(ApcParcours $parcours): void
     {
         $this->generePagePdf('page_2_CompetencesComposantes_' . $parcours->getId(), 'pageCompetencesComposantes', [
             'parcours' => $parcours,
@@ -135,7 +138,7 @@ class GenerePdfCompetences
         ]);
     }
 
-    private function generePageSituationProfessionnelles(ApcParcours $parcours)
+    private function generePageSituationProfessionnelles(ApcParcours $parcours): void
     {
         $this->generePagePdf('page_3_SituationProfessionnelles_' . $parcours->getId(), 'pageSituationProfessionnelles',
             [
@@ -145,7 +148,7 @@ class GenerePdfCompetences
             ]);
     }
 
-    private function generePageNiveaux(ApcParcours $parcours)
+    private function generePageNiveaux(ApcParcours $parcours): void
     {
         $width = 100 / count($this->competencesParcours[$parcours->getId()]);
 
@@ -158,7 +161,7 @@ class GenerePdfCompetences
         ]);
     }
 
-    private function generePageCompetence(ApcParcours $parcours, mixed $competence)
+    private function generePageCompetence(ApcParcours $parcours, mixed $competence): void
     {
         $this->generePagePdf('page_5_Competence_' . $parcours->getId() . '_' . $competence->getId(), 'pageCompetence',
             [

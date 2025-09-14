@@ -11,23 +11,36 @@ class StructureDepartement
     private Departement $departement;
 
     public float $nbHeuresRessourcesSae = 0;
+
     public float $pourcentageAdaptationLocale = 0;
+
     public float $nbHeuresEnseignementLocale = 0;
 
     public int $nbSemaines = 0;
+
     public int $nbSemainesConges = 0;
+
     public int $nbSemainesStageMin = 0;
+
     public int $nbSemainesStageMax = 0;
+
     public int $nbSemainesCoursProjet = 0;
+
     public float $nbHeuresProjet = 0;
+
     public float $nbHeuresCoursProjet = 0;
+
     public int $nbDemiJournees = 0;
+
     public float $dureeHebdo = 0;
+
     public float $nbMoyenneHeuresDemiJournee = 0;
+
     public float $nbHeuresCoursHebdo = 0;
+
     public float $nbHeuresHebdoProjet = 0;
-    private float $totalPourcentageAdaptationLocale = 0;
     private float $totalAdaptationLocale = 0;
+
     private float $totalTp = 0;
 
     public function setDepartement(Departement $departement): void
@@ -63,11 +76,7 @@ class StructureDepartement
 
     public function getJson(): array
     {
-        if ($this->departement->isTertiaire()) {
-            $nbHeuresTp = Tertiaire::NB_HEURES_TP;
-        } else {
-            $nbHeuresTp = Secondaire::NB_HEURES_TP;
-        }
+        $nbHeuresTp = $this->departement->isTertiaire() ? Tertiaire::NB_HEURES_TP : Secondaire::NB_HEURES_TP;
 
 
         return [

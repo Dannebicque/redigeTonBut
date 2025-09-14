@@ -14,23 +14,17 @@ use App\Repository\ApcParcoursNiveauRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ApcParcoursNiveauRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: ApcParcoursNiveauRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ApcParcoursNiveau extends BaseEntity
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcNiveau::class, inversedBy="apcParcoursNiveaux")
-     * @Groups({"read:departement"})
-     */
+    #[ORM\ManyToOne(targetEntity: ApcNiveau::class, inversedBy: 'apcParcoursNiveaux')]
+    #[Groups(['read:departement'])]
     private ?ApcNiveau $niveau;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ApcParcours::class, inversedBy="apcParcoursNiveaux")
-     */
+    #[ORM\ManyToOne(targetEntity: ApcParcours::class, inversedBy: 'apcParcoursNiveaux')]
     private ?ApcParcours $parcours;
 
     public function getNiveau(): ?ApcNiveau

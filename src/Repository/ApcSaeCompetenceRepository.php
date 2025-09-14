@@ -51,7 +51,10 @@ class ApcSaeCompetenceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBySaeArray($sae)
+    /**
+     * @return mixed[]
+     */
+    public function findBySaeArray($sae): array
     {
         $res = $this->findBy(['sae' => $sae]);
         $t = [];

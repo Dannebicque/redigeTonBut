@@ -45,6 +45,7 @@ class ApcApprentissageCritiqueController extends BaseController
         if ($this->getDepartement()?->getId() !== $departement->getId()) {
             throw new AccessDeniedException();
         }
+
         $acs = $apcApprentissageCritiqueRepository->findByDepartement($departement);
 
         return $this->render('competences/apc_apprentissage_critique/index.html.twig', [
@@ -168,7 +169,7 @@ class ApcApprentissageCritiqueController extends BaseController
                 ['departement' => $departement]);
         }
 
-        $this->addFlashBag(Constantes::FLASHBAG_ERROR, 'Erreur lors de la suppression de l\'apprentissage critique.');
+        $this->addFlashBag(Constantes::FLASHBAG_ERROR, "Erreur lors de la suppression de l'apprentissage critique.");
 
         return $this->redirect($request->headers->get('referer'));
     }

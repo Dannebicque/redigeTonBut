@@ -18,6 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class UpdateCodificationRefCompetencesCommand extends Command
 {
     private DepartementRepository $departementRepository;
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(

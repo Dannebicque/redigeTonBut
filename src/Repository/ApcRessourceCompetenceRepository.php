@@ -51,7 +51,10 @@ class ApcRessourceCompetenceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByRessourceArray($ressource)
+    /**
+     * @return mixed[]
+     */
+    public function findByRessourceArray($ressource): array
     {
         $res = $this->findBy(['ressource' => $ressource]);
         $t = [];

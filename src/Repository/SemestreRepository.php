@@ -52,7 +52,7 @@ class SemestreRepository extends ServiceEntityRepository
             ->setParameter('departement', $departement->getId())
             ;
 
-        if ($parcours !== null && $departement->getTypeStructure() === Departement::TYPE3) {
+        if ($parcours instanceof \App\Entity\ApcParcours && $departement->getTypeStructure() === Departement::TYPE3) {
             $query->andWhere('s.apcParcours = :parcours')
                 ->setParameter('parcours', $parcours->getId());
         }
@@ -66,7 +66,10 @@ class SemestreRepository extends ServiceEntityRepository
         return $this->findByDepartementBuilder($departement)->getQuery()->getResult();
     }
 
-    public function findByDepartementArray(Departement $departement)
+    /**
+     * @return mixed[]
+     */
+    public function findByDepartementArray(Departement $departement): array
     {
         $semestres = $this->findByDepartement($departement);
 

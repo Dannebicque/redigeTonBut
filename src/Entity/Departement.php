@@ -9,6 +9,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -17,31 +18,26 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
-
-/**
- * @ORM\Entity(repositoryClass="App\Repository\DepartementRepository")
- * @ORM\HasLifecycleCallbacks()
- * @ApiFilter(SearchFilter::class, properties={"sigle": "exact"})
- * @ApiResource(
- *     normalizationContext={"groups"={"read:departement"}},
- *     collectionOperations={"get"},
- *     itemOperations={"get"}
- * )
- */
+#[ORM\Entity(repositoryClass: \App\Repository\DepartementRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[ApiFilter(SearchFilter::class, properties: ["sigle" => "exact"])]
+#[ApiResource(
+    normalizationContext: ["groups" => ["read:departement"]],
+    collectionOperations: ["get"],
+    itemOperations: ["get"]
+)]
 class Departement
 {
     use LifeCycleTrait;
 
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     * @ApiProperty(identifier=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ApiProperty(identifier: false)]
     private ?int $id = null;
 
     public function getId(): ?int
@@ -50,146 +46,123 @@ class Departement
     }
 
     public const TERTIAIRE = 'tertiaire';
+
     public const SECONDAIRE = 'secondaire';
+
     public const TYPE1 = 'type1';
+
     public const TYPE2 = 'type2';
+
     public const TYPE3 = 'type3';
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"actualite_administration", "read:departement"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[Groups(["actualite_administration", "read:departement"])]
     private ?string $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=Annee::class, mappedBy="departement")
+     * @var Collection<int, \App\Entity\Annee>
      */
+    #[ORM\OneToMany(targetEntity: Annee::class, mappedBy: "departement")]
     private Collection $annees;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcCompetence::class, mappedBy="departement")
-     * @ORM\OrderBy({"couleur"="ASC"})
-     * @Groups({"read:departement"})
+     * @var Collection<int, \App\Entity\ApcCompetence>
      */
+    #[ORM\OneToMany(targetEntity: ApcCompetence::class, mappedBy: "departement")]
+    #[ORM\OrderBy(["couleur" => "ASC"])]
+    #[Groups(["read:departement"])]
     private Collection $apcCompetences;
 
     /**
-     * @ORM\OneToMany(targetEntity=ApcParcours::class, mappedBy="departement")
-     * @ORM\OrderBy({"ordre":"ASC"})
-     * @Groups({"read:departement"})
+     * @var Collection<int, \App\Entity\ApcParcours>
      */
+    #[ORM\OneToMany(targetEntity: ApcParcours::class, mappedBy: "departement")]
+    #[ORM\OrderBy(["ordre" => "ASC"])]
+    #[Groups(["read:departement"])]
     private Collection $apcParcours;
 
-    /**
-     * @ORM\Column(type="string", length=20)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 20)]
+    #[Groups(["read:departement"])]
     private ?string $typeDepartement;
 
-    /**
-     * @ORM\Column(type="string", length=20, unique=true)
-     * @ApiProperty(identifier=true)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 20, unique: true)]
+    #[ApiProperty(identifier: true)]
+    #[Groups(["read:departement"])]
     private ?string $sigle;
 
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(["read:departement"])]
     private ?int $numeroAnnexe;
 
-    /**
-     * @ORM\Column(type="string", length=5)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::STRING, length: 5)]
+    #[Groups(["read:departement"])]
     private ?string $typeStructure;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="departement")
+     * @var Collection<int, \App\Entity\User>
      */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: "departement")]
     private Collection $users;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["read:departement"])]
     private ?string $textePresentation;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="departements_enfnat")
-     */
-    private $departement_parent;
+    #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: "departementEnfants")]
+    private ?\App\Entity\Departement $departement_parent = null;
 
     /**
-     * @ORM\OneToMany(targetEntity=Departement::class, mappedBy="departement_parent")
+     * @var Collection<int, \App\Entity\Departement>
      */
-    private $departements_enfnat;
+    #[ORM\OneToMany(targetEntity: Departement::class, mappedBy: "departement_parent")]
+    private Collection $departementEnfants;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="CpnDepartements")
+     * @var Collection<int, \App\Entity\User>
      */
-    private $cpns;
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: "CpnDepartements")]
+    private Collection $cpns;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $verouilleStructure;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $verouilleCompetences;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $verouilleCroise;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(["read:departement"])]
     private ?DateTime $dateVersionCompetence;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"read:departement"})
-     */
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(["read:departement"])]
     private ?DateTime $dateVersionFormation;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $pn_bloque;
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private ?bool $pn_bloque = null;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private ?bool $coeff_editable = null;
+
+    #[ORM\Column(type: Types::FLOAT)]
+    #[Groups(["read:departement"])]
+    private ?float $altBut1 = null;
+
+    #[ORM\Column(type: Types::FLOAT)]
+    #[Groups(["read:departement"])]
+    private ?float $altBut2 = null;
+
+    #[ORM\Column(type: Types::FLOAT)]
+    #[Groups(["read:departement"])]
+    private ?float $altBut3 = null;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @var Collection<int, \App\Entity\QapesSae>
      */
-    private $coeff_editable;
-
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:departement"})
-     */
-    private $altBut1;
-
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:departement"})
-     */
-    private $altBut2;
-
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read:departement"})
-     */
-    private $altBut3;
-
-    /**
-     * @ORM\OneToMany(targetEntity=QapesSae::class, mappedBy="specialite")
-     */
-    private $qapesSaes;
+    #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: "specialite")]
+    private Collection $qapesSaes;
 
 
 
@@ -199,7 +172,7 @@ class Departement
         $this->apcCompetences = new ArrayCollection();
         $this->apcParcours = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->departements_enfnat = new ArrayCollection();
+        $this->departementEnfants = new ArrayCollection();
         $this->cpns = new ArrayCollection();
         $this->qapesSaes = new ArrayCollection();
     }
@@ -209,7 +182,7 @@ class Departement
         return $this->libelle;
     }
 
-    public function setLibelle($libelle): void
+    public function setLibelle(?string $libelle): void
     {
         $this->libelle = $libelle;
     }
@@ -234,11 +207,9 @@ class Departement
 
     public function removeAnnee(Annee $annee): self
     {
-        if ($this->annees->removeElement($annee)) {
-            // set the owning side to null (unless already changed)
-            if ($annee->getDepartement() === $this) {
-                $annee->setDepartement(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->annees->removeElement($annee) && $annee->getDepartement() === $this) {
+            $annee->setDepartement(null);
         }
 
         return $this;
@@ -264,11 +235,9 @@ class Departement
 
     public function removeApcCompetence(ApcCompetence $apcCompetence): self
     {
-        if ($this->apcCompetences->removeElement($apcCompetence)) {
-            // set the owning side to null (unless already changed)
-            if ($apcCompetence->getDepartement() === $this) {
-                $apcCompetence->setDepartement(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcCompetences->removeElement($apcCompetence) && $apcCompetence->getDepartement() === $this) {
+            $apcCompetence->setDepartement(null);
         }
 
         return $this;
@@ -294,11 +263,9 @@ class Departement
 
     public function removeApcParcour(ApcParcours $apcParcour): self
     {
-        if ($this->apcParcours->removeElement($apcParcour)) {
-            // set the owning side to null (unless already changed)
-            if ($apcParcour->getDepartement() === $this) {
-                $apcParcour->setDepartement(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->apcParcours->removeElement($apcParcour) && $apcParcour->getDepartement() === $this) {
+            $apcParcour->setDepartement(null);
         }
 
         return $this;
@@ -382,11 +349,9 @@ class Departement
 
     public function removeUser(User $user): self
     {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getDepartement() === $this) {
-                $user->setDepartement(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->users->removeElement($user) && $user->getDepartement() === $this) {
+            $user->setDepartement(null);
         }
 
         return $this;
@@ -463,28 +428,26 @@ class Departement
     /**
      * @return Collection|self[]
      */
-    public function getDepartementsEnfnat(): Collection
+    public function getDepartementEnfants(): Collection
     {
-        return $this->departements_enfnat;
+        return $this->departementEnfants;
     }
 
-    public function addDepartementsEnfnat(self $departementsEnfnat): self
+    public function addDepartementEnfant(self $departementsEnfnat): self
     {
-        if (!$this->departements_enfnat->contains($departementsEnfnat)) {
-            $this->departements_enfnat[] = $departementsEnfnat;
+        if (!$this->departementEnfants->contains($departementsEnfnat)) {
+            $this->departementEnfants[] = $departementsEnfnat;
             $departementsEnfnat->setDepartementParent($this);
         }
 
         return $this;
     }
 
-    public function removeDepartementsEnfnat(self $departementsEnfnat): self
+    public function removeDepartementEnfant(self $departementsEnfnat): self
     {
-        if ($this->departements_enfnat->removeElement($departementsEnfnat)) {
-            // set the owning side to null (unless already changed)
-            if ($departementsEnfnat->getDepartementParent() === $this) {
-                $departementsEnfnat->setDepartementParent(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->departementEnfants->removeElement($departementsEnfnat) && $departementsEnfnat->getDepartementParent() === $this) {
+            $departementsEnfnat->setDepartementParent(null);
         }
 
         return $this;
@@ -657,13 +620,16 @@ class Departement
 
     public function removeQapesSae(QapesSae $qapesSae): self
     {
-        if ($this->qapesSaes->removeElement($qapesSae)) {
-            // set the owning side to null (unless already changed)
-            if ($qapesSae->getSpecialite() === $this) {
-                $qapesSae->setSpecialite(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->qapesSaes->removeElement($qapesSae) && $qapesSae->getSpecialite() === $this) {
+            $qapesSae->setSpecialite(null);
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getSigle();
     }
 }

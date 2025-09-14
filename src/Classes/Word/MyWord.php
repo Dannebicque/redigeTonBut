@@ -27,6 +27,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class MyWord
 {
     private string $dir;
+
     private ApcSaeRessourceRepository $apcSaeRessourceRepository;
 
     public function __construct(
@@ -39,19 +40,18 @@ class MyWord
     }
 
     /**
-     * @return StreamedResponse
      *
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
      */
-    public function exportSae(ApcSae $apcSae)
+    public function exportSae(ApcSae $apcSae): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $templateProcessor = $this->genereWordSae($apcSae);
 
         $filename = 'sae_' . $apcSae->getCodeMatiere() . '-'.$apcSae->getId().'.docx';
 
         return new StreamedResponse(
-            static function() use ($templateProcessor) {
+            static function() use ($templateProcessor): void {
                 $templateProcessor->saveAs('php://output');
             },
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
@@ -65,7 +65,7 @@ class MyWord
         );
     }
 
-    private function prepareTexte($text)
+    private function prepareTexte(?string $text)
     {
         $parseDown = new Parsedown();
         $phpWord = new PhpWord();
@@ -81,19 +81,18 @@ class MyWord
     }
 
     /**
-     * @return StreamedResponse
      *
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
      */
-    public function exportRessource(ApcRessource $apcRessource)
+    public function exportRessource(ApcRessource $apcRessource): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $templateProcessor = $this->genereWord($apcRessource);
 
         $filename = 'ressource_' . $apcRessource->getCodeMatiere() . '-'.$apcRessource->getId().'.docx';
 
         return new StreamedResponse(
-            static function() use ($templateProcessor) {
+            static function() use ($templateProcessor): void {
                 $templateProcessor->saveAs('php://output');
             },
             \Symfony\Component\HttpFoundation\Response::HTTP_OK,
@@ -107,7 +106,7 @@ class MyWord
         );
     }
 
-    private function genereWord(ApcRessource $apcRessource)
+    private function genereWord(ApcRessource $apcRessource): \PhpOffice\PhpWord\TemplateProcessor
     {
         $templateProcessor = new TemplateProcessor($this->dir . 'ressource.docx');
 
@@ -162,25 +161,17 @@ class MyWord
             }
         }
 
-        if ($parcours !== null) {
-            $templateProcessor->setComplexValue('parcours', $parcours);
-        }
+        $templateProcessor->setComplexValue('parcours', $parcours);
 
         $templateProcessor->setValue('heures',
             $apcRessource->getHeuresTotales() . 'h dont ' . $apcRessource->getTpPpn() . ' h TP');
+        $templateProcessor->setComplexValue('sae', $saes);
 
-        if ($saes !== null) {
-            $templateProcessor->setComplexValue('sae', $saes);
-        }
-        if ($competences !== null) {
-            $templateProcessor->setComplexValue('competences', $competences);
-        }
-        if ($acs !== null) {
-            $templateProcessor->setComplexValue('apprentissages', $acs);
-        }
-        if ($ressources !== null) {
-            $templateProcessor->setComplexValue('prerequis', $ressources);
-        }
+        $templateProcessor->setComplexValue('competences', $competences);
+
+        $templateProcessor->setComplexValue('apprentissages', $acs);
+
+        $templateProcessor->setComplexValue('prerequis', $ressources);
 
         $texte = '<div style="text-align:justify">' . $apcRessource->getMotsCles() . '</div>';
         $section = (new PhpWord())->addSection();
@@ -194,7 +185,7 @@ class MyWord
         return $templateProcessor;
     }
 
-    private function genereWordSae(ApcSae $apcSae)
+    private function genereWordSae(ApcSae $apcSae): \PhpOffice\PhpWord\TemplateProcessor
     {
         $templateProcessor = new TemplateProcessor($this->dir . 'sae.docx');
         $templateProcessor->setValue('nomsae', $apcSae->getCodeMatiere() . ' - ' . $apcSae->getLibelle());
@@ -230,13 +221,9 @@ class MyWord
                 $parcours->addTextBreak();
             }
         }
+        $templateProcessor->setComplexValue('parcours', $parcours);
 
-        if ($parcours !== null) {
-            $templateProcessor->setComplexValue('parcours', $parcours);
-        }
-        if ($competences !== null) {
-            $templateProcessor->setComplexValue('competences', $competences);
-        }
+        $templateProcessor->setComplexValue('competences', $competences);
 
         // get elements in section
         $containers = $this->prepareTexte($apcSae->getObjectifs());
@@ -270,19 +257,16 @@ class MyWord
                 $templateProcessor->setComplexBlock('exemple#' . ($i + 1), $iValue);
             }
         }
+        $templateProcessor->setComplexValue('apprentissages', $acs);
 
-        if ($acs !== null) {
-            $templateProcessor->setComplexValue('apprentissages', $acs);
-        }
-        if ($ressources !== null) {
-            $templateProcessor->setComplexValue('ressources', $ressources);
-        }
+        $templateProcessor->setComplexValue('ressources', $ressources);
+
         $templateProcessor->setValue('semestre', $apcSae->getSemestre()->getOrdreLmd());
 
         return $templateProcessor;
     }
 
-    public function exportAndSaveressource(ApcRessource $apcRessource, $dir)
+    public function exportAndSaveressource(ApcRessource $apcRessource, string $dir): string
     {
         $templateProcessor = $this->genereWord($apcRessource);
 
@@ -294,7 +278,7 @@ class MyWord
         return $pathToSave;
     }
 
-    public function exportAndSaveSae(ApcSae $apcSae, $dir)
+    public function exportAndSaveSae(ApcSae $apcSae, string $dir): string
     {
         $templateProcessor = $this->genereWordSae($apcSae);
 

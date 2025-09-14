@@ -52,6 +52,7 @@ class UpdateEctsCommand extends Command
                             foreach ($allParcours as $parcours) {
                                 $t[$parcours->getId()] = $ects;
                             }
+
                             $competence->setEctsParcours($t);
                         }
                     }
@@ -60,6 +61,7 @@ class UpdateEctsCommand extends Command
 
             }
         }
+
         $this->entityManager->flush();
 
         $io->success('Données mises à jour.');
