@@ -36,6 +36,7 @@ class ExportMCCController extends BaseController
     #[Route('/parcours', name: 'parcours')]
     public function getParcours(DepartementRepository $departementRepository, Request $request): Response
     {
+        //todo: passer par Version ?
         $departement = $departementRepository->find($request->query->get('departement'));
         if ($departement !== null) {
             return $this->render('export/mcc/parcours.html.twig', [

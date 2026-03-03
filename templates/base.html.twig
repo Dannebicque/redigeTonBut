@@ -38,6 +38,31 @@
             </div>
             <!-- Logo End -->
 
+            {% if is_granted('ROLE_PACD') or is_granted('ROLE_CPN') or is_granted('ROLE_GT') %}
+                <!-- Version PN Menu -->
+                <div class="user-container d-flex">
+                    <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
+                        <div class="name">Version PN ({{ user_data.versionPn }})</div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end user-menu wide">
+                        <div class="row mb-3 ms-0 me-0">
+                            <div class="col-12 ps-1 pe-1">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="{{ path('change_version', {annee:2021}) }}">PN2021</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('change_version', {annee:2027}) }}">PN2027</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Version PN End -->
+            {% endif %}
+
             <!-- User Menu Start -->
             <div class="user-container d-flex">
                 <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -88,6 +113,8 @@
             </div>
             <!-- User Menu End -->
 
+
+
             <!-- Icons Menu Start -->
             <ul class="list-unstyled list-inline text-center menu-icons">
                 <li class="list-inline-item">
@@ -126,35 +153,46 @@
                         <ul id="formation">
                             {% if user_data.departement != null %}
                                 <li>
-                                    <a href="{{ path('administration_apc_referentiel_index', {departement: user_data.departement.id}) }}">
+                                    <a href="{{ path('administration_apc_referentiel_index', {version: user_data.version.id}) }}">
                                         <span class="label">Référentiel de compétences</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ path('administration_apc_apprentissage_critique_index', {departement: user_data.departement.id}) }}">
+                                    <a href="{{ path('administration_apc_apprentissage_critique_index', {version: user_data.version.id}) }}">
                                         <span class="label">Liste des AC</span>
                                     </a>
                                 </li>
-                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_GT') or is_granted('ROLE_CPN') or is_granted('ROLE_CPN_LECTEUR') or is_granted('ROLE_PACD') or is_granted('ROLE_EDITEUR') %}
+                                {% if (is_granted('COMPETENCES_EDIT', user_data.departement) and user_data.version.textesVerouilles == false) or is_granted('ROLE_ADMIN') %}
                                     <li>
-                                        <a href="{{ path('administration_departement_edit', {id: user_data.departement.id}) }}">
+                                        <a href="{{ path('administration_departement_edit', {id: user_data.version.id}) }}">
                                             <span class="label">Texte descriptif de la spécialité</span>
                                         </a>
                                     </li>
-                                    {% for parcours in user_data.departement.apcParcours %}
+                                    {% for parcours in user_data.version.apcParcours %}
                                         <li>
                                             <a href="{{ path('administration_apc_parcours_edit', {id:parcours.id}) }}">
                                                 <span class="label">Texte du parcours : {{ parcours.libelle }}</span>
                                             </a>
                                         </li>
                                     {% endfor %}
+                                                                    <li>
+                                                                        <a href="{{ path('administration_apc_referentiel_competence_export') }}">
+                                                                            <span class="label">Sauvegarder le référentiel de compétences</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="{{ path('administration_apc_referentiel_formation_export') }}">
+                                                                            <span class="label">Sauvegarder le référentiel de formation</span>
+                                                                        </a>
+                                                                    </li>
+                                    {# todo: lister les parcours selon le version et les droits... #}
                                 {% else %}
                                     <li>
                                         <a href="{{ path('administration_departement_lecteur_show', {id: user_data.departement.id}) }}">
                                             <span class="label">Consulter le texte descriptif de la spécialité</span>
                                         </a>
                                     </li>
-                                    {% for parcours in user_data.departement.apcParcours %}
+                                    {% for parcours in user_data.version.apcParcours %}
                                         <li>
                                             <a href="{{ path('administration_apc_parcours_show', {id:parcours.id}) }}">
                                                 <span class="label">Consulter le texte du parcours : {{ parcours.libelle }}</span>
@@ -192,7 +230,7 @@
                                             </li>
 
                                             {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
-                                                {% for parcours in user_data.departement.apcParcours %}
+                                                {% for parcours in user_data.version.apcParcours %}
                                                     <li>
                                                         <a href="#parcours{{ parcours.id }}_{{ annee.ordre }}">
                                                             <span class="label">Parcours {{ parcours.code }}</span>
@@ -232,37 +270,108 @@
                                         <span class="label">Structure des 3 années</span>
                                     </a>
                                 </li>
-                                {% for annee in user_data.annees %}
-                                    <li>
-                                        <a href="#tableaux_annee{{ annee.ordre }}">
-                                            <span class="label">Tableaux B.U.T. {{ annee.ordre }}</span>
-                                        </a>
-                                        <ul id="tableaux_annee{{ annee.ordre }}">
-                                            <li>
-                                                <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
-                                                    <span class="label">Tableau croisé par semestre</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
-                                                    <span class="label">Préconisations par semestre</span>
-                                                </a>
-                                            </li>
-                                            {% if is_granted('ROLE_PACD') %}
-                                                <li>
-                                                    <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">
-                                                        <span class="label">Volumes horaires par semestre</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
-                                                        <span class="label">Validation des AC par les SAÉ</span>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        </ul>
-                                    </li>
-                                {% endfor %}
+
+                                    {% for annee in user_data.annees %}
+                                        <li>
+                                            <a href="#tableaux_annee{{ annee.ordre }}">
+                                                <span class="label">Tableaux B.U.T. {{ annee.ordre }}</span>
+                                            </a>
+                                            <ul id="tableaux_annee{{ annee.ordre }}">
+                                                {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
+                                                    {% for parcours in user_data.version.apcParcours %}
+                                                        <li>
+                                                            <a href="#tab_parcours{{ parcours.id }}_{{ annee.ordre }}">
+                                                                <span class="label">Parcours {{ parcours.code }}</span>
+                                                            </a>
+                                                            <ul id="tab_parcours{{ parcours.id }}_{{ annee.ordre }}">
+                                                                <li>
+                                                                    <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                                        <span class="label">Tableau croisé par semestre</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                                        <span class="label">Préconisations par semestre</span>
+                                                                    </a>
+                                                                </li>
+                                                                {% if is_granted('ROLE_PACD') %}
+                                                                    <li>
+                                                                        <a href="{{ path('tableau_horaire_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                                            <span class="label">Volumes horaires par semestre</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                                            <span class="label">Validation des AC par les SAÉ</span>
+                                                                        </a>
+                                                                    </li>
+                                                                {% endif %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    {# année 1 #}
+                                                    <li>
+                                                        <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">
+                                                            <span class="label">Tableau croisé par semestre</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
+                                                            <span class="label">Préconisations par semestre</span>
+                                                        </a>
+                                                    </li>
+                                                    {% if is_granted('ROLE_PACD') %}
+                                                        <li>
+                                                            <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">
+                                                                <span class="label">Volumes horaires par semestre</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">
+                                                                <span class="label">Validation des AC par les SAÉ</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+
+
+
+
+{#                                {% for annee in user_data.annees %}#}
+{#                                    <li>#}
+{#                                        <a href="#tableaux_annee{{ annee.ordre }}">#}
+{#                                            <span class="label">Tableaux B.U.T. {{ annee.ordre }}</span>#}
+{#                                        </a>#}
+{#                                        <ul id="tableaux_annee{{ annee.ordre }}">#}
+{#                                            <li>#}
+{#                                                <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}">#}
+{#                                                    <span class="label">Tableau croisé par semestre</span>#}
+{#                                                </a>#}
+{#                                            </li>#}
+{#                                            <li>#}
+{#                                                <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">#}
+{#                                                    <span class="label">Préconisations par semestre</span>#}
+{#                                                </a>#}
+{#                                            </li>#}
+{#                                            {% if is_granted('ROLE_PACD') %}#}
+{#                                                <li>#}
+{#                                                    <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">#}
+{#                                                        <span class="label">Volumes horaires par semestre</span>#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                                <li>#}
+{#                                                    <a href="{{ path('tableau_validation_sae_ac_annee', {annee: annee.id}) }}">#}
+{#                                                        <span class="label">Validation des AC par les SAÉ</span>#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                            {% endif %}#}
+{#                                        </ul>#}
+{#                                    </li>#}
+{#                                {% endfor %}#}
                             </ul>
                         </li>
                     {% endif %}
@@ -474,7 +583,7 @@
                 <div class="row mt-4">
                     <!-- Title Start -->
                     <div class="col-md-10">
-                        <h1 id="title">{% block header %}{% endblock %}</h1>
+                        <h1 id="title">{% block header %}{% endblock %} - (PN {{ user_data.versionPn }})</h1>
                         <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
                             {% block breadcrumb %}{% endblock %}
                         </nav>
@@ -517,7 +626,7 @@
                         <ul class="breadcrumb pt-0 pe-0 mb-0">
                             <li class="breadcrumb-item mb-0 text-medium">
                                 &copy; MPL-2 - 2021 David Annebicque -
-                                    version {{ user_data.version }}
+                                    version {{ user_data.versionLogiciel }}
                             </li>
 
                             <li class="breadcrumb-item mb-0">

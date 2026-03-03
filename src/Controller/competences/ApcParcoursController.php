@@ -10,13 +10,17 @@
 namespace App\Controller\competences;
 
 use App\Classes\Apc\ApcStructure;
+use App\Classes\Export\DepartementExport;
+use App\Classes\JsonDiffService;
 use App\Controller\BaseController;
 use App\Entity\ApcParcours;
 use App\Entity\Constantes;
 use App\Form\ApcParcoursType;
+use App\Utils\Files;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route("/apc/parcours", name: "administration_")]
 class ApcParcoursController extends BaseController
@@ -26,13 +30,13 @@ class ApcParcoursController extends BaseController
     public function new(
         Request $request,
     ): Response {
-        if ($this->getDepartement() === null) {
+        if ($this->getVersion() === null) {
            return $this->redirectToRoute('homepage');
         }
 
-        $apcParcour = new ApcParcours($this->getDepartement());
+        $apcParcour = new ApcParcours($this->getVersion());
         $form = $this->createForm(ApcParcoursType::class, $apcParcour, [
-            'referentiel_bloque' => $this->getDepartement()->getVerouilleCompetences()
+            'referentiel_bloque' => $this->getVersion()?->isVerouilleCompetences()
         ]);
         $form->handleRequest($request);
 
@@ -42,7 +46,7 @@ class ApcParcoursController extends BaseController
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Parcours de spécialité créé avec succès.');
 
             return $this->redirectToRoute('administration_apc_referentiel_index', [
-                'departement' => $apcParcour->getDepartement()?->getId()
+                'version' => $apcParcour->getVersion()?->getId()
             ]);
         }
 
@@ -58,9 +62,11 @@ class ApcParcoursController extends BaseController
         Request $request,
         ApcParcours $apcParcour
     ): Response {
-        $form = $this->createForm(ApcParcoursType::class, $apcParcour, [
-            'referentiel_bloque' => $this->getDepartement()?->getVerouilleCompetences()
-        ]);
+        $this->denyAccessUnlessGranted('COMPETENCES_EDIT', $apcParcour);
+        if ($this->getVersion()?->isTextesVerouilles() === true) {
+            throw new AccessDeniedException('Parcours non ouvert à la modification');
+        }
+        $form = $this->createForm(ApcParcoursType::class, $apcParcour);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -76,10 +82,40 @@ class ApcParcoursController extends BaseController
 
     #[Route('/{id}', name: 'apc_parcours_show', methods: ['GET'])]
     public function show(
-        ApcParcours $apcParcours
+        ApcParcours $apcParcours,
+        Request $request,
     ): Response {
         return $this->render('competences/apc_parcours/show.html.twig', [
             'apcParcours' => $apcParcours,
+            'annee' => $request->query->get('annee') ?? 2027,
+        ]);
+    }
+
+    #[Route('/{id}/version', name: 'apc_parcours_show_version', methods: ['GET'])]
+    public function showVersion(
+        DepartementExport $departementExport,
+        Files $files,
+        ApcParcours $apcParcours,
+        Request $request,
+    ): Response {
+        $version = $apcParcours->getVersion();
+        if ($version === null) {
+            throw $this->createNotFoundException('Departement introuvable');
+        }
+//todo: a refaire
+        $fichier = $files->getLastVersionReferentielFile($departement);
+        $tabAncien = json_decode(file_get_contents($fichier), true);
+
+        // version courante :
+        $tabActuel = $departementExport->genereJsonReferentiel($departement);
+
+        $diffService = new JsonDiffService();
+        $diffs = $diffService->compare($tabAncien, $tabActuel);
+
+        return $this->render('competences/apc_parcours/showVersion.html.twig', [
+            'apcParcours' => $apcParcours,
+            'annee' => $request->query->get('annee') ?? 2027,
+            'diffs' => $diffs,
         ]);
     }
 
@@ -98,9 +134,9 @@ class ApcParcoursController extends BaseController
                 throw $this->createNotFoundException('Departement introuvable');
             }
 
-            if ($departement->getVerouilleCompetences() === true) {
+            if ($this->getVersion()?->isVerouilleCompetences() === true) {
                 $this->addFlashBag('warning', 'Le référentiel est verrouillé, vous ne pouvez pas supprimer un parcours');
-                return $this->redirectToRoute('administration_apc_referentiel_index', ['departement' => $departement->getId()]);
+                return $this->redirectToRoute('administration_apc_referentiel_index', ['version' => $this->getVersion()->getId()]);
             }
 
             foreach ($apcParcours->getIutSiteParcours() as $iutSiteParcours) {
@@ -125,7 +161,7 @@ class ApcParcoursController extends BaseController
 
             $this->addFlashBag('success', 'Parcours supprimé, avec l\'ensemble des liens vers les ressources, SAE et compétences');
 
-            return $this->redirectToRoute('administration_apc_referentiel_index', ['departement' => $departement->getId()]);
+            return $this->redirectToRoute('administration_apc_referentiel_index', ['version' => $this->getVersion()->getId()]);
         }
     }
 }

@@ -18,7 +18,7 @@ class ApcSituationProfessionnelleController extends BaseController
     #[Route('/new/{competence}', name: 'apc_situation_professionnelle_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ApcCompetence $competence): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $competence->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $competence->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -39,7 +39,7 @@ class ApcSituationProfessionnelleController extends BaseController
             );
 
             return $this->redirectToRoute('administration_apc_referentiel_index',
-                ['departement' => $apcSituationProfessionnelle->getDepartement()?->getId()]);
+                ['version' => $apcSituationProfessionnelle->getVersion()?->getId()]);
         }
 
         return $this->renderForm('competences/apc_situation_professionnelle/new.html.twig', [
@@ -52,7 +52,7 @@ class ApcSituationProfessionnelleController extends BaseController
     #[Route('/{id}/edit', name: 'apc_situation_professionnelle_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ApcSituationProfessionnelle $apcSituationProfessionnelle): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcSituationProfessionnelle->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcSituationProfessionnelle->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -69,7 +69,7 @@ class ApcSituationProfessionnelleController extends BaseController
 
             if (null !== $request->request->get('btn_update')) {
                 return $this->redirectToRoute('administration_apc_referentiel_index',
-                    ['departement' => $apcSituationProfessionnelle?->getDepartement()?->getId()]);
+                    ['version' => $apcSituationProfessionnelle?->getVersion()?->getId()]);
             }
 
             return $this->redirectToRoute('administration_apc_situation_professionnelle_edit',
@@ -86,7 +86,7 @@ class ApcSituationProfessionnelleController extends BaseController
     #[Route('/{id}', name: 'apc_situation_professionnelle_delete', methods: ['POST'])]
     public function delete(Request $request, ApcSituationProfessionnelle $apcSituationProfessionnelle): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcSituationProfessionnelle->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcSituationProfessionnelle->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -100,7 +100,7 @@ class ApcSituationProfessionnelleController extends BaseController
             );
 
             return $this->redirectToRoute('administration_apc_referentiel_index',
-                ['departement' => $apcSituationProfessionnelle?->getDepartement()?->getId()]);
+                ['version' => $apcSituationProfessionnelle?->getVersion()?->getId()]);
         }
 
         $this->addFlashBag(

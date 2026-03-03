@@ -11,6 +11,7 @@ namespace App\Repository;
 
 use App\Entity\ApcCompetence;
 use App\Entity\Departement;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -27,17 +28,19 @@ class ApcComptenceRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcCompetence::class);
     }
 
-    public function findByDepartement(Departement $departement)
+    public function findByVersion(Version $version)
     {
-        return $this->findByDepartementBuilder($departement)
+        return $this->findByVersionBuilder($version)
             ->getQuery()
             ->getResult();
     }
 
-    public function findBySigleDepartement($departement): array
+
+    //todo: gérer la version ?
+    public function findBySigleVersion($departement): array
     {
         return $this->createQueryBuilder('c')
-            ->innerJoin('c.departement', 'd')
+            ->innerJoin('c.version', 'd')
             ->where('d.sigle = :sigle')
             ->setParameter('sigle', $departement)
             ->orderBy('c.couleur', 'ASC')
@@ -46,18 +49,18 @@ class ApcComptenceRepository extends ServiceEntityRepository
             ;
     }
 
-    public function findByDepartementBuilder(Departement $departement)
+    public function findByVersionBuilder(Version $version)
     {
         return $this->createQueryBuilder('c')
-            ->where('c.departement = :departement')
-            ->setParameter('departement', $departement->getId())
+            ->where('c.version = :version')
+            ->setParameter('version', $version->getId())
             ->orderBy('c.couleur', 'ASC')
             ;
     }
 
-    public function findOneByDepartementArray(Departement $departement): array
+    public function findOneByVersionArray(Version $version): array
     {
-        $comps = $this->findByDepartement($departement);
+        $comps = $this->findByVersion($version);
         $t = [];
         foreach ($comps as $c) {
             $t[$c->getNomCourt()] = $c;
@@ -66,9 +69,9 @@ class ApcComptenceRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findByDepartementArray(Departement $departement): array
+    public function findByVersionArray(Version $version): array
     {
-        $comps = $this->findByDepartement($departement);
+        $comps = $this->findByVersion($version);
         $t = [];
         foreach ($comps as $c) {
             $t[$c->getCouleur()] = $c;
@@ -81,20 +84,20 @@ class ApcComptenceRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->where('a.couleur = :couleur')
-            ->andWhere('a.departement = :departement')
+            ->andWhere('a.version = :version')
             ->andWhere('a.id != :id')
             ->setParameter('couleur', $ordreDestination)
-            ->setParameter('departement', $competence->getDepartement()->getId())
+            ->setParameter('version', $competence->getVersion()->getId())
             ->setParameter('id', $competence->getId())
             ->getQuery()
             ->getResult();
     }
 
-    public function findLastByDepartement(?Departement $getDepartement): ?ApcCompetence
+    public function findLastByVersion(?Version $version): ?ApcCompetence
     {
         return $this->createQueryBuilder('c')
-            ->where('c.departement = :departement')
-            ->setParameter('departement', $getDepartement?->getId())
+            ->where('c.version = :version')
+            ->setParameter('version', $version?->getId())
             ->orderBy('c.numero', 'DESC')
             ->setMaxResults(1)
             ->getQuery()

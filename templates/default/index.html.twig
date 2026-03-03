@@ -114,7 +114,7 @@
                 </a>
                 <br>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
-                    {% for parcours in user_data.departement.apcParcours %}
+                    {% for parcours in user_data.version.apcParcours %}
                         <div class="col">
                             <div class="card h-100 border-{{ parcours.couleur }}">
                                 <div class="card-body">
@@ -135,15 +135,15 @@
         <section class="scroll-section mb-2" id="but_secondaires">
             <h2 class="small-title">Les B.U.T. secondaires</h2>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
-            {% for specialite in user_data.specialites|filter(specialite => specialite
+            {% for version in user_data.getVersionOfSpecialites(user_data.versionPn)|filter(version => version.departement
             .typeDepartement == 'secondaire') %}
                 <div class="col">
                     <div class="card h-100 border-primary">
                         <div class="card-body">
-                            <h5 class="card-title">{{ specialite.libelle }}</h5>
+                            <h5 class="card-title">{{ version.departement.libelle }}</h5>
                             <p class="card-text">
                                 <ul>
-                                {% for parcours in specialite.apcParcours %}
+                                {% for parcours in version.apcParcours %}
                                     <li>{{ parcours.code }} | {{ parcours.libelle }}</li>
                                 {% endfor %}
                             </ul>
@@ -151,9 +151,9 @@
                         </div>
                         <div class="card-footer">
                             <div class="d-grid">
-                                <a href="{{ path('change_specialite', {departement:specialite.id}) }}" class="btn
+                                <a href="{{ path('change_specialite', {departement:version.departement.id}) }}" class="btn
                             btn-block btn-primary d-block">
-                                    <span class="label">Consulter le programme {{ specialite.sigle }}</span>
+                                    <span class="label">Consulter le programme {{ version.departement.sigle }}</span>
                                 </a>
                             </div>
                         </div>
@@ -166,15 +166,15 @@
         <section class="scroll-section mb-2" id="but_tertiaires">
             <h2 class="small-title">Les B.U.T. tertiaires</h2>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
-            {% for specialite in user_data.specialites|filter(specialite => specialite
+            {% for version in user_data.getVersionOfSpecialites(user_data.versionPn)|filter(version => version.departement
             .typeDepartement == 'tertiaire') %}
                 <div class="col">
                     <div class="card h-100 border-success">
                         <div class="card-body">
-                            <h5 class="card-title">{{ specialite.libelle }}</h5>
+                            <h5 class="card-title">{{ version.departement.libelle }}</h5>
                             <p class="card-text">
                             <ul>
-                                {% for parcours in specialite.apcParcours %}
+                                {% for parcours in version.apcParcours %}
                                     <li>{{ parcours.code }} | {{ parcours.libelle }}</li>
                                 {% endfor %}
                             </ul>
@@ -182,9 +182,9 @@
                         </div>
                         <div class="card-footer">
                             <div class="d-grid">
-                                <a href="{{ path('change_specialite', {departement:specialite.id}) }}" class="btn
+                                <a href="{{ path('change_specialite', {departement:version.departement.id}) }}" class="btn
                             btn-block btn-primary d-block">
-                                    <span class="label">Consulter le programme {{ specialite.sigle }}</span>
+                                    <span class="label">Consulter le programme {{ version.departement.sigle }}</span>
                                 </a>
                             </div>
                         </div>
@@ -201,7 +201,7 @@
             <h2 class="small-title">B.U.T. {{ annee.ordre }}</h2>
             {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
-                    {% for parcours in user_data.departement.apcParcours %}
+                    {% for parcours in user_data.version.apcParcours %}
                         <div class="col">
                             <div class="card h-100 border-{{ parcours.couleur }}">
                                 <div class="card-body">

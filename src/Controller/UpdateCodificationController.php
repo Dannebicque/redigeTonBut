@@ -20,7 +20,7 @@ class UpdateCodificationController extends BaseController
     public function index(): Response
     {
         return $this->render('update_codification/index.html.twig', [
-            'semestres' => $this->getDepartement()->getSemestres()
+            'semestres' => $this->getVersion()->getSemestres()
         ]);
     }
 
@@ -70,8 +70,8 @@ class UpdateCodificationController extends BaseController
     #[Route('/apprentissages-critiques', name: 'acs')]
     public function acs(ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository): Response
     {
-        $acs = $apcApprentissageCritiqueRepository->findByDepartement($this->getDepartement());
-        foreach ($this->getDepartement()->getApcCompetences() as $competence)
+        $acs = $apcApprentissageCritiqueRepository->findByVersion($this->getVersion());
+        foreach ($this->getVersion()->getApcCompetences() as $competence)
         {
             $competence->setNumero(substr($competence->getCouleur(),1,1));
         }

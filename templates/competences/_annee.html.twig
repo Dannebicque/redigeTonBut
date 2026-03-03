@@ -15,7 +15,7 @@
                         <ul>
                             {% for ac in niveau.apcApprentissageCritiques %}
                                 <li>{{ ac.code }} | {{ ac.libelle }}
-                                    {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+                                    {% if is_granted('ROLE_PACD') and user_data.version.verouilleCompetences == false %}
                                         <a href="{{ path('administration_apc_apprentissage_critique_edit',
                                             {id:ac.id}) }}" class="text-black text-small">
                                             <i class="bi bi-pencil"></i>
@@ -34,7 +34,7 @@
                             {% endfor %}
                         </ul>
                         {% if is_granted('ROLE_PACD') and user_data
-                        .departement.verouilleCompetences == false %}<br>
+                        .version.verouilleCompetences == false %}<br>
                             <a href="{{ path('administration_apc_apprentissage_critique_new',
                                 {niveau:niveau.id}) }}" class="text-black text-small">
                                 <i class="bi bi-plus"></i> Ajouter un apprentissage critique

@@ -11,7 +11,7 @@ namespace App\Form;
 
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcRessourceApprentissageCritique;
-use App\Entity\Departement;
+use App\Entity\Version;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -20,19 +20,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApcRessourceApprentissageCritiqueType extends AbstractType
 {
-    protected ?Departement $departement;
+    protected ?Version $version;
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        $this->departement = $options['departement'];
+        $this->version = $options['version'];
 
         $builder
             ->add('apprentissageCritique', EntityType::class, [
                 'class' => ApcApprentissageCritique::class,
                 'choice_label'=> 'libelle',
                 'query_builder' => function (ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository) {
-                    return $apcApprentissageCritiqueRepository->findByDepartementBuilder($this->departement);
+                    return $apcApprentissageCritiqueRepository->findByVersionBuilder($this->version);
                 },
             ])
         ;
@@ -42,7 +42,7 @@ class ApcRessourceApprentissageCritiqueType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ApcRessourceApprentissageCritique::class,
-            'departement' => null
+            'version' => null
         ]);
     }
 }

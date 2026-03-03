@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\IutRegionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: IutRegionRepository::class)]
@@ -12,23 +13,23 @@ class IutRegion
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 100)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private ?string $libelle = null;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\IutAcademie>
+     * @var Collection<int, IutAcademie>
      */
     #[ORM\OneToMany(targetEntity: IutAcademie::class, mappedBy: 'region')]
-    private \Doctrine\Common\Collections\Collection $iutAcademies;
+    private Collection $iutAcademies;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\IutVille>
+     * @var Collection<int, IutVille>
      */
     #[ORM\OneToMany(targetEntity: IutVille::class, mappedBy: 'region')]
-    private \Doctrine\Common\Collections\Collection $iutVilles;
+    private Collection $iutVilles;
 
     public function __construct()
     {

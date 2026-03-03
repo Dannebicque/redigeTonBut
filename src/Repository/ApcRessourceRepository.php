@@ -16,6 +16,7 @@ use App\Entity\ApcRessourceParcours;
 use App\Entity\Departement;
 use App\Entity\Diplome;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -54,14 +55,14 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByDepartement(Departement $departement)
+    public function findByVersion(Version $version)
     {
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
+            ->where('a.version = :version')
             ->andWhere('r.ficheAdaptationLocale = false')
-            ->setParameter('departement', $departement->getId())
+            ->setParameter('version', $version->getId())
             ->orderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
@@ -69,14 +70,14 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByDepartementAl(Departement $departement)
+    public function findByVersionAl(Version $version)
     {
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
+            ->where('a.version = :version')
             ->andWhere('r.ficheAdaptationLocale = true')
-            ->setParameter('departement', $departement->getId())
+            ->setParameter('version', $version->getId())
             ->orderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
@@ -154,9 +155,10 @@ class ApcRessourceRepository extends ServiceEntityRepository
     /**
      * @return mixed[]
      */
-    public function findByDepartementArray(Departement $departement): array
+
+    public function findByVersionArray(Version $version): array
     {
-        $ressources = $this->findByDepartement($departement);
+        $ressources = $this->findByVersion($version);
         $tab = [];
         foreach ($ressources as $res) {
             $tab[$res->getCodeMatiere()] = $res;
@@ -238,12 +240,14 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBySigleDepartement(string $sigle)
+    //todo: gérer la version
+    public function findBySigleVersion(string $sigle)
     {
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->innerJoin('a.departement', 'd')
+            ->innerJoin('a.version', 'v')
+            ->innerJoin('v.departement', 'd')
             ->where('d.sigle = :departement')
             ->andWhere('r.ficheAdaptationLocale = false')
             ->setParameter('departement', $sigle)

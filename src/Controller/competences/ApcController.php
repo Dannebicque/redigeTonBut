@@ -10,14 +10,17 @@
 namespace App\Controller\competences;
 
 use App\Classes\Apc\ApcStructure;
+use App\Classes\Export\CompetencesExport;
 use App\Classes\Export\DepartementExport;
 use App\Classes\Import\MyUpload;
 use App\Classes\Import\ReferentielCompetenceImport;
 use App\Controller\BaseController;
 use App\Entity\Constantes;
 use App\Entity\Departement;
+use App\Entity\Version;
 use App\Repository\DepartementRepository;
 use App\Classes\JsonDiffService;
+use App\Repository\VersionRepository;
 use App\Utils\Files;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
@@ -28,16 +31,19 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route("/apc/referentiel-competences")]
 class ApcController extends BaseController
 {
-    #[Route("/consulter/{departement}", name:"administration_apc_referentiel_index", methods:["GET"])]
-    public function referentiel(ApcStructure $apcStructure, Departement $departement = null): Response
+    #[Route("/consulter/{version}", name:"administration_apc_referentiel_index", methods:["GET"])]
+    public function referentiel(
+        ApcStructure $apcStructure, Version $version = null): Response
     {
-        if (null === $departement) {
+        if (null === $version) {
             throw new \Exception('Departement inconnu');
         }
 
-        $tParcours = $apcStructure->parcoursNiveaux($departement);
-        $competences = $departement->getApcCompetences();
+
+        $tParcours = $apcStructure->parcoursNiveaux($version);
+        $competences = $version->getApcCompetences();
         $tComp = [];
+
         foreach ($competences as $comp) {
             $tComp[$comp->getId()] = $comp;
         }
@@ -51,24 +57,26 @@ class ApcController extends BaseController
             }
         }
 
+
         return $this->render('competences/referentiel.html.twig', [
             'competencesParcours' => $competencesParcours,
-            'departement' => $departement,
+            'departement' => $version->getDepartement(),
+            'version' => $version,
             'competences' => $competences,
-            'parcours' => $departement->getApcParcours(),
+            'parcours' => $version->getApcParcours(),
             'parcoursNiveaux' => $tParcours,
         ]);
     }
 
-    #[Route('/exporter/{departement}', name: 'export_referentiel_competences', methods: ['GET'])]
-    public function exportReferentiel(Pdf $knpSnappyPdf, ApcStructure $apcStructure, Departement $departement = null): PdfResponse
+    #[Route('/exporter/{version}', name: 'export_referentiel_competences', methods: ['GET'])]
+    public function exportReferentiel(Pdf $knpSnappyPdf, ApcStructure $apcStructure, Version $version = null): PdfResponse
     {
-        if (null === $departement) {
+        if (null === $version) {
             throw new \Exception('Departement inconnu');
         }
 
-        $tParcours = $apcStructure->parcoursNiveaux($departement);
-        $competences = $departement->getApcCompetences();
+        $tParcours = $apcStructure->parcoursNiveaux($version);
+        $competences = $version->getApcCompetences();
         $tComp = [];
         foreach ($competences as $comp) {
             $tComp[$comp->getId()] = $comp;
@@ -85,9 +93,9 @@ class ApcController extends BaseController
 
         $html = $this->renderView('competences/export-referentiel.html.twig',[
             'competencesParcours' => $competencesParcours,
-            'departement' => $departement,
+            'departement' => $version->getDepartement(),
             'competences' => $competences,
-            'parcours' => $departement->getApcParcours(),
+            'parcours' => $version->getApcParcours(),
             'parcoursNiveaux' => $tParcours,
         ]);
 
@@ -95,84 +103,38 @@ class ApcController extends BaseController
             $knpSnappyPdf->getOutputFromHtml($html, [
                 'orientation'=>'Landscape'
             ]),
-            'referentiel-competence-'.$departement->getSigle().'.pdf'
+            'referentiel-competence-'.$version->getDepartement()->getSigle().'.pdf'
         );
     }
 
-    #[Route('/exporter-versionning/{departement}', name: 'export_versionning_referentiel_competences', methods: ['GET'])]
+    #[Route('/exporter-versionning/{version}', name: 'export_versionning_referentiel_competences', methods: ['GET'])]
     public function exportVersionReferentiel(
-        Files $files,
-        DepartementExport $departementExport,
-        Pdf $knpSnappyPdf, ApcStructure $apcStructure, Departement $departement = null): Response //PdfResponse
+        CompetencesExport $competencesExport,
+        Version $version = null): Response //PdfResponse
     {
-        if (null === $departement) {
-            throw new \Exception('Departement inconnu');
-        }
-
-        // version précédente :
-        $fichier = $files->getLastVersionFile($departement);
-        $tabAncien = json_decode(file_get_contents($fichier), true);
-
-        // version courante :
-        $tabActuel = $departementExport->genereJson($departement);
-
-        $diffService = new JsonDiffService();
-        $diffs = $diffService->compare($tabAncien, $tabActuel);
-//        dd($diffs);
-
-        $tParcours = $apcStructure->parcoursNiveaux($departement);
-        $competences = $departement->getApcCompetences();
-        $tComp = [];
-        foreach ($competences as $comp) {
-            $tComp[$comp->getId()] = $comp;
-        }
-
-        $competencesParcours = [];
-
-        foreach ($tParcours as $key => $parc) {
-            $competencesParcours[$key] = [];
-            foreach ($parc as $k => $v) {
-                $competencesParcours[$key][] = $tComp[$k];
-            }
-        }
-
-        $html =  $this->renderView('competences/export-versionning-referentiel.html.twig',[
-            'competencesParcours' => $competencesParcours,
-            'departement' => $departement,
-            'competences' => $competences,
-            'parcours' => $departement->getApcParcours(),
-            'parcoursNiveaux' => $tParcours,
-            'diffs' => $diffs,
-        ]);
-
-        return new PdfResponse(
-            $knpSnappyPdf->getOutputFromHtml($html, [
-                'orientation'=>'Landscape'
-            ]),
-            'referentiel-competence-'.$departement->getSigle().'.pdf'
-        );
+        return $competencesExport->generePdfVersionCompetences($version);
     }
 
-    #[Route('/voir-versionning/{departement}', name: 'voir_versionning_referentiel_competences', methods: ['GET'])]
+    #[Route('/voir-versionning/{version}', name: 'voir_versionning_referentiel_competences', methods: ['GET'])]
     public function voirVersionReferentiel(
         Files $files,
         DepartementExport $departementExport,
-        ApcStructure $apcStructure, Departement $departement = null): Response //PdfResponse
+        ApcStructure $apcStructure, Version $version = null): Response //PdfResponse
     {
-        if (null === $departement) {
+        if (null === $version) {
             throw new \Exception('Departement inconnu');
         }
-
+//todo: A REFAIRE...
         // version précédente :
-        $fichier = $files->getLastVersionFile($departement);
+        $fichier = $files->getLastVersionFile($version->getDepartement());
         $tabAncien = json_decode(file_get_contents($fichier), true);
-
+        $departement = $version->getDepartement();
         // version courante :
         $tabActuel = $departementExport->genereJson($departement);
 
         $diffService = new JsonDiffService();
         $diffs = $diffService->compare($tabAncien, $tabActuel);
-        $tParcours = $apcStructure->parcoursNiveaux($departement);
+        $tParcours = $apcStructure->parcoursNiveaux($version);
         $competences = $departement->getApcCompetences();
         $tComp = [];
         foreach ($competences as $comp) {

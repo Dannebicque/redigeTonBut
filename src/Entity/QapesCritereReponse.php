@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\QapesCritereReponseRepository;
 
@@ -12,23 +13,23 @@ class QapesCritereReponse
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 150)]
+    #[ORM\Column(type: Types::STRING, length: 150)]
     private ?string $libelle = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 7)]
+    #[ORM\Column(type: Types::STRING, length: 7)]
     private ?string $couleur = null;
 
     #[ORM\ManyToOne(targetEntity: QapesCritere::class, inversedBy: 'qapesCritereReponses')]
-    private ?\App\Entity\QapesCritere $qapesCritere = null;
+    private ?QapesCritere $qapesCritere = null;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\QapesSaeCritereReponse>
+     * @var Collection<int, QapesSaeCritereReponse>
      */
     #[ORM\OneToMany(targetEntity: QapesSaeCritereReponse::class, mappedBy: 'reponse')]
-    private \Doctrine\Common\Collections\Collection $qapesSaeCritereReponses;
+    private Collection $qapesSaeCritereReponses;
 
     public function __construct()
     {

@@ -5,10 +5,13 @@ namespace App\DTO;
 
 
 use App\Entity\Departement;
+use App\Entity\Version;
 
 class StructureDepartement
 {
     private Departement $departement;
+
+    private Version $version;
 
     public float $nbHeuresRessourcesSae = 0;
 
@@ -43,9 +46,10 @@ class StructureDepartement
 
     private float $totalTp = 0;
 
-    public function setDepartement(Departement $departement): void
+    public function setVersion(Version $version): void
     {
-        $this->departement = $departement;
+        $this->version = $version;
+        $this->departement = $version->getDepartement();
     }
 
     public function addSemestre(StructureSemestre $semestre): void

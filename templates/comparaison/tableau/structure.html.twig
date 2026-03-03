@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% if user_data.departement.typeStructure == 'type3' %}
+        <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
+            {% for parcour in parcours %}
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" href="#parcour_{{ parcour.id }}" role="tab"
+                       aria-selected="true">{{ parcour.libelle }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content">
+            {% for parcour in parcours %}
+                <div class="tab-pane {% if loop.first %}active{% endif %}" id="parcour_{{ parcour.id }}"
+                     role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>{{ parcour.libelle }}</h2>
+                            {% if user_data.departement.typeStructure == 'type3' %}
+                                <a href="{{ path('export_excel_structure', {parcours: parcour.id}) }}" class="btn
+                                btn-sm btn-outline-success
+btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+                                >
+                                    <i class="bi-download"></i>
+                                    <span>Export Excel du parcours</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            {{ include('comparaison/tableau/_structure.html.twig', {codeParcours: parcour.id}) }}
+                            {{ render(controller(
+                                'App\\Controller\\ComparaisonTableauController::tableauStructureParcours',
+                                { codeParcours: parcour.id }
+                            )) }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ render(controller(
+            'App\\Controller\\ComparaisonTableauController::tableauStructureParcours'
+        )) }}
+{#        {{ include('comparaison/tableau/_structure.html.twig') }}#}
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+   Comparaison Tableau d'organisation globale du B.U.T.
+{% endblock %}
+
+{% block bouton_header %}
+    {% if user_data.departement.typeStructure != 'type3' %}
+
+        <a href="{{ path('tableau_structure') }}" class="btn btn-sm btn-outline-success
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        >
+            <i class="bi-back"></i>
+            <span>Retour édition/lecture</span>
+        </a>
+
+        <a href="{{ path('export_excel_structure') }}" class="btn btn-sm btn-outline-success
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        >
+            <i class="bi-download"></i>
+            <span>Export Excel</span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href:path('tableau_structure'),
+            title: 'Tableau d\'organisation globale',
+        },
+        {
+            href:'',
+            title: 'Comparaision version',
+        }
+    ]}) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+

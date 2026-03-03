@@ -10,10 +10,8 @@
 namespace App\Repository;
 
 use App\Entity\Annee;
-use App\Entity\Departement;
-use App\Entity\Diplome;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -32,11 +30,11 @@ class AnneeRepository extends ServiceEntityRepository
         parent::__construct($registry, Annee::class);
     }
 
-    public function findByDepartement(Departement $departement)
+    public function findByVersion(Version $version): array
     {
         return $this->createQueryBuilder('a')
-            ->where('a.departement = :departement')
-            ->setParameter('departement', $departement->getId())
+            ->where('a.version = :version')
+            ->setParameter('version', $version->getId())
             ->getQuery()
             ->getResult();
     }

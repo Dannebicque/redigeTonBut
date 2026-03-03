@@ -14,6 +14,7 @@ use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Diplome;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,25 +35,25 @@ class SemestreRepository extends ServiceEntityRepository
         parent::__construct($registry, Semestre::class);
     }
 
-    public function findByDepartementBuilder(Departement $departement): QueryBuilder
+    public function findByVersionBuilder(Version $version): QueryBuilder
     {
         return $this->createQueryBuilder('s')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
-            ->setParameter('departement', $departement->getId())
+            ->where('a.version = :version')
+            ->setParameter('version', $version->getId())
             ->orderBy('s.ordreLmd', 'ASC')
             ->addOrderBy('s.libelle', 'ASC');
     }
 
-    public function findByDepartementParcoursBuilder(Departement $departement, ?ApcParcours $parcours = null): QueryBuilder
+    public function findByVersionParcoursBuilder(Version $version, ?ApcParcours $parcours = null): QueryBuilder
     {
         $query = $this->createQueryBuilder('s')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
-            ->setParameter('departement', $departement->getId())
+            ->where('a.version = :version')
+            ->setParameter('version', $version->getId())
             ;
 
-        if ($parcours instanceof \App\Entity\ApcParcours && $departement->getTypeStructure() === Departement::TYPE3) {
+        if ($parcours instanceof ApcParcours && $version->getDepartement()->getTypeStructure() === Departement::TYPE3) {
             $query->andWhere('s.apcParcours = :parcours')
                 ->setParameter('parcours', $parcours->getId());
         }
@@ -61,51 +62,20 @@ class SemestreRepository extends ServiceEntityRepository
             ->addOrderBy('s.libelle', 'ASC');
     }
 
-    public function findByDepartement(Departement $departement)
+    public function findByVersion(Version $version)
     {
-        return $this->findByDepartementBuilder($departement)->getQuery()->getResult();
-    }
-
-    /**
-     * @return mixed[]
-     */
-    public function findByDepartementArray(Departement $departement): array
-    {
-        $semestres = $this->findByDepartement($departement);
-
-        $tabsemestre = [];
-
-        /** @var Semestre $semestre */
-        foreach ($semestres as $semestre) {
-            $tabsemestre[$semestre->getOrdreLmd()] = $semestre;
-        }
-
-        return $tabsemestre;
-    }
-
-    public function findOneByDepartementEtNumero(Departement $departement, string $numero, string $ordreAnnee)
-    {
-        return $this->createQueryBuilder('s')
-            ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
-            ->andWhere('s.ordreAnnee = :ordreAnnee')
-            ->andWhere('s.ordreLmd = :numero')
-            ->setParameter('departement', $departement->getId())
-            ->setParameter('numero', $numero)
-            ->setParameter('ordreAnnee', $ordreAnnee)
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $this->findByVersionBuilder($version)->getQuery()->getResult();
     }
 
     public function findSemestre(
-        Departement $departement,
+        Version $version,
         int $semestre
     ): ?Semestre {
         return $this->createQueryBuilder('s')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
+            ->where('a.version = :version')
             ->andWhere('s.ordreLmd = :numero')
-            ->setParameter('departement', $departement->getId())
+            ->setParameter('version', $version->getId())
             ->setParameter('numero', $semestre)
             ->getQuery()
             ->getOneOrNullResult();
@@ -123,16 +93,16 @@ class SemestreRepository extends ServiceEntityRepository
     }
 
     public function findSemestreParcours(
-        Departement $departement,
+        Version $version,
         int $semestre,
         ApcParcours $parcours
     ) {
         return $this->createQueryBuilder('s')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
+            ->where('a.version = :version')
             ->andWhere('s.ordreLmd = :numero')
             ->andWhere('s.apcParcours = :parcours')
-            ->setParameter('departement', $departement->getId())
+            ->setParameter('version', $version->getId())
             ->setParameter('numero', $semestre)
             ->setParameter('parcours', $parcours->getId())
             ->getQuery()
@@ -164,10 +134,10 @@ class SemestreRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findByDepartementParcours(
-        Departement $departement,
+    public function findByVersionParcours(
+        Version $version,
         ApcParcours $parcours
     ) {
-        return $this->findByDepartementParcoursBuilder($departement, $parcours)->getQuery()->getResult();
+        return $this->findByVersionParcoursBuilder($version, $parcours)->getQuery()->getResult();
     }
 }

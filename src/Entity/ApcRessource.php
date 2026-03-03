@@ -14,8 +14,10 @@ use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcRessourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\String\AbstractUnicodeString;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use App\Controller\api\GetRessourcesSpecialite;
 
@@ -27,6 +29,7 @@ use App\Controller\api\GetRessourcesSpecialite;
  *     "get_by_specialite"={
  *         "method"="GET",
  *         "path"="/specialite/{specialite}/ressources",
+ *         "defaults"={"annee"=2022},
  *         "openapi_context" = {
  *             "parameters" = {
  *                 {
@@ -38,7 +41,17 @@ use App\Controller\api\GetRessourcesSpecialite;
  *                          "type" : "string"
  *                      },
  *                      "style"="simple"
- *                 }
+ *                 },
+ *          {
+ *  "name" = "annee",
+ *  "in" = "query",
+ *  "description" = "Année",
+ *  "required" = false,
+ *  "schema"={
+ *  "type" : "integer",
+ *  "default" : 2022
+ *  }
+ *  }
  *           }
  *     },
  *         "controller"=GetRessourcesSpecialite::class,
@@ -58,63 +71,63 @@ class ApcRessource extends AbstractMatiere
     #[Groups(['read:ressource'])]
     private ?Semestre $semestre;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read:ressource'])]
     private ?string $motsCles;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceCompetence>
+     * @var Collection<int, ApcRessourceCompetence>
      */
     #[ORM\OneToMany(targetEntity: ApcRessourceCompetence::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
     #[Groups(['read:ressource'])]
     private Collection $apcRessourceCompetences;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceApprentissageCritique>
+     * @var Collection<int, ApcRessourceApprentissageCritique>
      */
     #[ORM\OneToMany(targetEntity: ApcRessourceApprentissageCritique::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
     #[Groups(['read:ressource'])]
     private Collection $apcRessourceApprentissageCritiques;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeRessource>
+     * @var Collection<int, ApcSaeRessource>
      */
     #[ORM\OneToMany(targetEntity: ApcSaeRessource::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
     private Collection $apcSaeRessources;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceParcours>
+     * @var Collection<int, ApcRessourceParcours>
      */
     #[ORM\OneToMany(targetEntity: ApcRessourceParcours::class, mappedBy: 'ressource', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[Groups(['read:ressource'])]
     private Collection $apcRessourceParcours;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Groups(['read:ressource'])]
     private ?int $ordre = 1;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessource>
+     * @var Collection<int, ApcRessource>
      */
     #[ORM\ManyToMany(targetEntity: ApcRessource::class, inversedBy: 'apcRessources')]
     private Collection $ressourcesPreRequises;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessource>
+     * @var Collection<int, ApcRessource>
      */
     #[ORM\ManyToMany(targetEntity: ApcRessource::class, mappedBy: 'ressourcesPreRequises')]
     private Collection $apcRessources;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $ficheAdaptationLocale = false;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT, nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private ?float $cmPreco = 0;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT, nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private ?float $tdPreco = 0;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT, nullable: true)]
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private ?float $tpPreco = 0;
 
     public function __construct()
@@ -387,6 +400,7 @@ class ApcRessource extends AbstractMatiere
 
     public function getDepartement():?Departement
     {
+        //todo: a adapter pour passer par Version
         return $this->getSemestre()?->getAnnee()?->getDepartement();
     }
 
@@ -438,7 +452,7 @@ class ApcRessource extends AbstractMatiere
         return $this;
     }
 
-    public function getSlugName(): \Symfony\Component\String\AbstractUnicodeString
+    public function getSlugName(): AbstractUnicodeString
     {
         $slugger = new AsciiSlugger();
         return $slugger->slug($this->getCodeMatiere());
@@ -446,7 +460,7 @@ class ApcRessource extends AbstractMatiere
 
     public function isGoodParcours(?ApcParcours $apcParcours = null): bool
     {
-        if (!$apcParcours instanceof \App\Entity\ApcParcours) {
+        if (!$apcParcours instanceof ApcParcours) {
             return true;
         }
 
@@ -488,7 +502,7 @@ class ApcRessource extends AbstractMatiere
             return false;
         }
 
-        if (!$apcParcours instanceof \App\Entity\ApcParcours) {
+        if (!$apcParcours instanceof ApcParcours) {
             return true;
         }
 

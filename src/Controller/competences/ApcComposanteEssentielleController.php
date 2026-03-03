@@ -21,7 +21,7 @@ class ApcComposanteEssentielleController extends BaseController
         ApcComposanteEssentielleOrdre $apcComposanteEssentielleOrdre,
         ApcCompetence $competence): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $competence->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $competence->getDepartement()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -42,7 +42,7 @@ class ApcComposanteEssentielleController extends BaseController
                 'Composante essentielle ajoutée avec succès.'
             );
             return $this->redirectToRoute('administration_apc_referentiel_index',
-                ['departement' => $apcComposanteEssentielle->getDepartement()?->getId()]);
+                ['departement' => $apcComposanteEssentielle->getVersion()?->getId()]);
         }
 
         return $this->renderForm('competences/apc_composante_essentielle/new.html.twig', [
@@ -57,7 +57,7 @@ class ApcComposanteEssentielleController extends BaseController
         ApcComposanteEssentielleOrdre $apcComposanteEssentielleOrdre,
         ApcComposanteEssentielle $apcComposanteEssentielle): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcComposanteEssentielle->getCompetence()?->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcComposanteEssentielle->getCompetence()?->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -76,7 +76,7 @@ class ApcComposanteEssentielleController extends BaseController
 
             if (null !== $request->request->get('btn_update')) {
                 return $this->redirectToRoute('administration_apc_referentiel_index',
-                    ['departement' => $apcComposanteEssentielle?->getDepartement()?->getId()]);
+                    ['version' => $apcComposanteEssentielle?->getVersion()?->getId()]);
             }
 
             return $this->redirectToRoute('administration_apc_composante_essentielle_edit',
@@ -92,7 +92,7 @@ class ApcComposanteEssentielleController extends BaseController
     #[Route('/{id}', name: 'apc_composante_essentielle_delete', methods: ['POST'])]
     public function delete(Request $request, ApcComposanteEssentielle $apcComposanteEssentielle): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcComposanteEssentielle->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcComposanteEssentielle->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -106,7 +106,7 @@ class ApcComposanteEssentielleController extends BaseController
             );
 
             return $this->redirectToRoute('administration_apc_referentiel_index', [
-                'departement' => $apcComposanteEssentielle?->getDepartement()?->getId()
+                'version' => $apcComposanteEssentielle?->getVersion()?->getId()
             ], Response::HTTP_SEE_OTHER);
         }
 

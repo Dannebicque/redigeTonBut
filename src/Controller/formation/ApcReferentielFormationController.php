@@ -18,6 +18,7 @@ use App\Entity\ApcSaeCompetence;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceRepository;
@@ -32,34 +33,35 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route("/referentiel-formation", name:"formation_")]
 class ApcReferentielFormationController extends BaseController
 {
-    #[Route("/grille/{departement}", name:"apc_referentiel_formation_grille", methods:["GET"])]
-    public function grille(Departement $departement): \Symfony\Component\HttpFoundation\Response
+    #[Route("/grille/{version}", name:"apc_referentiel_formation_grille", methods:["GET"])]
+    public function grille(Version $version): Response
     {
         return $this->render('formation/referentiel-formation/grille.html.twig',
             [
-                'departement' => $departement,
+                'version' => $version,
             ]);
     }
 
-    public function grilleCoefficientsSemestre(
-        ApcCoefficient $apcCoefficient,
-        ApcNiveauRepository $apcNiveauRepository,
-        ApcSaeRepository $apcSaeRepository,
-        ApcRessourceRepository $apcRessourceRepository,
-        Semestre $semestre
-    ): \Symfony\Component\HttpFoundation\Response {
-        $saes = $apcSaeRepository->findBySemestre($semestre);
-        $ressources = $apcRessourceRepository->findBySemestre($semestre);
-
-        return $this->render('formation/referentiel-formation/_grilleCoefficientsSemestre.html.twig',
-            [
-                'semestre' => $semestre,
-                'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
-                'saes' => $saes,
-                'ressources' => $ressources,
-                'coefficients' => $apcCoefficient->calculsCoefficients($saes, $ressources),
-            ]);
-    }
+//    public function grilleCoefficientsSemestre(
+//        ApcCoefficient $apcCoefficient,
+//        ApcNiveauRepository $apcNiveauRepository,
+//        ApcSaeRepository $apcSaeRepository,
+//        ApcRessourceRepository $apcRessourceRepository,
+//        Semestre $semestre
+//    ): Response
+//    {
+//        $saes = $apcSaeRepository->findBySemestre($semestre);
+//        $ressources = $apcRessourceRepository->findBySemestre($semestre);
+//
+//        return $this->render('formation/referentiel-formation/_grilleCoefficientsSemestre.html.twig',
+//            [
+//                'semestre' => $semestre,
+//                'niveaux' => $apcNiveauRepository->findBySemestre($semestre),
+//                'saes' => $saes,
+//                'ressources' => $ressources,
+//                'coefficients' => $apcCoefficient->calculsCoefficients($saes, $ressources),
+//            ]);
+//    }
 
 
     #[Route("/ajax-edit/{id}/{competence}/{type}", name: "apc_referentiel_formation_ajax", methods: ["POST"], options: ["expose" => true])]

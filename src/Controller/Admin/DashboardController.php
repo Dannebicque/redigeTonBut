@@ -10,6 +10,7 @@ use App\Entity\Iut;
 use App\Entity\IutSite;
 use App\Entity\IutSiteParcours;
 use App\Entity\User;
+use App\Entity\Version;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -44,6 +45,8 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Gestion des BUT');
         yield MenuItem::linkToCrud('Départements', 'fas fa-list', Departement::class);
+      yield MenuItem::linkToCrud('Version 2021', 'fas fa-list', Version::class)->setQueryParameter('annee', 2021);
+        yield MenuItem::linkToCrud('Version 2027', 'fas fa-list', Version::class)->setQueryParameter('annee', 2027);
         yield MenuItem::linkToCrud('Parcours', 'fas fa-list', ApcParcours::class);
 
         if ($this->isGranted('ROLE_GT')) {

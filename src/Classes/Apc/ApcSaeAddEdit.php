@@ -30,12 +30,13 @@ class ApcSaeAddEdit
     private array $tabCoeffs = [];
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityManagerInterface             $entityManager,
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
-        ApcParcoursRepository $apcParcoursRepository,
-        ApcComptenceRepository $apcComptenceRepository,
-        ApcRessourceRepository $apcRessourceRepository
-    ) {
+        ApcParcoursRepository              $apcParcoursRepository,
+        ApcComptenceRepository             $apcComptenceRepository,
+        ApcRessourceRepository             $apcRessourceRepository
+    )
+    {
         $this->entityManager = $entityManager;
         $this->apcApprentissageCritiqueRepository = $apcApprentissageCritiqueRepository;
         $this->apcParcoursRepository = $apcParcoursRepository;
@@ -50,7 +51,7 @@ class ApcSaeAddEdit
         $tabAcComp = [];
         if ($verouille === false) {
             //sauvegarde des AC
-            $acs = $request->request->get('ac');
+            $acs = $request->request->all()['ac'];
             if (is_array($acs)) {
                 foreach ($acs as $idAc) {
                     $ac = $this->apcApprentissageCritiqueRepository->find($idAc);
@@ -74,22 +75,22 @@ class ApcSaeAddEdit
                 $this->entityManager->persist($saeAc);
             }
 
-            $parcours = $request->request->get('parcours');
-            if (is_array($parcours)) {
-                foreach ($parcours as $idParcours) {
-                    $parc = $this->apcParcoursRepository->find($idParcours);
-                    if ($parc !== null) {
-                        $saeAc = new ApcSaeParcours($apcSae, $parc);
-                        $this->entityManager->persist($saeAc);
+            if ($request->request->has('parcours')) {
+                $parcours = $request->request->all()['parcours'];
+                if (is_array($parcours)) {
+                    foreach ($parcours as $idParcours) {
+                        $parc = $this->apcParcoursRepository->find($idParcours);
+                        if ($parc !== null) {
+                            $saeAc = new ApcSaeParcours($apcSae, $parc);
+                            $this->entityManager->persist($saeAc);
+                        }
                     }
                 }
             }
         }
 
 
-
-
-        $acs = $request->request->get('ressources');
+        $acs = $request->request->all()['ressources'];
         if (is_array($acs)) {
             foreach ($acs as $idAc) {
                 $res = $this->apcRessourceRepository->find($idAc);

@@ -8,7 +8,6 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 class DefaultController extends AbstractController
@@ -23,9 +22,11 @@ class DefaultController extends AbstractController
     #[Route('/direct/{departement}', name: 'homepage_direct_specialite')]
     public function directSpecialite(
         DepartementRepository $departementRepository,
-        RequestStack $requestStack, ?string $departement = null): Response
+        RequestStack          $requestStack,
+        ?string $departement = null): Response
     {
-        if( $departement !== null) {
+        //todo: gérer pour avoir la version aussi
+        if ($departement !== null) {
             $dept = $departementRepository->findOneBy(['sigle' => $departement]);
             if ($dept) {
                 $requestStack->getSession()->set('departement', $dept->getId());
@@ -57,5 +58,23 @@ class DefaultController extends AbstractController
         }
 
         throw new Exception('Fonctionnalité interdite au regard de vos droits.');
+    }
+
+    #[Route('/change-version/{annee}', name: 'change_version')]
+    public function changeVersion(RequestStack $requestStack, int $annee): Response
+    {
+        if ($annee === 2021 || $annee === 2027) {
+            if ($this->isGranted('ROLE_GT') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_PACD')) {
+
+                $requestStack->getSession()->set('versionPn', $annee);
+
+
+                return $this->redirectToRoute('homepage_specialite');
+            }
+
+            throw new Exception('Fonctionnalité interdite au regard de vos droits.');
+        }
+
+        throw new Exception('Année de version inexistante.');
     }
 }

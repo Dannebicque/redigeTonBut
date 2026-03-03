@@ -1,0 +1,20 @@
+{# todo: deprecated #}
+
+{% if competencesParcours[parcour.code] is defined %}
+    {% for competence in competencesParcours[parcour.code] %}
+        <div class="d-flex align-items-stretch mt-3">
+            {% for i in 1..3 %}
+                <div class="col-4 ">
+                    {% if competence[i] is defined %}
+                        <div class="p-3 comp competence{{ competence[i].couleur }}">
+                            {{ competence[i].nom_court }}
+                            niveau {{ competence[i].niveau }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endif %}
+<br>
+<br>

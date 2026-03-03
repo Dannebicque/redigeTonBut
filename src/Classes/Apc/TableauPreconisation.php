@@ -83,7 +83,7 @@ class TableauPreconisation
 
     public function getDatas(Semestre $semestre, ?ApcParcours $parcours): void
     {
-        if (!$parcours instanceof \App\Entity\ApcParcours) {
+        if (!$parcours instanceof ApcParcours) {
             $this->saes = $this->apcSaeRepository->findBySemestre($semestre);
             $this->saesAl = $this->apcSaeRepository->findBySemestreAl($semestre);
             $this->ressources = $this->apcRessourceRepository->findBySemestre($semestre);
@@ -98,7 +98,7 @@ class TableauPreconisation
         }
     }
 
-    public function getPreconisation(array $semestres, ?\App\Entity\ApcParcours $parcours): array
+    public function getPreconisation(array $semestres, ?ApcParcours $parcours): array
     {
         return $this->preconisation->setSemestresCompetences($semestres, $parcours)->getDataJson();
     }

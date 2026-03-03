@@ -1,12 +1,15 @@
 <div class="alert alert-info mt-2">
-    <strong>Pour supprimer un élément</strong>, vous devez le modifier et cliquer sur le bouton "Supprimer" en haut à droite du formulaire.
+    <strong>Pour supprimer un élément</strong>, vous devez le modifier et cliquer sur le bouton "Supprimer" en haut à
+    droite du formulaire.
 </div>
-
+{% set data1 = competence.libelle ~' : ' %}
+{% set data2 = competence.libelle ~' : ' %}
+{% set data3 = competence.libelle ~' : ' %}
 <div class="d-flex align-items-stretch mt-3">
     <div class="col-3 competence ">
         <div class="p-3 comp competence{{ competence.couleur }}">
             {{ competence.nomCourt }}
-            {% if is_granted('COMPETENCES_EDIT', competence) and user_data.departement.verouilleCompetences == false %}
+            {% if is_granted('COMPETENCES_EDIT', competence) and user_data.version.verouilleCompetences == false %}
                 <a href="{{ path('administration_apc_competence_edit', {id: competence.id}) }}" class="text-white
                 text-small"><i
                             class="bi
@@ -18,19 +21,21 @@
         <div class="p-3 competencelongue{{ competence.couleur }}">
             {{ competence.libelle }}
             {% if is_granted('COMPETENCES_EDIT', competence) and user_data
-            .departement.verouilleCompetences == false %}<br>
-            <a href="{{ path('administration_apc_composante_essentielle_new',
-                {competence:competence.id}) }}" class="text-white text-small">
-                <i class="bi bi-plus"></i> Ajouter une composante essentielle
-            </a>
+            .version.verouilleCompetences == false %}<br>
+                <a href="{{ path('administration_apc_composante_essentielle_new',
+                    {competence:competence.id}) }}" class="text-white text-small">
+                    <i class="bi bi-plus"></i> Ajouter une composante essentielle
+                </a>
             {% endif %}
         </div>
     </div>
     <div class="col-6 composantesessentielles{{ competence.couleur }}">
         <ul>
             {% for composante in competence.apcComposanteEssentielles %}
-                <li>{{ composante.code }} | {{ composante.libelle }} {% if is_granted('COMPETENCES_EDIT', competence) and user_data
-                    .departement.verouilleCompetences == false %}
+                {% set data2 = data2 ~ composante.libelle ~ '. ' %}
+                <li>{{ composante.code }}
+                    | {{ composante.libelle }} {% if is_granted('COMPETENCES_EDIT', competence) and user_data
+                    .version.verouilleCompetences == false %}
                         <a href="{{ path('administration_apc_composante_essentielle_edit',
                             {id:composante.id}) }}" class="text-black text-small">
                             <i class="bi bi-pencil"></i>
@@ -50,8 +55,9 @@
     <div class="col-9 ms-3 situationliste">
         <div class="p-3 situationliste{{ competence.couleur }}">
             {% for situation in competence.apcSituationProfessionnelles %}
+                {% set data1 = data1 ~ situation.libelle ~ '. ' %}
                 <p>{{ situation.libelle }} {% if is_granted('COMPETENCES_EDIT', competence) and user_data
-                    .departement.verouilleCompetences == false %}
+                    .version.verouilleCompetences == false %}
                         <a href="{{ path('administration_apc_situation_professionnelle_edit',
                             {id:situation.id}) }}" class="text-black text-small">
                             <i class="bi bi-pencil"></i>
@@ -59,7 +65,7 @@
                     {% endif %}</p>
             {% endfor %}
             {% if is_granted('COMPETENCES_EDIT', competence) and user_data
-            .departement.verouilleCompetences == false %}<br>
+            .version.verouilleCompetences == false %}<br>
                 <a href="{{ path('administration_apc_situation_professionnelle_new',
                     {competence:competence.id}) }}" class="text-black text-small">
                     <i class="bi bi-plus"></i> Ajouter une situation professionnelle
@@ -87,7 +93,7 @@
                 B.U.T. {{ niveau.annee.ordre }}</div>
             <div class="p-3 niveaulong">{{ niveau.libelle }}
                 {% if is_granted('COMPETENCES_EDIT', competence)
-                    and user_data.departement.verouilleCompetences == false %}<br>
+                    and user_data.version.verouilleCompetences == false %}<br>
                     <a href="{{ path('administration_apc_niveau_edit',
                         {id:niveau.id}) }}" class="text-black text-small">
                         <i class="bi bi-pencil"></i>
@@ -99,8 +105,9 @@
             <div class="p-3 niveauliste niveau{{ niveau.ordre }}{{ competence.couleur }}">
                 <ul>
                     {% for ac in niveau.apcApprentissageCritiques %}
+                        {% set data3 = data3 ~ '- '~ac.libelle ~ '.' %}
                         <li>{{ ac.code }} | {{ ac.libelle }}
-                            {% if is_granted('COMPETENCES_EDIT', competence) and user_data.departement.verouilleCompetences == false %}
+                            {% if is_granted('COMPETENCES_EDIT', competence) and user_data.version.verouilleCompetences == false %}
                                 <a href="{{ path('administration_apc_apprentissage_critique_edit',
                                     {id:ac.id}) }}" class="text-black text-small">
                                     <i class="bi bi-pencil"></i>
@@ -118,7 +125,7 @@
                         </li>
                     {% endfor %}
                     {% if is_granted('COMPETENCES_EDIT', competence) and user_data
-                    .departement.verouilleCompetences == false %}<br>
+                    .version.verouilleCompetences == false %}<br>
                         <a href="{{ path('administration_apc_apprentissage_critique_new',
                             {niveau:niveau.id}) }}" class="text-black text-small">
                             <i class="bi bi-plus"></i> Ajouter un apprentissage critique
@@ -129,4 +136,15 @@
         </div>
     </div>
 {% endfor %}
+
+{% if is_granted('ROLE_ADMIN') %}
+    <h2>Compétence + composantes essentielles</h2>
+    <textarea class="form-control" rows="10">{{ data2 }}</textarea>
+    <h2>Compétence + situations professionnells</h2>
+    <textarea class="form-control" rows="10">{{ data1 }}</textarea>
+    <h2>Compétence + apprentissages critiques</h2>
+    <textarea class="form-control" rows="10">{{ data3 }}</textarea>
+
+
+{% endif %}
 

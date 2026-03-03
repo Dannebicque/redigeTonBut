@@ -16,6 +16,7 @@ use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcNiveau;
 use App\Entity\Constantes;
 use App\Entity\Departement;
+use App\Entity\Version;
 use App\Form\ApcApprentissageCritiqueType;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,22 +32,22 @@ class ApcApprentissageCritiqueController extends BaseController
         ApcApprentissageCritiqueExport $apcApprentissageCritiqueExport,
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
     ): Response {
-        $acs = $apcApprentissageCritiqueRepository->findByDepartement($this->getDepartement());
+        $acs = $apcApprentissageCritiqueRepository->findByVersion($this->getVersion());
 
-        return $apcApprentissageCritiqueExport->exportDepartement($acs, $this->getDepartement());
+        return $apcApprentissageCritiqueExport->exportDepartement($acs, $this->getVersion());
     }
 
 
-    #[Route('/{departement}', name: 'administration_apc_apprentissage_critique_index', requirements: ['departement' => '\d+'], methods: ['GET'])]
+    #[Route('/{version}', name: 'administration_apc_apprentissage_critique_index', requirements: ['version' => '\d+'], methods: ['GET'])]
     public function index(
         ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
-        Departement $departement
+        Version $version
     ): Response {
-        if ($this->getDepartement()?->getId() !== $departement->getId()) {
+        if ($this->getVersion()?->getId() !== $version->getId()) {
             throw new AccessDeniedException();
         }
 
-        $acs = $apcApprentissageCritiqueRepository->findByDepartement($departement);
+        $acs = $apcApprentissageCritiqueRepository->findByVersion($this->getVersion());
 
         return $this->render('competences/apc_apprentissage_critique/index.html.twig', [
             'acs' => $acs,
@@ -57,7 +58,7 @@ class ApcApprentissageCritiqueController extends BaseController
     #[Route("/new/{niveau}", name: "administration_apc_apprentissage_critique_new", methods: ["GET", "POST"])]
     public function new(Request $request, ApcApprentissageCritiqueOrdre $apcApprentissageCritiqueOrdre, ApcNiveau $niveau): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $niveau->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $niveau->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -74,7 +75,7 @@ class ApcApprentissageCritiqueController extends BaseController
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Apprentissage critique ajouté avec succès.');
 
             return $this->redirectToRoute('administration_apc_referentiel_index',
-                ['departement' => $niveau->getDepartement()?->getId()]);
+                ['version' => $niveau->getVersion()?->getId()]);
         }
 
         return $this->render('competences/apc_apprentissage_critique/new.html.twig', [
@@ -91,7 +92,7 @@ class ApcApprentissageCritiqueController extends BaseController
         ApcApprentissageCritiqueOrdre $apcApprentissageCritiqueOrdre,
         ApcApprentissageCritique $apcApprentissageCritique
     ): Response {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcApprentissageCritique->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcApprentissageCritique->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -106,7 +107,7 @@ class ApcApprentissageCritiqueController extends BaseController
 
             if (null !== $request->request->get('btn_update')) {
                 return $this->redirectToRoute('administration_apc_referentiel_index',
-                    ['departement' => $apcApprentissageCritique->getDepartement()->getId()]);
+                    ['version' => $apcApprentissageCritique->getVersion()?->getId()]);
             }
 
             return $this->redirectToRoute('administration_apc_apprentissage_critique_edit',
@@ -126,7 +127,7 @@ class ApcApprentissageCritiqueController extends BaseController
         ApcApprentissageCritique $apcApprentissageCritique,
         int $position
     ): Response {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcApprentissageCritique->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcApprentissageCritique->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -142,12 +143,12 @@ class ApcApprentissageCritiqueController extends BaseController
         Request $request,
         ApcApprentissageCritique $apcApprentissageCritique
     ): Response {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcApprentissageCritique->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcApprentissageCritique->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
         $this->denyAccessUnlessGranted('delete', $apcApprentissageCritique);
-        $departement = $apcApprentissageCritique->getDepartement()->getId();
+        $version = $apcApprentissageCritique->getVersion()?->getId();
         $id = $apcApprentissageCritique->getId();
         if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
             foreach ($apcApprentissageCritique->getApcSaeApprentissageCritiques() as $s) {
@@ -166,7 +167,7 @@ class ApcApprentissageCritiqueController extends BaseController
             );
 
             return $this->redirectToRoute('administration_apc_referentiel_index',
-                ['departement' => $departement]);
+                ['version' => $version]);
         }
 
         $this->addFlashBag(Constantes::FLASHBAG_ERROR, "Erreur lors de la suppression de l'apprentissage critique.");

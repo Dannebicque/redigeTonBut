@@ -2,7 +2,7 @@
 
 {% block content %}
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
-        {% for annee in user_data.departement.annees %}
+        {% for annee in user_data.annees %}
             <li class="nav-item" role="presentation">
                 <a class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" href="#annee_{{ annee.id }}" role="tab"
                    aria-selected="true">B.U.T. {{ annee.ordre }}</a>
@@ -10,7 +10,7 @@
         {% endfor %}
     </ul>
     <div class="tab-content">
-        {% for annee in user_data.departement.annees %}
+        {% for annee in user_data.annees %}
             <div class="tab-pane {% if loop.first %}active{% endif %}" id="annee_{{ annee.id }}" role="tabpanel">
                 <div class="card">
                     <div class="card-body">
@@ -21,7 +21,7 @@
                                 <th>Libellé</th>
                                 <th>Compétence</th>
                                 <th>Parcours</th>
-                                {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+                                {% if is_granted('ROLE_PACD') and user_data.version.verouilleCompetences == false %}
                                 <th>Edition</th>
                                 {% endif %}
                             </tr>
@@ -40,7 +40,7 @@
                                                 </span>
                                             {% endfor %}
                                         </td>
-                                        {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+                                        {% if is_granted('ROLE_PACD') and user_data.version.verouilleCompetences == false %}
                                         <td>
                                             <a href="{{ path('administration_apc_apprentissage_critique_edit',
                                                 {id:ac.id}) }}" class="text-black text-small">

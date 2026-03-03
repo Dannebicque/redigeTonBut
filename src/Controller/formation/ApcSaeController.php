@@ -37,25 +37,26 @@ class ApcSaeController extends BaseController
         Semestre $semestre = null,
         ApcParcours $parcours = null
     ): Response {
-        if ($this->getDepartement()->getVerouilleCroise() === false) {
+        if ($this->getVersion()->isVerouilleCroise() === false) {
             $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
             $apcSae = new ApcSae();
 
-            if ($semestre instanceof \App\Entity\Semestre) {
+            if ($semestre instanceof Semestre) {
                 $apcSae->setSemestre($semestre);
                 $apcSae->setOrdre($apcSaeOrdre->getOrdreSuivant($semestre));
             }
 
             $form = $this->createForm(ApcSaeType::class, $apcSae, [
                 'departement' => $this->getDepartement(),
+                'version' => $this->getVersion(),
                 'editable' => $this->isGranted('ROLE_GT'),
-                'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
+                'verouille_croise' => $this->getVersion()?->isVerouilleCroise(),
                 'parcours' => $parcours
             ]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $apcSaeAddEdit->addOrEdit($apcSae, $request, $this->getDepartement()->getVerouilleCroise());
+                $apcSaeAddEdit->addOrEdit($apcSae, $request, $this->getVersion()->isVerouilleCroise());
 
                 $saeEvent = new SaeEvent($apcSae);
                 $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
@@ -98,7 +99,7 @@ class ApcSaeController extends BaseController
         Request $request,
         ApcSae $apcSae
     ): Response {
-        if ($this->getDepartement()->getPnBloque() === false) {
+        if ($this->getVersion()->isPnVerouille() === false) {
 
             $this->denyAccessUnlessGranted('edit', $apcSae);
             $parc = $request->query->get('parcours');
@@ -108,9 +109,9 @@ class ApcSaeController extends BaseController
             }
 
             $form = $this->createForm(ApcSaeType::class, $apcSae, [
-                'departement' => $this->getDepartement(),
+                'version' => $this->getVersion(),
                 'editable' => $this->isGranted('ROLE_GT'),
-                'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
+                'verouille_croise' => $this->getVersion()?->isVerouilleCroise(),
                 'parcours' => $parcours,
                 'ordre' => $apcSae->getSemestre()->getOrdreLmd()
             ]);
@@ -118,8 +119,8 @@ class ApcSaeController extends BaseController
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                $apcSaeAddEdit->removeLiens($apcSae, $this->getDepartement()->getVerouilleCroise());
-                $apcSaeAddEdit->addOrEdit($apcSae, $request, $this->getDepartement()->getVerouilleCroise());
+                $apcSaeAddEdit->removeLiens($apcSae, $this->getVersion()->isVerouilleCroise());
+                $apcSaeAddEdit->addOrEdit($apcSae, $request, $this->getVersion()->isVerouilleCroise());
 
                 $this->addFlashBag(
                     Constantes::FLASHBAG_SUCCESS,
@@ -130,7 +131,7 @@ class ApcSaeController extends BaseController
                 $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
 
 
-                if (null !== $request->request->get('btn_update') && $apcSae->getSemestre() instanceof \App\Entity\Semestre && $apcSae->getSemestre()->getAnnee() instanceof \App\Entity\Annee) {
+                if (null !== $request->request->get('btn_update') && $apcSae->getSemestre() instanceof Semestre && $apcSae->getSemestre()->getAnnee() instanceof \App\Entity\Annee) {
                     if ($parcours === null) {
                         return $this->redirectToRoute('but_sae_annee', [
                             'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
@@ -175,7 +176,7 @@ class ApcSaeController extends BaseController
     #[Route('/{id}/effacer', name: 'apc_sae_delete', methods: ['POST'])]
     public function delete(Request $request, ApcSae $apcSae): Response
     {
-        if ($this->getDepartement()->getPnBloque() === false) {
+        if ($this->getVersion()->isPnVerouille() === false) {
 
             $this->denyAccessUnlessGranted('delete', $apcSae);
             $id = $apcSae->getId();
@@ -209,7 +210,7 @@ class ApcSaeController extends BaseController
         ApcSaeAddEdit $addEdit,
         ApcSae $apcSae
     ): Response {
-        if ($this->getDepartement()->getPnBloque() === false) {
+        if ($this->getVersion()->isPnVerouille() === false) {
 
             $this->denyAccessUnlessGranted('edit', $apcSae);
             $newApcSae = $addEdit->duplique($apcSae);
@@ -229,7 +230,7 @@ class ApcSaeController extends BaseController
         ApcSae $apcSae,
         int $position
     ): Response {
-        if ($this->getDepartement()->getPnBloque() === false) {
+        if ($this->getVersion()->isPnVerouille() === false) {
 
             $apcSaeOrdre->deplaceSae($apcSae, $position);
             return $this->redirect($request->headers->get('referer'));

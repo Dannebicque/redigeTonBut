@@ -32,7 +32,7 @@ class ApcParcours extends BaseEntity
     private ?string $code;
 
     /**
-     * @var Collection<int, \App\Entity\ApcParcoursNiveau>
+     * @var Collection<int, ApcParcoursNiveau>
      */
     #[ORM\OneToMany(targetEntity: ApcParcoursNiveau::class, mappedBy: 'parcours')]
     #[Groups(['read:departement'])]
@@ -42,13 +42,13 @@ class ApcParcours extends BaseEntity
     private ?Departement $departement;
 
     /**
-     * @var Collection<int, \App\Entity\ApcSaeParcours>
+     * @var Collection<int, ApcSaeParcours>
      */
     #[ORM\OneToMany(targetEntity: ApcSaeParcours::class, mappedBy: 'parcours')]
     private Collection $apcSaeParcours;
 
     /**
-     * @var Collection<int, \App\Entity\ApcRessourceParcours>
+     * @var Collection<int, ApcRessourceParcours>
      */
     #[ORM\OneToMany(targetEntity: ApcRessourceParcours::class, mappedBy: 'parcours')]
     private Collection $apcRessourceParcours;
@@ -74,26 +74,33 @@ class ApcParcours extends BaseEntity
     private ?string $modalitesParticulieres;
 
     /**
-     * @var Collection<int, \App\Entity\Semestre>
+     * @var Collection<int, Semestre>
      */
     #[ORM\OneToMany(targetEntity: Semestre::class, mappedBy: 'apcParcours')]
     private Collection $semestres;
 
     /**
-     * @var Collection<int, \App\Entity\IutSiteParcours>
+     * @var Collection<int, IutSiteParcours>
      */
     #[ORM\OneToMany(targetEntity: IutSiteParcours::class, mappedBy: 'parcours')]
     private Collection $iutSiteParcours;
 
     /**
-     * @var Collection<int, \App\Entity\QapesSae>
+     * @var Collection<int, QapesSae>
      */
     #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: 'parcours')]
     private Collection $qapesSaes;
 
-    public function __construct(?Departement $departement = null)
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups(['read:departement'])]
+    private ?int $numeroIdentifiant;
+
+    #[ORM\ManyToOne(inversedBy: 'apcParcours')]
+    private ?Version $version = null;
+
+    public function __construct(?Version $version = null)
     {
-        $this->setDepartement($departement);
+        $this->setVersion($version);
         $this->apcParcoursNiveaux = new ArrayCollection();
         $this->apcSaeParcours = new ArrayCollection();
         $this->apcRessourceParcours = new ArrayCollection();
@@ -156,6 +163,7 @@ class ApcParcours extends BaseEntity
 
     public function getDepartement(): ?Departement
     {
+        //todo: a adapter pour passer par Version
         return $this->departement;
     }
 
@@ -385,5 +393,29 @@ class ApcParcours extends BaseEntity
     public function __toString(): string
     {
         return $this->getLibelle(). ' ('.$this->getDepartement()?->getSigle().')';
+    }
+
+    public function getNumeroIdentifiant(): ?int
+    {
+        return $this->numeroIdentifiant;
+    }
+
+    public function setNumeroIdentifiant(int $numeroIdentifiant): self
+    {
+        $this->numeroIdentifiant = $numeroIdentifiant;
+
+        return $this;
+    }
+
+    public function getVersion(): ?Version
+    {
+        return $this->version;
+    }
+
+    public function setVersion(?Version $version): static
+    {
+        $this->version = $version;
+
+        return $this;
     }
 }

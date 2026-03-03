@@ -56,4 +56,10 @@ trait LifeCycleTrait
     {
         $this->created = new DateTime();
     }
+
+    public function __clone()
+    {
+        $this->created = new DateTime();
+        $this->updated = new DateTime();
+    }
 }

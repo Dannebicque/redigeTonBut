@@ -6,9 +6,12 @@ use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcComposanteEssentielle;
 use App\Entity\ApcNiveau;
+use App\Entity\ApcParcours;
+use App\Entity\ApcParcoursNiveau;
 use App\Entity\ApcSituationProfessionnelle;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class StructureExtension extends AbstractExtension
 {
@@ -25,12 +28,27 @@ class StructureExtension extends AbstractExtension
         ];
     }
 
-//    public function getFunctions(): array
-//    {
-//        return [
-//            new TwigFunction('function_name', [$this, 'doSomething']),
-//        ];
-//    }
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('afficheDiff', [$this, 'afficheDiff'], ['is_safe' => ['html']]),
+        ];
+    }
+
+    public function afficheDiff(string $key, int $semestre, array $current, array $previous)
+    {
+        // on récupére current et previous si elle existe pour le semestre et la clé, on construit un badge HTML si une diff existe
+        if (isset($current[$semestre][$key]) && isset($previous[$semestre][$key])) {
+            $currentValue = $current[$semestre][$key];
+            $previousValue = $previous[$semestre][$key];
+            if ($currentValue !== $previousValue) {
+                return '<span class="badge bg-danger text-uppercase">' . $currentValue . ' ('.$previousValue.')</span>';
+            }
+        }
+
+        //sinon on retourne la valeur de current
+        return $current[$semestre][$key];
+    }
 
     public function badgeSeuil(string $value, $seuil): string
     {
@@ -79,11 +97,11 @@ class StructureExtension extends AbstractExtension
             $niveau = $object->getNiveau();
             $comp = $niveau?->getCompetence();
             $path = 'competences[' . $comp?->getNumeroIdentifiant() . '].niveaux['.($niveau?->getOrdre() - 1).'].acs[' . $object->getOrdre() - 1 . ']' . $this->getField($field);
+        } elseif ($object instanceof ApcParcours) {
+            $path = 'parcours.' . $object->getNumeroIdentifiant() . '.' . $field;
         } else {
             $path = get_class($object) . '.' . $object->getId() . '.' . $field;
         }
-
-
 
         foreach ($diffs as $diff) {
             if ($diff->path === $path) {

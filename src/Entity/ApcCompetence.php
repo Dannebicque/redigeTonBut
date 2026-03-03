@@ -27,6 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "get_by_specialite"={
  *         "method"="GET",
  *         "path"="/specialite/{specialite}/competences",
+ *         "defaults"={"annee"=2022},
  *         "openapi_context" = {
  *             "parameters" = {
  *                 {
@@ -38,7 +39,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                          "type" : "string"
  *                      },
  *                      "style"="simple"
- *                 }
+ *                 },
+ *     {
+ * "name" = "annee",
+ * "in" = "query",
+ * "description" = "Année",
+ * "required" = false,
+ * "schema"={
+ * "type" : "integer",
+ * "default" : 2022
+ * }
+ * }
  *           }
  *     },
  *         "controller"=GetCompetenceSpecialite::class,
@@ -79,6 +90,7 @@ class ApcCompetence extends BaseEntity
      */
     #[ORM\OneToMany(mappedBy: 'competence', targetEntity: ApcComposanteEssentielle::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:competence'])]
+    #[ORM\OrderBy(['ordre' => 'ASC'])]
     private Collection $apcComposanteEssentielles;
 
     /**
@@ -124,10 +136,14 @@ class ApcCompetence extends BaseEntity
     #[ORM\OneToMany(mappedBy: 'competence', targetEntity: ApcCompetenceSemestre::class)]
     private Collection $apcCompetenceSemestres;
 
+    #[ORM\ManyToOne(inversedBy: 'apcCompetences')]
+    private ?Version $version = null;
 
-    public function __construct(Departement $departement)
+
+    public function __construct(Version $version = null)
     {
-        $this->setDepartement($departement);
+        $this->setDepartement(null);//todo: remove
+        $this->setVersion($version);
         $this->apcComposanteEssentielles = new ArrayCollection();
         $this->apcNiveaux = new ArrayCollection();
         $this->apcRessourceCompetences = new ArrayCollection();
@@ -325,6 +341,7 @@ class ApcCompetence extends BaseEntity
 
     public function setDepartement(?Departement $departement): self
     {
+        //todo: a adapter pour passer par Version
         $this->departement = $departement;
 
         return $this;
@@ -407,5 +424,17 @@ class ApcCompetence extends BaseEntity
         }
 
         return false;
+    }
+
+    public function getVersion(): ?Version
+    {
+        return $this->version;
+    }
+
+    public function setVersion(?Version $version): static
+    {
+        $this->version = $version;
+
+        return $this;
     }
 }

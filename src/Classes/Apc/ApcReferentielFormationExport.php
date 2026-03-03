@@ -5,6 +5,8 @@ namespace App\Classes\Apc;
 use App\Classes\Excel\ExcelWriter;
 use App\Classes\Word\MyWord;
 use App\Entity\Departement;
+use App\Entity\Semestre;
+use App\Entity\Version;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeParcoursRepository;
@@ -52,15 +54,15 @@ class ApcReferentielFormationExport
     }
 
 
-    public function export(Departement $departement, string $_format)
+    public function export(Version $version, string $_format)
     {
 
         if ($_format === 'al') {
-            $this->ressources = $this->apcRessourceRepository->findByDepartementAl($departement);
-            $this->saes = $this->apcSaeRepository->findByDepartementAl($departement);
+            $this->ressources = $this->apcRessourceRepository->findByVersionAl($version);
+            $this->saes = $this->apcSaeRepository->findByVersionAl($version);
         }  else {
-            $this->ressources = $this->apcRessourceRepository->findByDepartement($departement);
-            $this->saes = $this->apcSaeRepository->findByDepartement($departement);
+            $this->ressources = $this->apcRessourceRepository->findByVersion($version);
+            $this->saes = $this->apcSaeRepository->findByVersion($version);
         }
 
 
@@ -281,17 +283,18 @@ class ApcReferentielFormationExport
         return $this->excelWriter->genereFichier('tableau_referentiel_formation' . date('YmdHis'));
     }
 
-    public function exportSynthese(Departement $departement)
+    public function exportSynthese(Version $version)
     {
+        $departement = $version->getDepartement();
         $this->excelWriter->nouveauFichier('');
         $this->excelWriter->createSheet('Synthèse');
 
         $ligne = 1;
-        foreach ($departement->getApcParcours() as $parcours) {
+        foreach ($version->getApcParcours() as $parcours) {
             $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
             $ligne++;
             if ($departement->getTypeStructure() === Departement::TYPE3) {
-                /** @var \App\Entity\Semestre $semestre */
+                /** @var Semestre $semestre */
                 foreach ($parcours->getSemestres() as $semestre) {
                     $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
                     $ligne++;
@@ -320,8 +323,8 @@ class ApcReferentielFormationExport
                     }
                 }
             } else {
-                /** @var \App\Entity\Semestre $semestre */
-                foreach ($departement->getSemestres() as $semestre) {
+                /** @var Semestre $semestre */
+                foreach ($version->getSemestres() as $semestre) {
                     $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
                     $ligne++;
                     if ($semestre->getAnnee()->getOrdre() > 1) {
@@ -362,17 +365,18 @@ class ApcReferentielFormationExport
         return $this->excelWriter->genereFichier('tableau_referentiel_synthese_formation' . date('YmdHis'));
     }
 
-    public function exportSyntheseAcd(Departement $departement)
+    public function exportSyntheseAcd(Version $version)
     {
+        $departement = $version->getDepartement();
         $this->excelWriter->nouveauFichier('');
         $this->excelWriter->createSheet('Synthèse');
 
         $ligne = 1;
-        foreach ($departement->getApcParcours() as $parcours) {
+        foreach ($version->getApcParcours() as $parcours) {
             $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
             $ligne++;
             if ($departement->getTypeStructure() === Departement::TYPE3) {
-                /** @var \App\Entity\Semestre $semestre */
+                /** @var Semestre $semestre */
                 foreach ($parcours->getSemestres() as $semestre) {
                     $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
                     $ligne++;
@@ -401,8 +405,8 @@ class ApcReferentielFormationExport
                     }
                 }
             } else {
-                /** @var \App\Entity\Semestre $semestre */
-                foreach ($departement->getSemestres() as $semestre) {
+                /** @var Semestre $semestre */
+                foreach ($version->getSemestres() as $semestre) {
                     $this->excelWriter->writeCellXY(1, $ligne, $semestre->getLibelle());
                     $ligne++;
                     if ($semestre->getAnnee()->getOrdre() > 1) {

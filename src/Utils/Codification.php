@@ -59,11 +59,11 @@ class Codification
     private static function codeParcoursAc(ApcApprentissageCritique $apcApprentissageCritique)
     {
         $nbParcoursAC = $apcApprentissageCritique->getNiveau()?->getApcParcoursNiveaux();
-        $nbParcoursComp = $apcApprentissageCritique->getCompetence()->getDepartement()->getApcParcours();
-        if ( $apcApprentissageCritique->getCompetence()->getDepartement()->getTypeStructure() === Departement::TYPE1 && count($nbParcoursComp) !== count($nbParcoursAC))
+        $nbParcoursComp = $apcApprentissageCritique->getCompetence()?->getVersion()?->getApcParcours();
+        if ( $apcApprentissageCritique->getCompetence()?->getVersion()?->getDepartement()?->getTypeStructure() === Departement::TYPE1 && count($nbParcoursComp) !== count($nbParcoursAC))
         {
             if (count($nbParcoursAC) === 1) {
-                return $nbParcoursAC[0]->getParcours()->getCode();
+                return $nbParcoursAC[0]->getParcours()?->getCode();
             }
         }
         return null;

@@ -2,15 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\ApcParcours;
-use App\Entity\ApcSae;
-use App\Entity\Departement;
-use App\Entity\Iut;
-use App\Entity\IutSite;
 use App\Entity\QapesSae;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use PhpOffice\PhpWord\Shared\Text;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

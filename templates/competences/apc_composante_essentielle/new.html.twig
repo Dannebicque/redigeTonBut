@@ -18,14 +18,14 @@
 {% block breadcrumb %}
     {{ include('composants/breadcrumb.html.twig', {liens:[
         {
-            href: path('administration_apc_referentiel_index', {departement:apc_composante_essentielle.departement.id}),
+            href: path('administration_apc_referentiel_index', {version:apc_composante_essentielle.version.id}),
             title: 'Référentiel de compétences',
         },
     ]}) }}
 {% endblock %}
 
 {% block bouton_header %}
-    <a href="{{ path('administration_apc_referentiel_index', {departement:apc_composante_essentielle.departement.id}) }}"
+    <a href="{{ path('administration_apc_referentiel_index', {version:apc_composante_essentielle.version.id}) }}"
        class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >

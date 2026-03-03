@@ -41,13 +41,13 @@ class ButController extends BaseController
         ApcRessourceRepository $apcRessourceRepository,
         Annee $annee, ApcParcours $parcours = null): Response
     {
-        if ($parcours instanceof \App\Entity\ApcParcours) {
+        if ($parcours instanceof ApcParcours) {
             $ressources = $apcRessourceParcoursRepository->findByAnneeArray($annee, $parcours);
         } else {
             $ressources = $apcRessourceRepository->findByAnneeArray($annee);
         }
 
-        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours instanceof \App\Entity\ApcParcours ) {
+        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours instanceof ApcParcours) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);
@@ -69,13 +69,13 @@ class ButController extends BaseController
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         ApcSaeRepository $apcSaeRepository, Annee $annee, ApcParcours $parcours = null): Response
     {
-        if ($parcours instanceof \App\Entity\ApcParcours) {
+        if ($parcours instanceof ApcParcours) {
             $saes = $apcSaeParcoursRepository->findByAnneeArray($annee, $parcours);
         } else {
             $saes = $apcSaeRepository->findByAnneeArray($annee);
         }
 
-        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours instanceof \App\Entity\ApcParcours ) {
+        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3 && $parcours instanceof ApcParcours) {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
         } else {
             $semestres = $semestreRepository->findBy(['annee' => $annee->getId()]);

@@ -10,28 +10,30 @@
 namespace App\Entity;
 
 use App\Entity\Traits\LifeCycleTrait;
+use App\Repository\AnneeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: \App\Repository\AnneeRepository::class)]
+#[ORM\Entity(repositoryClass: AnneeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Annee extends BaseEntity
 {
     use LifeCycleTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 20, nullable: true)]
     private ?string $codeEtape;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Groups(['read:competence', 'read:departement'])]
     private ?string $libelle;
 
-    #[ORM\Column(name: 'ordre', type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(name: 'ordre', type: Types::INTEGER)]
     private int $ordre = 1;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 150, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 150, nullable: true)]
     #[Groups(['annee'])]
     private ?string $libelleLong;
 
@@ -43,13 +45,16 @@ class Annee extends BaseEntity
     private Collection $semestres;
 
     /**
-     * @var Collection<int, \App\Entity\ApcNiveau>
+     * @var Collection<int, ApcNiveau>
      */
     #[ORM\OneToMany(targetEntity: ApcNiveau::class, mappedBy: 'annee')]
     private Collection $apcNiveaux;
 
     #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: 'annees')]
     private ?Departement $departement;
+
+    #[ORM\ManyToOne(inversedBy: 'annees')]
+    private ?Version $version = null;
 
     public function __construct()
     {
@@ -162,12 +167,25 @@ class Annee extends BaseEntity
 
     public function getDepartement(): ?Departement
     {
+        //todo: a adapter pour passer par Version
         return $this->departement;
     }
 
     public function setDepartement(?Departement $departement): self
     {
         $this->departement = $departement;
+
+        return $this;
+    }
+
+    public function getVersion(): ?Version
+    {
+        return $this->version;
+    }
+
+    public function setVersion(?Version $version): static
+    {
+        $this->version = $version;
 
         return $this;
     }

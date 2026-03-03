@@ -8,6 +8,7 @@ use App\Entity\ApcSae;
 use App\Entity\ApcSaeApprentissageCritique;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -45,14 +46,14 @@ class ApcSaeApprentissageCritiqueRepository extends ServiceEntityRepository
         return $t;
     }
 
-    public function findByDepartement(Departement $departement)
+    public function findByVersion(Version $version)
     {
         return $this->createQueryBuilder('a')
             ->innerJoin(ApcSae::class, 'r', 'WITH', 'a.sae = r.id')
             ->innerJoin(Semestre::class, 's', 'WITH', 'r.semestre = s.id')
             ->innerJoin(Annee::class, 'an', 'WITH', 's.annee = an.id')
-            ->where('an.departement = :departement')
-            ->setParameter('departement', $departement->getId())
+            ->where('an.version = :version')
+            ->setParameter('version', $version->getId())
             ->getQuery()
             ->getResult();
     }

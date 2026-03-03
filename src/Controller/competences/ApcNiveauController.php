@@ -10,6 +10,7 @@ use App\Entity\ApcNiveau;
 use App\Entity\Constantes;
 use App\Form\ApcComposanteEssentielleType;
 use App\Form\ApcNiveauType;
+use App\Utils\Codification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,7 +24,7 @@ class ApcNiveauController extends BaseController
         ApcComposanteEssentielleOrdre $apcComposanteEssentielleOrdre,
         ApcCompetence $competence): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $competence->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $competence->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -44,7 +45,7 @@ class ApcNiveauController extends BaseController
                 'Composante essentielle ajoutée avec succès.'
             );
             return $this->redirectToRoute('administration_apc_referentiel_index',
-                ['departement' => $apcComposanteEssentielle->getDepartement()?->getId()]);
+                ['departement' => $apcComposanteEssentielle->getVersion()?->getId()]);
         }
 
         return $this->renderForm('competences/apc_niveau/new.html.twig', [
@@ -56,19 +57,25 @@ class ApcNiveauController extends BaseController
 
     #[Route('/{id}/edit', name: 'apc_niveau_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request,
+                         Codification $codification,
         ApcNiveau $apcNiveau): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcNiveau->getCompetence()?->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcNiveau->getCompetence()?->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
         $form = $this->createForm(ApcNiveauType::class, $apcNiveau, [
-            'departement' => $apcNiveau->getCompetence()?->getDepartement(),
+            'departement' => $apcNiveau->getCompetence()?->getVersion(),
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $apcNiveau->setOrdre($apcNiveau->getAnnee()?->getOrdre());
+            $acs = $apcNiveau->getApcApprentissageCritiques();
+            foreach ($acs as $ac) {
+                $ac->setCode($codification::codeApprentissageCritique($ac));
+            }
+
+
             $this->entityManager->flush();
 
             $this->addFlashBag(
@@ -78,7 +85,7 @@ class ApcNiveauController extends BaseController
 
             if (null !== $request->request->get('btn_update')) {
                 return $this->redirectToRoute('administration_apc_referentiel_index',
-                    ['departement' => $apcNiveau->getCompetence()?->getDepartement()?->getId()]);
+                    ['version' => $apcNiveau->getCompetence()?->getVersion()?->getId()]);
             }
 
             return $this->redirectToRoute('administration_apc_niveau_edit',
@@ -94,7 +101,7 @@ class ApcNiveauController extends BaseController
     #[Route('/{id}/delete', name: 'apc_niveau_delete', methods: ['POST'])]
     public function delete(Request $request, ApcNiveau $apcNiveau): Response
     {
-        if ($this->getDepartement()?->getVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $apcNiveau->getCompetence()?->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $apcNiveau->getCompetence()?->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -127,6 +134,6 @@ class ApcNiveauController extends BaseController
         }
 
         return $this->redirectToRoute('administration_apc_referentiel_index',
-            ['departement' => $apcNiveau->getCompetence()?->getDepartement()?->getId()]);
+            ['version' => $apcNiveau->getCompetence()?->getVersion()?->getId()]);
     }
 }

@@ -107,7 +107,7 @@ class ApcAjaxRessourceController extends BaseController
 
             $datas = $apcSaeRepository->findBySemestre($semestre);
 
-            if ($semestre->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+            if ($semestre->getVersion()->getDepartement()->getTypeStructure() === Departement::TYPE3) {
                 $parcours = $semestre->getApcParcours();
                 if ($parcours !== null) {
                     $datas = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
@@ -159,10 +159,10 @@ class ApcAjaxRessourceController extends BaseController
             if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
                     $parcours = $semestre->getApcParcours();
                     if ($parcours !== null) {
-                        $datas = $apcRessourceParcoursRepository->findBySemestreEtPrecedent($semestre, $parcours, $this->getDepartement()->getSemestres());
+                        $datas = $apcRessourceParcoursRepository->findBySemestreEtPrecedent($semestre, $parcours, $this->getVersion()->getSemestres());
                     }
             } else {
-                $datas = $apcRessourceRepository->findBySemestreEtPrecedent($semestre, $this->getDepartement()->getSemestres());
+                $datas = $apcRessourceRepository->findBySemestreEtPrecedent($semestre, $this->getVersion()->getSemestres());
             }
 
             $t = [];
@@ -206,7 +206,7 @@ class ApcAjaxRessourceController extends BaseController
 
         $semestre = $semestreRepository->find($parametersAsArray['semestre']);
         if (null !== $semestre && (($semestre->getOrdreLmd() > 2 && $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) || $this->getDepartement()->getTypeStructure() === Departement::TYPE3)) {
-            $datas = $this->getDepartement()->getApcParcours();
+            $datas = $this->getVersion()->getApcParcours();
             if (count($datas) > 0) {
                 if (null !== $parametersAsArray['ressource']) {
                     $tabRessourceParcours = $apcRessourceParcoursRepository->findArrayIdRessource($parametersAsArray['ressource']);

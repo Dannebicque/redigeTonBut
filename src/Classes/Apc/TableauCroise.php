@@ -67,7 +67,7 @@ class TableauCroise
 
     public function getDatas(Semestre $semestre, ?ApcParcours $parcours = null): void
     {
-        if (!$parcours instanceof \App\Entity\ApcParcours) {
+        if (!$parcours instanceof ApcParcours) {
             $this->saes = $this->apcSaeRepository->findBySemestre($semestre);
             $this->saesAl = $this->apcSaeRepository->findBySemestreAl($semestre);
             $this->ressources = $this->apcRessourceRepository->findBySemestre($semestre);
@@ -82,8 +82,8 @@ class TableauCroise
         }
 
         //on prend tout... pour éviter les soucis avec le type 3
-        $compSae = $this->apcSaeCompetenceRepository->findByDepartement($semestre->getDepartement());
-        $compRessources = $this->apcRessourceCompetenceRepository->findByDepartement($semestre->getDepartement());
+        $compSae = $this->apcSaeCompetenceRepository->findByVersion($semestre->getVersion());
+        $compRessources = $this->apcRessourceCompetenceRepository->findByVersion($semestre->getVersion());
 
         $this->tab = [];
         $this->coefficients = [];

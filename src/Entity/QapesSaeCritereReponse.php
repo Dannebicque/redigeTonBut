@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\QapesSaeCritereReponseRepository;
 
@@ -10,20 +11,20 @@ class QapesSaeCritereReponse
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: QapesCritere::class, inversedBy: 'qapesSaeCritereReponses')]
-    private ?\App\Entity\QapesCritere $critere = null;
+    private ?QapesCritere $critere = null;
 
     #[ORM\ManyToOne(targetEntity: QapesSae::class, inversedBy: 'qapesSaeCritereReponse')]
-    private ?\App\Entity\QapesSae $sae = null;
+    private ?QapesSae $sae = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
 
     #[ORM\ManyToOne(targetEntity: QapesCritereReponse::class, inversedBy: 'qapesSaeCritereReponses')]
-    private ?\App\Entity\QapesCritereReponse $reponse = null;
+    private ?QapesCritereReponse $reponse = null;
 
     public function getCritere(): ?QapesCritere
     {

@@ -9,6 +9,7 @@ use App\Classes\Apc\TableauExport;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
+use App\Entity\Version;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -25,21 +26,21 @@ class ExportController extends BaseController
     public function exportReferentielFormationExcel(
         ApcReferentielFormationExport $apcReferentielFormationExport): Response
     {
-        return $apcReferentielFormationExport->export($this->getDepartement(), 'xlsx');
+        return $apcReferentielFormationExport->export($this->getVersion(), 'xlsx');
     }
 
     #[Route('/export-synthese-referentiel-formation/excel', name: 'export_referentiel_synthese_format_excel')]
     public function exportReferentielSyntheseFormationExcel(
         ApcReferentielFormationExport $apcReferentielFormationExport): Response
     {
-        return $apcReferentielFormationExport->exportSynthese($this->getDepartement());
+        return $apcReferentielFormationExport->exportSynthese($this->getVersion());
     }
 
     #[Route('/export-synthese-referentiel-formation/acd/excel', name: 'export_referentiel_synthese_format_excel_acd')]
     public function exportReferentielSyntheseFormationAcdExcel(
         ApcReferentielFormationExport $apcReferentielFormationExport): Response
     {
-        return $apcReferentielFormationExport->exportSyntheseAcd($this->getDepartement());
+        return $apcReferentielFormationExport->exportSyntheseAcd($this->getVersion());
     }
 
 
@@ -47,14 +48,14 @@ class ExportController extends BaseController
     public function exportReferentielFormationWord(
         ApcReferentielFormationExport $apcReferentielFormationExport): Response
     {
-        return $apcReferentielFormationExport->export($this->getDepartement(), 'docx');
+        return $apcReferentielFormationExport->export($this->getVersion(), 'docx');
     }
 
     #[Route('/export-referentiel-formation/word-al', name: 'export_referentiel_format_word_al')]
     public function exportReferentielFormationWordAl(
         ApcReferentielFormationExport $apcReferentielFormationExport): Response
     {
-        return $apcReferentielFormationExport->export($this->getDepartement(), 'al');
+        return $apcReferentielFormationExport->export($this->getVersion(), 'al');
     }
 
     #[Route('/export-ressources/{annee}.{_format}/{parcours}', name: 'export_ressources_annee')]
@@ -80,13 +81,12 @@ class ExportController extends BaseController
         return $tableauExport->exportTableauCroise($annee, $parcours);
     }
 
-    #[Route('/export-tableau-croise-volumes-horaires/{departement}', name: 'export_tableau_croise_et_volume_horaire')]
+    #[Route('/export-tableau-croise-volumes-horaires/{version}', name: 'export_tableau_croise_et_volume_horaire')]
     public function exportTableauCroiseVolumesHoraires(
         TableauExport $tableauExport,
-        Departement $departement): Response
+        Version $version): Response
     {
-        //todo: faire par parcours?
-        return $tableauExport->exportTableauCroiseVolumeHoraire($departement);
+        return $tableauExport->exportTableauCroiseVolumeHoraire($version);
     }
 
     #[Route('/export-tableau-horaire/{annee}/{parcours}', name: 'export_tableau_horaire_annee')]

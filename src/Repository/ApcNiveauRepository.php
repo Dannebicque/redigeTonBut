@@ -17,6 +17,7 @@ use App\Entity\ApcParcoursNiveau;
 use App\Entity\Departement;
 use App\Entity\Diplome;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -53,12 +54,12 @@ class ApcNiveauRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByDepartement(Departement $departement)
+    public function findByVersion(Version $version)
     {
         return $this->createQueryBuilder('n')
             ->innerJoin(ApcCompetence::class, 'a', 'WITH', 'a.id = n.competence')
-            ->where('a.departement = :departement')
-            ->setParameter('departement', $departement->getId())
+            ->where('a.version = :version')
+            ->setParameter('version', $version->getId())
             ->getQuery()
             ->getResult();
     }

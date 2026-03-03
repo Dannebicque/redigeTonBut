@@ -13,6 +13,7 @@ use App\Entity\ApcSae;
 use App\Entity\ApcSituationProfessionnelle;
 use App\Entity\Departement;
 use App\Entity\User;
+use App\Entity\Version;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -42,7 +43,7 @@ class CompetencesVoter extends Voter
             return false;
         }
         // only vote on `ApcRessource` or ApcRessource objects
-        return $subject instanceof ApcCompetence || $subject instanceof ApcComposanteEssentielle || $subject instanceof ApcParcours || $subject instanceof ApcSituationProfessionnelle || $subject instanceof ApcNiveau || $subject instanceof ApcApprentissageCritique;
+        return $subject instanceof Version || $subject instanceof Departement || $subject instanceof ApcCompetence || $subject instanceof ApcComposanteEssentielle || $subject instanceof ApcParcours || $subject instanceof ApcSituationProfessionnelle || $subject instanceof ApcNiveau || $subject instanceof ApcApprentissageCritique;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -76,21 +77,19 @@ class CompetencesVoter extends Voter
     private function canView(
         ApcCompetence|ApcComposanteEssentielle|ApcParcours|ApcSituationProfessionnelle|ApcNiveau|ApcApprentissageCritique $post, User $user): bool
     {
-        // if they can edit, they can view
-        // the Post object could have, for example, a method `isPrivate()`
-        //todo: ajouter champ blocage édition sur ??? département ??? tableaux ???
-        return $this->canEdit($post, $user);
+        return true;
     }
 
-    private function canEdit(ApcCompetence|ApcComposanteEssentielle|ApcParcours|ApcSituationProfessionnelle|ApcNiveau|ApcApprentissageCritique $post, User $user): bool
+    private function canEdit(ApcCompetence|ApcComposanteEssentielle|ApcParcours|ApcSituationProfessionnelle|ApcNiveau|ApcApprentissageCritique|Departement $post, User $user): bool
     {
-        if (in_array('ROLE_LECTEUR', $user->getRoles()) || in_array('ROLE_CPN_LECTEUR', $user->getRoles())) {
+        if (!in_array('ROLE_EDITEUR', $user->getRoles()) && !in_array('ROLE_PACD', $user->getRoles()) && !in_array('ROLE_CPN', $user->getRoles())) {
             return false;
         }
 
         if (!$user->getDepartement() instanceof Departement || !$this->getDepartementFromSubject($post) instanceof Departement) {
             return false;
         }
+
 
         // this assumes that the Post object has a `getOwner()` method
         if (in_array('ROLE_CPN', $user->getRoles()) || in_array('ROLE_EDITEUR', $user->getRoles())) {
@@ -126,10 +125,18 @@ class CompetencesVoter extends Voter
         return $user->getDepartement()->getId() === $this->getDepartementFromSubject($post)->getId();
     }
 
-    public function getDepartementFromSubject(ApcCompetence|ApcComposanteEssentielle|ApcParcours|ApcSituationProfessionnelle|ApcNiveau|ApcApprentissageCritique $post): ?Departement
+    public function getDepartementFromSubject(ApcCompetence|ApcComposanteEssentielle|ApcParcours|ApcSituationProfessionnelle|ApcNiveau|ApcApprentissageCritique|Departement $post): ?Departement
     {
         if ($post instanceof ApcCompetence) {
             return $post->getDepartement();
+        }
+
+        if ($post instanceof ApcApprentissageCritique) {
+            return $post->getDepartement();
+        }
+
+        if ($post instanceof Departement) {
+            return $post;
         }
 
         if ($post instanceof ApcComposanteEssentielle) {

@@ -14,8 +14,10 @@ use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcSaeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\String\AbstractUnicodeString;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use App\Controller\api\GetSaesSpecialite;
 
@@ -27,6 +29,7 @@ use App\Controller\api\GetSaesSpecialite;
  *     "get_by_specialite"={
  *         "method"="GET",
  *         "path"="/specialite/{specialite}/saes",
+ *     "defaults"={"annee"=2022},
  *         "openapi_context" = {
  *             "parameters" = {
  *                 {
@@ -38,7 +41,17 @@ use App\Controller\api\GetSaesSpecialite;
  *                          "type" : "string"
  *                      },
  *                      "style"="simple"
- *                 }
+ *                 },
+ *          {
+ *  "name" = "annee",
+ *  "in" = "query",
+ *  "description" = "Année",
+ *  "required" = false,
+ *  "schema"={
+ *  "type" : "integer",
+ *  "default" : 2022
+ *  }
+ *  }
  *           }
  *     },
  *         "controller"=GetSaesSpecialite::class,
@@ -58,66 +71,66 @@ class ApcSae extends AbstractMatiere
     #[Groups(['read:sae'])]
     private ?Semestre $semestre;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Groups(['read:sae'])]
     private float $projetPpn = 0;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeCompetence>
+     * @var Collection<int, ApcSaeCompetence>
      */
     #[ORM\OneToMany(targetEntity: ApcSaeCompetence::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
     #[Groups(['read:sae'])]
     private Collection $apcSaeCompetences;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeRessource>
+     * @var Collection<int, ApcSaeRessource>
      */
     #[ORM\OneToMany(targetEntity: ApcSaeRessource::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
     #[Groups(['read:sae'])]
     private Collection $apcSaeRessources;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeApprentissageCritique>
+     * @var Collection<int, ApcSaeApprentissageCritique>
      */
     #[ORM\OneToMany(targetEntity: ApcSaeApprentissageCritique::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
     #[Groups(['read:sae'])]
     private Collection $apcSaeApprentissageCritiques;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeParcours>
+     * @var Collection<int, ApcSaeParcours>
      */
     #[ORM\OneToMany(targetEntity: ApcSaeParcours::class, mappedBy: 'sae', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[Groups(['read:sae'])]
     private Collection $apcSaeParcours;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Groups(['read:sae'])]
     private ?int $ordre;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read:sae'])]
     private ?string $objectifs;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read:sae'])]
     private ?string $exemples;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private ?bool $ficheAdaptationLocale = false;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    #[ORM\Column(type: Types::BOOLEAN)]
     #[Groups(['read:sae'])]
     private ?bool $portfolio = false;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    #[ORM\Column(type: Types::BOOLEAN)]
     #[Groups(['read:sae'])]
     private ?bool $stage = false;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\QapesSae>
+     * @var Collection<int, QapesSae>
      */
     #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: 'sae')]
-    private \Doctrine\Common\Collections\Collection $qapesSaes;
+    private Collection $qapesSaes;
 
     public function __construct()
     {
@@ -320,9 +333,9 @@ class ApcSae extends AbstractMatiere
         return $this;
     }
 
-    public function getDepartement():?Departement
+    public function getVersion():?Version
     {
-        return $this->getSemestre()?->getAnnee()?->getDepartement();
+        return $this->getSemestre()?->getAnnee()?->getVersion();
     }
 
     public function getObjectifs(): ?string
@@ -385,7 +398,7 @@ class ApcSae extends AbstractMatiere
         return $this;
     }
 
-    public function getSlugName(): \Symfony\Component\String\AbstractUnicodeString
+    public function getSlugName(): AbstractUnicodeString
     {
         $slugger = new AsciiSlugger();
         return $slugger->slug($this->getCodeMatiere());
@@ -393,7 +406,7 @@ class ApcSae extends AbstractMatiere
 
     public function isGoodParcours(?ApcParcours $apcParcours = null): bool
     {
-        if (!$apcParcours instanceof \App\Entity\ApcParcours) {
+        if (!$apcParcours instanceof ApcParcours) {
             return true;
         }
 
@@ -476,5 +489,33 @@ class ApcSae extends AbstractMatiere
         }
 
         return $this;
+    }
+
+    public function getCleUnique(): string
+    {
+        // Clé métier stable entre années.
+        // Objectif : reconnaître “la même SAE” même si des relations annexes (parcours, AC)
+        // ou des champs de contenu (objectifs/exemples) évoluent d’une année à l’autre.
+        // Donc : on base la clé sur les attributs structurels + références stables.
+
+        $normalizeString = static function (?string $value): string {
+            $value = $value ?? '';
+            $value = trim($value);
+            $value = preg_replace('/\s+/u', ' ', $value) ?? $value;
+            return mb_strtolower($value);
+        };
+
+        $payload = [
+            'code' => $normalizeString($this->getCodeMatiere()),
+            'libelle' => $normalizeString($this->getLibelle()),
+            'libelle_court' => $normalizeString($this->getLibelleCourt()),
+            'ordre' => (int)($this->getOrdre() ?? 0),
+            'portfolio' => (int)($this->getPortfolio() ? 1 : 0),
+            'stage' => (int)($this->getStage() ? 1 : 0),
+            'description' => $normalizeString($this->getDescription()),
+            'heures_totales' => (float)($this->getHeuresTotales() ?? 0),
+        ];
+
+        return md5(json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
 }

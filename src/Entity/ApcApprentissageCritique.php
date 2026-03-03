@@ -13,6 +13,7 @@ use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcApprentissageCritiqueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -22,16 +23,16 @@ class ApcApprentissageCritique extends BaseEntity
 {
     use LifeCycleTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT)]
     #[Groups(['read:competence', 'read:ressource', 'read:sae'])]
     private ?string $libelle;
 
     #[ORM\ManyToOne(targetEntity: ApcNiveau::class, inversedBy: 'apcApprentissageCritiques')]
     private ?ApcNiveau $niveau;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20)]
+    #[ORM\Column(type: Types::STRING, length: 20)]
     #[Groups(['read:competence', 'read:ressource', 'read:sae'])]
-    private ?string $code;
+    private ?string $code = null;
 
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceApprentissageCritique>
@@ -45,7 +46,7 @@ class ApcApprentissageCritique extends BaseEntity
     #[ORM\OneToMany(targetEntity: ApcSaeApprentissageCritique::class, mappedBy: 'apprentissageCritique')]
     private Collection $apcSaeApprentissageCritiques;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Groups(['read:competence'])]
     private ?int $ordre;
 
@@ -54,7 +55,7 @@ class ApcApprentissageCritique extends BaseEntity
      *
      * @param $niveau
      */
-    public function __construct(?\App\Entity\ApcNiveau $niveau = null)
+    public function __construct(?ApcNiveau $niveau = null)
     {
         $this->niveau = $niveau;
         $this->apcRessourceApprentissageCritiques = new ArrayCollection();
@@ -90,7 +91,7 @@ class ApcApprentissageCritique extends BaseEntity
         return $this->code;
     }
 
-    public function setCode(string $code): self
+    public function setCode(?string $code = ''): self
     {
         $this->code = trim($code);
 
@@ -157,7 +158,7 @@ class ApcApprentissageCritique extends BaseEntity
 
     public function getCompetence(): ?ApcCompetence
     {
-        if ($this->getNiveau() instanceof \App\Entity\ApcNiveau) {
+        if ($this->getNiveau() instanceof ApcNiveau) {
             return $this->getNiveau()->getCompetence();
         }
 
@@ -176,11 +177,11 @@ class ApcApprentissageCritique extends BaseEntity
         return $this;
     }
 
-    public function getDepartement(): ?Departement
+    public function getVersion(): ?Version
     {
         if ($this->getCompetence() instanceof ApcCompetence)
         {
-            return $this->getCompetence()->getDepartement();
+            return $this->getCompetence()->getVersion();
         }
 
         return null;

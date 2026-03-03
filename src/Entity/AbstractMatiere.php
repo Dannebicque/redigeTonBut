@@ -10,6 +10,7 @@
 namespace App\Entity;
 
 use App\Utils\Convert;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -19,38 +20,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\MappedSuperclass]
 abstract class AbstractMatiere extends BaseEntity
 {
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Groups(['read:ressource', 'read:sae'])]
     private string $libelle;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read:ressource', 'read:sae'])]
     private ?string $description;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Groups(['read:ressource', 'read:sae'])]
     private float $cmPpn = 0;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Groups(['read:ressource', 'read:sae'])]
     private float $tdPpn = 0;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Groups(['read:ressource', 'read:sae'])]
     private float $heuresTotales = 0;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Groups(['read:ressource', 'read:sae'])]
     private float $tpPpn = 0;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = '';
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 20)]
+    #[ORM\Column(type: Types::STRING, length: 20)]
     #[Groups(['read:ressource', 'read:sae'])]
     private ?string $codeMatiere = '-';
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 25, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     #[Groups(['read:ressource', 'read:sae'])]
     private ?string $libelleCourt;
 

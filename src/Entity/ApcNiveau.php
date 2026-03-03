@@ -13,6 +13,7 @@ use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcNiveauRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -22,7 +23,7 @@ class ApcNiveau extends BaseEntity
 {
     use LifeCycleTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Groups(['read:competence'])]
     private ?string $libelle;
 
@@ -30,7 +31,7 @@ class ApcNiveau extends BaseEntity
     #[Groups(['read:departement'])]
     private ?ApcCompetence $competence;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Groups(['read:competence', 'read:departement'])]
     private ?int $ordre;
 
@@ -39,7 +40,7 @@ class ApcNiveau extends BaseEntity
     private ?Annee $annee;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcApprentissageCritique>
+     * @var Collection<int, ApcApprentissageCritique>
      */
     #[ORM\OneToMany(targetEntity: ApcApprentissageCritique::class, mappedBy: 'niveau', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['code' => 'ASC'])]
@@ -47,10 +48,10 @@ class ApcNiveau extends BaseEntity
     private Collection $apcApprentissageCritiques;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcParcoursNiveau>
+     * @var Collection<int, ApcParcoursNiveau>
      */
     #[ORM\OneToMany(targetEntity: ApcParcoursNiveau::class, mappedBy: 'niveau')]
-    private \Doctrine\Common\Collections\Collection $apcParcoursNiveaux;
+    private Collection $apcParcoursNiveaux;
 
     public function __construct(ApcCompetence $competence = null)
     {
@@ -183,8 +184,8 @@ class ApcNiveau extends BaseEntity
         return $this->getCompetence()?->getNomCourt().' - Niveau '.$niv.'('.$this->ordre.')';
     }
 
-    public function getDepartement(): ?Departement
+    public function getVersion(): ?Version
     {
-        return $this->getCompetence()?->getDepartement();
+        return $this->getCompetence()?->getVersion();
     }
 }

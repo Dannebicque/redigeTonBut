@@ -29,7 +29,7 @@
                                    @keyup="update"
                             /></td>
                     {% endfor %}
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresRessourcesSae, {{ constant
+                    <td class="text-center" x-html="badgeSeuil(donnees.version.nbHeuresRessourcesSae, {{ constant
                         ('NB_HEURES_TOTAL', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center fw-bold">{{ constant('NB_HEURES_TOTAL', user_data.caracteristiques) }}</td>
@@ -58,7 +58,7 @@
                             </div>
                         </td>
                     {% endfor %}
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.moyenneAdaptationLocale, {{ constant
+                    <td class="text-center" x-html="badgeSeuil(donnees.version.moyenneAdaptationLocale, {{ constant
                         ('POURCENTAGE_ADAPTATION', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center">
@@ -74,7 +74,7 @@
                             <span x-text="donnees[{{ i }}].nbHeuresAdaptationLocale"></span>
                         </td>
                     {% endfor %}
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresAdaptationLocale, {{ user_data.caracteristiques.heuresAdaptationLocale }})">
+                    <td class="text-center" x-html="badgeSeuil(donnees.version.nbHeuresAdaptationLocale, {{ user_data.caracteristiques.heuresAdaptationLocale }})">
                     </td>
                     <td class="text-center fw-bold">
                         {{ user_data.caracteristiques.heuresAdaptationLocale }}
@@ -99,7 +99,7 @@
                         </td>{# a lier avec les autres tableaux #}
                     {% endfor %}
                     <td class="text-center">
-                        <span x-text="donnees.departement.nbHeuresSae"></span>
+                        <span x-text="donnees.version.nbHeuresSae"></span>
                     </td>
                     <td></td>
                     <td></td>
@@ -117,7 +117,7 @@
                         </td>{# a lier avec les autres tableaux #}
                     {% endfor %}
                     <td class="text-center">
-                        <span x-text="donnees.departement.nbHeuresRessources"></span>
+                        <span x-text="donnees.version.nbHeuresRessources"></span>
 </td>
                     <td></td>
                     <td></td>
@@ -133,7 +133,7 @@
                         </td>
                     {% endfor %}
                     <td class="text-center">
-                        <span x-text="donnees.departement.nbSemaines"></span>
+                        <span x-text="donnees.version.nbSemaines"></span>
                     </td>
                     <td></td>
                     <td></td>
@@ -146,7 +146,7 @@
                         </td>
                     {% endfor %}
                     <td class="text-center">
-                        <span x-text="donnees.departement.nbSemainesConges"></span>
+                        <span x-text="donnees.version.nbSemainesConges"></span>
                     </td>
                     <td></td>
                     <td></td>
@@ -183,8 +183,8 @@
                         </td>
                     {% endfor %}
                     <td rowspan="2" class="text-center">
-                        <span x-text="donnees.departement.nbSemainesStageMin"></span> - <span
-                                x-text="donnees.departement.nbSemainesStageMax"></span>
+                        <span x-text="donnees.version.nbSemainesStageMin"></span> - <span
+                                x-text="donnees.version.nbSemainesStageMax"></span>
                     </td>
                     <td></td>
                     <td></td>
@@ -201,7 +201,7 @@
                         </td>
                     {% endfor %}
                     <td class="text-center">
-                        <span x-text="donnees.departement.nbSemainesCoursProjet"></span>
+                        <span x-text="donnees.version.nbSemainesCoursProjet"></span>
                     </td>
                     <td></td>
                     <td></td>
@@ -221,7 +221,7 @@
                             />
                         </td>
                     {% endfor %}
-                    <td class="text-center"  x-html="badgeSeuil(donnees.departement.nbHeuresProjet, {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }})">
+                    <td class="text-center"  x-html="badgeSeuil(donnees.version.nbHeuresProjet, {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }})">
                     </td>
                     <td class="text-center fw-bold">
                         {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }}
@@ -240,7 +240,7 @@
                         </td>
                     {% endfor %}
                     <td class="text-center">
-                        <span x-text="donnees.departement.nbHeuresProjet"></span>
+                        <span x-text="donnees.version.nbHeuresProjet"></span>
                     </td>
                     <td></td>
                     <td></td>
@@ -252,7 +252,7 @@
                             <span x-text="donnees[{{ i }}].nbHeuresCoursProjet"></span>
                         </td>
                     {% endfor %}
-                    <td class="text-center" x-html="badgeSeuil(donnees.departement.nbHeuresCoursProjet, {{ user_data
+                    <td class="text-center" x-html="badgeSeuil(donnees.version.nbHeuresCoursProjet, {{ user_data
                     .caracteristiques.totalHeuresAvecProjet }})">
                        </td>
                     <td class="text-center fw-bold">{{ user_data.caracteristiques.totalHeuresAvecProjet }}</td>
@@ -271,7 +271,7 @@
                         </td>
                     {% endfor %}
                     <td class="text-center">
-                        <span x-text="donnees.departement.nbHeuresRessourcesSae "></span>
+                        <span x-text="donnees.version.nbHeuresRessourcesSae "></span>
                     </td>
                     <td></td>
                     <td></td>
@@ -285,7 +285,7 @@
                         </td>
                     {% endfor %}
                     <td class="text-center">
-                        <span x-text="donnees.departement.nbHeuresCoursProjet "></span>
+                        <span x-text="donnees.version.nbHeuresCoursProjet "></span>
                     </td>
                     <td></td>
                     <td></td>

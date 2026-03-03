@@ -20,8 +20,8 @@ class SearchController extends BaseController
             return $this->json([]);
         }
         $t = [];
-        $saes = $apcSaeRepository->findByDepartement($this->getDepartement());
-        $ressources = $apcRessourceRepository->findByDepartement($this->getDepartement());
+        $saes = $apcSaeRepository->findByVersion($this->getVersion());
+        $ressources = $apcRessourceRepository->findByVersion($this->getVersion());
 
         foreach ($saes as $sae) {
             $t[] = [

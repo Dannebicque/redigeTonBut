@@ -2,7 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Classes\Export\CompetencesExport;
 use App\Entity\Departement;
+use App\Repository\DepartementRepository;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -14,11 +16,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class DepartementCrudController extends BaseCrudController
 {
-    public function __construct(private Security $security)
+    public function __construct(
+        private RequestStack      $requestStack,
+        private Security $security, private readonly DepartementRepository $departementRepository)
     {
     }
 
@@ -47,11 +53,6 @@ class DepartementCrudController extends BaseCrudController
 
                     return 'Aucun';
                 })->hideOnForm(),
-            TextareaField::new('textePresentation')->setLabel('Description')->hideOnIndex()->setPermission('ROLE_GT'),
-            BooleanField::new('verouilleStructure')->setLabel('Verrouillé Structure')->setPermission('ROLE_GT'),
-            BooleanField::new('verouilleCompetences')->setLabel('Verrouillé Compétences')->setPermission('ROLE_GT'),
-            BooleanField::new('verouilleCroise')->setLabel('Verrouillé Croisé')->setPermission('ROLE_GT'),
-            BooleanField::new('pn_bloque')->setLabel('PN Bloqué')->setPermission('ROLE_GT'),
             AssociationField::new('cpns')
                 ->setLabel('CPN')
                 ->setFormTypeOptions([
@@ -69,15 +70,36 @@ class DepartementCrudController extends BaseCrudController
             ->setEntityLabelInSingular('Département')
             ->setEntityLabelInPlural('Départements')
             ->setDefaultSort(['numeroAnnexe' => 'ASC'])
-            ->setSearchFields(['sigle', 'libelle', 'pacd']);
+            ->setSearchFields(['sigle', 'libelle', 'pacd'])
+            ->setPaginatorPageSize(1000);
     }
 
     public function configureActions(Actions $actions): Actions
     {
         $actions = parent::configureActions($actions);
+
+        $generePdfVersionCompetences = Action::new('generePdfVersionCompetences', 'PDF Compétences versionnés')
+            ->linkToCrudAction('generePdfVersionCompetences')
+            ->setCssClass('text-info');
+
         return $actions
-            // ...
+            ->add(Crud::PAGE_DETAIL, $generePdfVersionCompetences)
+            ->add(Crud::PAGE_INDEX, $generePdfVersionCompetences)
             ->disable(Action::BATCH_DELETE); // Désactive l'action batch de suppression
+    }
+
+    public function generePdfVersionCompetences(
+        CompetencesExport $competencesExport): PdfResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if (!$request || !$request->query->has('entityId')) {
+            $this->addFlash('danger', 'Aucun département sélectionné.');
+        }
+
+        $departementId = $request->query->get('entityId');
+        $departement = $this->departementRepository->find($departementId);
+
+        return $competencesExport->generePdfVersionCompetences($departement);
     }
 
     public function configureFilters(Filters $filters): Filters

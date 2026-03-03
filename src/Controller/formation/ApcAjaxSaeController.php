@@ -144,7 +144,7 @@ class ApcAjaxSaeController extends BaseController
 
         $semestre = $semestreRepository->find($parametersAsArray['semestre']);
         if (null !== $semestre && (($semestre->getOrdreLmd() > 2 && $this->getDepartement()->getTypeStructure() !== Departement::TYPE3) || $this->getDepartement()->getTypeStructure() === Departement::TYPE3)) {
-            $datas = $this->getDepartement()->getApcParcours();
+            $datas = $this->getVersion()->getApcParcours();
             if (count($datas) > 0) {
                 if (null !== $parametersAsArray['sae']) {
                     $tabSaeParcours = $apcSaeParcoursRepository->findArrayIdSae($parametersAsArray['sae']);

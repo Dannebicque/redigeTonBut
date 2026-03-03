@@ -13,6 +13,7 @@ namespace App\Controller\formation;
 use App\Classes\Apc\ApcRessourceAddEdit;
 use App\Classes\Apc\ApcRessourceOrdre;
 use App\Controller\BaseController;
+use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\Constantes;
@@ -40,25 +41,26 @@ class ApcRessourceController extends BaseController
         Semestre $semestre = null,
         ApcParcours $parcours = null
     ): Response {
-        if ($this->getDepartement()->getVerouilleCroise() === false) {
+        if ($this->getVersion()->isVerouilleCroise() === false) {
             $this->denyAccessUnlessGranted('new', $semestre ?? $this->getDepartement());
             $apcRessource = new ApcRessource();
 
-            if ($semestre instanceof \App\Entity\Semestre) {
+            if ($semestre instanceof Semestre) {
                 $apcRessource->setSemestre($semestre);
                 $apcRessource->setOrdre($apcRessourceOrdre->getOrdreSuivant($semestre));
             }
 
             $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
                 'departement' => $this->getDepartement(),
+                'version' => $this->getVersion(),
                 'editable' => $this->isGranted('ROLE_GT'),
-                'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
+                'verouille_croise' => $this->getVersion()?->isVerouilleCroise(),
                 'parcours' => $parcours
             ]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $apcRessourceAddEdit->addOrEdit($apcRessource, $request, $this->getDepartement()->getVerouilleCroise());
+                $apcRessourceAddEdit->addOrEdit($apcRessource, $request, $this->getVersion()->isVerouilleCroise());
 
                 $ressourceEvent = new RessourceEvent($apcRessource);
                 $eventDispatcher->dispatch($ressourceEvent, RessourceEvent::UPDATE_CODIFICATION);
@@ -102,7 +104,7 @@ class ApcRessourceController extends BaseController
         Request $request,
         ApcRessource $apcRessource
     ): Response {
-        if ($this->getDepartement()->getPnBloque() === false) {
+        if ($this->getVersion()->isPnVerouille() === false) {
 
             $this->denyAccessUnlessGranted('edit', $apcRessource);
 
@@ -113,17 +115,17 @@ class ApcRessourceController extends BaseController
             }
 
             $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
-                'departement' => $this->getDepartement(),
+                'version' => $this->getVersion(),
                 'editable' => $this->isGranted('ROLE_GT'),
-                'verouille_croise' => $this->getDepartement()?->getVerouilleCroise(),
+                'verouille_croise' => $this->getVersion()?->isVerouilleCroise(),
                 'parcours' => $parcours,
                 'ordre' => $apcRessource->getSemestre()->getOrdreLmd()
             ]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $apcRessourceAddEdit->removeLiens($apcRessource, $this->getDepartement()->getVerouilleCroise());
-                $apcRessourceAddEdit->addOrEdit($apcRessource, $request, $this->getDepartement()->getVerouilleCroise());
+                $apcRessourceAddEdit->removeLiens($apcRessource, $this->getVersion()->isVerouilleCroise());
+                $apcRessourceAddEdit->addOrEdit($apcRessource, $request, $this->getVersion()->isVerouilleCroise());
 
                 $ressourceEvent = new RessourceEvent($apcRessource);
                 $eventDispatcher->dispatch($ressourceEvent, RessourceEvent::UPDATE_CODIFICATION);
@@ -133,7 +135,7 @@ class ApcRessourceController extends BaseController
                     'Ressource modifiée avec succès.'
                 );
 
-                if (null !== $request->request->get('btn_update') && $apcRessource->getSemestre() instanceof \App\Entity\Semestre && $apcRessource->getSemestre()->getAnnee() instanceof \App\Entity\Annee) {
+                if (null !== $request->request->get('btn_update') && $apcRessource->getSemestre() instanceof Semestre && $apcRessource->getSemestre()->getAnnee() instanceof Annee) {
 
                     if ($parcours === null) {
                         return $this->redirectToRoute('but_ressources_annee',
@@ -181,7 +183,7 @@ class ApcRessourceController extends BaseController
     #[Route("/{id}/effacer", name: "apc_ressource_delete", methods: ["POST"])]
     public function delete(Request $request, ApcRessource $apcRessource): Response
     {
-        if ($this->getDepartement()->getPnBloque() === false) {
+        if ($this->getVersion()->isPnVerouille() === false) {
 
             $this->denyAccessUnlessGranted('delete', $apcRessource);
             $id = $apcRessource->getId();
@@ -215,7 +217,7 @@ class ApcRessourceController extends BaseController
         ApcRessourceAddEdit $apcRessourceAddEdit,
         ApcRessource $apcRessource
     ): Response {
-        if ($this->getDepartement()->getPnBloque() === false) {
+        if ($this->getVersion()->isPnVerouille() === false) {
 
             $this->denyAccessUnlessGranted('duplicate', $apcRessource);
             $newApcRessource = $apcRessourceAddEdit->duplique($apcRessource);
@@ -234,7 +236,7 @@ class ApcRessourceController extends BaseController
         ApcRessource $apcRessource,
         int $position
     ): Response {
-        if ($this->getDepartement()->getPnBloque() === false) {
+        if ($this->getVersion()->isPnVerouille() === false) {
             $this->denyAccessUnlessGranted('edit', $apcRessource);
             $apcRessourceOrdre->deplaceRessource($apcRessource, $position);
             return $this->redirect($request->headers->get('referer'));

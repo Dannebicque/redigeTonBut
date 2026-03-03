@@ -13,9 +13,8 @@ use App\Entity\Annee;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcNiveau;
-use App\Entity\Departement;
-use App\Entity\Diplome;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -32,24 +31,24 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcApprentissageCritique::class);
     }
 
-    public function findByDepartement(Departement $departement)
+    public function findByVersion(Version $version)
     {
-        return $this->findByDepartementBuilder($departement)
+        return $this->findByVersionBuilder($version)
             ->getQuery()
             ->getResult();
     }
 
-    public function findByDepartementBuilder(Departement $departement)
+    public function findByVersionBuilder(Version $version)
     {
         return $this->createQueryBuilder('a')
             ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'a.niveau = n.id')
             ->innerJoin(ApcCompetence::class, 'c', 'WITH', 'c.id = n.competence')
-            ->where('c.departement = :departement')
+            ->where('c.version = :version')
             ->orderBy('c.couleur', 'ASC')
             ->addOrderBy('n.ordre', 'ASC')
             ->addOrderBy('a.ordre', 'ASC')
             ->addOrderBy('a.code', 'ASC')
-            ->setParameter('departement', $departement->getId());
+            ->setParameter('version', $version->getId());
     }
 
     public function findBySemestreAndCompetences(
@@ -89,9 +88,9 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findOneByDepartementArray(Departement $departement): array
+    public function findOneByVersionArray(Version $version): array
     {
-        $comps = $this->findByDepartement($departement);
+        $comps = $this->findByVersion($version, $version->getDepartement());
         $t = [];
         foreach ($comps as $c) {
             $t[$c->getCode()] = $c;
@@ -118,8 +117,8 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'a.niveau = n.id')
             ->innerJoin(Annee::class, 'an', 'WITH', 'n.annee = an.id')
-            ->where('an.departement = :departement')
-            ->setParameter('departement', $competence->getDepartement()->getId())
+            ->where('an.version = :version')
+            ->setParameter('version', $competence->getVersion()->getId())
             ->getQuery()
             ->getResult();
     }

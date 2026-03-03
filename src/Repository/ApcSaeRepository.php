@@ -14,6 +14,7 @@ use App\Entity\ApcSae;
 use App\Entity\ApcSaeParcours;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -52,14 +53,14 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByDepartement(Departement $departement)
+    public function findByVersion(Version $version)
     {
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
+            ->where('a.version = :version')
             ->andWhere('r.ficheAdaptationLocale = false')
-            ->setParameter('departement', $departement->getId())
+            ->setParameter('version', $version->getId())
             ->orderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
@@ -67,14 +68,14 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByDepartementAl(Departement $departement)
+    public function findByVersionAl(Version $version)
     {
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
+            ->where('a.version = :version')
             ->andWhere('r.ficheAdaptationLocale = true')
-            ->setParameter('departement', $departement->getId())
+            ->setParameter('version', $version->getId())
             ->orderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')
@@ -82,25 +83,9 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @return mixed[]
-     */
-    public function findByDepartementToSemestreArray(?Departement $departement): array
+    public function findByVersionArray(?Version $version): array
     {
-        $tab = [];
-        foreach ($departement->getSemestres() as $semestre) {
-            $tab[$semestre->getId()] = $this->findBySemestre($semestre);
-        }
-
-        return $tab;
-    }
-
-    /**
-     * @return mixed[]
-     */
-    public function findByDepartementArray(?Departement $departement): array
-    {
-        $saes = $this->findByDepartement($departement);
+        $saes = $this->findByVersion($version);
         $tab = [];
         foreach ($saes as $sae) {
             $tab[$sae->getCodeMatiere()] = $sae;
@@ -225,12 +210,15 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBySigleDepartement(string $sigle)
+
+    //todo: gérer la version
+    public function findBySigleVersion(string $sigle)
     {
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->innerJoin('a.departement', 'd')
+            ->innerJoin('a.version', 'v')
+            ->innerJoin('v.departement', 'd')
             ->where('d.sigle = :departement')
             ->andWhere('r.ficheAdaptationLocale = false')
             ->setParameter('departement', $sigle)
@@ -241,15 +229,15 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByTroncCommun(Departement $departement)
+    public function findByTroncCommun(Version $version)
     {
         return $this->createQueryBuilder('r')
             ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
             ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-            ->where('a.departement = :departement')
+            ->where('a.version = :version')
             ->andWhere('r.ficheAdaptationLocale = false')
             ->andWhere('r.apcSaeParcours IS EMPTY')
-            ->setParameter('departement', $departement->getId())
+            ->setParameter('version', $version->getId())
             ->orderBy('r.ordre', 'ASC')
             ->addOrderBy('r.codeMatiere', 'ASC')
             ->addOrderBy('r.libelle', 'ASC')

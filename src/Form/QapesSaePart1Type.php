@@ -34,6 +34,7 @@ class QapesSaePart1Type extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        //todo: a revoir
         $this->edit = $options['edit'];
         $this->iutSite = $builder->getData()->getIutSite();
         $this->apcParcours = $builder->getData()->getParcours();
@@ -112,7 +113,7 @@ class QapesSaePart1Type extends AbstractType
                 'choice_label' => 'display',
                 'autocomplete' => true,
                 'query_builder' => function(ApcSaeRepository $er) {
-                    if ($this->apcParcours instanceof \App\Entity\ApcParcours) {
+                    if ($this->apcParcours instanceof ApcParcours) {
                         $er->createQueryBuilder('r')
                             ->join('r.apcSaeParcours', 'p')
                             ->where('p.parcours = :parcours')
@@ -124,9 +125,9 @@ class QapesSaePart1Type extends AbstractType
                     return $er->createQueryBuilder('r')
                         ->innerJoin(Semestre::class, 's', 'WITH', 's.id = r.semestre')
                         ->innerJoin(Annee::class, 'a', 'WITH', 'a.id = s.annee')
-                        ->where('a.departement = :departement')
+                        ->where('a.version = :version')
                         ->andWhere('r.ficheAdaptationLocale = false')
-                        ->setParameter('departement', $this->departement->getId())
+                        ->setParameter('version', $this->version->getId())
                         ->orderBy('r.ordre', 'ASC')
                         ->addOrderBy('r.codeMatiere', 'ASC')
                         ->addOrderBy('r.libelle', 'ASC');

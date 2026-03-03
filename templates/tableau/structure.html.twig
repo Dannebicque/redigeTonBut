@@ -46,12 +46,20 @@ btn-icon btn-icon-end w-100 w-sm-auto mx-2"
 
 {% block bouton_header %}
     {% if user_data.departement.typeStructure != 'type3' %}
-    <a href="{{ path('export_excel_structure') }}" class="btn btn-sm btn-outline-success
-btn-icon btn-icon-end w-100 w-sm-auto mx-2"
-    >
-        <i class="bi-download"></i>
-        <span>Export Excel</span>
-    </a>
+
+        <a href="{{ path('comparaison_tableau_structure') }}" class="btn btn-sm btn-outline-success
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        >
+            <i class="bi-file-diff"></i>
+            <span>Comparaison version</span>
+        </a>
+
+        <a href="{{ path('export_excel_structure') }}" class="btn btn-sm btn-outline-success
+    btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        >
+            <i class="bi-download"></i>
+            <span>Export Excel</span>
+        </a>
     {% endif %}
 {% endblock %}
 

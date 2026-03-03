@@ -11,3 +11,15 @@
         </div>
     </div>
 {% endblock %}
+
+{% block bouton_header %}
+    {% if is_granted('COMPETENCES_EDIT', user_data.departement) or is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('administration_apc_parcours_show_version', {id: apc_parcour.id, annee:2027}) }}" class="btn btn-sm
+                    btn-outline-success
+                        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        >
+            <i class="bi-shuffle"></i>
+            <span>Comparer les versions</span>
+        </a>
+    {% endif %}
+{% endblock %}

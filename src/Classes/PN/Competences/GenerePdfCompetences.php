@@ -5,6 +5,7 @@ namespace App\Classes\PN\Competences;
 use App\Classes\Apc\ApcStructure;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
+use App\Entity\Version;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Symfony\Component\Filesystem\Filesystem;
@@ -20,6 +21,7 @@ class GenerePdfCompetences
 
     private array $competencesParcours;
 
+    private Version $version;
     private Departement $departement;
 
     private ?\Doctrine\Common\Collections\Collection $competences = null;
@@ -38,13 +40,15 @@ class GenerePdfCompetences
 
     }
 
-    public function generePdfCompetencesParPage(Departement $departement): void
+    public function generePdfCompetencesParPage(Version $version): void
     {
-        $this->departement = $departement;
-        $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe().'/ref-competences/') ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe().'/ref-competences/');
+        $this->departement = $version->getDepartement();
+        $this->version = $version;
+
+        $this->filesystem->exists($this->dir.$this->departement->getNumeroAnnexe().'/ref-competences/') ?: $this->filesystem->mkdir($this->dir.$this->departement->getNumeroAnnexe().'/ref-competences/');
         $this->getDataReferentiel();
 
-        foreach ($this->departement->getApcParcours() as $parcours) {
+        foreach ($this->version->getApcParcours() as $parcours) {
             //pour chaque parcours
             // -> page de garde
             $this->generePageDeGarde($parcours);
@@ -90,8 +94,8 @@ class GenerePdfCompetences
 
     private function getDataReferentiel(): void
     {
-        $this->tParcours = $this->apcStructure->parcoursNiveaux($this->departement);
-        $this->competences = $this->departement->getApcCompetences();
+        $this->tParcours = $this->apcStructure->parcoursNiveaux($this->version);
+        $this->competences = $this->version->getApcCompetences();
         $tComp = [];
         foreach ($this->competences as $comp) {
             $tComp[$comp->getId()] = $comp;
@@ -125,6 +129,7 @@ class GenerePdfCompetences
     {
         $this->generePagePdf('page_1_garde_' . $parcours->getId(), 'pageDeGardeParcours', [
             'parcours' => $parcours,
+            'version' => $this->version,
             'departement' => $this->departement
         ]);
     }

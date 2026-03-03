@@ -11,6 +11,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcComposanteEssentielleRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -20,18 +21,18 @@ class ApcComposanteEssentielle extends BaseEntity
 {
     use LifeCycleTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Groups(['read:competence'])]
     private ?string $libelle;
 
     #[ORM\ManyToOne(targetEntity: ApcCompetence::class, inversedBy: 'apcComposanteEssentielles')]
     private ?ApcCompetence $competence;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Groups(['read:competence'])]
     private ?int $ordre;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     #[Groups(['read:competence'])]
     private ?string $code;
 
@@ -88,9 +89,9 @@ class ApcComposanteEssentielle extends BaseEntity
         return $this;
     }
 
-    public function getDepartement(): ?Departement
+    public function getVersion(): ?Version
     {
-        return $this->getCompetence()?->getDepartement();
+        return $this->getCompetence()?->getVersion();
     }
 
     public function display(): string

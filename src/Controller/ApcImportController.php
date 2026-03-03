@@ -32,9 +32,9 @@ class ApcImportController extends BaseController
         ApcParcoursRepository $apcParcoursRepository
     ): Response {
 
-        if ($request->isMethod('POST') && null !== $this->getDepartement()) {
+        if ($request->isMethod('POST') && null !== $this->getVersion()) {
             //effacer
-            $ressources = $apcRessourceRepository->findByDepartement($this->getDepartement());
+            $ressources = $apcRessourceRepository->findByVersion($this->getVersion());
             foreach ($ressources as $res) {
                 foreach ($res->getApcRessourceApprentissageCritiques() as $as) {
                     $this->entityManager->remove($as);
@@ -59,8 +59,8 @@ class ApcImportController extends BaseController
 
                 $this->entityManager->remove($res);
             }
-            
-            $saes = $apcSaeRepository->findByDepartement($this->getDepartement());
+
+            $saes = $apcSaeRepository->findByVersion($this->getVersion());
             foreach ($saes as $sae) {
                 foreach ($sae->getApcSaeApprentissageCritiques() as $as) {
                     $this->entityManager->remove($as);
@@ -80,16 +80,16 @@ class ApcImportController extends BaseController
 
                 $this->entityManager->remove($sae);
             }
-            
+
             $this->entityManager->flush();
             $fichier = $myUpload->upload($request->files->get('fichier'), 'temp/', ['xlsx', 'xml']);
-            $diplomeImport->import($this->getDepartement(), $fichier, 'formation');
+            $diplomeImport->import($this->getVersion(), $fichier, 'formation');
             unlink($fichier);
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Maquette importée avec succès');
         }
 
         return $this->render('apc_import/index.html.twig', [
-            'parcours' => $apcParcoursRepository->findBy(['departement' => $this->getDepartement()->getId()])
+            'parcours' => $apcParcoursRepository->findBy(['version' => $this->getVersion()->getId()])
         ]);
     }
 }

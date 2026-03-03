@@ -9,6 +9,7 @@
 
 namespace App\Controller\competences;
 
+use App\Classes\Apc\ApcApprentissageCritiqueOrdre;
 use App\Classes\Apc\ApcCompetenceOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
@@ -31,33 +32,44 @@ class ApcCompetenceController extends BaseController
 {
     //création de la compétence
     #[Route("/new", name:"administration_apc_competence_new", methods:["GET","POST"])]
-    public function new(Request $request): Response
+    public function new(
+        ApcApprentissageCritiqueOrdre $apcApprentissageCritiqueOrdre,
+        Request $request): Response
     {
-        $apcCompetence = new ApcCompetence($this->getDepartement());
+        $apcCompetence = new ApcCompetence($this->getVersion());
         $form = $this->createForm(ApcCompetenceType::class, $apcCompetence, [
             'new' => true,
-            'departement' => $this->getDepartement(),
+            'version' => $this->getVersion(),
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // par défaut, on met au dernier ordre disponible
-            $lastCompetence = $this->entityManager->getRepository(ApcCompetence::class)->findLastByDepartement($apcCompetence->getDepartement());
+            $lastCompetence = $this->entityManager->getRepository(ApcCompetence::class)->findLastByVersion($apcCompetence->getVersion());
             $apcCompetence->setNumero($lastCompetence->getNumero() + 1);
             $apcCompetence->setNumeroIdentifiant($lastCompetence->getNumero() + 1);
             $apcCompetence->setCouleur('c' . $apcCompetence->getNumero());
             $this->entityManager->persist($apcCompetence);
+
+            // parcours les niveaux, puis les AC pour générer les codes des AC
+            foreach ($apcCompetence->getApcNiveaux() as $apcNiveau) {
+                foreach ($apcNiveau->getApcApprentissageCritiques() as $apcApprentissageCritique) {
+                    $apcApprentissageCritiqueOrdre->deplaceApprentissageCritique($apcApprentissageCritique, $apcApprentissageCritique->getOrdre());
+                }
+            }
+
+
             $this->entityManager->flush();
             $this->addFlashBag(Constantes::FLASHBAG_SUCCESS, 'Compétence créée avec succès.');
 
             return $this->redirectToRoute('administration_apc_referentiel_index',
-                ['departement' => $apcCompetence->getDepartement()?->getId()]);
+                ['version' => $apcCompetence->getVersion()?->getId()]);
         }
 
         return $this->render('competences/apc_competence/new.html.twig', [
             'apc_competence' => $apcCompetence,
             'form' => $form->createView(),
-            'departement' => $this->getDepartement()
+            'version' => $this->getVersion()
         ]);
     }
 
@@ -78,7 +90,7 @@ class ApcCompetenceController extends BaseController
         $ordre = $apcCompetence->getCouleur();
         $form = $this->createForm(ApcCompetenceType::class, $apcCompetence, [
             'new' => false,
-            'departement' => $this->getDepartement(),
+            'version' => $this->getVersion(),
         ]);
         $form->handleRequest($request);
 
@@ -89,7 +101,7 @@ class ApcCompetenceController extends BaseController
 
             if (null !== $request->request->get('btn_update')) {
                 return $this->redirectToRoute('administration_apc_referentiel_index',
-                    ['departement' => $apcCompetence->getDepartement()->getId()]);
+                    ['version' => $apcCompetence->getVersion()->getId()]);
 
             }
         }
@@ -121,7 +133,7 @@ class ApcCompetenceController extends BaseController
 
         if ($apcCompSemetre !== null) {
             //on modifie
-            if ($semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $parcours !== null) {
+            if ($semestre->getVersion()?->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $parcours !== null) {
                 $tab = $apcCompSemetre->getEctsParcours();
                 $tab[$parcours->getId()] = Convert::convertToFloat($parametersAsArray['valeur']);
                 $apcCompSemetre->setEctsParcours($tab);
@@ -133,8 +145,8 @@ class ApcCompetenceController extends BaseController
             $apcCompSemetre = new ApcCompetenceSemestre();
             $apcCompSemetre->setSemestre($semestre);
             $apcCompSemetre->setCompetence($competence);
-            if ($semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $parcours !== null) {
-                foreach ($semestre->getDepartement()->getApcParcours() as $parc) {
+            if ($semestre->getVersion()?->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $parcours !== null) {
+                foreach ($semestre->getVersion()->getApcParcours() as $parc) {
                     $tab[$parc->getId()] = 0;
                 }
 
@@ -162,14 +174,14 @@ class ApcCompetenceController extends BaseController
         $this->denyAccessUnlessGranted('COMPETENCES_DELETE', $apcCompetence);
 
         if ($this->isCsrfTokenValid('delete'.$apcCompetence->getId(), $request->request->get('_token'))) {
-            $departement = $apcCompetence->getDepartement();
-            if ($departement === null) {
+            $version = $apcCompetence->getVersion();
+            if ($version === null) {
                 throw $this->createNotFoundException('Departement introuvable');
             }
 
-            if ($departement->getVerouilleCompetences() === true) {
+            if ($this->getDataUserSession()?->getVersion()?->isVerouilleCompetences() === true) {
                 $this->addFlashBag('warning', 'Le référentiel est verrouillé, vous ne pouvez pas supprimer une compétence');
-                return $this->redirectToRoute('administration_apc_referentiel_index', ['departement' => $departement->getId()]);
+                return $this->redirectToRoute('administration_apc_referentiel_index', ['version' => $version->getId()]);
             }
 
             foreach ($apcCompetence->getApcNiveaux() as $apcNiveau) {
@@ -218,7 +230,7 @@ class ApcCompetenceController extends BaseController
 
             $this->addFlashBag('success', 'Compétence supprimée, avec l\'ensemble des liens vers les ressources, SAE et parcours');
 
-            return $this->redirectToRoute('administration_apc_referentiel_index', ['departement' => $departement->getId()]);
+            return $this->redirectToRoute('administration_apc_referentiel_index', ['version' => $version->getId()]);
         }
     }
 }

@@ -21,6 +21,6 @@ class ExportExcelController extends BaseController
     #[Route('/structure/{parcours}', name: 'structure')]
     public function structure(Structure $structure, ApcParcours $parcours = null): Response
     {
-        return $structure->genereFichierExcel($this->excelWriter, $this->getDepartement(), $parcours);
+        return $structure->genereFichierExcel($this->excelWriter, $this->getVersion(), $parcours);
     }
 }

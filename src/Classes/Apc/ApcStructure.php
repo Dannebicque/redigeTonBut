@@ -14,6 +14,7 @@
 namespace App\Classes\Apc;
 
 use App\Entity\Departement;
+use App\Entity\Version;
 use App\Repository\ApcParcoursNiveauRepository;
 
 class ApcStructure
@@ -27,12 +28,10 @@ class ApcStructure
         $this->apcParcoursNiveauRepository = $apcParcoursNiveauRepository;
     }
 
-
-
-    public function parcoursNiveaux(Departement $departement): array
+    public function parcoursNiveaux(Version $version): array
     {
         $tParcours = [];
-        foreach ($departement->getApcParcours() as $parcours) {
+        foreach ($version->getApcParcours() as $parcours) {
             $pn = $this->apcParcoursNiveauRepository->findParcoursNiveauCompetence($parcours);
             $tParcours[$parcours->getId()] = [];
             foreach ($pn as $niveau) {

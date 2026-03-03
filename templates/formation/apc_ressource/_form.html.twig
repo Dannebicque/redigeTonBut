@@ -93,7 +93,7 @@
                                    :value="competence.id"
                                    name="competences[]"
                                    @change="changeCompetence"
-                                   {% if user_data.departement.verouilleCroise == true %}disabled{% endif %}
+                                   {% if user_data.version.verouilleCroise == true %}disabled{% endif %}
                                    class="competence"
                                    :checked="competence.checked">&nbsp;
                             <span x-html="competence.display"></span>
@@ -102,7 +102,7 @@
                                     <div class="col-6">
                                         <input type="checkbox" name="ac[]" :value="ac.id" :checked="ac.checked"
                                                class="ac"
-                                               {% if user_data.departement.verouilleCroise == true %}disabled{% endif %}>&nbsp;
+                                               {% if user_data.version.verouilleCroise == true %}disabled{% endif %}>&nbsp;
                                         <span x-text="ac.code + ` | ` + ac.libelle"></span>
                                     </div>
                                 </template>
@@ -200,7 +200,7 @@
                         <template x-for="parcour in parcours">
                             <div class="col-6">
                                 <input type="checkbox" name="parcours[]" :value="parcour.id" :checked="parcour.checked"
-                                       {% if user_data.departement.verouilleCroise == true %}disabled{% endif %}
+                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}
                                 >&nbsp;
                                 <span x-text="parcour.libelle"></span>
                             </div>

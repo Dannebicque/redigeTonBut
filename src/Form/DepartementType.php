@@ -19,8 +19,8 @@ class DepartementType extends AbstractType
     {
         $this->droit =  $options['droit'];
         $builder
-            ->add('sigle')
-            ->add('libelle')
+            ->add('sigle', TextType::class, ['disabled' => $this->droit])
+            ->add('libelle', TextType::class, ['disabled' => $this->droit])
             ->add('numeroAnnexe', IntegerType::class, ['disabled' => $this->droit])
             ->add('altBut1', TextType::class, ['label' => 'Pourcentage de réduction pour l\'alternance en BUT1'])
             ->add('altBut2', TextType::class, ['label' => 'Pourcentage de réduction pour l\'alternance en BUT2'])
@@ -42,7 +42,7 @@ class DepartementType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Departement::class,
-            'droit' => null
+            'droit' => true
         ]);
     }
 }

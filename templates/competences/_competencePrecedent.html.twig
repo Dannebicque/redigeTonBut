@@ -1,0 +1,69 @@
+{# todo: deprecated #}
+
+{% set competence = competence|first %}
+<div class="d-flex align-items-stretch mt-3">
+    <div class="col-3 competence ">
+        <div class="p-3 comp competence{{ competence.couleur }}">
+            {{ competence.nom_court }}
+        </div>
+    </div>
+    <div class="col-3 competencelongue  ms-3">
+        <div class="p-3 competencelongue{{ competence.couleur }}">
+            {{ competence.libelle_long }}
+        </div>
+    </div>
+    <div class="col-6 composantesessentielles{{ competence.couleur }}">
+        <ul>
+            {% for composante in competence.composantes_essentielles %}
+                <li>{{ composante }}</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+
+{# Situtations professionnelles #}
+<div class="d-flex align-items-stretch mt-3">
+    <div class="col-3">
+        <div class="p-3 situationpro situation{{ competence.couleur }}">Situations professionnelles</div>
+    </div>
+    <div class="col-9 ms-3 situationliste">
+        <div class="p-3 situationliste{{ competence.couleur }}">
+            {% for situation in competence.situations %}
+                <p>{{ situation }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{# Niveaux #}
+<div class="d-flex align-items-stretch mt-3">
+    <div class="col-3">
+        <div class="p-3 titreniveau">Niveaux</div>
+    </div>
+    <div class="col-9 ms-3">
+        <div class="p-3 titreac">Apprentissages critiques
+        </div>
+    </div>
+</div>
+
+{% for niveau in competence.niveaux %}
+    <div class="d-flex align-items-stretch mt-3">
+        <div class="col-flex-3 niveau  niveau{{ niveau.ordre }}{{ competence.couleur }}">
+            <div class="p-3 niveaucourt ">
+                B.U.T. {{ niveau.annee }}</div>
+            <div class="p-3 niveaulong">{{ niveau.libelle }}
+            </div>
+        </div>
+        <div class="col-flex-9 ms-3" style="padding-right:15px;">
+            <div class="p-3 niveauliste niveau{{ niveau.ordre }}{{ competence.couleur }}">
+                <ul>
+                    {% for ac in niveau.acs %}
+                        <li>{{ ac.code }} | {{ ac.libelle }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+

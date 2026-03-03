@@ -73,7 +73,7 @@ class Preconisation
         $this->donneesDepartement = new PreconisationDepartement();
         $json = [];
         foreach ($this->semestres as $semestre) {
-            if ($this->apcParcours instanceof \App\Entity\ApcParcours) {
+            if ($this->apcParcours instanceof ApcParcours) {
                 $competences = $this->apcParcoursNiveauRepository->findParcoursSemestreCompetence($semestre, $this->apcParcours);
                 $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->apcParcours);
                 $ressourcesAl = $this->apcRessourceParcoursRepository->findBySemestreAl($semestre, $this->apcParcours);

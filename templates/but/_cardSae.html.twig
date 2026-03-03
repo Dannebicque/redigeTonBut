@@ -21,7 +21,7 @@
                     </div>
                 {% endfor %}
             </p>
-            <p>{{ sae.objectifs | markdown_to_html}}</p>
+            <p>{{ sae.objectifs != null ? sae.objectifs | markdown_to_html : ''}}</p>
             <p>
                 {% for competence in sae.apcSaeCompetences %}
                     <span class="badge badge-{{ competence.competence.couleur }}">
@@ -40,8 +40,8 @@
             </a>
             {% if  is_granted('ROLE_EDITEUR') %}
                 <div class="col-12 d-flex align-items-center justify-content-md-end">
-                    {% if user_data.departement.pnBloque == false %}
-                        {% if user_data.departement.verouilleCroise == false %}
+                    {% if user_data.version.pnVerouille == false %}
+                        {% if user_data.version.verouilleCroise == false %}
                             <a href="{{ path('formation_apc_sae_duplicate',
                                 {'id': sae.id, parcours: parcours != null ? parcours.id : null}) }}" class="btn btn-sm btn-icon btn-icon-start btn-outline-info ms-1"
                                type="button">
@@ -55,7 +55,7 @@
                             <i class="bi-pencil-square"></i>
                             <span class="d-none d-xxl-inline-block">Modifier</span>
                         </a>
-                        {% if  is_granted('ROLE_PACD') and user_data.departement.verouilleCroise == false %}
+                        {% if  is_granted('ROLE_PACD') and user_data.version.verouilleCroise == false %}
                             {{ include('form/_delete_form.html.twig', {path: path('formation_apc_sae_delete',
                                 {id: sae.id, }), id: sae.id}) }}
                         {% endif %}

@@ -64,4 +64,24 @@ class DepartementRepository extends ServiceEntityRepository
 
         return $qb->getquery()->getresult();
     }
+
+    public function findByActifs() : array
+    {
+        return $this->createQueryBuilder('departement')
+            ->innerJoin('departement.versions', 'version')
+            ->where('version.actif = :actif')
+            ->setParameter('actif', true)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByVersion(int $annee): array
+    {
+        return $this->createQueryBuilder('departement')
+            ->innerJoin('departement.versions', 'version')
+            ->where('version.annee = :annee')
+            ->setParameter('annee', $annee)
+            ->getQuery()
+            ->getResult();
+    }
 }

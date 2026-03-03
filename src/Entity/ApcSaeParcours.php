@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ApcSaeParcoursRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -11,7 +12,7 @@ class ApcSaeParcours
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Groups(['read:sae'])]
     private ?int $id = null;
 

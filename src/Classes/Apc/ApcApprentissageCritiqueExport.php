@@ -6,6 +6,7 @@ namespace App\Classes\Apc;
 
 use App\Classes\Excel\ExcelWriter;
 use App\Entity\Departement;
+use App\Entity\Version;
 
 class ApcApprentissageCritiqueExport
 {
@@ -16,11 +17,11 @@ class ApcApprentissageCritiqueExport
         $this->excelWriter = $excelWriter;
     }
 
-    public function exportDepartement($acs, Departement $departement)
+    public function exportDepartement($acs, Version $version)
     {
         $this->excelWriter->nouveauFichier();
 
-        foreach ($departement->getAnnees() as $annee) {
+        foreach ($version->getAnnees() as $annee) {
             $this->excelWriter->createSheet('BUT ' . $annee->getOrdre());
             $this->excelWriter->writeCellName('A1', 'Code');
             $this->excelWriter->writeCellName('B1', 'Libelle');

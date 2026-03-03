@@ -13,7 +13,9 @@ use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use App\Repository\SemestreRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -25,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApcRessourceType extends AbstractType
 {
-    protected ?Departement $departement;
+    protected ?Version $version;
 
     protected bool $editable;
 
@@ -36,7 +38,7 @@ class ApcRessourceType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->departement = $options['departement'];
+        $this->version = $options['version'];
         $this->editable = !$options['editable'];
         $this->parcours = $options['parcours'];
         $this->verouille_croise = $options['verouille_croise'];
@@ -101,7 +103,7 @@ class ApcRessourceType extends AbstractType
                 'label_attr' => ['class' => 'text-white'],
                 'help_attr' => ['class' => 'text-white'],
             ]);
-        if ($this->departement->getTypeStructure() === Departement::TYPE3) {
+        if ($this->version->getDepartement()->getTypeStructure() === Departement::TYPE3) {
             $builder->add('semestre', EntityType::class, [
                 'class' => Semestre::class,
                 'data' => $this->parcours->getSemestres()[$options['ordre'] - 1],
@@ -109,8 +111,8 @@ class ApcRessourceType extends AbstractType
                 'disabled' => $this->verouille_croise,
                 'choice_label' => 'display',
                 'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
-                'query_builder' => function(SemestreRepository $semestreRepository): \Doctrine\ORM\QueryBuilder {
-                    return $semestreRepository->findByDepartementParcoursBuilder($this->departement,
+                'query_builder' => function(SemestreRepository $semestreRepository): QueryBuilder {
+                    return $semestreRepository->findByVersionParcoursBuilder($this->version,
                         $this->parcours);
                 },
                 'label' => 'Semestre',
@@ -123,8 +125,8 @@ class ApcRessourceType extends AbstractType
                 'disabled' => $this->verouille_croise,
                 'choice_label' => 'display',
                 'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
-                'query_builder' => function(SemestreRepository $semestreRepository): \Doctrine\ORM\QueryBuilder {
-                    return $semestreRepository->findByDepartementParcoursBuilder($this->departement,
+                'query_builder' => function(SemestreRepository $semestreRepository): QueryBuilder {
+                    return $semestreRepository->findByVersionParcoursBuilder($this->version,
                         $this->parcours);
                 },
                 'label' => 'Semestre',
@@ -137,7 +139,7 @@ class ApcRessourceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ApcRessource::class,
-            'departement' => null,
+            'version' => null,
             'editable' => null,
             'verouille_croise' => null,
             'parcours' => null,

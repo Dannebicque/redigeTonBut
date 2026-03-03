@@ -11,7 +11,7 @@ namespace App\Form;
 
 use App\Entity\ApcCompetence;
 use App\Entity\ApcSaeCompetence;
-use App\Entity\Departement;
+use App\Entity\Version;
 use App\Repository\ApcComptenceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -20,19 +20,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApcSaeCompetenceType extends AbstractType
 {
-    protected ?Departement $departement;
+    protected ?Version $version;
+
+    public function __construct()
+    {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        $this->departement = $options['departement'];
+        $this->version = $options['version'];
 
         $builder
             ->add('competence', EntityType::class, [
                 'class' => ApcCompetence::class,
                 'choice_label'=> 'nomCourt',
                 'query_builder' => function (ApcComptenceRepository $apcComptenceRepository) {
-                    return $apcComptenceRepository->findByDepartementBuilder($this->departement);
+                    return $apcComptenceRepository->findByVersionBuilder($this->version);
                 },
             ])
         ;
@@ -42,7 +46,7 @@ class ApcSaeCompetenceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ApcSaeCompetence::class,
-            'departement' => null
+            'version' => null
         ]);
     }
 }

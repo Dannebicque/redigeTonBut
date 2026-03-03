@@ -23,7 +23,7 @@
 
                 <tr>
                     <th>Texte descriptif</th>
-                    <td>{{ apcParcours.textePresentation|markdown_to_html|raw }}</td>
+                    <td>{{ apcParcours.textePresentation != null ? apcParcours.textePresentation|markdown_to_html|raw : '' }}</td>
                 </tr>
 
                 </tbody>
@@ -32,6 +32,18 @@
     </div>
 {% endblock %}
 
-
+{% block bouton_header %}
+    {% if is_granted('COMPETENCES_EDIT', user_data.departement) or is_granted('ROLE_ADMIN') %}
+        {% if annee == 2027 %}
+            <a href="{{ path('administration_apc_parcours_show_version', {id: apcParcours.id, annee:2027}) }}" class="btn btn-sm
+                    btn-outline-info
+                        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+            >
+                <i class="bi-shuffle"></i>
+                <span>Comparer les versions</span>
+            </a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
 
 

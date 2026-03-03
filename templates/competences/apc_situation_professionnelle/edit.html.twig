@@ -21,18 +21,18 @@
 {% block breadcrumb %}
     {{ include('composants/breadcrumb.html.twig', {liens:[
         {
-            href: path('administration_apc_referentiel_index', {departement:apc_situation_professionnelle.departement.id}),
+            href: path('administration_apc_referentiel_index', {version:apc_situation_professionnelle.version.id}),
             title: 'Référentiel de compétences',
         },
     ]}) }}
 {% endblock %}
 
 {% block bouton_header %}
-    {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+    {% if is_granted('ROLE_PACD') and user_data.version.verouilleCompetences == false %}
         {{ include('form/_delete_form.html.twig', {path: path('administration_apc_situation_professionnelle_delete',
             {id: apc_situation_professionnelle.id, }), id: apc_situation_professionnelle.id}) }}
     {% endif %}
-    <a href="{{ path('administration_apc_referentiel_index', {departement:apc_situation_professionnelle.departement.id}) }}"
+    <a href="{{ path('administration_apc_referentiel_index', {version:apc_situation_professionnelle.version.id}) }}"
        class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >

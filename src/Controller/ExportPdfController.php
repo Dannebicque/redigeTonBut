@@ -22,8 +22,8 @@ class ExportPdfController extends BaseController
         Pdf $knpSnappyPdf,
         ApcRessourceRepository $apcRessourceRepository
     ): Response {
-        $nbParcours = $this->getDepartement()?->getApcParcours()->count();
-        $semestres = $this->getDepartement()->getSemestres();
+        $nbParcours = $this->getVersion()?->getApcParcours()->count();
+        $semestres = $this->getVersion()->getSemestres();
 
         $ressources = [];
 
@@ -42,7 +42,7 @@ class ExportPdfController extends BaseController
         $day = new DateTime('now');
         $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_parcours_' . $day->format('dmYHis') . '.pdf';
         $html = $this->renderView('formation/export-referentiel.html.twig', [
-            'allParcours' => $this->getDepartement()->getApcParcours(),
+            'allParcours' => $this->getVersion()->getApcParcours(),
             'departement' => $this->getDepartement(),
             'semestres' => $semestres,
             'ressources' => $ressources,
@@ -66,8 +66,8 @@ class ExportPdfController extends BaseController
         Pdf $knpSnappyPdf,
         ApcRessourceRepository $apcRessourceRepository
     ): Response {
-        $nbParcours = $this->getDepartement()?->getApcParcours()->count();
-        $semestres = $this->getDepartement()->getSemestres();
+        $nbParcours = $this->getVersion()?->getApcParcours()->count();
+        $semestres = $this->getVersion()->getSemestres();
 
 
         $ressources = [];
@@ -89,8 +89,8 @@ class ExportPdfController extends BaseController
         $day = new DateTime('now');
         $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_tronc_commun_' . $day->format('dmYHis') . '.pdf';
         $html = $this->renderView('formation/export-referentiel.html.twig', [
-            'allParcours' => $this->getDepartement()->getApcParcours(),
-            'departement' => $this->getDepartement(),
+            'allParcours' => $this->getVersion()->getApcParcours(),
+            'departement' => $this->getVersion(),
             'semestres' => $semestres,
             'ressources' => $ressources,
         ]);
@@ -120,7 +120,7 @@ class ExportPdfController extends BaseController
         if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
             $semestres = $semestreRepository->findByParcours($parcours);
         } else {
-            $semestres = $this->getDepartement()->getSemestres();
+            $semestres = $this->getVersion()->getSemestres();
         }
 
         $ressources = [];
@@ -139,7 +139,7 @@ class ExportPdfController extends BaseController
         $day = new DateTime('now');
         $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_' . $parcours->getCode() . '_' . $day->format('dmYHis') . '.pdf';
         $html = $this->renderView('formation/export-referentiel.html.twig', [
-            'allParcours' => $this->getDepartement()->getApcParcours(),
+            'allParcours' => $this->getVersion()->getApcParcours(),
             'departement' => $this->getDepartement(),
             'semestres' => $semestres,
             'saes' => $saes,
@@ -175,7 +175,7 @@ class ExportPdfController extends BaseController
         if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
             $semestres = $semestreRepository->findByParcours($parcours);
         } else {
-            $semestres = $this->getDepartement()->getSemestres();
+            $semestres = $this->getVersion()->getSemestres();
         }
 
         $ressources = [];
@@ -194,7 +194,7 @@ class ExportPdfController extends BaseController
         $day = new DateTime('now');
         $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_' . $parcours->getCode() . '_' . $day->format('dmYHis') . '.pdf';
         $html = $this->renderView('formation/export-referentiel.html.twig', [
-            'allParcours' => $this->getDepartement()->getApcParcours(),
+            'allParcours' => $this->getVersion()->getApcParcours(),
             'departement' => $this->getDepartement(),
             'semestres' => $semestres,
             'saes' => $saes,

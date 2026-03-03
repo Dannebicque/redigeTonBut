@@ -49,31 +49,29 @@
 
                 {% for sae in saes %}
                     <td class="text-center">
-                        {% if (is_granted('ROLE_LECTEUR') or is_granted('ROLE_IUT') or user_data.departement.pnBloque
-                            == true) and user_data
-                        .departement.coeffEditable == false %}
-                            <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }}, {{ niveau.competence.id }})"></span>
-                        {% else %}
+                        {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.coeffVerouille == false) %}
                             <input type="text" class="form-control"
                                    @blur="updateSae"
                                    data-sae="{{ sae.id }}"
                                    data-competence="{{ niveau.competence.id }}"
                                    x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }}, {{ niveau.competence.id }})">
+                        {% else %}
+                            <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saes, {{ sae.id }}, {{ niveau.competence.id }})"></span>
+
                         {% endif %}
                     </td>
                 {% endfor %}
                 {% if not is_granted('ROLE_IUT') %}
                     {% for sae in saesAl %}
                         <td class="text-center bg-warning adaptationLocale d-none">
-                            {% if (is_granted('ROLE_LECTEUR') or is_granted('ROLE_IUT') or user_data.departement.pnBloque
-                                == true) and user_data.departement.coeffEditable == false %}
-                                <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saesAl, {{ sae.id }}, {{ niveau.competence.id }})"></span>
-                            {% else %}
+                            {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.coeffVerouille == false) %}
                                 <input type="text" class="form-control"
                                        @blur="updateSae"
                                        data-sae="{{ sae.id }}"
                                        data-competence="{{ niveau.competence.id }}"
                                        x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saesAl, {{ sae.id }}, {{ niveau.competence.id }})">
+                            {% else %}
+                                <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].saesAl, {{ sae.id }}, {{ niveau.competence.id }})"></span>
                             {% endif %}
                         </td>
                     {% endfor %}
@@ -82,30 +80,25 @@
                 <th>&nbsp;</th>
                 {% for ressource in ressources %}
                     <td class="text-center">
-                        {% if (is_granted('ROLE_LECTEUR') or is_granted('ROLE_IUT') or user_data.departement.pnBloque == true) and user_data
-                        .departement.coeffEditable == false %}
-                            <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
-                            .ressources,
-{{ ressource.id }}, {{ niveau.competence.id }})"></span>
-                        {% else %}
+                        {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.coeffVerouille == false) %}
                             <input type="text" class="form-control"
                                    @blur="updateRessource"
                                    style="min-width: 50px"
                                    data-ressource="{{ ressource.id }}"
                                    data-competence="{{ niveau.competence.id }}"
                                    x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}].ressources, {{ ressource.id }}, {{ niveau.competence.id }})">
+                        {% else %}
+                            <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
+                            .ressources,
+{{ ressource.id }}, {{ niveau.competence.id }})"></span>
+
                         {% endif %}
                     </td>
                 {% endfor %}
                 {% if not is_granted('ROLE_IUT') %}
                     {% for ressource in ressourcesAl %}
                         <td class="text-center bg-warning adaptationLocale d-none">
-                            {% if (is_granted('ROLE_LECTEUR') or is_granted('ROLE_IUT') or user_data.departement.pnBloque == true) and user_data
-                            .departement.coeffEditable == false %}
-                                <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
-                            .ressourcesAl,
-{{ ressource.id }}, {{ niveau.competence.id }})"></span>
-                            {% else %}
+                            {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.coeffVerouille == false) %}
                                 <input type="text" class="form-control"
                                        @blur="updateRessource"
                                        style="min-width: 50px"
@@ -113,17 +106,17 @@
                                        data-competence="{{ niveau.competence.id }}"
                                        x-bind:value="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
                                    .ressourcesAl, {{ ressource.id }}, {{ niveau.competence.id }})">
+                            {% else %}
+                                <span x-html="afficheValeurCoefficient(donnees[{{ semestre.ordreLmd }}]
+                            .ressourcesAl,
+{{ ressource.id }}, {{ niveau.competence.id }})"></span>
                             {% endif %}
                         </td>
                     {% endfor %}
                 {% endif %}
                 <td></td>
                 <td class="text-center">
-                    {% if (is_granted('ROLE_LECTEUR') or is_granted('ROLE_IUT') or user_data.departement.pnBloque == true) and user_data
-                    .departement.coeffEditable == false %}
-                        <span x-html="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
-                'ects')"></span>
-                    {% else %}
+                    {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.coeffVerouille == false) %}
                         <input type="text" class="form-control"
                                @blur="updateCompetence"
                                style="min-width: 50px"
@@ -131,6 +124,9 @@
                                data-semestre="{{ semestre.id }}"
                                x-bind:value="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
                 'ects')">
+                    {% else %}
+                        <span x-html="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }},
+                'ects')"></span>
                     {% endif %}
                 </td>
                 <td x-text="afficheValeurTotal(donnees[{{ semestre.ordreLmd }}].competences, {{ niveau.competence.id }})"

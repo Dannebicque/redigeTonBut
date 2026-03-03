@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Classes\PN\Competences\GenerePdfCompetences;
 use App\Repository\DepartementRepository;
+use App\Repository\VersionRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,6 +20,7 @@ class GenereRefCompetenceCommand extends Command
 {
 
     public function __construct(
+        protected VersionRepository $versionRepository,
         protected DepartementRepository $departementRepository,
         protected GenerePdfCompetences $generePdfCompetences
     ) {
@@ -28,7 +30,9 @@ class GenereRefCompetenceCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('specialite', InputArgument::OPTIONAL, 'Nom de la spécialité');
+            ->addArgument('specialite', InputArgument::REQUIRED, 'Nom de la spécialité')
+            ->addArgument('version', InputArgument::REQUIRED, 'Version du PN' )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -49,9 +53,12 @@ class GenereRefCompetenceCommand extends Command
             $io->note(sprintf('Génération pour la spécialité %s', $arg1));
             //une spécialité
             $specialite = $this->departementRepository->findOneBy(['sigle' => $arg1]);
+
+
             if ($specialite !== null) {
-                $this->generePdfCompetences->generePdfCompetencesParPage($specialite);
-                $this->generePdfCompetences->generePdfCompetencesComplet($specialite);
+                $version = $this->versionRepository->findOneBy(['annee' => $input->getArgument('version'), 'departement' => $specialite->getId()]);
+                $this->generePdfCompetences->generePdfCompetencesParPage($version);
+                $this->generePdfCompetences->generePdfCompetencesComplet($version);
             } else {
                 $io->error('Spécialité inexistante.');
 

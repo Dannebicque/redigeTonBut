@@ -60,25 +60,31 @@ class Departement
     private ?string $libelle;
 
     /**
-     * @var Collection<int, \App\Entity\Annee>
+     * @var Collection<int, Annee>
      */
+    //todo: a supprimer, sur version
     #[ORM\OneToMany(targetEntity: Annee::class, mappedBy: "departement")]
+    /** @deprecated */
     private Collection $annees;
 
     /**
-     * @var Collection<int, \App\Entity\ApcCompetence>
+     * @var Collection<int, ApcCompetence>
      */
     #[ORM\OneToMany(targetEntity: ApcCompetence::class, mappedBy: "departement")]
     #[ORM\OrderBy(["couleur" => "ASC"])]
     #[Groups(["read:departement"])]
+    /** @deprecated */
+    //todo: a supprimer, sur version
     private Collection $apcCompetences;
 
     /**
-     * @var Collection<int, \App\Entity\ApcParcours>
+     * @var Collection<int, ApcParcours>
      */
-    #[ORM\OneToMany(targetEntity: ApcParcours::class, mappedBy: "departement")]
+    #[ORM\OneToMany(mappedBy: "departement", targetEntity: ApcParcours::class)]
     #[ORM\OrderBy(["ordre" => "ASC"])]
     #[Groups(["read:departement"])]
+    /** @deprecated */
+    //todo: a supprimer, sur version
     private Collection $apcParcours;
 
     #[ORM\Column(type: Types::STRING, length: 20)]
@@ -99,70 +105,106 @@ class Departement
     private ?string $typeStructure;
 
     /**
-     * @var Collection<int, \App\Entity\User>
+     * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: "departement")]
+    #[ORM\OneToMany(mappedBy: "departement", targetEntity: User::class)]
     private Collection $users;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(["read:departement"])]
+    //todo: a supprimer, sur version
+        /** @deprecated */
     private ?string $textePresentation;
 
     #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: "departementEnfants")]
-    private ?\App\Entity\Departement $departement_parent = null;
+    //todo: pas utilisé ?
+    private ?Departement $departement_parent = null;
 
     /**
-     * @var Collection<int, \App\Entity\Departement>
+     * @var Collection<int, Departement>
      */
     #[ORM\OneToMany(targetEntity: Departement::class, mappedBy: "departement_parent")]
+    //todo: pas utilisé ?
     private Collection $departementEnfants;
 
     /**
-     * @var Collection<int, \App\Entity\User>
+     * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: "CpnDepartements")]
     private Collection $cpns;
 
     #[ORM\Column(type: Types::BOOLEAN)]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private bool $verouilleStructure;
 
     #[ORM\Column(type: Types::BOOLEAN)]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private bool $verouilleCompetences;
 
     #[ORM\Column(type: Types::BOOLEAN)]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private bool $verouilleCroise;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(["read:departement"])]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private ?DateTime $dateVersionCompetence;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(["read:departement"])]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private ?DateTime $dateVersionFormation;
 
     #[ORM\Column(type: Types::BOOLEAN)]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private ?bool $pn_bloque = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private ?bool $coeff_editable = null;
 
     #[ORM\Column(type: Types::FLOAT)]
     #[Groups(["read:departement"])]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private ?float $altBut1 = null;
 
     #[ORM\Column(type: Types::FLOAT)]
     #[Groups(["read:departement"])]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private ?float $altBut2 = null;
 
     #[ORM\Column(type: Types::FLOAT)]
     #[Groups(["read:departement"])]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
     private ?float $altBut3 = null;
 
     /**
-     * @var Collection<int, \App\Entity\QapesSae>
+     * @var Collection<int, QapesSae>
      */
     #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: "specialite")]
+    //todo: a supprimé, déplacé sur Version . A traiter
     private Collection $qapesSaes;
+
+    #[ORM\Column]
+    //todo: a supprimé, déplacé sur Version
+        /** @deprecated */
+    private ?bool $verouilleTextes = true;
+
+    /**
+     * @var Collection<int, Version>
+     */
+    #[ORM\OneToMany(mappedBy: 'departement', targetEntity: Version::class)]
+    private Collection $versions;
 
 
 
@@ -175,6 +217,8 @@ class Departement
         $this->departementEnfants = new ArrayCollection();
         $this->cpns = new ArrayCollection();
         $this->qapesSaes = new ArrayCollection();
+        $this->versions = new ArrayCollection();
+        $this->dateVersionCompetence = new DateTime();
     }
 
     public function getLibelle(): ?string
@@ -190,11 +234,13 @@ class Departement
     /**
      * @return Collection|Annee[]
      */
+    /** @deprecated */
     public function getAnnees(): Collection
     {
         return $this->annees;
     }
 
+    /** @deprecated */
     public function addAnnee(Annee $annee): self
     {
         if (!$this->annees->contains($annee)) {
@@ -205,6 +251,7 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function removeAnnee(Annee $annee): self
     {
         // set the owning side to null (unless already changed)
@@ -218,11 +265,13 @@ class Departement
     /**
      * @return Collection|ApcCompetence[]
      */
+    /** @deprecated */
     public function getApcCompetences(): Collection
     {
         return $this->apcCompetences;
     }
 
+    /** @deprecated */
     public function addApcCompetence(ApcCompetence $apcCompetence): self
     {
         if (!$this->apcCompetences->contains($apcCompetence)) {
@@ -233,6 +282,7 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function removeApcCompetence(ApcCompetence $apcCompetence): self
     {
         // set the owning side to null (unless already changed)
@@ -246,11 +296,13 @@ class Departement
     /**
      * @return Collection|ApcParcours[]
      */
+    /** @deprecated */
     public function getApcParcours(): Collection
     {
         return $this->apcParcours;
     }
 
+    /** @deprecated */
     public function addApcParcour(ApcParcours $apcParcour): self
     {
         if (!$this->apcParcours->contains($apcParcour)) {
@@ -261,6 +313,7 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function removeApcParcour(ApcParcours $apcParcour): self
     {
         // set the owning side to null (unless already changed)
@@ -362,6 +415,7 @@ class Departement
         return $this->getSigle().' | '.$this->getLibelle();
     }
 
+    /** @deprecated */
     public function getSemestres(): array
     {
         $semestres = [];
@@ -374,11 +428,13 @@ class Departement
         return $semestres;
     }
 
+    /** @deprecated */
     public function getTextePresentation(): ?string
     {
         return $this->textePresentation;
     }
 
+    /** @deprecated */
     public function setTextePresentation(string $textePresentation): self
     {
         $this->textePresentation = $textePresentation;
@@ -480,11 +536,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getVerouilleStructure(): ?bool
     {
         return $this->verouilleStructure;
     }
 
+    /** @deprecated */
     public function setVerouilleStructure(bool $verouilleStructure): self
     {
         $this->verouilleStructure = $verouilleStructure;
@@ -492,11 +550,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getVerouilleCompetences(): ?bool
     {
         return $this->verouilleCompetences;
     }
 
+    /** @deprecated */
     public function setVerouilleCompetences(bool $verouilleCompetences): self
     {
         $this->verouilleCompetences = $verouilleCompetences;
@@ -504,11 +564,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getVerouilleCroise(): ?bool
     {
         return $this->verouilleCroise;
     }
 
+    /** @deprecated */
     public function setVerouilleCroise(bool $verouilleCroise): self
     {
         $this->verouilleCroise = $verouilleCroise;
@@ -516,11 +578,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getDateVersionCompetence(): ?DateTimeInterface
     {
         return $this->dateVersionCompetence;
     }
 
+    /** @deprecated */
     public function setDateVersionCompetence(?DateTimeInterface $dateVersionCompetence): self
     {
         $this->dateVersionCompetence = $dateVersionCompetence;
@@ -528,11 +592,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getDateVersionFormation(): ?DateTimeInterface
     {
         return $this->dateVersionFormation;
     }
 
+    /** @deprecated */
     public function setDateVersionFormation(?DateTimeInterface $dateVersionFormation): self
     {
         $this->dateVersionFormation = $dateVersionFormation;
@@ -540,11 +606,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getPnBloque(): ?bool
     {
         return $this->pn_bloque;
     }
 
+    /** @deprecated */
     public function setPnBloque(bool $pn_bloque): self
     {
         $this->pn_bloque = $pn_bloque;
@@ -552,11 +620,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getCoeffEditable(): ?bool
     {
         return $this->coeff_editable;
     }
 
+    /** @deprecated */
     public function setCoeffEditable(bool $coeff_editable): self
     {
         $this->coeff_editable = $coeff_editable;
@@ -564,11 +634,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getAltBut1(): ?float
     {
         return $this->altBut1;
     }
 
+    /** @deprecated */
     public function setAltBut1(float $altBut1): self
     {
         $this->altBut1 = $altBut1;
@@ -576,11 +648,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getAltBut2(): ?float
     {
         return $this->altBut2;
     }
 
+    /** @deprecated */
     public function setAltBut2(float $altBut2): self
     {
         $this->altBut2 = $altBut2;
@@ -588,11 +662,13 @@ class Departement
         return $this;
     }
 
+    /** @deprecated */
     public function getAltBut3(): ?float
     {
         return $this->altBut3;
     }
 
+    /** @deprecated */
     public function setAltBut3(float $altBut3): self
     {
         $this->altBut3 = $altBut3;
@@ -631,5 +707,49 @@ class Departement
     public function __toString(): string
     {
         return $this->getSigle();
+    }
+
+    /** @deprecated */
+    public function isVerouilleTextes(): ?bool
+    {
+        return $this->verouilleTextes;
+    }
+
+    /** @deprecated */
+    public function setVerouilleTextes(bool $verouilleTextes): static
+    {
+        $this->verouilleTextes = $verouilleTextes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Version>
+     */
+    public function getVersions(): Collection
+    {
+        return $this->versions;
+    }
+
+    public function addVersion(Version $version): static
+    {
+        if (!$this->versions->contains($version)) {
+            $this->versions->add($version);
+            $version->setDepartement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVersion(Version $version): static
+    {
+        if ($this->versions->removeElement($version)) {
+            // set the owning side to null (unless already changed)
+            if ($version->getDepartement() === $this) {
+                $version->setDepartement(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -23,6 +23,7 @@ use App\Entity\ApcSaeRessource;
 use App\Entity\ApcSituationProfessionnelle;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use App\Utils\Codification;
 use App\Utils\Convert;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,7 +34,7 @@ class ReferentielCompetenceImport
 {
     private string $fichier;
 
-    private Departement $departement;
+    private Version  $version;
 
     private EntityManagerInterface $entityManager;
 
@@ -42,10 +43,10 @@ class ReferentielCompetenceImport
         $this->entityManager = $entityManager;
     }
 
-    public function import(Departement $departement, string $fichier, $type): void
+    public function import(Version $version, string $fichier, $type): void
     {
         $this->fichier = $fichier;
-        $this->departement = $departement;
+        $this->version = $version;
         $ext = pathinfo($this->fichier, PATHINFO_EXTENSION);
 
         //supprimer les anciens référentiels.
@@ -74,7 +75,7 @@ class ReferentielCompetenceImport
 
     private function importCompetenceExcel(): void
     {
-        $annees = $this->entityManager->getRepository(Annee::class)->findByDepartement($this->departement);
+        $annees = $this->entityManager->getRepository(Annee::class)->findByVersion($this->version);
         $tAnnees = [];
         foreach ($annees as $annee) {
             $tAnnees['BUT' . $annee->getOrdre()] = $annee;
@@ -97,7 +98,7 @@ class ReferentielCompetenceImport
                 case '5':
                 case '6':
                     //nouvelle compétence
-                    $comp = new ApcCompetence($this->departement);
+                    $comp = new ApcCompetence($this->version);
                     $comp->setCouleur('c' . $sheet->getCellByColumnAndRow(2, $ligne)->getValue());
                     $comp->setNumero($sheet->getCellByColumnAndRow(2, $ligne)->getValue());
                     $comp->setLibelle($sheet->getCellByColumnAndRow(4, $ligne)->getValue());
@@ -158,7 +159,7 @@ class ReferentielCompetenceImport
         while (null !== $sheet->getCellByColumnAndRow(1, $ligne)->getValue()) {
             if ($sheet->getCellByColumnAndRow(5, $ligne)->getValue() === 'BUT1') {
                 //nouveau parcours
-                $parc = new ApcParcours($this->departement);
+                $parc = new ApcParcours($this->version);
                 $ordre = $sheet->getCellByColumnAndRow(2, $ligne)->getValue();
                 $parc->setCode($sheet->getCellByColumnAndRow(4, $ligne)->getValue());
                 $parc->setLibelle($sheet->getCellByColumnAndRow(3, $ligne)->getValue());
@@ -188,7 +189,7 @@ class ReferentielCompetenceImport
 
     private function importCompetence(): void
     {
-        $annees = $this->entityManager->getRepository(Annee::class)->findByDepartement($this->departement);
+        $annees = $this->entityManager->getRepository(Annee::class)->findByVersion($this->version);
         $tAnnees = [];
         foreach ($annees as $annee) {
             $tAnnees['BUT' . $annee->getOrdre()] = $annee;
@@ -197,7 +198,7 @@ class ReferentielCompetenceImport
         $xml = $this->openXmlFile();
         $tCompetences = [];
         foreach ($xml->competences->competence as $competence) {
-            $comp = new ApcCompetence($this->departement);
+            $comp = new ApcCompetence($this->version);
             $comp->setCouleur($competence['couleur']);
             $comp->setNumero(substr($competence['couleur'], 1, 1));
             $comp->setLibelle($competence['libelle_long']);
@@ -256,7 +257,7 @@ class ReferentielCompetenceImport
 
         $i = 1;
         foreach ($xml->parcours->parcour as $parcour) {
-            $parc = new ApcParcours($this->departement);
+            $parc = new ApcParcours($this->version);
             $parc->setCode($parcour['code']);
             $parc->setLibelle($parcour['libelle']);
             $parc->setCouleur('p' . $i);
@@ -288,9 +289,9 @@ class ReferentielCompetenceImport
     private function importFormation(): void
     {
         $xml = $this->openXmlFile();
-        $tAcs = $this->entityManager->getRepository(ApcApprentissageCritique::class)->findOneByDepartementArray($this->departement);
-        $tParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByDepartementArray($this->departement);
-        $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findOneByDepartementArray($this->departement);
+        $tAcs = $this->entityManager->getRepository(ApcApprentissageCritique::class)->findOneByVersionArray($this->version);
+        $tParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByVersionArray($this->version);
+        $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findOneByVersionArray($this->version);
         $tSem = [];
         $tRessources = [];
         $tabPrerequis = [];
@@ -459,12 +460,12 @@ class ReferentielCompetenceImport
 
     private function importFormationExcel(): void
     {
-        $tSemestres = $this->entityManager->getRepository(Semestre::class)->findByDepartementArray($this->departement);
-        $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findByDepartementArray($this->departement);
-        $tAcs = $this->entityManager->getRepository(ApcApprentissageCritique::class)->findOneByDepartementArray($this->departement);
-        $tSaes = $this->entityManager->getRepository(ApcSae::class)->findByDepartementArray($this->departement);
-        $tabParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByDepartementArray($this->departement);
-        $tabRessources = $this->entityManager->getRepository(ApcRessource::class)->findByDepartementArray($this->departement);
+        $tSemestres = $this->entityManager->getRepository(Semestre::class)->findOneByVersionArray($this->version);
+        $tCompetences = $this->entityManager->getRepository(ApcCompetence::class)->findOneByVersionArray($this->version);
+        $tAcs = $this->entityManager->getRepository(ApcApprentissageCritique::class)->findOneByVersionArray($this->version);
+        $tSaes = $this->entityManager->getRepository(ApcSae::class)->findOneByVersionArray($this->version);
+        $tabParcours = $this->entityManager->getRepository(ApcParcours::class)->findOneByVersionArray($this->version);
+        $tabRessources = $this->entityManager->getRepository(ApcRessource::class)->findOneByVersionArray($this->version);
 
         $excel = $this->openExcelFile();
         $sheet = $excel->getSheet(0);//ressources

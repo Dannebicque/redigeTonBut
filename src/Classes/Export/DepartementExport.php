@@ -9,7 +9,19 @@
 
 namespace App\Classes\Export;
 
+use App\DTO\PreconisationSemestre;
+use App\Entity\ApcCompetence;
+use App\Entity\ApcParcours;
+use App\Entity\ApcRessource;
+use App\Entity\ApcSae;
+use App\Entity\ApcSaeRessource;
 use App\Entity\Departement;
+use App\Entity\Semestre;
+use App\Entity\Version;
+use App\Repository\AnneeRepository;
+use App\Repository\ApcParcoursNiveauRepository;
+use App\Repository\ApcRessourceParcoursRepository;
+use App\Repository\ApcSaeParcoursRepository;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -22,20 +34,24 @@ class DepartementExport
     private string $baseDir = '';
 
     public function __construct(
-        KernelInterface $kernel,
-        Environment $twig)
+        private ApcSaeParcoursRepository       $apcSaeParcoursRepository,
+        private ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
+        private ApcParcoursNiveauRepository    $apcParcoursNiveauRepository,
+        KernelInterface                        $kernel,
+        Environment                            $twig,
+        private readonly AnneeRepository $anneeRepository)
     {
         $this->twig = $twig;
         $this->baseDir = $kernel->getProjectDir();
     }
 
-    public function exportRefentiel(Departement $departement, $format = 'xml'): Response
+    public function exportRefentiel(Version $version, $format = 'xml'): Response
     {
         switch ($format) {
             case 'xml':
-                return $this->exportFichierXml($departement);
+                return $this->exportFichierXml($version);
             case 'json':
-                return $this->exportFichierJson($departement);
+                return $this->exportFichierJson($version);
         }
 
     }
@@ -75,6 +91,7 @@ class DepartementExport
             'specialite' => $departement->getSigle(),
             'specialite_long' => $departement->getLibelle(),
             'type' => 'B.U.T.',
+            'description' => $departement->getTextePresentation(),
             'annexe' => $departement->getNumeroAnnexe(),
             'type_structure' => $departement->getTypeStructure(),
             'type_departement' => $departement->getTypeDepartement(),
@@ -132,6 +149,7 @@ class DepartementExport
                 'numero' => $parcour->getOrdre(),
                 'libelle' => $parcour->getLibelle(),
                 'code' => $parcour->getCode(),
+                'description' => $parcour->getTextePresentation(),
                 'annees' => [],
             ];
 
@@ -143,12 +161,12 @@ class DepartementExport
 
                 foreach ($parcour->getApcParcoursNiveaux() as $niveau) {
                     if (
-                        (!$niveau->getNiveau()->getAnnee() && $niveau->getNiveau()->getOrdre() == $annee) ||
-                        ($niveau->getNiveau()->getAnnee() && $niveau->getNiveau()->getAnnee()->getOrdre() == $annee)
+                        (!$niveau->getNiveau()?->getAnnee() && $niveau->getNiveau()?->getOrdre() == $annee) ||
+                        ($niveau->getNiveau()?->getAnnee() && $niveau->getNiveau()?->getAnnee()?->getOrdre() == $annee)
                     ) {
                         $anneeData['competences'][] = [
-                            'niveau' => $niveau->getNiveau()->getOrdre(),
-                            'id' => $niveau->getNiveau()->getCompetence()->getCleUnique(),
+                            'niveau' => $niveau->getNiveau()?->getOrdre(),
+                            'id' => $niveau->getNiveau()?->getCompetence()?->getCleUnique(),
                         ];
                     }
                 }
@@ -163,12 +181,13 @@ class DepartementExport
     }
 
 
-    public function exportFichierXml(Departement $departement): Response
+    public function exportFichierXml(Version $version): Response
     {
+        $departement = $version->getDepartement();
         $xmlContent = $this->twig->render('xml/export-referentiel-but.xml.twig', [
             'departement' => $departement,
-            'competences' => $departement->getApcCompetences(),
-            'parcours' => $departement->getApcParcours(),
+            'competences' => $version->getApcCompetences(),
+            'parcours' => $version->getApcParcours(),
         ]);
         $name = 'but-' . $departement->getSigle();
 
@@ -181,10 +200,11 @@ class DepartementExport
         return $response;
     }
 
-    public function exportProgramme(Departement $departement): Response
+    public function exportProgramme(Version $version): Response
     {
+        $departement = $version->getDepartement();
         $xmlContent = $this->twig->render('xml/export-programme-but.xml.twig', [
-            'semestres' => $departement->getSemestres(),
+            'semestres' => $version->getSemestres(),
         ]);
         $name = 'but-pn-' . $departement->getSigle();
 
@@ -192,27 +212,203 @@ class DepartementExport
         return $this->exportFichier($xmlContent, $name);
     }
 
-    public function compareJson(mixed $tabAncien, array $tabActuel)
+    public function genereJsonReferentiel(Version $version)
     {
-        // Je veux comparer les deux tableaux JSON, et créer un tableau de différences, avec pour chaque élément : si c'est un ajout, une suppression ou une modification. Chaque élément doit être identifié par son ID (à concaténer avec compétence, ac, ce, niveau... pour les différencier, et faciliter la récursion depuis l'affichage de la structure). La structure du json peut comporter plusieurs niveaux, donc il faut que la fonction puisse être récursive pour comparer les sous-éléments.
-dump($tabAncien);
-        $diff = [];
+        $departement = $version->getDepartement();
+        $tabJson = [];
+        $tabJson['specialite'] = $departement->getSigle();
+        $tabJson['specialite_long'] = $departement->getLibelle();
+        $tabJson['type'] = 'B.U.T.';
+        $tabJson['description'] = $version->getTextePresentation();
+        $tabJson['annexe'] = $departement->getNumeroAnnexe();
+        $tabJson['type_structure'] = $departement->getTypeStructure();
+        $tabJson['alt_but_1'] = $version->getAltBut1();
+        $tabJson['alt_but_2'] = $version->getAltBut2();
+        $tabJson['alt_but_3'] = $version->getAltBut3();
 
-        //pour chaque item dans le tableau actuel, on vérifie s'il existe dans l'ancien tableau et on compare les valeurs, on va passer par un DTO pour faciliter la comparaison et éviter la duplication de code
+        foreach ($version->getApcParcours() as $apcParcour) {
+            $tabJson['parcours'][$apcParcour->getNumeroIdentifiant()] = [
+                'numero' => $apcParcour->getOrdre(),
+                'libelle' => $apcParcour->getLibelle(),
+                'code' => $apcParcour->getCode(),
+                'description' => $apcParcour->getTextePresentation(),
+                'modalites_particulieres' => $apcParcour->getModalitesParticulieres(),
+            ];
+
+            $tabSemestres = [];
+            if ($departement->gettypeStructure() !== 'type3') {
+                // on récupère les semestre de l'année 1 puis ceux du parcours
+                $annees = $version->getAnnees();
+                foreach ($annees as $annee) {
+                        $sems = $annee->getSemestres();
+                        foreach ($sems as $sem) {
+                            $tabSemestres[$sem->getOrdreLmd()] = $sem;
+                    }
+                }
 
 
+            }
+
+            /** @var Semestre $semestre */
+            foreach ($tabSemestres as $semestre) {
+
+                if ($departement->gettypeStructure() !== 'type3' and ($semestre->getOrdreLmd() < 3 )) {
+                    $ressources = $semestre->getApcRessources();
+                    $ressourcesAl = [];
+                    $saes = $semestre->getApcSaes();
+                    $saesAl = [];
+                } else {
+                    $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $apcParcour);
+                    $ressourcesAl = $this->apcRessourceParcoursRepository->findBySemestreAl($semestre, $apcParcour);
+                    $saes = $this->apcSaeParcoursRepository->findBySemestre($semestre, $apcParcour);
+                    $saesAl = $this->apcSaeParcoursRepository->findBySemestreAl($semestre, $apcParcour);
+                }
+                $tabSem = [];
+
+                foreach ($ressources as $ressource) {
+                    $tabSem['ressources'][] = $this->convertRessourceToJson($ressource);
+                }
+
+                foreach ($ressourcesAl as $ressource) {
+                    $tabSem['ressourcesAl'][] = $this->convertRessourceToJson($ressource);
+                }
+
+                foreach ($saes as $sae) {
+                    $tabSem['saes'][] = $this->convertSaeToJson($sae);
+                }
+
+                foreach ($saesAl as $sae) {
+                    $tabSem['saesAl'][] = $this->convertSaeToJson($sae);
+                }
 
 
+                $tabJson['parcours'][$apcParcour->getNumeroIdentifiant()]['semestres'] [$semestre->getOrdreLmd()] = $tabSem;
+            }
+        }
+
+        return $tabJson;
+    }
+
+    private function convertRessourceToJson(ApcRessource $ressource): array
+    {
+        $res= [
+            'id' => $ressource->getId(),
+            'libelle' => $ressource->getLibelle(),
+            'code' => $ressource->getCodeMatiere(),
+            'mots_cles' => $ressource->getMotsCles(),
+            'description' => $ressource->getDescription(),
+            'ordre' => $ressource->getOrdre(),
+            'ficheAdaptationLocale' => $ressource->getFicheAdaptationLocale(),
+            'cmPreco' => $ressource->getCmPreco(),
+            'tdPreco' => $ressource->getTdPreco(),
+            'tpPreco' => $ressource->getTpPreco(),
+        ];
+
+        $preRequis = [];
+        //prerequis
+        foreach ($ressource->getRessourcesPreRequises() as $preR) {
+            $preRequis[] = [
+                'id' => $preR->getId(),
+                'libelle' => $preR->getLibelle(),
+                'code' => $preR->getCodeMatiere(),
+            ];
+        }
+        $res['preRequis'] = $preRequis;
+
+        //competences
+        $comps = [];
+        /** @var ApcCompetence $comp */
+        foreach ($ressource->getCompetences() as $comp) {
+            $comps[] = [
+                'id' => $comp->getId(),
+                'libelle' => $comp->getLibelle(),
+                'nomCourt' => $comp->getNomCourt(),
+                'code' => $comp->getCleUnique(),
+            ];
+        }
+        $res['competences'] = $comps;
+
+        // Apprentissages critiques
+        $acs = [];
+        foreach ($ressource->getApcRessourceApprentissageCritiques() as $ac) {
+            $acs[] = [
+                'id_liaison' => $ac->getId(),
+                'id_ac' => $ac->getApprentissageCritique()?->getId(),
+                'code' => $ac->getApprentissageCritique()?->getCode(),
+                'libelle' => $ac->getApprentissageCritique()?->getLibelle(),
+            ];
+        }
+        $res['acs'] = $acs;
+
+        // SAES associées
+        $saes = [];
+        /** @var ApcSaeRessource $sae */
+        foreach ($ressource->getApcSaeRessources() as $sae) {
+            $saes[] = [
+                'id_liaison' => $sae->getId(),
+                'id' => $sae->getSae()?->getId(),
+                'libelle' => $sae->getSae()?->getLibelle(),
+                'code' => $sae->getSae()?->getCodeMatiere(),
+            ];
+        }
+        $res['saes'] = $saes;
+
+        return $res;
+    }
+
+    private function convertSaeToJson(ApcSae $sae): array
+    {
+        $sa= [
+            'id' => $sae->getId(),
+            'libelle' => $sae->getLibelle(),
+            'code' => $sae->getCodeMatiere(),
+            'exemples' => $sae->getExemples(),
+            'objectifs' => $sae->getObjectifs(),
+            'ordre' => $sae->getOrdre(),
+            'ficheAdaptationLocale' => $sae->getFicheAdaptationLocale(),
+            'portfolio' => $sae->getPortfolio(),
+            'stage' => $sae->getStage(),
+            'projetPpn' => $sae->getProjetPpn(),
+        ];
+
+        //competences
+        $comps = [];
+        /** @var ApcCompetence $comp */
+        foreach ($sae->getCompetences() as $comp) {
+            $comps[] = [
+                'id' => $comp->getId(),
+                'libelle' => $comp->getLibelle(),
+                'nomCourt' => $comp->getNomCourt(),
+                'code' => $comp->getCleUnique(),
+            ];
+        }
+        $sa['competences'] = $comps;
+
+        // Apprentissages critiques
+        $acs = [];
+        foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
+            $acs[] = [
+                'id_liaison' => $ac->getId(),
+                'id_ac' => $ac->getApprentissageCritique()?->getId(),
+                'code' => $ac->getApprentissageCritique()?->getCode(),
+                'libelle' => $ac->getApprentissageCritique()?->getLibelle(),
+            ];
+        }
+        $sa['acs'] = $acs;
+
+        // SAES associées
+        $saes = [];
+        foreach ($sae->getApcSaeRessources() as $res) {
+            $saes[] = [
+                'id_liaison' => $res->getId(),
+                'id' => $res->getRessource()?->getId(),
+                'libelle' => $res->getRessource()?->getLibelle(),
+                'code' => $res->getRessource()?->getCodeMatiere(),
+            ];
+        }
+        $sa['saes'] = $saes;
 
 
-
-        dd($diff);
-        return $diff;
-
-
-
-
-
-
+        return $sa;
     }
 }

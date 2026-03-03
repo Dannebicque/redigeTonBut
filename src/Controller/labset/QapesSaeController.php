@@ -89,7 +89,7 @@ class QapesSaeController extends AbstractController
                     ];
                 }
 
-                $siteiut = $apcSaeRepository->findByTroncCommun($parcours->getDepartement());
+                $siteiut = $apcSaeRepository->findByTroncCommun($parcours->getVersion());
                 foreach ($siteiut as $site) {
                     $siteiutArray[] = [
                         'id' => $site->getId(),
@@ -100,6 +100,7 @@ class QapesSaeController extends AbstractController
                 return new JsonResponse($siteiutArray);
 
             case 'saeFromSpecialite':
+                //todo: a traiter
                 $iut = $request->query->get('specialite');
                 $departement = $departementRepository->find($iut);
                 $siteiut = $apcSaeRepository->findByDepartement($departement);

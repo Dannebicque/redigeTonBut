@@ -8,6 +8,8 @@ use App\Entity\Annee;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
+use App\Entity\Semestre;
+use App\Entity\Version;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeParcoursRepository;
@@ -60,7 +62,7 @@ class TableauExport
 
     public function exportTableauCroise(Annee $annee, ?ApcParcours $parcours = null, $displayCoeff = false)
     {
-        if (!$parcours instanceof \App\Entity\ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -176,7 +178,7 @@ class TableauExport
     public function exportTableauHoraire(Annee $annee, ?ApcParcours $parcours)
     {
 
-        if (!$parcours instanceof \App\Entity\ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -186,7 +188,7 @@ class TableauExport
 
         $this->excelWriter->nouveauFichier('');
         foreach ($semestres as $semestre) {
-            if (!$parcours instanceof \App\Entity\ApcParcours) {
+            if (!$parcours instanceof ApcParcours) {
                 $saes = $this->apcSaeRepository->findBySemestre($semestre);
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {
@@ -362,7 +364,7 @@ class TableauExport
     {
 
 
-        if (!$parcours instanceof \App\Entity\ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+        if (!$parcours instanceof ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
         } else {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
@@ -518,14 +520,15 @@ class TableauExport
         return $this->excelWriter->genereFichier('tableau_preconisation_BUT' . $annee->getOrdre());
     }
 
-    public function exportTableauCroiseVolumeHoraire(Departement $departement)
+    public function exportTableauCroiseVolumeHoraire(Version $version)
     {
+        $departement = $version->getDepartement();
         $this->excelWriter->nouveauFichier('');
-        foreach ($departement->getAnnees() as $annee) {
+        foreach ($version->getAnnees() as $annee) {
 
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
             if ($annee->getOrdre() > 1 || $departement->getTypeStructure() === Departement::TYPE3) {
-                $parcours = $departement->getApcParcours();
+                $parcours = $version->getApcParcours();
             }
 
             foreach ($semestres as $semestre) {
@@ -550,7 +553,7 @@ class TableauExport
         return $this->excelWriter->genereFichier('tableau_croise__volumes_horaires_' . $departement->getSigle());
     }
 
-    private function afficheParcours(int|float $ligne, ?\App\Entity\ApcParcours $parcours, \App\Entity\Semestre $semestre, array $semestres): int|float
+    private function afficheParcours(int|float $ligne, ?ApcParcours $parcours, Semestre $semestre, array $semestres): int|float
     {
         $this->excelWriter->writeCellXY(1, $ligne, $parcours->getLibelle());
         $ligne++;
@@ -806,7 +809,7 @@ class TableauExport
         return $ligne;
     }
 
-    private function affichePasParcours(int $ligne, \App\Entity\Semestre $semestre, array $semestres): int
+    private function affichePasParcours(int $ligne, Semestre $semestre, array $semestres): int
     {
         $this->tableauCroise->getDatas($semestre);
         $this->excelWriter->writeCellXY(1, $ligne, 'Compétences');

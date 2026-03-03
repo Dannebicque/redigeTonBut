@@ -1,0 +1,373 @@
+<div class="alert alert-info mb-3">
+    Les lignes colorées, sont les lignes qui seront publiées. Les données sont sauvegardées dès
+    <strong>que vous quittez la zone de saisie</strong>
+</div>
+<div class="alert alert-info mb-3">
+    <strong> Pourcentage de réduction de l'alternance : </strong>
+    <ul>
+        <li>B.U.T. 1: {{ user_data.version.altBut1 }} %</li>
+        <li>B.U.T. 2: {{ user_data.version.altBut2 }} %</li>
+        <li>B.U.T. 3: {{ user_data.version.altBut3 }} %</li>
+    </ul>
+</div><br>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-bordered table-sm">
+            <thead>
+            <tr>
+                <th class="w-20">Semestres</th>
+                {% for i in 1..6 %}
+                    <th class="w-10 text-center">S{{ i }}</th>
+                {% endfor %}
+                <th class="text-center">TOTAL</th>
+                <th class="text-center">VALEURS<br> CIBLES</th>
+                <th class="text-center">ECARTS</th>
+            </tr>
+            </thead>
+            <tbody x-data="getUpdateStructure({% if codeParcours is defined %}{{ codeParcours }}{% else %}null{%
+                endif %})" x-init="donnees = await (await fetch(Routing.generate
+                ('tableau_api_structure', {parcours: {% if codeParcours is defined %}{{ codeParcours }}{% else %}null{%
+                endif %}})))
+                .json()">
+            <tr class="lignepubliee">
+                <th>Nbre d'heures d'enseignement (ressources + SAé)</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresRessourcesSae', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td class="text-center" x-html="badgeEgalite(donnees.version.nbHeuresRessourcesSae, {{ constant
+                    ('NB_HEURES_TOTAL', user_data.caracteristiques) }})">
+                </td>
+                <td class="text-center fw-bold">{{ constant('NB_HEURES_TOTAL', user_data.caracteristiques) }}</td>
+                <td class="text-center" x-html="badgeEgalite(donnees.version.ecart, 0)">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="10">&nbsp;</td>
+            </tr>
+            <tr class="lignepubliee">
+                <th>Dont % d'adaptation locale<br>
+                    <p class="text-small">max 667 h (secondaire) 600h (tertaire) sur 3 ans<br>
+                        max 40% du volume d'enseignement</p></th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('pourcentageAdaptationLocale', i, jsonCurrent, jsonPrevious) }}
+{#                            <span x-html="donnees[{{ i }}].pourcentageAdaptationLocale"></span>#}
+                    </td>
+                {% endfor %}
+                <td class="text-center" x-html="badgeSeuilInferieur(donnees.version.totalPourcentageAdaptationLocale, {{ constant
+                    ('POURCENTAGE_ADAPTATION', user_data.caracteristiques) }})">
+                </td>
+                <td class="text-center">
+                    {{ constant('POURCENTAGE_ADAPTATION', user_data.caracteristiques) }} %
+                </td>
+                <td></td>
+            </tr>
+
+            <tr class="lignepubliee">
+                <th>Nbre d'heures d'enseignement définies localement</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresEnseignementLocale', i, jsonCurrent, jsonPrevious) }}
+
+{#                        <span x-html="donnees[{{ i }}].nbHeuresEnseignementLocale"></span>#}
+                    </td>
+                {% endfor %}
+                <td class="text-center">
+                    <span x-text="donnees.version.totalAdaptationLocale"></span>
+                </td>
+                <td class="text-center fw-bold">
+
+                </td>
+                <td class="text-center">
+
+                </td>
+            </tr>
+            <tr class="lignepubliee">
+                <th>Nbre heures d'enseignement SAÉ définies localement</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresEnseignementSaeLocale', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr class="lignepubliee">
+                <th>Nbre heures d'enseignement à définir localement dans les Ressources ou les SAÉ</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresEnseignementRessourceLocale', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr class="lignepubliee">
+                <th>Nbre heures d'enseignement des ressources définies nationalement</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresEnseignementRessourceNational', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Nbre heures de tp définies nationalement</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresTpNational', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td rowspan="2" class="text-center"
+                    x-html="badgeSeuilInferieur(donnees.version.totalTp, {{ constant('NB_HEURES_TP', user_data
+                    .caracteristiques) }})">
+                </td>
+                <td rowspan="2" class="text-center fw-bold">
+                    {{ constant('NB_HEURES_TP', user_data.caracteristiques) }}
+                </td>
+                <td rowspan="2" class="text-center" x-html="badgeSeuil(donnees.version.ecartTotalTp, 0)">
+                </td>
+            </tr>
+            <tr>
+                <th>Nbre heures de tp à définir localement</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresTpLocale', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+
+            </tr>
+
+            <tr>
+                <th colspan="10">&nbsp;</th>
+            </tr>
+            <tr class="lignepubliee">
+                <th>Nbre d'heures de projet tutoré</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresProjet', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td class="text-center"
+                    x-html="badgeEgalite(donnees.version.nbHeuresProjet, {{ constant('NB_HEURES_PROJET', user_data
+                    .caracteristiques) }})">
+                </td>
+                <td class="text-center fw-bold">
+                    {{ constant('NB_HEURES_PROJET', user_data.caracteristiques) }}
+                </td>
+                <td class="text-center" x-html="badgeEgalite(donnees.version.ecartProjet, 0)">
+                </td>
+            </tr>
+            <tr class="lignepubliee">
+                <th scope="row">Nbre heures de projet/année min 150 h / max 250h</th>
+                {% for i in range(1, 6, 2) %}
+                    <td class="text-center" colspan="2">
+                        <span x-text="totalAnneeNbHeuresProjet({{ i }})"></span>
+                    </td>
+                {% endfor %}
+                <td class="text-center">
+                    <span x-text="donnees.version.nbHeuresProjet"></span>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td colspan="10">&nbsp;</td>
+            </tr>
+            <tr class="lignepubliee">
+                <th rowspan="2">Nbre de semaines de stage<br>
+                    <p class="text-small"> 8 à 12 semaines BUT 1&2<br>
+                        12 à 16 semaines BUT 3</p>
+                </th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbSemainesStageMin', i, jsonCurrent, jsonPrevious) }}
+-
+                        {{ afficheDiff('nbSemainesStageMax', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td rowspan="2" class="text-center">
+                    <span x-text="donnees.version.nbSemainesStageMin"></span> - <span
+                            x-text="donnees.version.nbSemainesStageMax"></span>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="4">-</td>
+                <td colspan="2">-</td>
+            </tr>
+            <tr>
+                <td colspan="10"></td>
+            </tr>
+            <tr>
+                <th>Nbre de semaines</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbSemaines', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td class="text-center">
+                    <span x-text="donnees.version.nbSemaines"></span>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Nbre de semaines de congés</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbSemainesConges', i, jsonCurrent, jsonPrevious) }}
+{#                            <span x-html="donnees[{{ i }}].nbSemainesConges"></span>#}
+                    </td>
+                {% endfor %}
+                <td class="text-center">
+                    <span x-text="donnees.version.nbSemainesConges"></span>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td colspan="10">&nbsp;</td>
+            </tr>
+            <tr>
+                <th>Nbre de semaines d'enseignement + projet (durée stage max déduite)</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbSemainesCoursProjet', i, jsonCurrent, jsonPrevious) }}
+
+{#                        <span x-text="donnees[{{ i }}].nbSemainesCoursProjet"></span>#}
+                    </td>
+                {% endfor %}
+                <td class="text-center">
+                    <span x-text="donnees.version.nbSemainesCoursProjet"></span>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Nbre d'heures d'enseignement + projet</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresCoursProjet', i, jsonCurrent, jsonPrevious) }}
+
+{#                        <span x-text="donnees[{{ i }}].nbHeuresCoursProjet"></span>#}
+                    </td>
+                {% endfor %}
+                <td class="text-center"
+                    x-html="badgeSeuil(donnees.version.nbHeuresCoursProjet, {{ user_data
+                    .caracteristiques.totalHeuresAvecProjet }})">
+                </td>
+                <td class="text-center fw-bold">
+                    {{ user_data.caracteristiques.totalHeuresAvecProjet }}
+                </td>
+                <td class="text-center">
+                </td>
+            </tr>
+            <tr>
+                <th>Nbre d'heures d'enseignement / année</th>
+                {% for i in range(1, 6, 2) %}
+                    <td class="text-center" colspan="2">
+                        <span x-text="totalAnneeNbHeuresRessourcesSae({{ i }})"></span>
+                    </td>
+                {% endfor %}
+                <td class="text-center">
+                    <span x-text="donnees.version.nbHeuresRessourcesSae "></span>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Nbre d'heures d'enseignement + projet/année</th>
+                {% for i in range(1, 6, 2) %}
+                    <td class="text-center" colspan="2">
+                        <span x-text="totalAnneeNbHeuresCoursProjet({{ i }})"></span>
+                    </td>
+                {% endfor %}
+                <td class="text-center">
+                    <span x-text="donnees.version.nbHeuresCoursProjet "></span>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th colspan="10">&nbsp;</th>
+            </tr>
+            <tr>
+                <th>Demies journées</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbDemiJournees', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Durée hedomadaire</th>
+                {% for i in 1..6 %}
+                    <td class="text-center" x-html="badgeSeuil(donnees[{{ i }}].dureeHebdo, {{ constant
+                        ('NB_MAX_HEURE_SEMAINE', user_data.caracteristiques) }})">
+                    </td>
+                {% endfor %}
+                <td></td>
+                <td class="text-center fw-bold">{{ constant('NB_MAX_HEURE_SEMAINE', user_data.caracteristiques) }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Durée moyenne d'une 1/2 journée</th>
+                {% for i in 1..6 %}
+                    <td class="text-center" x-html="badgeSeuil(donnees[{{ i }}].nbMoyenneHeuresDemiJournee, {{ constant
+                        ('NB_MAX_HEURE_DEMI_JOURNEE', user_data.caracteristiques) }})">
+
+                    </td>
+                {% endfor %}
+                <td></td>
+                <td class="text-center fw-bold">{{ constant('NB_MAX_HEURE_DEMI_JOURNEE', user_data.caracteristiques) }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Nbre d'heures hebdomadaire d'enseignement</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresCoursHebdo', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Nbre d'heures hebdomadaire de projet</th>
+                {% for i in 1..6 %}
+                    <td class="text-center">
+                        {{ afficheDiff('nbHeuresHebdoProjet', i, jsonCurrent, jsonPrevious) }}
+                    </td>
+                {% endfor %}
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

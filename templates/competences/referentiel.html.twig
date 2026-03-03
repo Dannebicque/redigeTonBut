@@ -134,6 +134,15 @@
 {% endblock %}
 
 {% block bouton_header %}
+{#    <a href="{{ path('voir_precedent_referentiel_competences', {departement:departement.id, annee:2022}) }}" class="btn btn-sm#}
+{#        btn-outline-info#}
+{#            btn-icon btn-icon-end w-100 w-sm-auto mx-2"#}
+{#    >#}
+{#        <i class="bi-shuffle"></i>#}
+{#        <span>Basculer sur la version 2022</span>#}
+{#    </a>#}
+
+    {% if is_granted('COMPETENCES_EDIT', departement) and user_data.version.verouilleCompetences == false %}
     <a href="{{ path('administration_apc_parcours_new') }}" class="btn btn-sm
     btn-outline-success
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
@@ -149,8 +158,9 @@
         <i class="bi-plus"></i>
         <span>Ajouter une compétence</span>
     </a>
+    {% endif %}
 
-        <a href="{{ path('voir_versionning_referentiel_competences', {departement:departement.id}) }}" class="btn btn-sm
+        <a href="{{ path('voir_versionning_referentiel_competences', {version:version.id}) }}" class="btn btn-sm
         btn-outline-success
             btn-icon btn-icon-end w-100 w-sm-auto mx-2"
         >

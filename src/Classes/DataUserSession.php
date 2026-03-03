@@ -7,8 +7,10 @@ namespace App\Classes;
 use App\DTO\Secondaire;
 use App\DTO\Tertiaire;
 use App\Entity\Departement;
+use App\Entity\Version;
 use App\Repository\AnneeRepository;
 use App\Repository\DepartementRepository;
+use App\Repository\VersionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -36,6 +38,7 @@ class DataUserSession
                                 private RequestStack          $requestStack,
                                 KernelInterface               $kernel,
                                 private DepartementRepository $departementRepository,
+                                private VersionRepository $versionRepository,
                                 AnneeRepository               $anneeRepository)
     {
         $this->anneeRepository = $anneeRepository;
@@ -67,10 +70,24 @@ class DataUserSession
         return $this->departementRepository->findAll();
     }
 
+    public function getSpecialitesActifs() : array
+    {
+        return $this->departementRepository->findByActifs();
+    }
+
+    public function getVersionOfSpecialites(int $annee): array
+    {
+        if ($annee === 2021 || $annee === 2027) {
+            return $this->versionRepository->findByVersion($annee);
+        }
+
+        throw new \Exception('Annee inconnue');
+    }
+
     public function getAnnees()
     {
-        if ($this->departement instanceof \App\Entity\Departement) {
-            return $this->anneeRepository->findByDepartement($this->departement);
+        if ($this->departement instanceof Departement) {
+            return $this->anneeRepository->findByVersion($this->getVersion());
         }
 
         return null;
@@ -89,7 +106,7 @@ class DataUserSession
         return null;
     }
 
-    public function version()
+    public function versionLogiciel()
     {
         $filename = $this->dir . '/package.json';
         $composerData = json_decode(file_get_contents($filename), true);
@@ -100,6 +117,17 @@ class DataUserSession
     public function getUser(): UserInterface|\Stringable|string
     {
         return $this->user;
+    }
+
+    public function getVersion(): Version
+    {
+        return $this->versionRepository->findOneByAnneeAndDepartement($this->getDepartement(), $this->versionPn());
+    }
+
+    public function versionPn(): int
+    {
+        //on récupére dans la session, sinon 2021 par défaut
+        return $this->requestStack->getSession()->get('versionPn', 2021);
     }
 
 

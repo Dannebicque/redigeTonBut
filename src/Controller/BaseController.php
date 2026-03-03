@@ -9,9 +9,11 @@
 
 namespace App\Controller;
 
+use App\Classes\DataUserSession;
 use App\DTO\Secondaire;
 use App\DTO\Tertiaire;
 use App\Entity\Departement;
+use App\Entity\Version;
 use App\Repository\DepartementRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,10 +42,18 @@ class BaseController extends AbstractController
 
     private ?Departement $departement;
 
+    protected DataUserSession $dataUserSession;
+
     #[\Symfony\Contracts\Service\Attribute\Required]
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {
         $this->entityManager = $entityManager;
+    }
+
+    #[\Symfony\Contracts\Service\Attribute\Required]
+    public function setDataUserSession(DataUserSession $dataUserSession): void
+    {
+        $this->dataUserSession = $dataUserSession;
     }
 
     #[\Symfony\Contracts\Service\Attribute\Required]
@@ -72,11 +82,11 @@ class BaseController extends AbstractController
 
     public function getCaracteristiques(): \App\DTO\Tertiaire|\App\DTO\Secondaire|null
     {
-        if ($this->getDepartement()->isTertiaire()) {
+        if ($this->getDepartement()?->isTertiaire()) {
             return new Tertiaire();
         }
 
-        if ($this->getDepartement()->isSecondaire()) {
+        if ($this->getDepartement()?->isSecondaire()) {
             return new Secondaire();
         }
         return null;
@@ -93,7 +103,7 @@ class BaseController extends AbstractController
                 $this->departement = null;
             }
         } elseif ($this->getUser() instanceof UserInterface && $this->getUser()->getDepartement()!== null) {
-            $this->departement = $this->getUser()->getDepartement();
+            $this->departement = $this->getUser()?->getDepartement();
         } else {
             return $this->redirectToRoute('app_login');//pas de département??
         }
@@ -105,4 +115,16 @@ class BaseController extends AbstractController
     {
         $this->flashBag->add($type, $message);
     }
+
+    public function getDataUserSession(): DataUserSession
+    {
+        return $this->dataUserSession;
+    }
+
+    public function getVersion() : Version
+    {
+        return $this->getDataUserSession()->getVersion();
+    }
+
+
 }

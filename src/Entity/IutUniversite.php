@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\IutUniversiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: IutUniversiteRepository::class)]
@@ -12,20 +13,20 @@ class IutUniversite
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $libelle = null;
 
     #[ORM\ManyToOne(targetEntity: IutAcademie::class, inversedBy: 'iutUniversites')]
-    private ?\App\Entity\IutAcademie $academie = null;
+    private ?IutAcademie $academie = null;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Iut>
+     * @var Collection<int, Iut>
      */
     #[ORM\OneToMany(targetEntity: Iut::class, mappedBy: 'universite')]
-    private \Doctrine\Common\Collections\Collection $iuts;
+    private Collection $iuts;
 
     public function __construct()
     {

@@ -5,28 +5,31 @@ namespace App\Classes\Export;
 use App\Classes\Apc\ApcStructure;
 use App\Classes\Excel\ExcelWriter;
 use App\Repository\DepartementRepository;
+use App\Repository\VersionRepository;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AllDepartementsExport
 {
     public function __construct(
-        private ExcelWriter           $excelWriter,
-        private DepartementRepository $departementRepository,
-        private ApcStructure          $apcStructure
+        private readonly ExcelWriter       $excelWriter,
+        private readonly ApcStructure      $apcStructure,
+        private readonly VersionRepository $versionRepository,
 
     )
     {
     }
 
 
-    public function exportCompetences()
+    public function exportCompetences(int $annee): StreamedResponse
     {
-        $departements = $this->departementRepository->findAll();
+        $versions = $this->versionRepository->findByVersion($annee);
         $this->excelWriter->nouveauFichier();
 
-        foreach ($departements as $departement) {
+        foreach ($versions as $version) {
 
-            $tParcours = $this->apcStructure->parcoursNiveaux($departement);
 
+            $tParcours = $this->apcStructure->parcoursNiveaux($version);
+            $departement = $version->getDepartement();
             $this->excelWriter->createSheet($departement->getSigle());
 
             $ligne = 1;
@@ -42,8 +45,8 @@ class AllDepartementsExport
 
             $ligne++;
 
-            foreach ($departement->getApcParcours() as $apcParcour) {
-                foreach ($departement->getApcCompetences() as $apcCompetence) {
+            foreach ($version->getApcParcours() as $apcParcour) {
+                foreach ($version->getApcCompetences() as $apcCompetence) {
                     if ($apcCompetence->isGoodParcours($apcParcour)) {
 
                         $this->excelWriter->writeCellXY('A', $ligne, $apcParcour->getLibelle());
@@ -80,6 +83,5 @@ class AllDepartementsExport
         }
 
         return $this->excelWriter->genereFichier('export_competences_tous_but');
-
     }
 }

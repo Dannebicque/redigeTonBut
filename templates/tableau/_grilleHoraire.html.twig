@@ -33,9 +33,7 @@
             <td colspan="{{ saes|length }}" rowspan="2" class="cell-jaune ">&nbsp;</td>
             {% for ressource in ressources %}
                 <td class="text-rouge text-center">
-                    {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
-                        <span x-html="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
-                    {% else %}
+                    {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false)  %}
                         <input type="text" class="heures form-control"
                                data-type="heures_totales"
                                data-ressource="{{ ressource.id }}"
@@ -43,6 +41,9 @@
                                :value="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
                                @blur="updateHeuresRessource"
                         />
+                    {% else %}
+                        <span x-html="getVolumeTotalRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
+
                     {% endif %}
                 </td>
             {% endfor %}
@@ -57,9 +58,7 @@
             <td class="text-center cell-jaune-pale" colspan="2">Dont TP</td>
             {% for ressource in ressources %}
                 <td class="text-rouge text-center">
-                    {% if is_granted('ROLE_LECTEUR') or user_data.departement.pnBloque == true %}
-                        <span x-html="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
-                    {% else %}
+                    {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false)  %}
                         <input type="text" class="heures form-control"
                                data-type="heures_tp"
                                data-ressource="{{ ressource.id }}"
@@ -67,6 +66,10 @@
                                :value="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"
                                @blur="updateHeuresRessource"
                         />
+                    {% else %}
+                        <span x-html="getVolumeDontTpRessource({{ semestre.ordreLmd }}, {{ ressource.id }})"></span>
+
+
                     {% endif %}
                 </td>
             {% endfor %}
@@ -84,9 +87,7 @@
                 Volume horaire des enseignements définis par l'adaptation locale
             </td>
             <td colspan="{{ saes|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 or user_data.departement.pnBloque == true %}
-                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"></span>
-                {% else %}
+                {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.verouilleStructure == false)  %}
                     <input type="text" class="heures form-control"
                            data-field="vhNbHeuresEnseignementSae"
                            data-semestre="{{ semestre.id }}"
@@ -94,6 +95,9 @@
                            x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"
                            @blur="updateSemestre"
                     />
+                {% else %}
+                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresEnseignementSae"></span>
+
                 {% endif %}
             </td>
             <td colspan="{{ ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">&nbsp;</td>
@@ -110,9 +114,7 @@
         </tr>
         <tr>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                {% if is_granted('ROLE_LECTEUR')  or user_data.departement.verouilleStructure == 1 or user_data.departement.pnBloque == true %}
-                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"></span>
-                {% else %}
+                {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.verouilleStructure == false)  %}
                     <input type="text" class="heures form-control"
                            data-field="vhNbHeureeEnseignementSaeRessource"
                            data-semestre="{{ semestre.id }}"
@@ -120,6 +122,10 @@
                            x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"
                            @blur="updateSemestre"
                     />
+                {% else %}
+                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeureeEnseignementSaeRessource"></span>
+
+
                 {% endif %}
             </td>
             <td colspan="2" class="text-end cell-jaune">rappel tableau global 6 semestres →</td>
@@ -131,9 +137,7 @@
         <tr>
             <td colspan="2" class="text-center cell-jaune text-rouge fw-bold">Dont TP</td>
             <td colspan="{{ saes|length + ressources|length }}" class="text-center cell-jaune text-rouge fw-bold">
-                {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 or user_data.departement.pnBloque == true %}
-                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"></span>
-                {% else %}
+                {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.verouilleStructure == false)  %}
                     <input type="text" class="heures form-control"
                            data-field="vhNbHeuresDontTpSaeRessource"
                            data-semestre="{{ semestre.id }}"
@@ -141,6 +145,9 @@
                            x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"
                            @blur="updateSemestre"
                     />
+                {% else %}
+                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresDontTpSaeRessource"></span>
+
                 {% endif %}
             </td>
             <td class="text-center cell-jaune text-rouge fw-bold">
@@ -187,9 +194,7 @@
         <tr>
             <td class="text-center cell-gris fw-bold" colspan="2">Volume horaire projet tutoré</td>
             <td colspan="{{ saes|length }}" class="cell-gris texte-rouge fw-bold text-center">
-                {% if is_granted('ROLE_LECTEUR') or user_data.departement.verouilleStructure == 1 or user_data.departement.pnBloque == true %}
-                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"></span>
-                {% else %}
+                {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.verouilleStructure == false)  %}
                     <input type="text" class="heures form-control"
                            data-field="vhNbHeuresProjetTutores"
                            data-semestre="{{ semestre.id }}"
@@ -197,6 +202,8 @@
                            x-model.debounce="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"
                            @blur="updateSemestre"
                     />
+                {% else %}
+                    <span x-html="donnees[{{ semestre.ordreLmd }}].vhNbHeuresProjetTutores"></span>
                 {% endif %}
             </td>
             <td colspan="{{ ressources|length }}" class="cell-gris texte-rouge fw-bold">

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-    Confuguration des niveaux pour le parcours : {{ parcours.libelle }}
+    Configuration des niveaux pour le parcours : {{ parcours.libelle }}
 {% endblock %}
 
 {% block content %}
@@ -48,7 +48,7 @@
 {% endblock %}
 
 {% block bouton_header %}
-    <a href="{{ path('administration_apc_referentiel_index', {departement:departement.id}) }}"
+    <a href="{{ path('administration_apc_referentiel_index', {version:version.id}) }}"
        class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >

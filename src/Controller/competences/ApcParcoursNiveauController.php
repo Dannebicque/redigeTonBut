@@ -29,14 +29,14 @@ class ApcParcoursNiveauController extends BaseController
         ApcParcours                 $parcours
     ): Response
     {
-        $competences = $apcComptenceRepository->findByDepartement($this->getDepartement());
+        $competences = $apcComptenceRepository->findByVersion($this->getVersion());
         $tabNiveaux = $apcParcoursNiveauRepository->findNiveauByParcoursArray($parcours);
 
         return $this->render('competences/apc_parcours_niveau/configuration.html.twig', [
             'parcours' => $parcours,
             'comptences' => $competences,
             'tabNiveauxId' => $tabNiveaux,
-            'departement' => $this->getDepartement()
+            'departement' => $this->getVersion()->getDepartement()
         ]);
     }
 

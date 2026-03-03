@@ -54,7 +54,7 @@
 {#        <i class="bi-download"></i>#}
 {#        <span>Export PDF "version PN"</span>#}
 {#    </a>#}
-    {% if user_data.departement.pnBloque == false %}
+    {% if user_data.version.pnVerouille == false %}
         {% if  is_granted('ROLE_EDITEUR') %}
             <a href="{{ path('formation_apc_sae_edit', {id:apc_sae.id}) }}" class="btn btn-sm btn-outline-warning
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
@@ -62,7 +62,7 @@
                 <i class="bi-pencil-square"></i>
                 <span>Modifier</span>
             </a>
-            {% if  is_granted('ROLE_PACD') and user_data.departement.verouilleCroise == false %}
+            {% if  is_granted('ROLE_PACD') and user_data.version.verouilleCroise == false %}
                 {{ include('form/_delete_form.html.twig', {path: path('formation_apc_ressource_delete',
                     {id: apc_sae.id, }), id: apc_sae.id}) }}
             {% endif %}

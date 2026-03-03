@@ -72,10 +72,7 @@ class ReferentielVoter extends Voter
 
     private function canView(ApcSae|ApcRessource $post, User $user): bool
     {
-        // if they can edit, they can view
-        // the Post object could have, for example, a method `isPrivate()`
-        //todo: ajouter champ blocage édition sur ??? département ??? tableaux ???
-        return $this->canEdit($post, $user);
+        return true;
     }
 
     private function canEdit(ApcSae|ApcRessource $post, User $user): bool

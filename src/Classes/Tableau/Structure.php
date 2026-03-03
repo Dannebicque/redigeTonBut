@@ -6,6 +6,7 @@ use App\DTO\StructureDepartement;
 use App\DTO\StructureSemestre;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
+use App\Entity\Version;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Structure
@@ -16,25 +17,25 @@ class Structure
 
     private StructureDepartement $donneesDepartement;
 
-    private Departement $departement;
+    private Version $version;
 
-    public function setDepartement(Departement $departement): Structure
+    public function setVersion(Version $version): self
     {
-        $this->departement = $departement;
+        $this->version = $version;
         return $this;
     }
 
-    public function setSemestres(array $semestres): Structure
+    public function setSemestres(array $semestres): self
     {
         $this->semestres = $semestres;
         return $this;
     }
 
-    public function getDataTableau(): Structure
+    public function getDataTableau(): self
     {
         $this->donneesSemestres = [];
         $this->donneesDepartement = new StructureDepartement();
-        $this->donneesDepartement->setDepartement($this->departement);
+        $this->donneesDepartement->setVersion($this->version);
 
         foreach ($this->semestres as $semestre)
         {
@@ -63,7 +64,7 @@ class Structure
     {
         $json = [];
         $this->donneesDepartement = new StructureDepartement();
-        $this->donneesDepartement->setDepartement($this->departement);
+        $this->donneesDepartement->setVersion($this->version);
         foreach ($this->semestres as $semestre)
         {
             $sem = new StructureSemestre($semestre);
@@ -71,28 +72,28 @@ class Structure
             $this->donneesDepartement->addSemestre($sem);
         }
 
-        $json['departement'] = $this->donneesDepartement->getJson();
+        $json['version'] = $this->donneesDepartement->getJson();
 
         return $json;
     }
 
     public function genereFichierExcel(
         ExcelWriter $excelWriter,
-        Departement $departement,
+        Version $version,
         ?ApcParcours $parcours = null
     ): StreamedResponse {
-        $this->departement = $departement;
-        $this->semestres = $parcours instanceof \App\Entity\ApcParcours ? $parcours->getSemestresArray() : $departement->getSemestres();
-
+        $this->version = $version;
+        $this->semestres = $parcours instanceof ApcParcours ? $parcours->getSemestresArray() : $version->getSemestres();
+        $departement = $version->getDepartement();
         $this->getDataTableau();
         $spreadsheet = $excelWriter->createFromTemplate('tableau_structure.xlsx');
 
         //complète le fichier
         $sheet = $spreadsheet->getSheetByName('vol_global_T');
         if ($sheet !== null) {
-            $sheet->getCell('B4')->setValue('BUT ' . $this->departement->getSigle());
-            $sheet->getCell('C4')->setValue($this->departement->getTypeDepartement());
-            if ($parcours instanceof \App\Entity\ApcParcours) {
+            $sheet->getCell('B4')->setValue('BUT ' . $departement->getSigle());
+            $sheet->getCell('C4')->setValue($departement->getTypeDepartement());
+            if ($parcours instanceof ApcParcours) {
                 $sheet->getCell('B5')->setValue('PARCOURS '.$parcours->getLibelle());
             }
 

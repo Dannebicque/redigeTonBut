@@ -23,7 +23,7 @@ class AjaxSemestreController extends BaseController
         Semestre $semestre,
         string $type
     ): \Symfony\Component\HttpFoundation\JsonResponse {
-        if ($this->getDepartement()->getVerouilleStructure() === false) {
+        if ($this->getVersion()->isVerouilleStructure() === false) {
             $parametersAsArray = [];
             if ($content = $request->getContent()) {
                 $parametersAsArray = json_decode($content, true);

@@ -21,20 +21,20 @@
 {% block breadcrumb %}
     {{ include('composants/breadcrumb.html.twig', {liens:[
         {
-            href: path('administration_apc_referentiel_index', {departement:apc_niveau.competence.departement.id}),
+            href: path('administration_apc_referentiel_index', {version:apc_niveau.competence.version.id}),
             title: 'Référentiel de compétences',
         },
     ]}) }}
 {% endblock %}
 
 {% block bouton_header %}
-    {% if is_granted('ROLE_PACD') and user_data.departement.verouilleCompetences == false %}
+    {% if is_granted('COMPETENCES_EDIT',apc_niveau) and user_data.version.verouilleCompetences == false %}
         {{ include('form/_delete_form.html.twig', {
             path: path('administration_apc_niveau_delete',
             {id: apc_niveau.id}), id: apc_niveau.id, texte : 'Êtes-vous sûr de vouloir supprimer ce niveau et les apprentissages critiques associés ?'}) }}
     {% endif %}
 
-    <a href="{{ path('administration_apc_referentiel_index', {departement:apc_niveau.competence.departement.id}) }}"
+    <a href="{{ path('administration_apc_referentiel_index', {version:apc_niveau.competence.version.id}) }}"
        class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>Libelle</th>
+                    <td>{{ apcParcours.libelle|diff_render(diffs, apcParcours, 'libelle') }}</td>
+                </tr>
+
+                <tr>
+                    <th>Code</th>
+                    <td>{{ apcParcours.code|diff_render(diffs, apcParcours, 'code') }}</td>
+                </tr>
+                <tr>
+                    <th>Ordre</th>
+                    <td>{{ apcParcours.ordre }} (si 0, l'ordre alphabétique s'applique)</td>
+                </tr>
+
+                <tr>
+                    <th>Texte descriptif</th>
+                    <td>{{ apcParcours.textePresentation|diff_render(diffs, apcParcours, 'textePresentation') }}</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block header %}
+    Comparaison des versions du parcours : {{ apcParcours.libelle }} (2027)
+{% endblock %}
+
+{% block bouton_header %}
+    {% if is_granted('COMPETENCES_EDIT', user_data.departement) or is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('administration_apc_parcours_edit', {id: apcParcours.id}) }}" class="btn btn-sm
+                    btn-outline-info
+                        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+        >
+            <i class="bi-arrow-left"></i>
+            <span>Revenir à l'édition</span>
+        </a>
+    {% endif %}
+{% endblock %}
+

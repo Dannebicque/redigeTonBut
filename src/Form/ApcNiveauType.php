@@ -11,22 +11,22 @@ namespace App\Form;
 
 use App\Entity\Annee;
 use App\Entity\ApcNiveau;
-use App\Entity\Departement;
+use App\Entity\Version;
+use App\Form\Type\CollectionStimulusType;
 use App\Repository\AnneeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApcNiveauType extends AbstractType
 {
-    protected ?Departement $departement;
+    protected ?Version $version;
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->departement = $options['departement'];
+        $this->version = $options['version'];
         $builder
             ->add('libelle')
             ->add('ordre', ChoiceType::class,
@@ -40,23 +40,18 @@ class ApcNiveauType extends AbstractType
                 'required' => true,
                 'query_builder' => function (AnneeRepository $er) {
                     return $er->createQueryBuilder('a')
-                        ->where('a.departement = :departement')
-                        ->setParameter('departement', $this->departement)
+                        ->where('a.version = :version')
+                        ->setParameter('version', $this->version)
                         ->orderBy('a.libelle', 'ASC');
                 }
             ])
-            ->add('apcApprentissageCritiques', CollectionType::class, [
+            ->add('apcApprentissageCritiques', CollectionStimulusType::class, [
                 'entry_type' => ApcApprentissageCritiqueType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
-                'prototype' => true,
                 'allow_delete' => true,
                 'label' => 'Apprentissages critiques du niveau de compétence',
                 'by_reference' => false,
-                'prototype_name' => '__niveau__',
-                'attr' => [
-                    'class' => 'selector-apprentissageCritique',
-                ],
                 'help' => 'Ajoutez les apprentissages critiques du niveau de compétence.',
             ]);
     }
@@ -65,7 +60,7 @@ class ApcNiveauType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ApcNiveau::class,
-            'departement' => null
+            'version' => null
         ]);
     }
 }
