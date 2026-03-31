@@ -4,14 +4,7 @@
 namespace App\Classes\Latex;
 
 
-use App\Classes\Apc\ApcStructure;
 use App\Entity\ApcRessource;
-use App\Entity\Departement;
-use App\Repository\ApcRessourceParcoursRepository;
-use App\Repository\ApcRessourceRepository;
-use App\Repository\ApcSaeParcoursRepository;
-use App\Repository\ApcSaeRepository;
-use DateTime;
 use Twig\Environment;
 
 class GenereFileRessource

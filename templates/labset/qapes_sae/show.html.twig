@@ -11,21 +11,23 @@
                     <h3 class="card-title">Contexte</h3>
                     <dl>
                         <dt>IUT</dt>
-                        <dd>{{ qapes.iutSite != null ? qapes.iutSite.iut.libelle  : '-'}} ({{ qapes.iutSite != null ? qapes.iutSite.libelle : '-' }})</dd>
+                        <dd>{{ qapes.iutSite != null ? qapes.iutSite.iut.libelle  : '-' }}
+                            ({{ qapes.iutSite != null ? qapes.iutSite.libelle : '-' }})
+                        </dd>
                         <dt>Spécialité</dt>
                         <dd>{{ qapes.specialite != null ? qapes.specialite.sigle : '-' }}</dd>
                         <dt>Parcours</dt>
                         <dd>{{ qapes.parcours != null ? qapes.parcours.libelle : '-' }}</dd>
                         <dt>SAÉ dans le programme</dt>
                         <dd>
-                          {% if qapes.sae == null %}
-                            -
-                          {% else %}
-                            <a href="{{ path('but_fiche_sae', {'apcSae': qapes.sae.id}) }}">
-                                {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
-                                ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
-                            </a>
-                          {% endif %}
+                            {% if qapes.sae == null %}
+                                -
+                            {% else %}
+                                <a href="{{ path('but_fiche_sae', {'apcSae': qapes.sae.id}) }}">
+                                    {{ qapes.sae != null ? qapes.sae.libelle : '-' }}
+                                    ({{ qapes.sae != null ? qapes.sae.codeMatiere : '-' }})
+                                </a>
+                            {% endif %}
                         </dd>
                         <dt>Auteur(s) de la SAE</dt>
                         <dd>{% for aut in qapes.auteur %}{{ aut.display }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
@@ -133,7 +135,7 @@
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Déroulement</strong>
-                    <p>{{ qapes.deroulementSae != null ? qapes.deroulementSae|markdown_to_html : ''  }}</p>
+                    <p>{{ qapes.deroulementSae != null ? qapes.deroulementSae|markdown_to_html : '' }}</p>
                 </div>
                 <div class="col-md-6">
                     <strong class="mt-2">Modalités d'évaluation</strong>
@@ -177,10 +179,9 @@
                 </div>
             </div>
 
-
             <h2 class="h4">Référentiel de compétences</h2>
             {{ include('labset/qapes_sae/_referentiel.html.twig') }}
-        </div
+        </div>
     </div>
 {% endblock %}
 
@@ -199,14 +200,14 @@
 
 {% block bouton_header %}
     {% if is_granted('ROLE_LABSET') %}
-    <a href="{{ path('app_qapes_sae_edit', {id:qapes.id}) }}" class="btn
+        <a href="{{ path('app_qapes_sae_edit', {id:qapes.id}) }}" class="btn
             btn-outline-warning
             btn-icon btn-icon-end
     w-100
     w-sm-auto"
-    >
-        <i class="bi bi-pencil"></i>
-        <span>Modifier</span>
-    </a>
+        >
+            <i class="bi bi-pencil"></i>
+            <span>Modifier</span>
+        </a>
     {% endif %}
 {% endblock %}

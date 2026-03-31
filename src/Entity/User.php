@@ -44,14 +44,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isVerified = false;
 
-    #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: 'users', fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Departement::class, fetch: 'EAGER', inversedBy: 'users')]
     private ?Departement $departement = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $actif = false;
 
     /**
-     * @var Collection<int, \App\Entity\Departement>
+     * @var Collection<int, Departement>
      */
     #[ORM\ManyToMany(targetEntity: Departement::class, inversedBy: 'cpns')]
     private Collection $CpnDepartements;
@@ -60,13 +60,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $login;
 
     /**
-     * @var Collection<int, \App\Entity\QapesSae>
+     * @var Collection<int, QapesSae>
      */
     #[ORM\ManyToMany(targetEntity: QapesSae::class, mappedBy: 'auteur')]
     private Collection $qapesSaesAuteurs;
 
     /**
-     * @var Collection<int, \App\Entity\QapesSae>
+     * @var Collection<int, QapesSae>
      */
     #[ORM\ManyToMany(targetEntity: QapesSae::class, mappedBy: 'redacteur')]
     private Collection $qapesSaesRedacteurs;
@@ -255,11 +255,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isCpn(): bool
     {
-        return in_array('ROLE_CPN', $this->getRoles(), true) || in_array('ROLE_CPN_LECTEUR', $this->getRoles(), true);
+        return in_array('ROLE_EDITEUR', $this->getRoles(), true) || in_array('ROLE_CPN', $this->getRoles(), true) || in_array('ROLE_CPN_LECTEUR', $this->getRoles(), true);
     }
 
     /**
-     * @return Collection|Departement[]
+     * @return Collection
      */
     public function getCpnDepartements(): Collection
     {

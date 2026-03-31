@@ -6,7 +6,9 @@
             <th>AC</th>
             <th>&nbsp;</th>
             {% for sae in saes %}
-                <th><p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p></th>
+                <th>
+                    <p data-bs-toggle="tooltip" title="{{ sae.libelle }}">{{ sae.codeMatiere }}</p>
+                </th>
             {% endfor %}
             {% if not is_granted('ROLE_IUT') %}
                 {% for sae in saesAl %}
@@ -49,6 +51,14 @@
 
                 {% for sae in saes %}
                     <td class="text-center">
+                        {% if sae.portfolio == true and sae.apcSaeCompetences.contains( niveau.competence) %}
+                        OK
+                        {% else %}
+                            ---
+                            {% endif %}
+
+
+
                         {% if (is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false and user_data.version.coeffVerouille == false) %}
                             <input type="text" class="form-control"
                                    @blur="updateSae"

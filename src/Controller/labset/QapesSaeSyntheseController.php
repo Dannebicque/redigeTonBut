@@ -5,6 +5,7 @@ namespace App\Controller\labset;
 use App\Repository\QapesCritereRepository;
 use App\Repository\QapesSaeCritereReponseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
@@ -17,7 +18,7 @@ class QapesSaeSyntheseController extends AbstractController
         QapesSaeCritereReponseRepository $qapesSaeCritereReponseRepository,
         QapesCritereRepository           $qapesCritereRepository,
         ChartBuilderInterface            $chartBuilder
-    ): \Symfony\Component\HttpFoundation\Response
+    ): Response
     {
         $total = [];
         $reponses = $qapesSaeCritereReponseRepository->findAll();

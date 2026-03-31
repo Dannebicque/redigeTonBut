@@ -7,7 +7,6 @@ use App\Entity\ApcCompetence;
 use App\Entity\ApcComposanteEssentielle;
 use App\Entity\ApcNiveau;
 use App\Entity\ApcParcours;
-use App\Entity\ApcParcoursNiveau;
 use App\Entity\ApcSituationProfessionnelle;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;

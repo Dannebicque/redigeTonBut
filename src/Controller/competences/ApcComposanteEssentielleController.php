@@ -45,9 +45,9 @@ class ApcComposanteEssentielleController extends BaseController
                 ['departement' => $apcComposanteEssentielle->getVersion()?->getId()]);
         }
 
-        return $this->renderForm('competences/apc_composante_essentielle/new.html.twig', [
+        return $this->render('competences/apc_composante_essentielle/new.html.twig', [
             'apc_composante_essentielle' => $apcComposanteEssentielle,
-            'form' => $form,
+            'form' => $form->createView(),
             'competence' => $competence
         ]);
     }
@@ -83,9 +83,9 @@ class ApcComposanteEssentielleController extends BaseController
                 ['id' => $apcComposanteEssentielle->getId()]);
         }
 
-        return $this->renderForm('competences/apc_composante_essentielle/edit.html.twig', [
+        return $this->render('competences/apc_composante_essentielle/edit.html.twig', [
             'apc_composante_essentielle' => $apcComposanteEssentielle,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

@@ -8,20 +8,21 @@ use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
 use App\Entity\Departement;
 use App\Entity\User;
+use LogicException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 
 class ReferentielVoter extends Voter
 {
     // these strings are just invented: you can use anything
-    public const VIEW = 'view';
+    public const string VIEW = 'view';
 
-    public const EDIT = 'edit';
+    public const string EDIT = 'edit';
 
-    public const DUPLICATE = 'duplicate';
+    public const string DUPLICATE = 'duplicate';
 
-    public const DELETE = 'delete';
+    public const string DELETE = 'delete';
 
     private Security $security;
 
@@ -67,7 +68,7 @@ class ReferentielVoter extends Voter
                 return $this->canDelete($post, $user);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(ApcSae|ApcRessource $post, User $user): bool
@@ -81,20 +82,20 @@ class ReferentielVoter extends Voter
             return false;
         }
 
-        if (!$user->getDepartement() instanceof Departement || !$post->getDepartement() instanceof Departement) {
+        if (!$user->getDepartement() instanceof Departement || !$post->getVersion()->getDepartement() instanceof Departement) {
             return false;
         }
 
         // this assumes that the Post object has a `getOwner()` method
         if (in_array('ROLE_CPN', $user->getRoles())) {
             foreach ($user->getCpnDepartements() as $dpt) {
-                if ($dpt->getId() === $post->getDepartement()->getId()) {
+                if ($dpt->getId() === $post->getVersion()->getDepartement()->getId()) {
                     return true;
                 }
             }
         }
 
-        return $user->getDepartement()->getId() === $post->getDepartement()->getId();
+        return $user->getDepartement()->getId() === $post->getVersion()->getDepartement()->getId();
     }
 
     private function canDelete(ApcSae|ApcRessource|ApcApprentissageCritique $post, User $user): bool
@@ -103,19 +104,19 @@ class ReferentielVoter extends Voter
             return false;
         }
 
-        if (!$user->getDepartement() instanceof Departement || !$post->getDepartement() instanceof Departement) {
+        if (!$user->getDepartement() instanceof Departement || !$post->getVersion()->getDepartement() instanceof Departement) {
             return false;
         }
 
         if (in_array('ROLE_CPN', $user->getRoles())) {
             foreach ($user->getCpnDepartements() as $dpt) {
-                if ($dpt->getId() === $post->getDepartement()->getId()) {
+                if ($dpt->getId() === $post->getVersion()->getDepartement()->getId()) {
                     return true;
                 }
             }
         }
 
         // this assumes that the Post object has a `getOwner()` method
-        return $user->getDepartement()->getId() === $post->getDepartement()->getId();
+        return $user->getDepartement()->getId() === $post->getVersion()->getDepartement()->getId();
     }
 }

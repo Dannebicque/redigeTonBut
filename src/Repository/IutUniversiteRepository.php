@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\IutUniversite;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -24,8 +24,6 @@ class IutUniversiteRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function add(IutUniversite $entity, bool $flush = true): void
     {
@@ -36,8 +34,6 @@ class IutUniversiteRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(IutUniversite $entity, bool $flush = true): void
     {
@@ -46,33 +42,4 @@ class IutUniversiteRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
-
-    // /**
-    //  * @return IutUniversite[] Returns an array of IutUniversite objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?IutUniversite
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

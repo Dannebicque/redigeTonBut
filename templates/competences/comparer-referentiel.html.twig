@@ -1,0 +1,341 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Comparaison des référentiels de compétences : {{ departement.sigle }}
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-info" role="alert">
+        <strong>Version actuelle :</strong> {{ versionActuelle.libelle }}<br>
+        <strong>Version précédente :</strong> {{ versionPrecedente.libelle }}
+    </div>
+
+    <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="comparisonTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" data-bs-toggle="tab" href="#vue-synthese" role="tab" aria-selected="true">
+                Synthese des changements
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#vue-detaillee" role="tab" aria-selected="false">
+                Comparaison detaillee par parcours
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3">
+        <div class="tab-pane active" id="vue-synthese" role="tabpanel">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Resume des changements</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Competences dans la version actuelle</h6>
+                            <p class="badge bg-success">Total : {{ versionActuelle.apcCompetences|length }} competences</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Competences dans la version precedente</h6>
+                            <p class="badge bg-warning">Total : {{ versionPrecedente.apcCompetences|length }} competences</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Analyses par parcours</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Parcours</th>
+                                <th class="text-center">Version actuelle</th>
+                                <th class="text-center">Version precedente</th>
+                                <th class="text-center">Ajouts</th>
+                                <th class="text-center">Suppressions</th>
+                                <th class="text-center">Modifications</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for parcoursData in comparaisonParcours %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ parcoursData.code }}</strong>
+                                        <div class="small text-muted">{{ parcoursData.libelle }}</div>
+                                    </td>
+                                    <td class="text-center"><span class="badge bg-success">{{ parcoursData.competencesActuelles|length }}</span></td>
+                                    <td class="text-center"><span class="badge bg-warning">{{ parcoursData.competencesPrecedentes|length }}</span></td>
+                                    <td class="text-center"><span class="badge bg-success">+{{ parcoursData.ajouteesCount }}</span></td>
+                                    <td class="text-center"><span class="badge bg-danger">-{{ parcoursData.supprimeesCount }}</span></td>
+                                    <td class="text-center"><span class="badge bg-primary">{{ parcoursData.modifieesCount }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="vue-detaillee" role="tabpanel">
+            <div class="accordion" id="accordionComparison">
+                {% for parcoursData in comparaisonParcours %}
+                    {% set accordionId = parcoursData.code|replace({' ': '_', '/': '_'}) %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ accordionId }}">
+                            <button class="accordion-button {% if loop.first %}{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ accordionId }}" aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ accordionId }}">
+                                <strong>{{ parcoursData.code }}</strong>
+                                <span class="ms-2 text-muted">{{ parcoursData.libelle }}</span>
+                                <span class="ms-auto">
+                                    <span class="badge bg-success">+{{ parcoursData.ajouteesCount }}</span>
+                                    <span class="badge bg-danger">-{{ parcoursData.supprimeesCount }}</span>
+                                    <span class="badge bg-primary">{{ parcoursData.modifieesCount }} modifiees</span>
+                                </span>
+                            </button>
+                        </h2>
+                        <div id="collapse{{ accordionId }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ accordionId }}" data-bs-parent="#accordionComparison">
+                            <div class="accordion-body">
+                                {# En-tête des colonnes #}
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <span class="fw-bold text-success">
+                                            <i class="fas fa-check-circle"></i> Version actuelle — {{ versionActuelle.libelle }}
+                                        </span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="fw-bold text-warning">
+                                            <i class="fas fa-history"></i> Version précédente — {{ versionPrecedente.libelle }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {% for competence in parcoursData.competenceComparaisons %}
+                                    {% set compId = (accordionId ~ '-' ~ competence.nomCourt)|replace({' ': '_', '/': '_'})|lower %}
+                                    <div class="card mb-3 {% if competence.isAdded %}border-success{% elseif competence.isRemoved %}border-danger{% elseif competence.hasChanges %}border-primary{% endif %}">
+
+                                        {# En-tête de la compétence #}
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>{{ competence.nomCourt }}</strong>
+                                                {% if competence.isAdded %}
+                                                    <span class="badge bg-success ms-2">Nouvelle</span>
+                                                {% elseif competence.isRemoved %}
+                                                    <span class="badge bg-danger ms-2">Supprimée</span>
+                                                {% elseif competence.hasChanges %}
+                                                    <span class="badge bg-primary ms-2">Modifiée ({{ competence.changesCount }})</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary ms-2">Identique</span>
+                                                {% endif %}
+                                            </div>
+                                            {% if not competence.isAdded and not competence.isRemoved %}
+                                                <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#diff-{{ compId }}"
+                                                        aria-expanded="{% if competence.hasChanges %}true{% else %}false{% endif %}">
+                                                    Détail du diff
+                                                </button>
+                                            {% endif %}
+                                        </div>
+
+                                        {# Vue côte à côte : libellé + composantes + situations + niveaux/acs #}
+                                        <div class="card-body p-0">
+                                            <div class="row g-0">
+                                                {# Colonne version actuelle #}
+                                                <div class="col-6 border-end p-3 {% if competence.isAdded %}bg-success-light{% elseif competence.isRemoved %}bg-light text-muted fst-italic{% endif %}">
+                                                    {% if competence.actuelle is not null %}
+                                                        <p class="mb-1"><strong>{{ competence.actuelle.libelle }}</strong></p>
+
+                                                        {% if competence.actuelle.apcComposanteEssentielles|length > 0 %}
+                                                            <p class="small fw-semibold text-muted mt-2 mb-1">Composantes essentielles</p>
+                                                            <ul class="small mb-2 ps-3">
+                                                                {% for ce in competence.actuelle.apcComposanteEssentielles %}
+                                                                    <li>{{ ce.code }} | {{ ce.libelle }}</li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        {% endif %}
+
+                                                        {% if competence.actuelle.apcSituationProfessionnelles|length > 0 %}
+                                                            <p class="small fw-semibold text-muted mt-2 mb-1">Situations professionnelles</p>
+                                                            <ul class="small mb-2 ps-3">
+                                                                {% for sp in competence.actuelle.apcSituationProfessionnelles %}
+                                                                    <li>{{ sp.libelle }}</li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        {% endif %}
+
+                                                        {% if competence.actuelle.apcNiveaux|length > 0 %}
+                                                            <p class="small fw-semibold text-muted mt-2 mb-1">Niveaux / Apprentissages critiques</p>
+                                                            {% for niveau in competence.actuelle.apcNiveaux %}
+                                                                <p class="small mb-0"><em>Niveau {{ niveau.ordre }} — {{ niveau.libelle }}</em></p>
+                                                                <ul class="small mb-2 ps-3">
+                                                                    {% for ac in niveau.apcApprentissageCritiques %}
+                                                                        <li>{{ ac.code }} | {{ ac.libelle }}</li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="text-muted fst-italic">—</span>
+                                                    {% endif %}
+                                                </div>
+
+                                                {# Colonne version précédente #}
+                                                <div class="col-6 p-3 {% if competence.isRemoved %}bg-danger-light{% elseif competence.isAdded %}bg-light text-muted fst-italic{% endif %}">
+                                                    {% if competence.precedente is not null %}
+                                                        <p class="mb-1"><strong>{{ competence.precedente.libelle }}</strong></p>
+
+                                                        {% if competence.precedente.apcComposanteEssentielles|length > 0 %}
+                                                            <p class="small fw-semibold text-muted mt-2 mb-1">Composantes essentielles</p>
+                                                            <ul class="small mb-2 ps-3">
+                                                                {% for ce in competence.precedente.apcComposanteEssentielles %}
+                                                                    <li>{{ ce.code }} | {{ ce.libelle }}</li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        {% endif %}
+
+                                                        {% if competence.precedente.apcSituationProfessionnelles|length > 0 %}
+                                                            <p class="small fw-semibold text-muted mt-2 mb-1">Situations professionnelles</p>
+                                                            <ul class="small mb-2 ps-3">
+                                                                {% for sp in competence.precedente.apcSituationProfessionnelles %}
+                                                                    <li>{{ sp.libelle }}</li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        {% endif %}
+
+                                                        {% if competence.precedente.apcNiveaux|length > 0 %}
+                                                            <p class="small fw-semibold text-muted mt-2 mb-1">Niveaux / Apprentissages critiques</p>
+                                                            {% for niveau in competence.precedente.apcNiveaux %}
+                                                                <p class="small mb-0"><em>Niveau {{ niveau.ordre }} — {{ niveau.libelle }}</em></p>
+                                                                <ul class="small mb-2 ps-3">
+                                                                    {% for ac in niveau.apcApprentissageCritiques %}
+                                                                        <li>{{ ac.code }} | {{ ac.libelle }}</li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="text-muted fst-italic">—</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            {# Bloc diff dépliable sous les deux colonnes #}
+                                            {% if not competence.isAdded and not competence.isRemoved %}
+                                                <div id="diff-{{ compId }}" class="collapse {% if competence.hasChanges %}show{% endif %} border-top">
+                                                    <div class="p-3 bg-light">
+                                                        <p class="small fw-semibold text-muted mb-2">Détail des différences</p>
+                                                        {% set sectionLabels = {
+                                                            'libelle': 'Libellé',
+                                                            'composantes': 'Composantes essentielles',
+                                                            'situations': 'Situations professionnelles',
+                                                            'niveaux': 'Niveaux',
+                                                            'acs': 'Apprentissages critiques'
+                                                        } %}
+                                                        {% for sectionKey, lines in competence.sections %}
+                                                            {% if lines|length > 0 %}
+                                                                <div class="mb-2">
+                                                                    <span class="small fw-semibold">{{ sectionLabels[sectionKey] }}</span>
+                                                                    <div class="diff-box mt-1">
+                                                                        {% for line in lines %}
+                                                                            {% if line.type == 'add' %}
+                                                                                <div class="diff-line diff-add">{{ line.text }}</div>
+                                                                            {% elseif line.type == 'remove' %}
+                                                                                <div class="diff-line diff-remove">{{ line.text }}</div>
+                                                                            {% else %}
+                                                                                <div class="diff-line diff-change">{{ line.text }}</div>
+                                                                                {% if line.old is defined %}
+                                                                                    <div class="diff-subline diff-remove">- {{ line.old }}</div>
+                                                                                {% endif %}
+                                                                                {% if line.new is defined %}
+                                                                                    <div class="diff-subline diff-add">+ {{ line.new }}</div>
+                                                                                {% endif %}
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('administration_apc_referentiel_index', {version: versionActuelle.id}) }}" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Retour a la version actuelle
+        </a>
+        <a href="{{ path('administration_apc_referentiel_index', {version: versionPrecedente.id}) }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Voir la version precedente
+        </a>
+    </div>
+
+    <style>
+        .accordion-button:not(.collapsed) {
+            background-color: #f8f9fa;
+        }
+
+        .badge {
+            margin-right: 5px;
+        }
+
+        .diff-box {
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            padding: 8px;
+            background: #fff;
+        }
+
+        .diff-line,
+        .diff-subline {
+            font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.87rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .diff-add {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        .diff-remove {
+            background: #ffebee;
+            color: #b71c1c;
+        }
+
+        .diff-change {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+
+        .bg-success-light {
+            background-color: #f0fff4;
+        }
+
+        .bg-danger-light {
+            background-color: #fff5f5;
+        }
+
+        .border-end {
+            border-right: 1px solid #dee2e6 !important;
+        }
+
+        .card .col-6 {
+            min-height: 60px;
+        }
+    </style>
+{% endblock %}

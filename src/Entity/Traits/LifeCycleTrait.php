@@ -11,6 +11,7 @@ namespace App\Entity\Traits;
 
 use DateTime;
 use DateTimeInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,10 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait LifeCycleTrait
 {
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $created;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $updated;
 
     public function getCreated(): ?DateTimeInterface

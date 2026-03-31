@@ -26,12 +26,11 @@ class ApcExportController extends BaseController
         return $departementExport->exportRefentiel($this->getVersion());
     }
 
-    #[Route("/competences/all/{annee}", name:"competence_export_all")]
+    #[Route("/competences/all", name:"competence_export_all")]
     public function exportCompetencesAll(
-        AllDepartementsExport $departementExport,
-        int $annee
+        AllDepartementsExport $departementExport
     ): Response {
-        return $departementExport->exportCompetences($annee);
+        return $departementExport->exportCompetences($this->getVersion());
     }
 
     #[Route('/formation', name: 'formation_export')]

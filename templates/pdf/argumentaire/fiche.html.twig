@@ -1,0 +1,246 @@
+{% extends 'pdf/basepdf.html.twig' %}
+
+{% block titre %}
+    Argumentaire CPN | {{ version.departement.sigle }} | {{ version.libelle }}
+{% endblock %}
+
+{% block styles %}
+    @page { size: A4; margin: 10mm; }
+
+    body {
+        font-size: 12px;
+        color: #1f2937;
+    }
+
+    h1, h2, h3 {
+        color: #253a52;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 16px;
+        margin-top: 25px;
+        border-bottom: 1px solid #d1d5db;
+        padding-bottom: 5px;
+    }
+
+    .meta {
+        margin-bottom: 15px;
+    }
+
+    .note {
+        background: #eef6ff;
+        border: 1px solid #b6d4fe;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 8px;
+        font-size: 10px;
+        color: #ffffff;
+    }
+
+    .badge-success {
+        background: #198754;
+    }
+
+    .badge-danger {
+        background: #dc3545;
+    }
+
+    .badge-secondary {
+        background: #6c757d;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 16px;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #d1d5db;
+        padding: 6px;
+        vertical-align: top;
+    }
+
+    .table thead th {
+        background: #f3f4f6;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+{% endblock %}
+
+{% macro diff_badge(diff) %}
+    {% if diff > 0 %}
+        <span class="badge badge-danger">+{{ diff }}</span>
+    {% elseif diff < 0 %}
+        <span class="badge badge-danger">{{ diff }}</span>
+    {% else %}
+        <span class="badge badge-success">Identique</span>
+    {% endif %}
+{% endmacro %}
+
+{% import _self as helper %}
+
+{% block content %}
+    <h1>Argumentaire CPN</h1>
+
+    <div class="meta">
+        <strong>Département :</strong> {{ version.departement.libelle }} ({{ version.departement.sigle }})<br>
+        <strong>Version courante :</strong> {{ version.libelle }}{% if version.annee %} - {{ version.annee }}{% endif %}<br>
+        <strong>Version de comparaison :</strong>
+        {% if previousVersion %}
+            {{ previousVersion.libelle }}{% if previousVersion.annee %} - {{ previousVersion.annee }}{% endif %}
+        {% else %}
+            Aucune version précédente
+        {% endif %}
+    </div>
+
+    <div class="note">
+        Ce PDF reprend les données comparatives disponibles dans l’argumentaire.
+        Les commentaires saisis dans le formulaire web ne sont pas inclus dans cette génération.
+    </div>
+
+    <h2>Présentation</h2>
+    <p>
+        Ce document a pour objectif d’éclairer la CCN sur les modifications proposées par les spécialités.
+        Il constitue une aide à la lecture des évolutions envisagées du référentiel.
+    </p>
+
+    <h2>Volumes horaires par semestre</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>Version précédente</th>
+            <th>Version courante</th>
+            <th>Écart</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            {% set diff = structureCurrent[i].nbHeuresCoursProjet - structurePrevious[i].nbHeuresCoursProjet %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td>
+                    {{ structurePrevious[i].nbHeuresCoursProjet }} h
+                    <br><small>dont projet : {{ structurePrevious[i].nbHeuresProjet }} h</small>
+                </td>
+                <td>
+                    {{ structureCurrent[i].nbHeuresCoursProjet }} h
+                    <br><small>dont projet : {{ structureCurrent[i].nbHeuresProjet }} h</small>
+                </td>
+                <td class="text-center">{{ helper.diff_badge(diff) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Équilibres SAÉ / Ressources</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>SAÉ local  précédente</th>
+            <th>SAÉ local  courante</th>
+            <th>Ressources précédente</th>
+            <th>Ressources courante</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            {% set previousRessources = structurePrevious[i].nbHeuresEnseignementRessourceNational + structurePrevious[i].nbHeuresEnseignementRessourceLocale %}
+            {% set currentRessources = structureCurrent[i].nbHeuresEnseignementRessourceNational + structureCurrent[i].nbHeuresEnseignementRessourceLocale %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td class="text-center">{{ structurePrevious[i].nbHeuresEnseignementSaeLocale }} h</td>
+                <td class="text-center">{{ structureCurrent[i].nbHeuresEnseignementSaeLocale }} h</td>
+                <td class="text-center">{{ previousRessources }} h</td>
+                <td class="text-center">{{ currentRessources }} h</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>TP et autonomie</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>TP précédente</th>
+            <th>TP courante</th>
+            <th>Autonomie précédente</th>
+            <th>Autonomie courante</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td class="text-center">{{ structurePrevious[i].nbHeuresTpNational + structurePrevious[i].nbHeuresTpLocale }} h</td>
+                <td class="text-center">{{ structureCurrent[i].nbHeuresTpNational + structureCurrent[i].nbHeuresTpLocale }} h</td>
+                <td class="text-center">{{ structurePrevious[i].nbHeuresProjet }} h</td>
+                <td class="text-center">{{ structureCurrent[i].nbHeuresProjet }} h</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Stages</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>Version précédente</th>
+            <th>Version courante</th>
+            <th>Positionnement</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            {% set previousStage = structurePrevious[i].nbSemainesStageMin ~ ' - ' ~ structurePrevious[i].nbSemainesStageMax %}
+            {% set currentStage = structureCurrent[i].nbSemainesStageMin ~ ' - ' ~ structureCurrent[i].nbSemainesStageMax %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td class="text-center">
+                    {% if structurePrevious[i].nbSemainesStageMax > 0 %}
+                        {{ previousStage }} semaines
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if structureCurrent[i].nbSemainesStageMax > 0 %}
+                        {{ currentStage }} semaines
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if structurePrevious[i].nbSemainesStageMax > 0 or structureCurrent[i].nbSemainesStageMax > 0 %}
+                        {% if previousStage == currentStage %}
+                            <span class="badge badge-success">Identique</span>
+                        {% else %}
+                            <span class="badge badge-danger">Modification</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="badge badge-secondary">Sans stage</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

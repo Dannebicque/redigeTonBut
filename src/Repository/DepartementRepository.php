@@ -29,7 +29,7 @@ class DepartementRepository extends ServiceEntityRepository
         parent::__construct($registry, Departement::class);
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         return $this->findBy([], ['sigle' => 'ASC']);
     }

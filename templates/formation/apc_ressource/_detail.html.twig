@@ -1,4 +1,17 @@
 <table class="table table-bordered">
+    {% if compareMode|default(false) and ressourceDiff is not null %}
+        <tr>
+            <td colspan="2">
+                {% if ressourceDiff.status == 'added' %}
+                    <span class="badge bg-success">Ajoutee depuis N-1</span>
+                {% elseif ressourceDiff.status == 'changed' %}
+                    <span class="badge bg-warning text-dark">Modifiee par rapport a N-1</span>
+                {% else %}
+                    <span class="badge bg-secondary">Identique a N-1</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
     <tr>
         <th>Parcours</th>
         <th>Semestre</th>
@@ -20,8 +33,21 @@
         <th>Volume horaire</th>
     </tr>
     <tr>
-        <td>{{ apc_ressource.codeMatiere }} | {{ apc_ressource.libelle }}</td>
-        <td>{{ apc_ressource.heuresTotales }}h dont  {{ apc_ressource.tpPpn }}h TP</td>
+        <td>
+            {{ apc_ressource.codeMatiere }} | {{ apc_ressource.libelle }}
+            {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.libelle is defined %}
+                <br><small class="text-muted">N-1: {{ ressourceDiff.changes.libelle.old }}</small>
+            {% endif %}
+        </td>
+        <td>
+            {{ apc_ressource.heuresTotales }}h dont  {{ apc_ressource.tpPpn }}h TP
+            {% if compareMode|default(false) and ressourceDiff is not null and (ressourceDiff.changes.heuresTotales is defined or ressourceDiff.changes.tpPpn is defined) %}
+                <br><small class="text-muted">
+                    N-1: {{ ressourceDiff.changes.heuresTotales is defined ? ressourceDiff.changes.heuresTotales.old : apc_ressource.heuresTotales }}h
+                    dont {{ ressourceDiff.changes.tpPpn is defined ? ressourceDiff.changes.tpPpn.old : apc_ressource.tpPpn }}h TP
+                </small>
+            {% endif %}
+        </td>
     </tr>
 </table>
 <br>
@@ -37,15 +63,42 @@
     </thead>
     <tbody>
     <tr>
-        <td>{{ apc_ressource.cmPreco }}</td>
-        <td>{{ apc_ressource.tdPreco }}</td>
-        <td>{{ apc_ressource.tpPreco }}</td>
+        <td>
+            {{ apc_ressource.cmPreco }}
+            {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.cmPreco is defined %}
+                <br><small class="text-muted">N-1: {{ ressourceDiff.changes.cmPreco.old }}</small>
+            {% endif %}
+        </td>
+        <td>
+            {{ apc_ressource.tdPreco }}
+            {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tdPreco is defined %}
+                <br><small class="text-muted">N-1: {{ ressourceDiff.changes.tdPreco.old }}</small>
+            {% endif %}
+        </td>
+        <td>
+            {{ apc_ressource.tpPreco }}
+            {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tpPreco is defined %}
+                <br><small class="text-muted">N-1: {{ ressourceDiff.changes.tpPreco.old }}</small>
+            {% endif %}
+        </td>
     </tr>
     </tbody>
 </table>
 <br>
 {% endif %}
 <h3>Compétences ciblées</h3>
+{% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.linkedChanges is defined %}
+    {% if ressourceDiff.linkedChanges.competences.added|length > 0 or ressourceDiff.linkedChanges.competences.removed|length > 0 %}
+        <div class="mb-2 small">
+            {% for item in ressourceDiff.linkedChanges.competences.added %}
+                <span class="badge bg-success me-1">+ {{ item }}</span>
+            {% endfor %}
+            {% for item in ressourceDiff.linkedChanges.competences.removed %}
+                <span class="badge bg-danger me-1">- {{ item }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% else %}
 <p>
     {% for competence in apc_ressource.apcRessourceCompetences|filter(competence => competence.competence !=
         null) %}
@@ -54,8 +107,20 @@
                 </span>
     {% endfor %}
 </p>
-
+{% endif %}
 <h3>Apprentissages critiques</h3>
+{% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.linkedChanges is defined %}
+    {% if ressourceDiff.linkedChanges.acs.added|length > 0 or ressourceDiff.linkedChanges.acs.removed|length > 0 %}
+        <div class="mb-2 small">
+            {% for item in ressourceDiff.linkedChanges.acs.added %}
+                <span class="badge bg-success me-1">+ {{ item }}</span>
+            {% endfor %}
+            {% for item in ressourceDiff.linkedChanges.acs.removed %}
+                <span class="badge bg-danger me-1">- {{ item }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% else %}
 <p>
     {% for ac in apc_ressource.apcRessourceApprentissageCritiques|filter(ac => ac.apprentissageCritique !=
         null) %}
@@ -63,9 +128,9 @@
                     {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle }}</span>
     {% endfor %}
 </p>
-
+{% endif %}
 <h3>SAÉ concernées</h3>
-<a>
+<p>
     {% for sae in saes %}
         {% if apc_ressource.apcRessourceParcours.get(0).parcours is defined %}
             {% if sae.sae.isGoodParcours(apc_ressource.apcRessourceParcours.get(0).parcours) %}
@@ -87,18 +152,52 @@
 <p>
     {{ apc_ressource.description != null ? apc_ressource.description|markdown_to_html : '' }}
 </p>
+{% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.description is defined %}
+    <div class="alert alert-warning small">
+        <strong>Ancienne description (N-1)</strong><br>
+        {{ ressourceDiff.changes.description.old != null ? ressourceDiff.changes.description.old|markdown_to_html : '' }}
+    </div>
+{% endif %}
 
 <h3>Prérequis</h3>
+{% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.linkedChanges is defined %}
+    {% if ressourceDiff.linkedChanges.prerequis.added|length > 0 or ressourceDiff.linkedChanges.prerequis.removed|length > 0 %}
+        <div class="mb-2 small">
+            {% for item in ressourceDiff.linkedChanges.prerequis.added %}
+                <span class="badge bg-success me-1">+ {{ item }}</span>
+            {% endfor %}
+            {% for item in ressourceDiff.linkedChanges.prerequis.removed %}
+                <span class="badge bg-danger me-1">- {{ item }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% else %}
 <p>
     {% for prerequis in apc_ressource.ressourcesPreRequises %}
-        <a href="{{ path('but_fiche_ressource', {apcRessource:prerequis.id}) }}"><span class="badge bg-primary">
+        <a href="{{ path('but_fiche_ressource', {apcRessource: prerequis.id, compare: compareMode|default(false) ? 1 : null}) }}"><span class="badge bg-primary">
             {{ prerequis.codeMatiere }} | {{ prerequis.libelle }}
             </span></a>
+        {% else %}
+            <span class="badge bg-info">Pas de prérequis</span>
     {% endfor %}
 </p>
+{% endif %}
 
 <h3>Mots clés</h3>
 <p>
     {{ apc_ressource.motsCles|keyWords }}
 </p>
+{% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.motsCles is defined %}
+    <p class="small text-muted">N-1: {{ ressourceDiff.changes.motsCles.old }}</p>
+{% endif %}
+
+{% if compareMode|default(false) and ressourceDiff is not null and (ressourceDiff.changes.ficheAdaptationLocale is defined) %}
+    <h3>Autres champs de fiche</h3>
+    <p class="small">
+        <strong>Fiche adaptation locale:</strong>
+        {{ ressourceDiff.changes.ficheAdaptationLocale.old ? 'Oui' : 'Non' }}
+        ->
+        {{ ressourceDiff.changes.ficheAdaptationLocale.new ? 'Oui' : 'Non' }}
+    </p>
+{% endif %}
 

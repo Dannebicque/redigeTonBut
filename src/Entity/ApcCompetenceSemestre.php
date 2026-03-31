@@ -24,7 +24,7 @@ class ApcCompetenceSemestre
     private ?float $ECTS = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
-    private ?string $ectsParcours = "";
+    private ?string $ectsParcours = '';
 
     public function getId(): ?int
     {

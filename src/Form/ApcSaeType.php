@@ -15,6 +15,7 @@ use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Entity\Version;
 use App\Repository\SemestreRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -133,7 +134,7 @@ class ApcSaeType extends AbstractType
                 'required' => true,
                 'choice_label' => 'display',
                 'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
-                'query_builder' => function(SemestreRepository $semestreRepository): \Doctrine\ORM\QueryBuilder {
+                'query_builder' => function(SemestreRepository $semestreRepository): QueryBuilder {
                     return $semestreRepository->findByVersionParcoursBuilder($this->version, $this->parcours);
                 },
                 'label' => 'Semestre',
@@ -145,7 +146,7 @@ class ApcSaeType extends AbstractType
                 'required' => true,
                 'choice_label' => 'display',
                 'attr' => ['x-model' => 'semestre', '@change' => 'changeSemestre'],
-                'query_builder' => function(SemestreRepository $semestreRepository): \Doctrine\ORM\QueryBuilder {
+                'query_builder' => function(SemestreRepository $semestreRepository): QueryBuilder {
                     return $semestreRepository->findByVersionParcoursBuilder($this->version, $this->parcours);
                 },
                 'label' => 'Semestre',

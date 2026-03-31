@@ -5,11 +5,10 @@ namespace App\Command;
 //ALTER TABLE apc_competence ADD numero_identifiant INT NOT NULL;
 use App\Classes\Export\DepartementExport;
 use App\Repository\DepartementRepository;
+use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -50,7 +49,7 @@ class VersionCompetenceCommand extends Command
             $filePath = $this->baseDir . $specialite->getNumeroAnnexe() . '/' . $name . '.json';
             if (!is_dir($this->baseDir . $specialite->getNumeroAnnexe())) {
                 if (!mkdir($concurrentDirectory = $this->baseDir . $specialite->getNumeroAnnexe(), 0777, true) && !is_dir($concurrentDirectory)) {
-                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+                    throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
                 }
             }
 

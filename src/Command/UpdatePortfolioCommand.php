@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -20,8 +19,8 @@ class UpdatePortfolioCommand extends Command
 
 
     public function __construct(
-        private ApcSaeRepository $apcSaeRepository,
-        private EntityManagerInterface $entityManager
+        private readonly ApcSaeRepository       $apcSaeRepository,
+        private readonly EntityManagerInterface $entityManager
     ) {
         parent::__construct();
     }

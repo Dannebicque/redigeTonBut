@@ -65,7 +65,7 @@ class ApcSae extends AbstractMatiere
 {
     use LifeCycleTrait;
 
-    public const SOURCE = 'sae';
+    public const string SOURCE = 'sae';
 
     #[ORM\ManyToOne(targetEntity: Semestre::class, inversedBy: 'apcSaes')]
     #[Groups(['read:sae'])]
@@ -78,28 +78,28 @@ class ApcSae extends AbstractMatiere
     /**
      * @var Collection<int, ApcSaeCompetence>
      */
-    #[ORM\OneToMany(targetEntity: ApcSaeCompetence::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'sae', targetEntity: ApcSaeCompetence::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:sae'])]
     private Collection $apcSaeCompetences;
 
     /**
      * @var Collection<int, ApcSaeRessource>
      */
-    #[ORM\OneToMany(targetEntity: ApcSaeRessource::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'sae', targetEntity: ApcSaeRessource::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:sae'])]
     private Collection $apcSaeRessources;
 
     /**
      * @var Collection<int, ApcSaeApprentissageCritique>
      */
-    #[ORM\OneToMany(targetEntity: ApcSaeApprentissageCritique::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'sae', targetEntity: ApcSaeApprentissageCritique::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:sae'])]
     private Collection $apcSaeApprentissageCritiques;
 
     /**
      * @var Collection<int, ApcSaeParcours>
      */
-    #[ORM\OneToMany(targetEntity: ApcSaeParcours::class, mappedBy: 'sae', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    #[ORM\OneToMany(mappedBy: 'sae', targetEntity: ApcSaeParcours::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[Groups(['read:sae'])]
     private Collection $apcSaeParcours;
 
@@ -129,7 +129,7 @@ class ApcSae extends AbstractMatiere
     /**
      * @var Collection<int, QapesSae>
      */
-    #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: 'sae')]
+    #[ORM\OneToMany(mappedBy: 'sae', targetEntity: QapesSae::class)]
     private Collection $qapesSaes;
 
     public function __construct()
@@ -159,7 +159,7 @@ class ApcSae extends AbstractMatiere
     }
 
     /**
-     * @return Collection|ApcSaeCompetence[]
+     * @return Collection
      */
     public function getApcSaeCompetences(): Collection
     {
@@ -187,7 +187,7 @@ class ApcSae extends AbstractMatiere
     }
 
     /**
-     * @return Collection|ApcSaeRessource[]
+     * @return Collection
      */
     public function getApcSaeRessources(): Collection
     {
@@ -215,7 +215,7 @@ class ApcSae extends AbstractMatiere
     }
 
     /**
-     * @return Collection|ApcCompetence[]
+     * @return Collection
      */
     public function getCompetences(): Collection
     {
@@ -254,7 +254,7 @@ class ApcSae extends AbstractMatiere
     }
 
     /**
-     * @return Collection|ApcSaeApprentissageCritique[]
+     * @return Collection
      */
     public function getApcSaeApprentissageCritiques(): Collection
     {
@@ -294,7 +294,7 @@ class ApcSae extends AbstractMatiere
     }
 
     /**
-     * @return Collection|ApcSaeParcours[]
+     * @return Collection
      */
     public function getApcSaeParcours(): Collection
     {
@@ -509,9 +509,9 @@ class ApcSae extends AbstractMatiere
             'code' => $normalizeString($this->getCodeMatiere()),
             'libelle' => $normalizeString($this->getLibelle()),
             'libelle_court' => $normalizeString($this->getLibelleCourt()),
-            'ordre' => (int)($this->getOrdre() ?? 0),
-            'portfolio' => (int)($this->getPortfolio() ? 1 : 0),
-            'stage' => (int)($this->getStage() ? 1 : 0),
+            'ordre' => $this->getOrdre() ?? 0,
+            'portfolio' => $this->getPortfolio() ? 1 : 0,
+            'stage' => $this->getStage() ? 1 : 0,
             'description' => $normalizeString($this->getDescription()),
             'heures_totales' => (float)($this->getHeuresTotales() ?? 0),
         ];

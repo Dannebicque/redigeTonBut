@@ -42,9 +42,9 @@ class ApcSituationProfessionnelleController extends BaseController
                 ['version' => $apcSituationProfessionnelle->getVersion()?->getId()]);
         }
 
-        return $this->renderForm('competences/apc_situation_professionnelle/new.html.twig', [
+        return $this->render('competences/apc_situation_professionnelle/new.html.twig', [
             'apc_situation_professionnelle' => $apcSituationProfessionnelle,
-            'form' => $form,
+            'form' => $form->createView(),
             'competence' => $competence
         ]);
     }
@@ -77,9 +77,9 @@ class ApcSituationProfessionnelleController extends BaseController
 
         }
 
-        return $this->renderForm('competences/apc_situation_professionnelle/edit.html.twig', [
+        return $this->render('competences/apc_situation_professionnelle/edit.html.twig', [
             'apc_situation_professionnelle' => $apcSituationProfessionnelle,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

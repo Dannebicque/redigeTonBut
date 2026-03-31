@@ -17,16 +17,16 @@ class Constantes
 
 
 
-    public const FLASHBAG_SUCCESS = 'success';
+    public const string FLASHBAG_SUCCESS = 'success';
 
-    public const FLASHBAG_INFO = 'info';
+    public const string FLASHBAG_INFO = 'info';
 
-    public const FLASHBAG_NOTICE = 'warning';
+    public const string FLASHBAG_NOTICE = 'warning';
 
-    public const FLASHBAG_ERROR = 'danger';
+    public const string FLASHBAG_ERROR = 'danger';
 
 
-    public const CIVILITE_HOMME = 'M.';
+    public const string CIVILITE_HOMME = 'M.';
 
-    public const CIVILITE_FEMME = 'Mme';
+    public const string CIVILITE_FEMME = 'Mme';
 }

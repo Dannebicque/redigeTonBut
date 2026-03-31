@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
-use App\Security\EmailVerifier;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -62,7 +62,7 @@ class RegistrationController extends AbstractController
                 ->context([
                     'user' => $user,
                     'token' => md5($user->getEmail()),
-                    'expiredAt' => (new \DateTime())->modify('+1 hour')->getTimestamp()
+                    'expiredAt' => (new DateTime())->modify('+1 hour')->getTimestamp()
                     ]);
 
 
@@ -98,7 +98,7 @@ class RegistrationController extends AbstractController
             ->context([
                 'user' => $user,
                 'token' => md5($user->getEmail()),
-                'expiredAt' => (new \DateTime())->modify('+1 hour')->getTimestamp()
+                'expiredAt' => (new DateTime())->modify('+1 hour')->getTimestamp()
             ]);
 
 
@@ -139,9 +139,9 @@ class RegistrationController extends AbstractController
         }
 
         //créer un objet DateTime avec la date d'expiration en texte
-        $expiredAt = (new \DateTime())->setTimestamp($expiredAt);
+        $expiredAt = (new DateTime())->setTimestamp($expiredAt);
 
-        if ((new \DateTime()) > $expiredAt) {
+        if ((new DateTime()) > $expiredAt) {
             $this->addFlash('danger', 'Le lien a expiré.');
             return $this->redirectToRoute('app_register');
         }

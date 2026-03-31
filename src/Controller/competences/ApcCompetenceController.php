@@ -14,8 +14,6 @@ use App\Classes\Apc\ApcCompetenceOrdre;
 use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcCompetenceSemestre;
-use App\Entity\ApcNiveau;
-use App\Entity\ApcParcours;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Entity\Semestre;
@@ -23,6 +21,7 @@ use App\Form\ApcCompetenceType;
 use App\Repository\ApcCompetenceSemestreRepository;
 use App\Repository\ApcParcoursRepository;
 use App\Utils\Convert;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -112,11 +111,11 @@ class ApcCompetenceController extends BaseController
         ]);
     }
 
-    #[Route("/{semestre}/{competence}/update_ects_ajax", name:"administration_apc_competence_update_ects", methods:["POST"], options:["expose"=>true])]
+    #[Route("/{semestre}/{competence}/update_ects_ajax", name: "administration_apc_competence_update_ects", options: ["expose"=>true], methods: ["POST"])]
     public function updateEcts(
         ApcParcoursRepository $apcParcoursRepository,
         ApcCompetenceSemestreRepository $apcCompetenceSemestreRepository,
-        Request $request, Semestre $semestre, ApcCompetence $competence): \Symfony\Component\HttpFoundation\JsonResponse {
+        Request $request, Semestre $semestre, ApcCompetence $competence): JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);

@@ -60,7 +60,7 @@ class TableauExport
     }
 
 
-    public function exportTableauCroise(Annee $annee, ?ApcParcours $parcours = null, $displayCoeff = false)
+    public function exportTableauCroise(Annee $annee, ?ApcParcours $parcours = null, $displayCoeff = false): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         if (!$parcours instanceof ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
@@ -175,7 +175,7 @@ class TableauExport
         return $this->excelWriter->genereFichier('tableau_croise_BUT' . $annee->getOrdre());
     }
 
-    public function exportTableauHoraire(Annee $annee, ?ApcParcours $parcours)
+    public function exportTableauHoraire(Annee $annee, ?ApcParcours $parcours): \Symfony\Component\HttpFoundation\StreamedResponse
     {
 
         if (!$parcours instanceof ApcParcours || $annee->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
@@ -360,7 +360,7 @@ class TableauExport
         return $this->excelWriter->genereFichier('tableau_horaire_BUT' . $annee->getOrdre());
     }
 
-    public function exportTableauPreconisation(Annee $annee, ?ApcParcours $parcours)
+    public function exportTableauPreconisation(Annee $annee, ?ApcParcours $parcours): \Symfony\Component\HttpFoundation\StreamedResponse
     {
 
 
@@ -520,7 +520,7 @@ class TableauExport
         return $this->excelWriter->genereFichier('tableau_preconisation_BUT' . $annee->getOrdre());
     }
 
-    public function exportTableauCroiseVolumeHoraire(Version $version)
+    public function exportTableauCroiseVolumeHoraire(Version $version): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $departement = $version->getDepartement();
         $this->excelWriter->nouveauFichier('');

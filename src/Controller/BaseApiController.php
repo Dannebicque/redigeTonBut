@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BaseApiController extends AbstractController
 {
-    protected function checkAccessApi(Request $request)
+    protected function checkAccessApi(Request $request): void
     {
         if (!$request->headers->has('x-api-key')) {
             throw $this->createAccessDeniedException('Accès non autorisé');

@@ -13,9 +13,9 @@
 
 namespace App\Classes\Apc;
 
-use App\Entity\Departement;
 use App\Entity\Version;
 use App\Repository\ApcParcoursNiveauRepository;
+use function array_key_exists;
 
 class ApcStructure
 {
@@ -37,7 +37,7 @@ class ApcStructure
             foreach ($pn as $niveau) {
                 if (null !== $niveau && null !== $niveau->getNiveau()) {
                     $niv = $niveau->getNiveau();
-                    if (null !== $niv && null !== $niv->getCompetence() && !\array_key_exists($niv->getCompetence()->getId(),
+                    if (null !== $niv && null !== $niv->getCompetence() && !array_key_exists($niv->getCompetence()->getId(),
                             $tParcours[$parcours->getId()])) {
                         $tParcours[$parcours->getId()][$niv->getCompetence()->getId()] = [];
                     }

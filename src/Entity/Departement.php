@@ -14,6 +14,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Traits\LifeCycleTrait;
+use App\Repository\DepartementRepository;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,13 +23,13 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: \App\Repository\DepartementRepository::class)]
+#[ORM\Entity(repositoryClass: DepartementRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ApiFilter(SearchFilter::class, properties: ["sigle" => "exact"])]
 #[ApiResource(
-    normalizationContext: ["groups" => ["read:departement"]],
     collectionOperations: ["get"],
-    itemOperations: ["get"]
+    itemOperations: ["get"],
+    normalizationContext: ["groups" => ["read:departement"]]
 )]
 class Departement
 {
@@ -45,15 +46,15 @@ class Departement
         return $this->id;
     }
 
-    public const TERTIAIRE = 'tertiaire';
+    public const string TERTIAIRE = 'tertiaire';
 
-    public const SECONDAIRE = 'secondaire';
+    public const string SECONDAIRE = 'secondaire';
 
-    public const TYPE1 = 'type1';
+    public const string TYPE1 = 'type1';
 
-    public const TYPE2 = 'type2';
+    public const string TYPE2 = 'type2';
 
-    public const TYPE3 = 'type3';
+    public const string TYPE3 = 'type3';
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Groups(["actualite_administration", "read:departement"])]
@@ -63,14 +64,14 @@ class Departement
      * @var Collection<int, Annee>
      */
     //todo: a supprimer, sur version
-    #[ORM\OneToMany(targetEntity: Annee::class, mappedBy: "departement")]
+    #[ORM\OneToMany(mappedBy: "departement", targetEntity: Annee::class)]
     /** @deprecated */
     private Collection $annees;
 
     /**
      * @var Collection<int, ApcCompetence>
      */
-    #[ORM\OneToMany(targetEntity: ApcCompetence::class, mappedBy: "departement")]
+    #[ORM\OneToMany(mappedBy: "departement", targetEntity: ApcCompetence::class)]
     #[ORM\OrderBy(["couleur" => "ASC"])]
     #[Groups(["read:departement"])]
     /** @deprecated */
@@ -123,7 +124,7 @@ class Departement
     /**
      * @var Collection<int, Departement>
      */
-    #[ORM\OneToMany(targetEntity: Departement::class, mappedBy: "departement_parent")]
+    #[ORM\OneToMany(mappedBy: "departement_parent", targetEntity: Departement::class)]
     //todo: pas utilisé ?
     private Collection $departementEnfants;
 
@@ -191,7 +192,7 @@ class Departement
     /**
      * @var Collection<int, QapesSae>
      */
-    #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: "specialite")]
+    #[ORM\OneToMany(mappedBy: "specialite", targetEntity: QapesSae::class)]
     //todo: a supprimé, déplacé sur Version . A traiter
     private Collection $qapesSaes;
 
@@ -383,7 +384,7 @@ class Departement
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection
      */
     public function getUsers(): Collection
     {
@@ -482,7 +483,7 @@ class Departement
     }
 
     /**
-     * @return Collection|self[]
+     * @return Collection
      */
     public function getDepartementEnfants(): Collection
     {
@@ -510,7 +511,7 @@ class Departement
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection
      */
     public function getCpns(): Collection
     {

@@ -35,15 +35,15 @@ class ApcApprentissageCritique extends BaseEntity
     private ?string $code = null;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcRessourceApprentissageCritique>
+     * @var Collection<int, ApcRessourceApprentissageCritique>
      */
-    #[ORM\OneToMany(targetEntity: ApcRessourceApprentissageCritique::class, mappedBy: 'apprentissageCritique')]
+    #[ORM\OneToMany(mappedBy: 'apprentissageCritique', targetEntity: ApcRessourceApprentissageCritique::class)]
     private Collection $apcRessourceApprentissageCritiques;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ApcSaeApprentissageCritique>
+     * @var Collection<int, ApcSaeApprentissageCritique>
      */
-    #[ORM\OneToMany(targetEntity: ApcSaeApprentissageCritique::class, mappedBy: 'apprentissageCritique')]
+    #[ORM\OneToMany(mappedBy: 'apprentissageCritique', targetEntity: ApcSaeApprentissageCritique::class)]
     private Collection $apcSaeApprentissageCritiques;
 
     #[ORM\Column(type: Types::INTEGER)]
@@ -53,7 +53,7 @@ class ApcApprentissageCritique extends BaseEntity
     /**
      * ApcApprentissageCritique constructor.
      *
-     * @param $niveau
+     * @param ApcNiveau|null $niveau
      */
     public function __construct(?ApcNiveau $niveau = null)
     {
@@ -99,7 +99,7 @@ class ApcApprentissageCritique extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcRessourceApprentissageCritique[]
+     * @return Collection
      */
     public function getApcRessourceApprentissageCritiques(): Collection
     {
@@ -129,7 +129,7 @@ class ApcApprentissageCritique extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcSaeApprentissageCritique[]
+     * @return Collection
      */
     public function getApcSaeApprentissageCritiques(): Collection
     {

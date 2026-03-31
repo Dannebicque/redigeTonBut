@@ -25,8 +25,6 @@ class DepartementType extends AbstractType
             ->add('altBut1', TextType::class, ['label' => 'Pourcentage de réduction pour l\'alternance en BUT1'])
             ->add('altBut2', TextType::class, ['label' => 'Pourcentage de réduction pour l\'alternance en BUT2'])
             ->add('altBut3', TextType::class, ['label' => 'Pourcentage de réduction pour l\'alternance en BUT3'])
-            ->add('numeroAnnexe', IntegerType::class, ['disabled' => $this->droit])
-            ->add('numeroAnnexe', IntegerType::class, ['disabled' => $this->droit])
             ->add('typeDepartement', ChoiceType::class,
                 ['choices' => ['Secondaire' => 'secondaire', 'Tertiaire' => 'tertiaire'], 'disabled' => $this->droit])
             ->add('typeStructure', ChoiceType::class,

@@ -46,9 +46,7 @@ class ApcRessourceOrdre
         ]);
         $apcRessource->setOrdre($ordreDestination);
 
-        if ($ressource !== null) {
-            $ressource->setOrdre($ordreInitial);
-        }
+        $ressource?->setOrdre($ordreInitial);
 
         $this->entityManager->flush();
 

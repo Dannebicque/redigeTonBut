@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\QapesSae;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -24,8 +24,6 @@ class QapesSaeRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function add(QapesSae $entity, bool $flush = true): void
     {
@@ -36,8 +34,6 @@ class QapesSaeRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function remove(QapesSae $entity, bool $flush = true): void
     {

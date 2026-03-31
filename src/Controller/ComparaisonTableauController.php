@@ -2,25 +2,11 @@
 
 namespace App\Controller;
 
-use App\Classes\Apc\TableauCroise;
-use App\Classes\Apc\TableauPreconisation;
-use App\Classes\Tableau\Preconisation;
 use App\Classes\Tableau\Structure;
-use App\Classes\Tableau\VolumesHoraires;
-use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
-use App\Entity\Semestre;
-use App\Repository\ApcParcoursNiveauRepository;
 use App\Repository\ApcParcoursRepository;
-use App\Repository\ApcRessourceParcoursRepository;
-use App\Repository\ApcRessourceRepository;
-use App\Repository\ApcSaeParcoursRepository;
-use App\Repository\ApcSaeRepository;
 use App\Repository\SemestreRepository;
-use App\Utils\Convert;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 

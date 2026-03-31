@@ -5,8 +5,9 @@ namespace App\Classes\Apc;
 
 
 use App\Classes\Excel\ExcelWriter;
-use App\Entity\Departement;
+use App\Entity\ApcApprentissageCritique;
 use App\Entity\Version;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApcApprentissageCritiqueExport
 {
@@ -17,7 +18,7 @@ class ApcApprentissageCritiqueExport
         $this->excelWriter = $excelWriter;
     }
 
-    public function exportDepartement($acs, Version $version)
+    public function exportDepartement($acs, Version $version): StreamedResponse
     {
         $this->excelWriter->nouveauFichier();
 
@@ -29,7 +30,7 @@ class ApcApprentissageCritiqueExport
             $this->excelWriter->writeCellName('D1', 'Parcours');
 
             $ligne = 2;
-            /** @var \App\Entity\ApcApprentissageCritique $ac */
+            /** @var ApcApprentissageCritique $ac */
             foreach ($acs as $ac) {
                 if ($ac->getNiveau()->getAnnee()->getId() === $annee->getId()) {
                     $this->excelWriter->writeCellXY(1, $ligne, $ac->getCode());

@@ -1,10 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block header %}Modification de la spécialité{% endblock %}
+{% block header %}Modification de la spécialité {{ version.departement.sigle }}{% endblock %}
 
 {% block content %}
+    {% set departement = version.departement %}
     <div class="card">
         <div class="card-body">
+            <div class="row border-1 mb-2">
+                <div class="col-3">
+                    Spécialité :<br>
+                    <strong>{{ departement.libelle }}</strong>
+                </div>
+                <div class="col-3">
+                    Sigle :<br>
+                    <strong>{{ departement.sigle }}</strong>
+                </div>
+                <div class="col-3">
+                    Numéro Annexe :<br>
+                    <strong> {{ departement.numeroAnnexe }}</strong>
+                </div>
+                <div class="col-3">
+                    type de spécialite<br>
+                    <strong>{{ departement.typeDepartement }}</strong>
+                </div>
+            </div>
             {{ include('composants/adm-form.html.twig') }}
         </div>
     </div>

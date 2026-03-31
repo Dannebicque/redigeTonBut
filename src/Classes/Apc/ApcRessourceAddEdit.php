@@ -96,16 +96,19 @@ class ApcRessourceAddEdit
             }
         }
 
-        $saes = $request->request->all()['saes'];
-        if (is_array($saes)) {
-            foreach ($saes as $idAc) {
-                $apcSae = $this->apcSaeRepository->find($idAc);
-                $saeRes = new ApcSaeRessource($apcSae, $apcRessource);
-                $this->entityManager->persist($saeRes);
+        if ($request->request->has('saes')) {
+            $saes = $request->request->all()['saes'];
+            if (is_array($saes)) {
+                foreach ($saes as $idAc) {
+                    $apcSae = $this->apcSaeRepository->find($idAc);
+                    $saeRes = new ApcSaeRessource($apcSae, $apcRessource);
+                    $this->entityManager->persist($saeRes);
+                }
             }
         }
 
-        $tprerequis = $request->request->all()['tprerequis'];
+        if ($request->request->has('tprerequis')) {
+            $tprerequis = $request->request->all()['tprerequis'];
         if (is_array($tprerequis)) {
             foreach ($tprerequis as $idAc) {
                 $res = $this->apcRessourceRepository->find($idAc);
@@ -113,6 +116,7 @@ class ApcRessourceAddEdit
                     $apcRessource->addRessourcesPreRequise($res);
                 }
             }
+        }
         }
 
         $this->entityManager->flush();

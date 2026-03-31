@@ -12,10 +12,11 @@ namespace App\Classes\Import;
 use Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use function in_array;
 
 class MyUpload
 {
-    private $dir;
+    private string $dir;
 
     public function __construct(ParameterBagInterface $parameterBag)
     {
@@ -29,7 +30,7 @@ class MyUpload
     {
         $extension = $this->getExtension($fichier);
         $dir = $this->valideDir($destination);
-        if (($extensions !== []) && !\in_array($extension, $extensions, true)) {
+        if (($extensions !== []) && !in_array($extension, $extensions, true)) {
             throw new Exception();
         }
         $nomfile = random_int(1, 99999) . '_' . date('YmdHis') . '.' . $extension;

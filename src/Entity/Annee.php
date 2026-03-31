@@ -40,14 +40,14 @@ class Annee extends BaseEntity
     /**
      * @var Collection<int, Semestre>
      */
-    #[ORM\OneToMany(targetEntity: Semestre::class, mappedBy: 'annee')]
+    #[ORM\OneToMany(mappedBy: 'annee', targetEntity: Semestre::class)]
     #[ORM\OrderBy(['ordreLmd' => 'ASC'])]
     private Collection $semestres;
 
     /**
      * @var Collection<int, ApcNiveau>
      */
-    #[ORM\OneToMany(targetEntity: ApcNiveau::class, mappedBy: 'annee')]
+    #[ORM\OneToMany(mappedBy: 'annee', targetEntity: ApcNiveau::class)]
     private Collection $apcNiveaux;
 
     #[ORM\ManyToOne(targetEntity: Departement::class, inversedBy: 'annees')]
@@ -92,10 +92,6 @@ class Annee extends BaseEntity
         $this->libelleLong = $libelleLong;
     }
 
-
-    /**
-     * @return Collection|Semestre[]
-     */
     public function getSemestres(): Collection
     {
         return $this->semestres;
@@ -125,7 +121,7 @@ class Annee extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcNiveau[]
+     * @return Collection
      */
     public function getApcNiveaux(): Collection
     {
@@ -165,12 +161,14 @@ class Annee extends BaseEntity
         $this->codeEtape = $codeEtape;
     }
 
+    /** @deprecated */
     public function getDepartement(): ?Departement
     {
         //todo: a adapter pour passer par Version
         return $this->departement;
     }
 
+    /** @deprecated */
     public function setDepartement(?Departement $departement): self
     {
         $this->departement = $departement;

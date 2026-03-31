@@ -44,12 +44,12 @@ class ApcRessourceParcoursRepository extends ServiceEntityRepository
 
     }
 
-    public function findBySemestre(Semestre $semestre, ApcParcours $parcours)
+    public function findBySemestre(Semestre $semestre, ApcParcours $parcours): array
     {
         return $this->getBySemestre($semestre, $parcours, false);
     }
 
-    public function findBySemestreAl(Semestre $semestre, ApcParcours $parcours)
+    public function findBySemestreAl(Semestre $semestre, ApcParcours $parcours): array
     {
         return $this->getBySemestre($semestre, $parcours, true);
     }

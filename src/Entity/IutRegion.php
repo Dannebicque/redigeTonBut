@@ -22,13 +22,13 @@ class IutRegion
     /**
      * @var Collection<int, IutAcademie>
      */
-    #[ORM\OneToMany(targetEntity: IutAcademie::class, mappedBy: 'region')]
+    #[ORM\OneToMany(mappedBy: 'region', targetEntity: IutAcademie::class)]
     private Collection $iutAcademies;
 
     /**
      * @var Collection<int, IutVille>
      */
-    #[ORM\OneToMany(targetEntity: IutVille::class, mappedBy: 'region')]
+    #[ORM\OneToMany(mappedBy: 'region', targetEntity: IutVille::class)]
     private Collection $iutVilles;
 
     public function __construct()

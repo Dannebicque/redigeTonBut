@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -253,7 +254,8 @@ class ExcelWriter
        }
     }
 
-    public function genereFichier(string $name): \Symfony\Component\HttpFoundation\StreamedResponse {
+    public function genereFichier(string $name): StreamedResponse
+    {
         $this->pageSetup($name);
         $writer = new Xlsx($this->spreadsheet);
 
@@ -261,7 +263,7 @@ class ExcelWriter
             static function() use ($writer): void {
                 $writer->save('php://output');
             },
-            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+            Response::HTTP_OK,
             [
                 'Content-Type'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'Content-Disposition' => 'attachment;filename="' . $name . '.xlsx"',

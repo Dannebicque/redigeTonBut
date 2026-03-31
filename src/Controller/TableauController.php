@@ -11,6 +11,7 @@ use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Repository\AnneeRepository;
 use App\Repository\ApcParcoursNiveauRepository;
 use App\Repository\ApcParcoursRepository;
 use App\Repository\ApcRessourceParcoursRepository;
@@ -192,6 +193,90 @@ class TableauController extends BaseController
         ]);
     }
 
+    #[Route('/croise-comparaison/{annee}/{parcours}', name: 'croise_comparaison_annee', requirements: ['annee' => '\\d+'])]
+    public function tableauComparaison(
+        SemestreRepository $semestreRepository,
+        AnneeRepository $anneeRepository,
+        ApcParcoursRepository $apcParcoursRepository,
+        TableauCroise $tableauCroise,
+        Annee $annee,
+        ApcParcours $parcours = null
+    ): Response {
+        $versionCourante = $this->getVersion();
+        $versionPrecedente = $versionCourante?->getPreviousVersion();
+
+        if ($versionPrecedente === null) {
+            $this->addFlashBag('warning', 'Aucune version N-1 n\'est definie pour cette version.');
+
+            return $this->redirectToRoute('tableau_croise_annee', [
+                'annee' => $annee->getId(),
+                'parcours' => $parcours?->getId(),
+            ]);
+        }
+
+        $anneePrecedente = $anneeRepository->findOneBy([
+            'version' => $versionPrecedente,
+            'ordre' => $annee->getOrdre(),
+        ]);
+
+        $parcoursPrecedent = null;
+        if ($parcours instanceof ApcParcours && $this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+            $parcoursPrecedent = $apcParcoursRepository->findOneBy([
+                'version' => $versionPrecedente,
+                'code' => $parcours->getCode(),
+            ]);
+        }
+
+        $semestresCourants = (!$parcours instanceof ApcParcours || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3)
+            ? $semestreRepository->findBy(['annee' => $annee->getId()])
+            : $semestreRepository->findBy(['annee' => $annee->getId(), 'apcParcours' => $parcours]);
+
+        $semestresPrecedents = [];
+        if ($anneePrecedente instanceof Annee) {
+            $semestresPrecedents = (!$parcoursPrecedent instanceof ApcParcours || $this->getDepartement()->getTypeStructure() !== Departement::TYPE3)
+                ? $semestreRepository->findBy(['annee' => $anneePrecedente->getId()])
+                : $semestreRepository->findBy(['annee' => $anneePrecedente->getId(), 'apcParcours' => $parcoursPrecedent]);
+        }
+
+        $semestresCourantsByOrdre = $this->indexSemestresByOrdreLmd($semestresCourants);
+        $semestresPrecedentsByOrdre = $this->indexSemestresByOrdreLmd($semestresPrecedents);
+        $ordres = array_unique(array_merge(array_keys($semestresCourantsByOrdre), array_keys($semestresPrecedentsByOrdre)));
+        sort($ordres);
+
+        $comparaisons = [];
+        foreach ($ordres as $ordre) {
+            $semestreCourant = $semestresCourantsByOrdre[$ordre] ?? null;
+            $semestrePrecedent = $semestresPrecedentsByOrdre[$ordre] ?? null;
+
+            $snapshotCourant = $semestreCourant instanceof Semestre
+                ? $this->buildCroiseSnapshot($tableauCroise, $semestreCourant, $parcours)
+                : $this->emptyCroiseSnapshot();
+
+            $snapshotPrecedent = $semestrePrecedent instanceof Semestre
+                ? $this->buildCroiseSnapshot($tableauCroise, $semestrePrecedent, $parcoursPrecedent)
+                : $this->emptyCroiseSnapshot();
+
+            $comparaisons[] = [
+                'ordreLmd' => $ordre,
+                'semestreCourant' => $semestreCourant,
+                'semestrePrecedent' => $semestrePrecedent,
+                'snapshotCourant' => $snapshotCourant,
+                'snapshotPrecedent' => $snapshotPrecedent,
+                'diff' => $this->buildCroiseDiff($snapshotCourant, $snapshotPrecedent),
+            ];
+        }
+
+        return $this->render('comparaison/tableau/croise.html.twig', [
+            'annee' => $annee,
+            'anneePrecedente' => $anneePrecedente,
+            'parcours' => $parcours,
+            'parcoursPrecedent' => $parcoursPrecedent,
+            'comparaisons' => $comparaisons,
+            'versionCourante' => $versionCourante,
+            'versionPrecedente' => $versionPrecedente,
+        ]);
+    }
+
     #[Route('/horaire/{annee}/{parcours}', name: 'horaire_annee', requirements: ['annee' => '\d+'])]
     public function tableauH(
         SemestreRepository $semestreRepository,
@@ -367,6 +452,213 @@ class TableauController extends BaseController
                 'ressources' => $tableauPreconisation->getRessources(),
                 'ressourcesAl' => $tableauPreconisation->getRessourcesAl(),
             ]);
+    }
+
+    private function indexSemestresByOrdreLmd(array $semestres): array
+    {
+        $indexed = [];
+        foreach ($semestres as $semestre) {
+            if ($semestre instanceof Semestre) {
+                $indexed[$semestre->getOrdreLmd()] = $semestre;
+            }
+        }
+
+        return $indexed;
+    }
+
+    private function emptyCroiseSnapshot(): array
+    {
+        return [
+            'acLabels' => [],
+            'acToCompetence' => [],
+            'matieres' => [],
+            'matiereIds' => ['saes' => [], 'saesAl' => [], 'ressources' => [], 'ressourcesAl' => []],
+            'relations' => [],
+            'coefficients' => [],
+            'counts' => ['matieres' => 0, 'relations' => 0, 'coefficients' => 0],
+        ];
+    }
+
+    private function buildCroiseSnapshot(TableauCroise $tableauCroise, Semestre $semestre, ?ApcParcours $parcours = null): array
+    {
+        $tableauCroise->getDatas($semestre, $parcours);
+
+        $snapshot = $this->emptyCroiseSnapshot();
+        $acIdToKey = [];
+        $competenceIdToKey = [];
+
+        foreach ($tableauCroise->getNiveaux() as $niveau) {
+            $competence = $niveau->getCompetence();
+            if ($competence === null) {
+                continue;
+            }
+
+            $competenceKey = (string) $competence->getNomCourt();
+            $competenceIdToKey[$competence->getId()] = $competenceKey;
+
+            foreach ($niveau->getApcApprentissageCritiques() as $ac) {
+                $acKey = $competenceKey . '::' . $ac->getCode();
+                $acIdToKey[$ac->getId()] = $acKey;
+                $snapshot['acToCompetence'][$acKey] = $competenceKey;
+                $snapshot['acLabels'][$acKey] = $ac->getCode() . ' - ' . $ac->getLibelle();
+            }
+        }
+
+        $this->appendMatieres($snapshot, $tableauCroise->getSaes(), 'saes', 'SAE');
+        $this->appendMatieres($snapshot, $tableauCroise->getSaesAl(), 'saesAl', 'SAE');
+        $this->appendMatieres($snapshot, $tableauCroise->getRessources(), 'ressources', 'Ressource');
+        $this->appendMatieres($snapshot, $tableauCroise->getRessourcesAl(), 'ressourcesAl', 'Ressource');
+
+        foreach ($tableauCroise->getTab() as $bucket => $rowsByMatiereId) {
+            foreach ($rowsByMatiereId as $matiereId => $acRows) {
+                $matiereKey = $snapshot['matiereIds'][$bucket][$matiereId] ?? null;
+                if ($matiereKey === null) {
+                    continue;
+                }
+
+                foreach ($acRows as $acId => $value) {
+                    $acKey = $acIdToKey[$acId] ?? null;
+                    if ($acKey === null) {
+                        continue;
+                    }
+
+                    $snapshot['relations'][$acKey . '||' . $matiereKey] = true;
+                }
+            }
+        }
+
+        foreach ($tableauCroise->getCoefficients() as $competenceId => $coeffByType) {
+            $competenceKey = $competenceIdToKey[$competenceId] ?? null;
+            if ($competenceKey === null) {
+                continue;
+            }
+
+            foreach ($coeffByType as $bucket => $coefficients) {
+                foreach ($coefficients as $matiereId => $coefficient) {
+                    $matiereKey = $snapshot['matiereIds'][$bucket][$matiereId] ?? null;
+                    if ($matiereKey === null) {
+                        continue;
+                    }
+
+                    $snapshot['coefficients'][$competenceKey . '||' . $matiereKey] = (string) $coefficient;
+                }
+            }
+        }
+
+        $snapshot['counts']['matieres'] = count($snapshot['matieres']);
+        $snapshot['counts']['relations'] = count($snapshot['relations']);
+        $snapshot['counts']['coefficients'] = count($snapshot['coefficients']);
+
+        return $snapshot;
+    }
+
+    private function appendMatieres(array &$snapshot, iterable $matieres, string $bucket, string $type): void
+    {
+        foreach ($matieres as $matiere) {
+            $matiereKey = $type . '|' . $matiere->getCodeMatiere() . '|' . ($matiere->getFicheAdaptationLocale() ? 'AL' : 'NAT');
+            $snapshot['matieres'][$matiereKey] = [
+                'type' => $type,
+                'code' => $matiere->getCodeMatiere(),
+                'libelle' => $matiere->getLibelle(),
+                'adaptationLocale' => (bool) $matiere->getFicheAdaptationLocale(),
+            ];
+            $snapshot['matiereIds'][$bucket][$matiere->getId()] = $matiereKey;
+        }
+    }
+
+    private function buildCroiseDiff(array $snapshotCourant, array $snapshotPrecedent): array
+    {
+        $relationDiffs = [];
+        $relationKeys = array_unique(array_merge(
+            array_keys($snapshotCourant['relations']),
+            array_keys($snapshotPrecedent['relations'])
+        ));
+
+        foreach ($relationKeys as $key) {
+            $currentValue = isset($snapshotCourant['relations'][$key]);
+            $previousValue = isset($snapshotPrecedent['relations'][$key]);
+            if ($currentValue === $previousValue) {
+                continue;
+            }
+
+            [$acKey, $matiereKey] = explode('||', $key, 2);
+            $matiere = $snapshotCourant['matieres'][$matiereKey] ?? $snapshotPrecedent['matieres'][$matiereKey] ?? [
+                'type' => '-',
+                'code' => $matiereKey,
+                'libelle' => '',
+                'adaptationLocale' => false,
+            ];
+
+            $status = $currentValue ? 'ajout' : 'suppression';
+            $relationDiffs[] = [
+                'status' => $status,
+                'statusLabel' => $status === 'ajout' ? 'Ajout' : 'Suppression',
+                'statusClass' => $status === 'ajout' ? 'bg-success' : 'bg-danger',
+                'ac' => $snapshotCourant['acLabels'][$acKey] ?? $snapshotPrecedent['acLabels'][$acKey] ?? $acKey,
+                'competence' => $snapshotCourant['acToCompetence'][$acKey] ?? $snapshotPrecedent['acToCompetence'][$acKey] ?? '-',
+                'matiere' => $matiere,
+                'old' => $previousValue,
+                'new' => $currentValue,
+            ];
+        }
+
+        $coefficientDiffs = [];
+        $coefficientKeys = array_unique(array_merge(
+            array_keys($snapshotCourant['coefficients']),
+            array_keys($snapshotPrecedent['coefficients'])
+        ));
+
+        foreach ($coefficientKeys as $key) {
+            $currentValue = $snapshotCourant['coefficients'][$key] ?? null;
+            $previousValue = $snapshotPrecedent['coefficients'][$key] ?? null;
+
+            if ($currentValue === $previousValue) {
+                continue;
+            }
+
+            [$competence, $matiereKey] = explode('||', $key, 2);
+            $matiere = $snapshotCourant['matieres'][$matiereKey] ?? $snapshotPrecedent['matieres'][$matiereKey] ?? [
+                'type' => '-',
+                'code' => $matiereKey,
+                'libelle' => '',
+                'adaptationLocale' => false,
+            ];
+
+            $status = 'modification';
+            $statusLabel = 'Modification';
+            $statusClass = 'bg-warning text-dark';
+            if ($previousValue === null && $currentValue !== null) {
+                $status = 'ajout';
+                $statusLabel = 'Ajout';
+                $statusClass = 'bg-success';
+            } elseif ($previousValue !== null && $currentValue === null) {
+                $status = 'suppression';
+                $statusLabel = 'Suppression';
+                $statusClass = 'bg-danger';
+            }
+
+            $coefficientDiffs[] = [
+                'status' => $status,
+                'statusLabel' => $statusLabel,
+                'statusClass' => $statusClass,
+                'competence' => $competence,
+                'matiere' => $matiere,
+                'old' => $previousValue,
+                'new' => $currentValue,
+            ];
+        }
+
+        usort($relationDiffs, static fn(array $a, array $b): int => [$a['matiere']['type'], $a['matiere']['code'], $a['ac']] <=> [$b['matiere']['type'], $b['matiere']['code'], $b['ac']]);
+        usort($coefficientDiffs, static fn(array $a, array $b): int => [$a['matiere']['type'], $a['matiere']['code'], $a['competence']] <=> [$b['matiere']['type'], $b['matiere']['code'], $b['competence']]);
+
+        return [
+            'relations' => $relationDiffs,
+            'coefficients' => $coefficientDiffs,
+            'counts' => [
+                'relations' => count($relationDiffs),
+                'coefficients' => count($coefficientDiffs),
+            ],
+        ];
     }
 
 }

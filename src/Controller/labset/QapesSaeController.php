@@ -37,7 +37,8 @@ class QapesSaeController extends AbstractController
         IutSiteParcoursRepository $iutSiteParcoursRepository,
         IutSiteRepository $iutSiteRepository,
         Request $request
-    ): ?\Symfony\Component\HttpFoundation\JsonResponse {
+    ): ?JsonResponse
+    {
         $action = $request->query->get('action');
         switch ($action) {
             case 'siteIut':

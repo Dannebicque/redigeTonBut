@@ -11,6 +11,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcRessourceCompetenceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -27,7 +28,7 @@ class ApcRessourceCompetence extends BaseEntity
     #[Groups(['read:ressource'])]
     private ?ApcCompetence $competence;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Groups(['read:ressource'])]
     private float $coefficient = 0;
 

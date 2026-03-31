@@ -9,9 +9,7 @@
 
 namespace App\Classes\Export;
 
-use App\DTO\PreconisationSemestre;
 use App\Entity\ApcCompetence;
-use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeRessource;
@@ -23,6 +21,7 @@ use App\Repository\ApcParcoursNiveauRepository;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcSaeParcoursRepository;
 use DateTime;
+use DateTimeInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Environment;
@@ -34,12 +33,12 @@ class DepartementExport
     private string $baseDir = '';
 
     public function __construct(
-        private ApcSaeParcoursRepository       $apcSaeParcoursRepository,
-        private ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
-        private ApcParcoursNiveauRepository    $apcParcoursNiveauRepository,
-        KernelInterface                        $kernel,
-        Environment                            $twig,
-        private readonly AnneeRepository $anneeRepository)
+        private readonly ApcSaeParcoursRepository       $apcSaeParcoursRepository,
+        private readonly ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
+        private readonly ApcParcoursNiveauRepository    $apcParcoursNiveauRepository,
+        KernelInterface                                 $kernel,
+        Environment                                     $twig,
+        private readonly AnneeRepository                $anneeRepository)
     {
         $this->twig = $twig;
         $this->baseDir = $kernel->getProjectDir();
@@ -57,9 +56,10 @@ class DepartementExport
     }
 
 
-    public function exportFichierJson(Departement $departement): Response
+    public function exportFichierJson(Version $version): Response
     {
-        $tabJson = $this->genereJson($departement);
+        $departement = $version->getDepartement();
+        $tabJson = $this->genereJson($version);
         $name = 'but-' . $departement->getSigle();
 
         $date = new DateTime('now');
@@ -71,10 +71,11 @@ class DepartementExport
         return $response;
     }
 
-    public function sauvegardeFichierJson(Departement $departement): Response
+    public function sauvegardeFichierJson(Version $version): Response
     {
+        $departement = $version->getDepartement();
         //sauvegarde en live du réferentiel de compétences
-        $tabJson = $this->genereJson($departement);
+        $tabJson = $this->genereJson($version);
         $name = 'but-' . $departement->getSigle();
 
         $date = new DateTime('now');
@@ -85,24 +86,25 @@ class DepartementExport
         file_put_contents($filePath, json_encode($tabJson));
     }
 
-    public function genereJson(Departement $departement): array
+    public function genereJson(Version $version): array
     {
+        $departement = $version->getDepartement();
         $data = [
             'specialite' => $departement->getSigle(),
             'specialite_long' => $departement->getLibelle(),
             'type' => 'B.U.T.',
-            'description' => $departement->getTextePresentation(),
+            'description' => $version->getTextePresentation(),
             'annexe' => $departement->getNumeroAnnexe(),
             'type_structure' => $departement->getTypeStructure(),
             'type_departement' => $departement->getTypeDepartement(),
-            'version' => $departement->getDateVersionCompetence() instanceof \DateTimeInterface
-                ? $departement->getDateVersionCompetence()->format('Y-m-d H:i:s')
+            'version' => $version->getDateVersionCompetence() instanceof DateTimeInterface
+                ? $version->getDateVersionCompetence()->format('Y-m-d H:i:s')
                 : '-',
             'competences' => [],
             'parcours' => [],
         ];
 
-        foreach ($departement->getApcCompetences() as $competence) {
+        foreach ($version->getApcCompetences() as $competence) {
             $competenceData = [
                 'nom_court' => $competence->getNomCourt(),
                 'numero' => $competence->getNumero(),
@@ -144,7 +146,7 @@ class DepartementExport
             $data['competences'][] = $competenceData;
         }
 
-        foreach ($departement->getApcParcours() as $parcour) {
+        foreach ($version->getApcParcours() as $parcour) {
             $parcourData = [
                 'numero' => $parcour->getOrdre(),
                 'libelle' => $parcour->getLibelle(),
@@ -212,7 +214,7 @@ class DepartementExport
         return $this->exportFichier($xmlContent, $name);
     }
 
-    public function genereJsonReferentiel(Version $version)
+    public function genereJsonReferentiel(Version $version): array
     {
         $departement = $version->getDepartement();
         $tabJson = [];

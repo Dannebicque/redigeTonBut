@@ -8,9 +8,24 @@
         <th>Projet (autonomie)</th>
     </tr>
     <tr>
-        <td>{{ apc_sae.heuresTotales }}</td>
-        <td>{{ apc_sae.tpPpn }}</td>
-        <td>{{ apc_sae.projetPpn }}</td>
+        <td>
+            {{ apc_sae.heuresTotales }}
+            {% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.heuresTotales is defined %}
+                <br><small>N-1: {{ saeDiff.changes.heuresTotales.old }}</small>
+            {% endif %}
+        </td>
+        <td>
+            {{ apc_sae.tpPpn }}
+            {% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.tpPpn is defined %}
+                <br><small>N-1: {{ saeDiff.changes.tpPpn.old }}</small>
+            {% endif %}
+        </td>
+        <td>
+            {{ apc_sae.projetPpn }}
+            {% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.projetPpn is defined %}
+                <br><small>N-1: {{ saeDiff.changes.projetPpn.old }}</small>
+            {% endif %}
+        </td>
     </tr>
 </table>
 <br>
@@ -18,3 +33,9 @@
 <p>
     {{ apc_sae.exemples != null ? apc_sae.exemples|markdown_to_html : '' }}
 </p>
+{% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.exemples is defined %}
+    <div class="alert alert-light text-dark small">
+        <strong>Ancien exemple (N-1)</strong><br>
+        {{ saeDiff.changes.exemples.old != null ? saeDiff.changes.exemples.old|markdown_to_html : '' }}
+    </div>
+{% endif %}

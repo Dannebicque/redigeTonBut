@@ -44,10 +44,10 @@ Ce document présente le programme national du B.U.T. {{ departement.libelle|lat
  de l'arrêté relatif aux programmes nationaux de la licence professionnelle -- bachelor universitaire de technologie.
 
 \section{Objectifs de la formation}
-{{ departement.textePresentation|markdown_to_latex }}
+{{ version.textePresentation|markdown_to_latex }}
 %% Affiche le S1/S2 si c'est un type 1 ou 2
 
-{% for parcours in departement.apcParcours %}
+{% for parcours in version.apcParcours %}
 \subsection{Le parcours : {{ parcours.libelle|latex_purge }}}
 
 {{ parcours.textePresentation|markdown_to_latex }}
@@ -81,7 +81,7 @@ Ce document présente le programme national du B.U.T. {{ departement.libelle|lat
 {{ include('latex/_referentiel_formation_but_1.tex.twig') }}
 {% endif %}
 
-{% for parcours in departement.apcParcours %}
+{% for parcours in version.apcParcours %}
 
 %%
 %% on commence un parcours
@@ -89,7 +89,7 @@ Ce document présente le programme national du B.U.T. {{ departement.libelle|lat
 \chapter{Parcours : {{ parcours.libelle|latex_purge }}}
 
 {% if departement.typeStructure == 'type1' or departement.typeStructure == 'type2' %}
-{% for semestre in departement.semestres|filter(semestre => semestre.ordreLmd > 2) %}
+{% for semestre in version.semestres|filter(semestre => semestre.ordreLmd > 2) %}
 \section{Semestre {{semestre.ordreLmd}}}
 \subsection{Tableau croisé}
 

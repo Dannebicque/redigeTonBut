@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
@@ -44,68 +45,91 @@ class BaseController extends AbstractController
 
     protected DataUserSession $dataUserSession;
 
-    #[\Symfony\Contracts\Service\Attribute\Required]
+    #[Required]
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {
         $this->entityManager = $entityManager;
     }
 
-    #[\Symfony\Contracts\Service\Attribute\Required]
+    #[Required]
     public function setDataUserSession(DataUserSession $dataUserSession): void
     {
         $this->dataUserSession = $dataUserSession;
     }
 
-    #[\Symfony\Contracts\Service\Attribute\Required]
+    #[Required]
     public function setDepartementRepository(DepartementRepository $dptRepository): void
     {
         $this->dptRepository = $dptRepository;
     }
 
-    #[\Symfony\Contracts\Service\Attribute\Required]
+    #[Required]
     public function setSession(RequestStack $session): void
     {
         $this->session = $session->getSession();
     }
 
-    #[\Symfony\Contracts\Service\Attribute\Required]
+    #[Required]
     public function setFlashBagInterface(RequestStack $session): void
     {
         $this->flashBag = $session->getSession()->getFlashBag();
     }
 
-    #[\Symfony\Contracts\Service\Attribute\Required]
+    #[Required]
     public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }
 
-    public function getCaracteristiques(): \App\DTO\Tertiaire|\App\DTO\Secondaire|null
+    public function getCaracteristiques(): Tertiaire|Secondaire|null
     {
-        if ($this->getDepartement()?->isTertiaire()) {
+        $departement = $this->resolveDepartement();
+
+        if ($departement?->isTertiaire()) {
             return new Tertiaire();
         }
 
-        if ($this->getDepartement()?->isSecondaire()) {
+        if ($departement?->isSecondaire()) {
             return new Secondaire();
         }
         return null;
     }
 
-    public function getDepartement(): Departement|RedirectResponse|null
+    private function resolveDepartement(): ?Departement
     {
         if (
             $this->isGranted('ROLE_ADMIN') ||
-            $this->isGranted('ROLE_GT') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_IUT') || $this->isGranted('ROLE_CPN_LECTEUR')) {
+            $this->isGranted('ROLE_GT') || $this->isGranted('ROLE_EDITEUR') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_IUT') || $this->isGranted('ROLE_CPN_LECTEUR')
+        ) {
             if ($this->session->get('departement') !== null) {
-                $this->departement = $this->dptRepository->find($this->session->get('departement'));
-            } else {
-                $this->departement = null;
+                return $this->dptRepository->find($this->session->get('departement'));
             }
-        } elseif ($this->getUser() instanceof UserInterface && $this->getUser()->getDepartement()!== null) {
-            $this->departement = $this->getUser()?->getDepartement();
-        } else {
-            return $this->redirectToRoute('app_login');//pas de département??
+
+            return null;
+        }
+
+        if ($this->getUser() instanceof UserInterface && $this->getUser()->getDepartement() !== null) {
+            return $this->getUser()?->getDepartement();
+        }
+
+        return null;
+    }
+
+    public function getDepartement(): Departement|RedirectResponse
+    {
+        $this->departement = $this->resolveDepartement();
+
+        if ($this->departement === null) {
+            $this->addFlashBag('warning', 'Veuillez choisir un departement pour continuer.');
+
+            if (
+                $this->isGranted('ROLE_ADMIN') ||
+                $this->isGranted('ROLE_GT') || $this->isGranted('ROLE_EDITEUR') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_IUT') || $this->isGranted('ROLE_CPN_LECTEUR')
+            ) {
+                return $this->redirectToRoute('homepage_specialite');
+            }
+
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->departement;
@@ -121,7 +145,7 @@ class BaseController extends AbstractController
         return $this->dataUserSession;
     }
 
-    public function getVersion() : Version
+    public function getVersion() : ?Version
     {
         return $this->getDataUserSession()->getVersion();
     }

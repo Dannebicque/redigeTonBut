@@ -26,6 +26,7 @@ use App\Repository\ApcSaeRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
 use App\Utils\Convert;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -33,7 +34,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route("/formation/api/ressource", name:"formation_")]
 class ApcAjaxRessourceController extends BaseController
 {
-    #[Route("/ajax-ac", name: "apc_ressources_ajax_ac", methods: ["POST"], options: ["expose" => true])]
+    #[Route("/ajax-ac", name: "apc_ressources_ajax_ac", options: ["expose" => true], methods: ["POST"])]
     public function ajaxAc(
         SemestreRepository $semestreRepository,
         ApcRessourceApprentissageCritiqueRepository $apcRessourceApprentissageCritiqueRepository,
@@ -84,7 +85,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(false);
     }
 
-    #[Route("/ajax-sae", name: "apc_sae_ajax", methods: ["POST"], options: ["expose" => true])]
+    #[Route("/ajax-sae", name: "apc_sae_ajax", options: ["expose" => true], methods: ["POST"])]
     public function ajaxSae(
         SemestreRepository $semestreRepository,
         ApcSaeRessourceRepository $apcSaeRessourceRepository,
@@ -132,7 +133,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(false);
     }
 
-    #[Route("/ajax-prerequis", name: "apc_prerequis_ajax", methods: ["POST"], options: ["expose" => true])]
+    #[Route("/ajax-prerequis", name: "apc_prerequis_ajax", options: ["expose" => true], methods: ["POST"])]
     public function ajaxPrerequis(
         SemestreRepository $semestreRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
@@ -192,7 +193,7 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(false);
     }
 
-   #[Route("/ajax-parcours", name: "apc_ressouce_parcours_ajax", methods: ["POST"], options: ["expose" => true])]
+   #[Route("/ajax-parcours", name: "apc_ressouce_parcours_ajax", options: ["expose" => true], methods: ["POST"])]
     public
     function ajaxParcours(
         SemestreRepository $semestreRepository,
@@ -232,14 +233,14 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(false);
     }
 
-    #[Route("/{ressource}/{ac}/update_ajax", name: "apc_ressource_ac_update_ajax", methods: ["POST"], options: ["expose" => true])]
+    #[Route("/{ressource}/{ac}/update_ajax", name: "apc_ressource_ac_update_ajax", options: ["expose" => true], methods: ["POST"])]
     public function updateAc(
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         ApcRessourceApprentissageCritiqueRepository $apcRessourceApprentissageCritiqueRepository,
         Request $request,
         ApcRessource $ressource,
         ApcApprentissageCritique $ac
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
+    ): JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -264,7 +265,7 @@ class ApcAjaxRessourceController extends BaseController
             $this->entityManager->persist($acRessource);
             //vérifier si la compétence est déjà associée dans le cas contraire, ajouter.
             $comp = $ac->getCompetence();
-            if ($comp instanceof \App\Entity\ApcCompetence) {
+            if ($comp instanceof ApcCompetence) {
                 $cp = $apcRessourceCompetenceRepository->findOneBy([
                     'competence' => $comp->getId(),
                     'ressource' => $ressource->getId()
@@ -281,13 +282,13 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(true);
     }
 
-    #[Route("/{ressource}/{competence}/update_coeff_ajax", name: "apc_ressource_coeff_update_ajax", methods: ["POST"], options: ["expose" => true])]
+    #[Route("/{ressource}/{competence}/update_coeff_ajax", name: "apc_ressource_coeff_update_ajax", options: ["expose" => true], methods: ["POST"])]
     public function updateCoeff(
         ApcRessourceCompetenceRepository $apcRessourceCompetenceRepository,
         Request $request,
         ApcRessource $ressource,
         ApcCompetence $competence
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
+    ): JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -315,13 +316,13 @@ class ApcAjaxRessourceController extends BaseController
         return $this->json(true);
     }
 
-    #[Route("/{ressource}/{type}/update_heures_ajax", name: "apc_ressource_heure_update_ajax", methods: ["POST"], options: ["expose" => true])]
+    #[Route("/{ressource}/{type}/update_heures_ajax", name: "apc_ressource_heure_update_ajax", options: ["expose" => true], methods: ["POST"])]
     public
     function updateHeures(
         Request $request,
         ApcRessource $ressource,
         string $type
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
+    ): JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);

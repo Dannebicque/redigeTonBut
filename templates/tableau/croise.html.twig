@@ -8,6 +8,19 @@
     {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
         <button class="btn btn-outline-info" id="showAdaptationLocale">Afficher Adaptation Locale</button>
     {% endif %}
+    {% if user_data.version.previousVersion is not null %}
+        {% if parcours is not null %}
+            <a href="{{ path('tableau_croise_comparaison_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-file-diff"></i>
+                <span>Comparaison version</span>
+            </a>
+        {% else %}
+            <a href="{{ path('tableau_croise_comparaison_annee', {annee: annee.id}) }}" class="btn btn-sm btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-file-diff"></i>
+                <span>Comparaison version</span>
+            </a>
+        {% endif %}
+    {% endif %}
     {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
         <a href="{{ path('export_tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm
     btn-outline-success

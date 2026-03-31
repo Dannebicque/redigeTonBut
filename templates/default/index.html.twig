@@ -4,7 +4,7 @@
 
 {% block content %}
     <p>Bienvenue sur ORéBUT, Outil de Rédaction des B.U.T.</p>
-    {% if is_granted('ROLE_PACD') %}
+    {% if is_granted('ROLE_PACD') or is_granted('ROLE_CPN') or is_granted('ROLE_EDITEUR')  %}
     {% if user_data.departement == null %}
             <div class="alert alert-danger mb-3">
                 <strong>Attention !</strong>
@@ -94,7 +94,7 @@
    {% endif %}
 
     {% if user_data.departement != null %}
-        {% if is_granted('ROLE_PACD') or is_granted('ROLE_LECTEUR') %}
+        {% if is_granted('ROLE_PACD') or is_granted('ROLE_CPN') or is_granted('ROLE_LECTEUR') %}
             <section class="scroll-section mb-2" id="export">
                 <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
                 {% if user_data.departement.typeStructure != 'type3' %}
@@ -131,7 +131,7 @@
             </section>
         {% endif %}
     {% endif %}
-    {% if is_granted('ROLE_IUT') %}
+    {% if is_granted('ROLE_IUT') or user_data.departement == null  %}
         <section class="scroll-section mb-2" id="but_secondaires">
             <h2 class="small-title">Les B.U.T. secondaires</h2>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
@@ -141,13 +141,13 @@
                     <div class="card h-100 border-primary">
                         <div class="card-body">
                             <h5 class="card-title">{{ version.departement.libelle }}</h5>
-                            <p class="card-text">
+                            <div class="card-text">
                                 <ul>
-                                {% for parcours in version.apcParcours %}
-                                    <li>{{ parcours.code }} | {{ parcours.libelle }}</li>
-                                {% endfor %}
-                            </ul>
-                            </p>
+                                    {% for parcours in version.apcParcours %}
+                                        <li>{{ parcours.code }} | {{ parcours.libelle }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="d-grid">
@@ -172,13 +172,13 @@
                     <div class="card h-100 border-success">
                         <div class="card-body">
                             <h5 class="card-title">{{ version.departement.libelle }}</h5>
-                            <p class="card-text">
-                            <ul>
-                                {% for parcours in version.apcParcours %}
-                                    <li>{{ parcours.code }} | {{ parcours.libelle }}</li>
-                                {% endfor %}
-                            </ul>
-                            </p>
+                            <div class="card-text">
+                                <ul>
+                                    {% for parcours in version.apcParcours %}
+                                        <li>{{ parcours.code }} | {{ parcours.libelle }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="d-grid">
@@ -195,7 +195,7 @@
         </section>
     {% endif %}
 
-    {% if is_granted('ROLE_PACD') %}
+    {% if is_granted('ROLE_PACD') or is_granted('ROLE_CPN') or is_granted('ROLE_EDITEUR') %}
         {% for annee in user_data.annees %}
             <section class="scroll-section" id="buttonTags">
             <h2 class="small-title">B.U.T. {{ annee.ordre }}</h2>
@@ -206,7 +206,7 @@
                             <div class="card h-100 border-{{ parcours.couleur }}">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ parcours.libelle }}</h5>
-                                    <p class="card-text">
+                                    <div class="card-text">
                                     <ul>
                                         <li>
                                             <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
@@ -244,7 +244,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

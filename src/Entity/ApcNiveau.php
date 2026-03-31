@@ -42,7 +42,7 @@ class ApcNiveau extends BaseEntity
     /**
      * @var Collection<int, ApcApprentissageCritique>
      */
-    #[ORM\OneToMany(targetEntity: ApcApprentissageCritique::class, mappedBy: 'niveau', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'niveau', targetEntity: ApcApprentissageCritique::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['code' => 'ASC'])]
     #[Groups(['read:competence'])]
     private Collection $apcApprentissageCritiques;
@@ -50,7 +50,7 @@ class ApcNiveau extends BaseEntity
     /**
      * @var Collection<int, ApcParcoursNiveau>
      */
-    #[ORM\OneToMany(targetEntity: ApcParcoursNiveau::class, mappedBy: 'niveau')]
+    #[ORM\OneToMany(mappedBy: 'niveau', targetEntity: ApcParcoursNiveau::class)]
     private Collection $apcParcoursNiveaux;
 
     public function __construct(ApcCompetence $competence = null)
@@ -109,7 +109,7 @@ class ApcNiveau extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcApprentissageCritique[]
+     * @return Collection
      */
     public function getApcApprentissageCritiques(): Collection
     {
@@ -139,10 +139,7 @@ class ApcNiveau extends BaseEntity
         return $this;
     }
 
-    /**
-     * @return ApcParcoursNiveau[]
-     */
-    public function getApcParcoursNiveaux()
+    public function getApcParcoursNiveaux(): ArrayCollection|Collection|array
     {
         return $this->apcParcoursNiveaux;
     }

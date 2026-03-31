@@ -3,32 +3,26 @@
 
 namespace App\Security;
 
-use App\Entity\ApcApprentissageCritique;
-use App\Entity\ApcCompetence;
-use App\Entity\ApcComposanteEssentielle;
-use App\Entity\ApcNiveau;
-use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
-use App\Entity\ApcSituationProfessionnelle;
 use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Entity\User;
 use App\Entity\Version;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use \Symfony\Bundle\SecurityBundle\Security;
 
 class FormationVoter extends Voter
 {
-    // these strings are just invented: you can use anything
-    public const FORMATION_VIEW = 'FORMATION_VIEW';
+    public const string FORMATION_VIEW = 'FORMATION_VIEW';
 
-    public const FORMATION_EDIT = 'FORMATION_EDIT';
+    public const string FORMATION_EDIT = 'FORMATION_EDIT';
 
-    public const FORMATION_DUPLICATE = 'FORMATION_DUPLICATE';
+    public const string FORMATION_DUPLICATE = 'FORMATION_DUPLICATE';
 
-    public const FORMATION_DELETE = 'FORMATION_DELETE';
+    public const string FORMATION_DELETE = 'FORMATION_DELETE';
 
     private Security $security;
 
@@ -72,7 +66,7 @@ class FormationVoter extends Voter
                 return $this->canDelete($post, $user);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(

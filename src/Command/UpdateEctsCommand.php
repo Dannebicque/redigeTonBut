@@ -20,9 +20,9 @@ class UpdateEctsCommand extends Command
 {
 
     public function __construct(
-        private DepartementRepository $departementRepository,
-        private EntityManagerInterface $entityManager,
-        private ApcCompetenceSemestreRepository $apcCompetenceSemestreRepository
+        private readonly DepartementRepository           $departementRepository,
+        private readonly EntityManagerInterface          $entityManager,
+        private readonly ApcCompetenceSemestreRepository $apcCompetenceSemestreRepository
     )
     {
         parent::__construct();

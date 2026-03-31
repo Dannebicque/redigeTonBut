@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Comparaison des référentiels de compétences
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-info" role="alert">
+        <i class="fas fa-info-circle"></i> Sélectionnez deux versions pour comparer leurs référentiels de compétences.
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Sélectionner les versions à comparer</h5>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="#" class="row g-3">
+                <div class="col-md-6">
+                    <label for="versionActuelle" class="form-label">Version actuelle</label>
+                    <select id="versionActuelle" name="versionActuelle" class="form-select" required>
+                        <option value="">-- Sélectionner une version --</option>
+                        {% for version in versions %}
+                            <option value="{{ version.id }}">{{ version.libelle }} ({{ version.departement.sigle }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="versionPrecedente" class="form-label">Version précédente</label>
+                    <select id="versionPrecedente" name="versionPrecedente" class="form-select" required>
+                        <option value="">-- Sélectionner une version --</option>
+                        {% for version in versions %}
+                            <option value="{{ version.id }}">{{ version.libelle }} ({{ version.departement.sigle }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-exchange-alt"></i> Comparer
+                    </button>
+                    <a href="{{ path('administration_apc_referentiel_index', {version: versions|first.id}) }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .alert {
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+{% endblock %}
+

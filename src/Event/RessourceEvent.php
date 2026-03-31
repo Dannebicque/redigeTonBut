@@ -8,7 +8,7 @@ use App\Entity\ApcRessource;
 
 class RessourceEvent
 {
-    public const UPDATE_CODIFICATION = 'update.codification.ressource';
+    public const string UPDATE_CODIFICATION = 'update.codification.ressource';
 
     protected ApcRessource $apcRessource;
 

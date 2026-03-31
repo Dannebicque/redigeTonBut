@@ -65,7 +65,7 @@ class ApcRessource extends AbstractMatiere
 {
     use LifeCycleTrait;
 
-    public const SOURCE = 'ressource';
+    public const string SOURCE = 'ressource';
 
     #[ORM\ManyToOne(targetEntity: Semestre::class, inversedBy: 'apcRessources')]
     #[Groups(['read:ressource'])]
@@ -78,27 +78,27 @@ class ApcRessource extends AbstractMatiere
     /**
      * @var Collection<int, ApcRessourceCompetence>
      */
-    #[ORM\OneToMany(targetEntity: ApcRessourceCompetence::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'ressource', targetEntity: ApcRessourceCompetence::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:ressource'])]
     private Collection $apcRessourceCompetences;
 
     /**
      * @var Collection<int, ApcRessourceApprentissageCritique>
      */
-    #[ORM\OneToMany(targetEntity: ApcRessourceApprentissageCritique::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'ressource', targetEntity: ApcRessourceApprentissageCritique::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:ressource'])]
     private Collection $apcRessourceApprentissageCritiques;
 
     /**
      * @var Collection<int, ApcSaeRessource>
      */
-    #[ORM\OneToMany(targetEntity: ApcSaeRessource::class, mappedBy: 'ressource', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'ressource', targetEntity: ApcSaeRessource::class, cascade: ['persist', 'remove'])]
     private Collection $apcSaeRessources;
 
     /**
      * @var Collection<int, ApcRessourceParcours>
      */
-    #[ORM\OneToMany(targetEntity: ApcRessourceParcours::class, mappedBy: 'ressource', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    #[ORM\OneToMany(mappedBy: 'ressource', targetEntity: ApcRessourceParcours::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[Groups(['read:ressource'])]
     private Collection $apcRessourceParcours;
 
@@ -165,7 +165,7 @@ class ApcRessource extends AbstractMatiere
     }
 
     /**
-     * @return Collection|ApcRessourceCompetence[]
+     * @return Collection
      */
     public function getApcRessourceCompetences(): Collection
     {
@@ -193,7 +193,7 @@ class ApcRessource extends AbstractMatiere
     }
 
     /**
-     * @return Collection|ApcRessourceApprentissageCritique[]
+     * @return Collection
      */
     public function getApcRessourceApprentissageCritiques(): Collection
     {
@@ -262,9 +262,8 @@ class ApcRessource extends AbstractMatiere
     }
 
 
-
     /**
-     * @return Collection|ApcCompetence[]
+     * @return Collection
      */
     public function getCompetences(): Collection
     {
@@ -308,7 +307,7 @@ class ApcRessource extends AbstractMatiere
     }
 
     /**
-     * @return Collection|ApcRessourceParcours[]
+     * @return Collection
      */
     public function getApcRessourceParcours(): Collection
     {
@@ -348,7 +347,7 @@ class ApcRessource extends AbstractMatiere
     }
 
     /**
-     * @return Collection|self[]
+     * @return Collection
      */
     public function getRessourcesPreRequises(): Collection
     {
@@ -372,7 +371,7 @@ class ApcRessource extends AbstractMatiere
     }
 
     /**
-     * @return Collection|self[]
+     * @return Collection
      */
     public function getApcRessources(): Collection
     {
@@ -398,10 +397,9 @@ class ApcRessource extends AbstractMatiere
         return $this;
     }
 
-    public function getDepartement():?Departement
+    public function getVersion():?Version
     {
-        //todo: a adapter pour passer par Version
-        return $this->getSemestre()?->getAnnee()?->getDepartement();
+        return $this->getSemestre()?->getAnnee()?->getVersion();
     }
 
     public function getFicheAdaptationLocale(): ?bool

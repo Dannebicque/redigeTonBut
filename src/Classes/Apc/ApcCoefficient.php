@@ -10,6 +10,7 @@
 namespace App\Classes\Apc;
 
 
+use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
 
 class ApcCoefficient
@@ -38,7 +39,7 @@ class ApcCoefficient
         }
 
         $tabs['ressources'] = [];
-        /** @var \App\Entity\ApcRessource $ressource */
+        /** @var ApcRessource $ressource */
         foreach ($ressources as $ressource) {
             $tabs['ressources'][$ressource->getid()] = [];
             $tabs['ressources'][$ressource->getid()]['total'] = 0;

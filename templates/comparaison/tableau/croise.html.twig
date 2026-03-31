@@ -1,0 +1,315 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Comparaison tableau croise B.U.T. {{ annee.ordre }}{% if parcours is not null %} | {{ parcours.libelle }}{% endif %}
+{% endblock %}
+
+{% block bouton_header %}
+    {% if parcours is not null %}
+        <a href="{{ path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm btn-outline-secondary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+            <i class="bi-arrow-left"></i>
+            <span>Retour tableau croise</span>
+        </a>
+    {% else %}
+        <a href="{{ path('tableau_croise_annee', {annee: annee.id}) }}" class="btn btn-sm btn-outline-secondary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+            <i class="bi-arrow-left"></i>
+            <span>Retour tableau croise</span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ include('composants/breadcrumb.html.twig', {liens:[
+        {
+            href: parcours is not null
+                ? path('tableau_croise_annee', {annee: annee.id, parcours: parcours.id})
+                : path('tableau_croise_annee', {annee: annee.id}),
+            title: 'Tableau croise',
+        },
+        {
+            href:'',
+            title: 'Comparaison versions',
+        }
+    ]}) }}
+{% endblock %}
+
+{% block content %}
+    {% if anneePrecedente is null %}
+        <div class="alert alert-warning">
+            Impossible de comparer: l'annee {{ annee.ordre }} n'existe pas dans la version precedente.
+        </div>
+    {% else %}
+        <div class="alert alert-info mb-3">
+            Comparaison entre <strong>N-1</strong> (version {{ versionPrecedente.id }}) et <strong>courante</strong> (version {{ versionCourante.id }}).
+            {% if parcours is not null and parcoursPrecedent is null %}
+                <br>Le parcours <strong>{{ parcours.code }}</strong> est absent en version N-1.
+            {% endif %}
+        </div>
+
+        <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="compareCroiseTabs" role="tablist">
+            {% for comparaison in comparaisons %}
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if loop.first %}active{% endif %}" data-bs-toggle="tab" href="#compare_semestre_{{ comparaison.ordreLmd }}" role="tab" aria-selected="{{ loop.first ? 'true' : 'false' }}">
+                        S{{ comparaison.ordreLmd }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="card mt-3 mb-3">
+            <div class="card-body py-2">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-2">
+                        <label for="compareFilterStatus" class="form-label mb-1">Statut</label>
+                        <select id="compareFilterStatus" class="form-select form-select-sm js-compare-control">
+                            <option value="">Tous</option>
+                            <option value="ajout">Ajout</option>
+                            <option value="suppression">Suppression</option>
+                            <option value="modification">Modification</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="compareFilterType" class="form-label mb-1">Type</label>
+                        <select id="compareFilterType" class="form-select form-select-sm js-compare-control">
+                            <option value="">Tous</option>
+                            <option value="SAE">SAE</option>
+                            <option value="Ressource">Ressource</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="compareFilterText" class="form-label mb-1">Recherche</label>
+                        <input id="compareFilterText" type="text" class="form-control form-control-sm js-compare-control" placeholder="Competence, AC, code, libelle...">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="compareSortBy" class="form-label mb-1">Tri</label>
+                        <select id="compareSortBy" class="form-select form-select-sm js-compare-control">
+                            <option value="">Aucun</option>
+                            <option value="status">Statut</option>
+                            <option value="competence">Competence</option>
+                            <option value="ac">AC</option>
+                            <option value="type">Type</option>
+                            <option value="matiere">Matiere</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="compareSortDir" class="form-label mb-1">Ordre</label>
+                        <select id="compareSortDir" class="form-select form-select-sm js-compare-control">
+                            <option value="asc">Croissant</option>
+                            <option value="desc">Decroissant</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" id="compareFiltersReset" class="btn btn-sm btn-outline-secondary w-100">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content mt-3">
+            {% for comparaison in comparaisons %}
+                <div class="tab-pane {% if loop.first %}active{% endif %}" id="compare_semestre_{{ comparaison.ordreLmd }}" role="tabpanel">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="card border-secondary h-100">
+                                <div class="card-header">Version N-1</div>
+                                <div class="card-body">
+                                    <div class="mb-1"><strong>Semestre:</strong> {{ comparaison.semestrePrecedent ? comparaison.semestrePrecedent.libelle : 'Absent' }}</div>
+                                    <div class="mb-1"><strong>Matieres:</strong> {{ comparaison.snapshotPrecedent.counts.matieres }}</div>
+                                    <div class="mb-1"><strong>Liaisons AC:</strong> {{ comparaison.snapshotPrecedent.counts.relations }}</div>
+                                    <div><strong>Coefficients:</strong> {{ comparaison.snapshotPrecedent.counts.coefficients }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-primary h-100">
+                                <div class="card-header">Version courante</div>
+                                <div class="card-body">
+                                    <div class="mb-1"><strong>Semestre:</strong> {{ comparaison.semestreCourant ? comparaison.semestreCourant.libelle : 'Absent' }}</div>
+                                    <div class="mb-1"><strong>Matieres:</strong> {{ comparaison.snapshotCourant.counts.matieres }}</div>
+                                    <div class="mb-1"><strong>Liaisons AC:</strong> {{ comparaison.snapshotCourant.counts.relations }}</div>
+                                    <div><strong>Coefficients:</strong> {{ comparaison.snapshotCourant.counts.coefficients }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if comparaison.diff.counts.relations == 0 and comparaison.diff.counts.coefficients == 0 %}
+                        <div class="alert alert-success">Aucune difference detectee pour ce semestre.</div>
+                    {% else %}
+                        <div class="card mb-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Differences de liaisons AC / matieres</span>
+                                <span class="badge bg-dark">{{ comparaison.diff.counts.relations }}</span>
+                            </div>
+                            <div class="card-body p-0">
+                                {% if comparaison.diff.relations is empty %}
+                                    <div class="p-3 text-muted">Aucune difference sur les liaisons.</div>
+                                {% else %}
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-striped mb-0 js-compare-table" data-kind="relations">
+                                            <thead>
+                                            <tr>
+                                                <th>Statut</th>
+                                                <th>Competence</th>
+                                                <th>AC</th>
+                                                <th>Type</th>
+                                                <th>Matiere</th>
+                                                <th>N-1</th>
+                                                <th>N</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in comparaison.diff.relations %}
+                                                <tr
+                                                    data-status="{{ row.status }}"
+                                                    data-competence="{{ row.competence }}"
+                                                    data-ac="{{ row.ac }}"
+                                                    data-type="{{ row.matiere.type }}"
+                                                    data-matiere="{{ row.matiere.code }} {{ row.matiere.libelle }}"
+                                                >
+                                                    <td><span class="badge {{ row.statusClass }}">{{ row.statusLabel }}</span></td>
+                                                    <td>{{ row.competence }}</td>
+                                                    <td>{{ row.ac }}</td>
+                                                    <td>{{ row.matiere.type }}{% if row.matiere.adaptationLocale %} (AL){% endif %}</td>
+                                                    <td>
+                                                        <span class="fw-bold">{{ row.matiere.code }}</span>
+                                                        {% if row.matiere.libelle is not empty %}<br><small class="text-muted">{{ row.matiere.libelle }}</small>{% endif %}
+                                                    </td>
+                                                    <td>{{ row.old ? 'X' : '-' }}</td>
+                                                    <td>{{ row.new ? 'X' : '-' }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Differences de coefficients</span>
+                                <span class="badge bg-dark">{{ comparaison.diff.counts.coefficients }}</span>
+                            </div>
+                            <div class="card-body p-0">
+                                {% if comparaison.diff.coefficients is empty %}
+                                    <div class="p-3 text-muted">Aucune difference sur les coefficients.</div>
+                                {% else %}
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-striped mb-0 js-compare-table" data-kind="coefficients">
+                                            <thead>
+                                            <tr>
+                                                <th>Statut</th>
+                                                <th>Competence</th>
+                                                <th>Type</th>
+                                                <th>Matiere</th>
+                                                <th>N-1</th>
+                                                <th>N</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for row in comparaison.diff.coefficients %}
+                                                <tr
+                                                    data-status="{{ row.status }}"
+                                                    data-competence="{{ row.competence }}"
+                                                    data-ac=""
+                                                    data-type="{{ row.matiere.type }}"
+                                                    data-matiere="{{ row.matiere.code }} {{ row.matiere.libelle }}"
+                                                >
+                                                    <td><span class="badge {{ row.statusClass }}">{{ row.statusLabel }}</span></td>
+                                                    <td>{{ row.competence }}</td>
+                                                    <td>{{ row.matiere.type }}{% if row.matiere.adaptationLocale %} (AL){% endif %}</td>
+                                                    <td>
+                                                        <span class="fw-bold">{{ row.matiere.code }}</span>
+                                                        {% if row.matiere.libelle is not empty %}<br><small class="text-muted">{{ row.matiere.libelle }}</small>{% endif %}
+                                                    </td>
+                                                    <td>{{ row.old is null ? '-' : row.old }}</td>
+                                                    <td>{{ row.new is null ? '-' : row.new }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const controls = document.querySelectorAll('.js-compare-control')
+        const filterStatus = document.getElementById('compareFilterStatus')
+        const filterType = document.getElementById('compareFilterType')
+        const filterText = document.getElementById('compareFilterText')
+        const sortBy = document.getElementById('compareSortBy')
+        const sortDir = document.getElementById('compareSortDir')
+        const resetBtn = document.getElementById('compareFiltersReset')
+
+        const normalize = (value) => (value || '')
+          .toString()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim()
+
+        const applyFiltersAndSort = () => {
+          const selectedStatus = normalize(filterStatus.value)
+          const selectedType = normalize(filterType.value)
+          const text = normalize(filterText.value)
+          const sortField = normalize(sortBy.value)
+          const direction = normalize(sortDir.value) === 'desc' ? -1 : 1
+
+          document.querySelectorAll('.js-compare-table tbody').forEach((tbody) => {
+            const rows = Array.from(tbody.querySelectorAll('tr'))
+
+            rows.forEach((row) => {
+              const rowStatus = normalize(row.dataset.status)
+              const rowType = normalize(row.dataset.type)
+              const haystack = normalize(
+                `${row.dataset.competence || ''} ${row.dataset.ac || ''} ${row.dataset.matiere || ''}`
+              )
+
+              const statusOk = selectedStatus === '' || rowStatus === selectedStatus
+              const typeOk = selectedType === '' || rowType === selectedType
+              const textOk = text === '' || haystack.includes(text)
+
+              row.classList.toggle('d-none', !(statusOk && typeOk && textOk))
+            })
+
+            if (sortField !== '') {
+              rows.sort((a, b) => {
+                const valueA = normalize(a.dataset[sortField] || '')
+                const valueB = normalize(b.dataset[sortField] || '')
+                return valueA.localeCompare(valueB, 'fr') * direction
+              })
+              rows.forEach((row) => tbody.appendChild(row))
+            }
+          })
+        }
+
+        controls.forEach((control) => {
+          control.addEventListener('change', applyFiltersAndSort)
+          control.addEventListener('input', applyFiltersAndSort)
+        })
+
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => {
+            filterStatus.value = ''
+            filterType.value = ''
+            filterText.value = ''
+            sortBy.value = ''
+            sortDir.value = 'asc'
+            applyFiltersAndSort()
+          })
+        }
+      })
+    </script>
+{% endblock %}
+

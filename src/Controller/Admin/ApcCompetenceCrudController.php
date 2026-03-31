@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\ApcCompetence;
 use App\Entity\Departement;
+use App\Entity\Version;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -28,9 +29,9 @@ class ApcCompetenceCrudController extends BaseCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            AssociationField::new('departement')
-                ->setLabel('Département')
-                ->setCrudController(Departement::class)
+            AssociationField::new('version')
+                ->setLabel('Département / Version')
+                ->setCrudController(Version::class)
                 ->hideOnForm()
                 ->setRequired(true),
             TextField::new('nom_court', 'Nom court'),
@@ -44,6 +45,6 @@ class ApcCompetenceCrudController extends BaseCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
-            ->add(EntityFilter::new('departement'));
+            ->add(EntityFilter::new('version'));
     }
 }

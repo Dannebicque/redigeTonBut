@@ -10,6 +10,7 @@
 namespace App\Controller;
 
 use App\Entity\Semestre;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -17,12 +18,12 @@ use Symfony\Component\Routing\Attribute\Route;
 class AjaxSemestreController extends BaseController
 {
 
-    #[Route("/{semestre}/{type}/update_heures_ajax", name:"heure_update_ajax", methods:["POST"],  options:["expose" =>true])]
+    #[Route("/{semestre}/{type}/update_heures_ajax", name: "heure_update_ajax", options: ["expose" =>true], methods: ["POST"])]
     public function updateHeures(
         Request $request,
         Semestre $semestre,
         string $type
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
+    ): JsonResponse {
         if ($this->getVersion()->isVerouilleStructure() === false) {
             $parametersAsArray = [];
             if ($content = $request->getContent()) {

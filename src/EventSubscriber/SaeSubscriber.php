@@ -21,7 +21,7 @@ class SaeSubscriber implements EventSubscriberInterface
     }
 
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             SaeEvent::UPDATE_CODIFICATION => 'onUpdateCodification',

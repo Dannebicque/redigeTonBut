@@ -1,10 +1,18 @@
 monolog:
+    channels: ['pdf_callback']
     handlers:
         main:
             type:           rotating_file
             max_files:      365
             path:           "%kernel.logs_dir%/%kernel.environment%.all.log"
             level:          info
+
+        pdf_callback:
+            type:           rotating_file
+            max_files:      90
+            path:           "%kernel.logs_dir%/%kernel.environment%.pdf_callback.log"
+            level:          info
+            channels:       ['pdf_callback']
 
         login:
             type:           rotating_file

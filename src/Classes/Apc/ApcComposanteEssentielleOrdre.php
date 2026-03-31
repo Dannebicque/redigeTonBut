@@ -1,9 +1,7 @@
 <?php
 namespace App\Classes\Apc;
 
-use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcComposanteEssentielle;
-use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcComposanteEssentielleRepository;
 use App\Utils\Codification;
 use Doctrine\ORM\EntityManagerInterface;

@@ -3,6 +3,11 @@
 {% block header %}{{ apc_sae.display }}{% endblock %}
 
 {% block content %}
+    {% if compareMode|default(false) %}
+        <div class="alert alert-info mb-2">
+            Mode comparaison actif (N-1 -> N){% if versionPrecedente is not null %}, version précédente: {{ versionPrecedente.id }}{% endif %}.
+        </div>
+    {% endif %}
     {% if apc_sae.ficheAdaptationLocale == true %}
         <div class="alert alert-warning mb-2">Fiche d'adaptation locale. Non publiée et non prise en compte dans les
                                               tableaux.
@@ -27,16 +32,19 @@
             title: 'B.U.T. ' ~apc_sae.semestre.annee.ordre,
         },
         {
-            href: path('but_sae_annee', {annee: apc_sae.semestre.annee.id, semestre: apc_sae
-        .semestre.id}),
+            href: compareMode|default(false)
+                ? path('but_sae_annee_comparaison', {annee: apc_sae.semestre.annee.id, parcours: selectedParcours != null ? selectedParcours.id : null, semestre: apc_sae.semestre.id})
+                : path('but_sae_annee', {annee: apc_sae.semestre.annee.id, parcours: selectedParcours != null ? selectedParcours.id : null, semestre: apc_sae.semestre.id}),
             title: 'Les SAÉ',
         },
     ]}) }}
 {% endblock %}
 
 {% block bouton_header %}
-    <a href="{{ path('but_sae_annee', {annee: apc_sae.semestre.annee.id, semestre: apc_sae
-    .semestre.id}) }}" class="btn btn-sm btn-outline-info
+    <a href="{{ compareMode|default(false)
+        ? path('but_sae_annee_comparaison', {annee: apc_sae.semestre.annee.id, parcours: selectedParcours != null ? selectedParcours.id : null, semestre: apc_sae.semestre.id})
+        : path('but_sae_annee', {annee: apc_sae.semestre.annee.id, parcours: selectedParcours != null ? selectedParcours.id : null, semestre: apc_sae.semestre.id})
+    }}" class="btn btn-sm btn-outline-info
         btn-icon btn-icon-end w-100 w-sm-auto mx-2"
     >
         <i class="bi-arrow-left-circle"></i>
@@ -63,7 +71,7 @@
                 <span>Modifier</span>
             </a>
             {% if  is_granted('ROLE_PACD') and user_data.version.verouilleCroise == false %}
-                {{ include('form/_delete_form.html.twig', {path: path('formation_apc_ressource_delete',
+                {{ include('form/_delete_form.html.twig', {path: path('formation_apc_sae_delete',
                     {id: apc_sae.id, }), id: apc_sae.id}) }}
             {% endif %}
         {% endif %}

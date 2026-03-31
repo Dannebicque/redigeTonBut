@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    Comparaison côte à côte : {{ departement.sigle }}
+{% endblock %}
+
+{% block content %}
+    <div class="row mb-4">
+        <div class="col-md-5">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Version actuelle</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>{{ versionActuelle.libelle }}</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 text-center">
+            <h3 class="text-primary">VS</h3>
+        </div>
+        <div class="col-md-5">
+            <div class="card border-warning">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">Version précédente</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>{{ versionPrecedente.libelle }}</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for parcourKey, competencesActuelles in competencesParcoursActuel %}
+        {% set competencesPrecedentes = competencesParcoursPrecedent[parcourKey]|default([]) %}
+        {% set competencesActuellesIds = competencesActuelles|map(attribute: 'id') %}
+        {% set competencesPrecedentesIds = competencesPrecedentes|map(attribute: 'id') %}
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">{{ parcourKey }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6 border-end pe-3">
+                        <h6 class="text-success mb-3">Version actuelle</h6>
+                        {% for comp in competencesActuelles %}
+                            <div class="mb-3 p-2 {% if comp.id not in competencesPrecedentesIds %}bg-success-light border-start border-success border-3{% else %}border-start border-secondary{% endif %}">
+                                <strong>{{ comp.reference }}</strong><br>
+                                <small>{{ comp.libelle }}</small>
+                                {% if comp.id not in competencesPrecedentesIds %}
+                                    <span class="badge bg-success float-end">Nouvelle</span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-lg-6 ps-3">
+                        <h6 class="text-warning mb-3">Version précédente</h6>
+                        {% for comp in competencesPrecedentes %}
+                            <div class="mb-3 p-2 {% if comp.id not in competencesActuellesIds %}bg-danger-light border-start border-danger border-3{% else %}border-start border-secondary{% endif %}">
+                                <strong>{{ comp.reference }}</strong><br>
+                                <small>{{ comp.libelle }}</small>
+                                {% if comp.id not in competencesActuellesIds %}
+                                    <span class="badge bg-danger float-end">Supprimée</span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="mt-4">
+        <a href="{{ path('administration_apc_referentiel_index', {version: versionActuelle.id}) }}" class="btn btn-primary">
+            Retour
+        </a>
+    </div>
+
+    <style>
+        .border-end {
+            border-right: 2px solid #dee2e6;
+        }
+        .bg-success-light {
+            background-color: #d4edda;
+        }
+        .bg-danger-light {
+            background-color: #f8d7da;
+        }
+    </style>
+{% endblock %}
+

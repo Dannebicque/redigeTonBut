@@ -5,8 +5,7 @@ namespace App\Classes\Tableau;
 
 use App\DTO\VolumesHorairesSemestre;
 use App\Entity\ApcParcours;
-use App\Entity\Departement;
-use App\Repository\ApcParcoursRepository;
+use App\Entity\Semestre;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 
@@ -45,10 +44,10 @@ class VolumesHoraires
     {
         $this->donneesSemestres = [];
         $json = [];
-        /** @var \App\Entity\Semestre $semestre */
+        /** @var Semestre $semestre */
         foreach ($this->semestres as $semestre)
         {
-            if (!$this->parcours instanceof \App\Entity\ApcParcours) {
+            if (!$this->parcours instanceof ApcParcours) {
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {
                 $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->parcours);

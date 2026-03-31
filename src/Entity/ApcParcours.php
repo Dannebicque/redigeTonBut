@@ -34,7 +34,7 @@ class ApcParcours extends BaseEntity
     /**
      * @var Collection<int, ApcParcoursNiveau>
      */
-    #[ORM\OneToMany(targetEntity: ApcParcoursNiveau::class, mappedBy: 'parcours')]
+    #[ORM\OneToMany(mappedBy: 'parcours', targetEntity: ApcParcoursNiveau::class)]
     #[Groups(['read:departement'])]
     private Collection $apcParcoursNiveaux;
 
@@ -44,13 +44,13 @@ class ApcParcours extends BaseEntity
     /**
      * @var Collection<int, ApcSaeParcours>
      */
-    #[ORM\OneToMany(targetEntity: ApcSaeParcours::class, mappedBy: 'parcours')]
+    #[ORM\OneToMany(mappedBy: 'parcours', targetEntity: ApcSaeParcours::class)]
     private Collection $apcSaeParcours;
 
     /**
      * @var Collection<int, ApcRessourceParcours>
      */
-    #[ORM\OneToMany(targetEntity: ApcRessourceParcours::class, mappedBy: 'parcours')]
+    #[ORM\OneToMany(mappedBy: 'parcours', targetEntity: ApcRessourceParcours::class)]
     private Collection $apcRessourceParcours;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -76,19 +76,19 @@ class ApcParcours extends BaseEntity
     /**
      * @var Collection<int, Semestre>
      */
-    #[ORM\OneToMany(targetEntity: Semestre::class, mappedBy: 'apcParcours')]
+    #[ORM\OneToMany(mappedBy: 'apcParcours', targetEntity: Semestre::class)]
     private Collection $semestres;
 
     /**
      * @var Collection<int, IutSiteParcours>
      */
-    #[ORM\OneToMany(targetEntity: IutSiteParcours::class, mappedBy: 'parcours')]
+    #[ORM\OneToMany(mappedBy: 'parcours', targetEntity: IutSiteParcours::class)]
     private Collection $iutSiteParcours;
 
     /**
      * @var Collection<int, QapesSae>
      */
-    #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: 'parcours')]
+    #[ORM\OneToMany(mappedBy: 'parcours', targetEntity: QapesSae::class)]
     private Collection $qapesSaes;
 
     #[ORM\Column(type: Types::INTEGER)]
@@ -134,7 +134,7 @@ class ApcParcours extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcParcoursNiveau[]
+     * @return Collection
      */
     public function getApcParcoursNiveaux(): Collection
     {
@@ -161,12 +161,14 @@ class ApcParcours extends BaseEntity
         return $this;
     }
 
+    /** @deprecated */
     public function getDepartement(): ?Departement
     {
         //todo: a adapter pour passer par Version
         return $this->departement;
     }
 
+    /** @deprecated */
     public function setDepartement(?Departement $departement): self
     {
         $this->departement = $departement;
@@ -175,7 +177,7 @@ class ApcParcours extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcSaeParcours[]
+     * @return Collection
      */
     public function getApcSaeParcours(): Collection
     {
@@ -203,7 +205,7 @@ class ApcParcours extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcRessourceParcours[]
+     * @return Collection
      */
     public function getApcRessourceParcours(): Collection
     {
@@ -291,7 +293,7 @@ class ApcParcours extends BaseEntity
     }
 
     /**
-     * @return Collection|Semestre[]
+     * @return Collection
      */
     public function getSemestres(): Collection
     {

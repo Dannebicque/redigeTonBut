@@ -8,66 +8,72 @@ use App\Classes\Tableau\VolumesHoraires;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use App\Repository\SemestreRepository;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Knp\Snappy\Pdf;
+//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+//use Knp\Snappy\Pdf;
+use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class GenerePdfTableaux
 {
 
     /**
-     * @var \Symfony\Component\HttpKernel\KernelInterface
+     * @var KernelInterface
      */
-    public $kernel;
+    public KernelInterface $kernel;
     private string $dir;
 
     private Departement $departement;
 
     public function __construct(
-        KernelInterface $kernel,
-        private Environment $twig,
-        private SemestreRepository $semestreRepository,
-        private TableauCroise $tableauCroise,
-        private Pdf $knpSnappyPdf,
-        private Structure $structure,
-        protected VolumesHoraires $volumesHoraires
+        KernelInterface                     $kernel,
+        private readonly Environment        $twig,
+        private readonly SemestreRepository $semestreRepository,
+        private readonly TableauCroise      $tableauCroise,
+//        private readonly Pdf                $knpSnappyPdf,
+        private readonly Structure          $structure,
+        protected VolumesHoraires           $volumesHoraires
     ) {
         $this->kernel = $kernel;
         $this->dir = $kernel->getProjectDir() . '/public/latex/';
     }
 
-    public function genereTableauStructure(Departement $departement): void
+    public function genereTableauStructure(Version $version): void
     {
+        $departement = $version->getDepartement();
         //type 2 et 1 (pour le type 3 1 par parcours...)
         if ($departement->getTypeStructure() === Departement::TYPE3) {
-            $parcours = $departement->getApcParcours();
+            $parcours = $version->getApcParcours();
             foreach ($parcours as $parcour) {
                 $semestres = $this->semestreRepository->findByParcours($parcour);
-                $this->genereStructureSemestres($semestres, $departement, $parcour);
+                $this->genereStructureSemestres($semestres, $version, $parcour);
             }
         } else {
-            $semestres = $departement->getSemestres();
-            $this->genereStructureSemestres($semestres, $departement);
+            $semestres = $version->getSemestres();
+            $this->genereStructureSemestres($semestres, $version);
         }
     }
 
-    public function genereTableauCroise(Departement $departement): void
+    public function genereTableauCroise(Version $version): void
     {
-        $this->departement = $departement;
-        foreach ($departement->getAnnees() as $annee) {
+        $this->departement = $version->getDepartement();
+        foreach ($version->getAnnees() as $annee) {
             $semestres = $this->semestreRepository->findBy(['annee' => $annee->getId()]);
 
-            if ($annee->getOrdre() > 1 || $departement->getTypeStructure() === Departement::TYPE3) {
-                $parcours = $departement->getApcParcours();
+            if ($annee->getOrdre() > 1 || $this->departement->getTypeStructure() === Departement::TYPE3) {
+                $parcours = $version->getApcParcours();
             }
 
             foreach ($semestres as $semestre) {
-                if ($annee->getOrdre() > 1 || $departement->getTypeStructure() === Departement::TYPE3) {
+                if ($annee->getOrdre() > 1 || $this->departement->getTypeStructure() === Departement::TYPE3) {
                     foreach ($parcours as $parcour) {
-                        if ($departement->getTypeStructure() === Departement::TYPE3) {
+                        if ($this->departement->getTypeStructure() === Departement::TYPE3) {
                             $sems = $this->semestreRepository->findBy([
                                 'annee' => $annee->getId(),
                                 'apcParcours' => $parcour->getId()
@@ -87,23 +93,25 @@ class GenerePdfTableaux
     }
 
     /**
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     private function genereStructureSemestres(
         array $semestres,
-        Departement $departement,
+        Version $version,
         ?ApcParcours $parcours = null
     ): void {
-        $json = $this->structure->setSemestres($semestres)->setDepartement($departement)->getDataJson();
+        throw new Exception('Fonctionnalité temporairement indisponible');
+        $json = $this->structure->setSemestres($semestres)->setVersion($version)->getDataJson();
 
         $html = $this->twig->render('pdf/tableau-structure.html.twig', [
-            'departement' => $departement,
+            'departement' => $version->getDepartement(),
+            'version' => $version,
             'donnees' => $json,
             'parcours' => $parcours,
         ]);
-        if (!$parcours instanceof \App\Entity\ApcParcours) {
+        if (!$parcours instanceof ApcParcours) {
             $name = 'tableau-structure.pdf';
             //  $nameHtml = 'tableau-structure.html';
         } else {
@@ -114,14 +122,14 @@ class GenerePdfTableaux
         ///  file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/tableaux/' . $nameHtml, $html);
 
 
-        $output = new PdfResponse(
-            $this->knpSnappyPdf->getOutputFromHtml($html, [
-                'orientation' => 'Landscape'
-            ]),
-            $name
-        );
-
-        file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/tableaux/' . $name, $output);
+//        $output = new PdfResponse(
+//            $this->knpSnappyPdf->getOutputFromHtml($html, [
+//                'orientation' => 'Landscape'
+//            ]),
+//            $name
+//        );
+//
+//        file_put_contents($this->dir . $version->getDepartement()->getNumeroAnnexe() . '/tableaux/' . $name, $output);
     }
 
     private function afficheParcours(ApcParcours $parcours, Semestre $semestre, array $semestres): void
@@ -140,8 +148,10 @@ class GenerePdfTableaux
         $this->generePdfCroise($this->tableauCroise, $donnees, $name, $semestre);
     }
 
-    private function generePdfCroise(\App\Classes\Apc\TableauCroise $tableauCroise, $donnees, string $name, Semestre $semestre, ?ApcParcours $parcours = null): void
+    private function generePdfCroise(TableauCroise $tableauCroise, $donnees, string $name, Semestre $semestre, ?ApcParcours $parcours = null): void
     {
+        throw new Exception('Fonctionnalité temporairement indisponible');
+
         $this->genereImage($tableauCroise->getRessources(), $tableauCroise->getSaes(), $this->departement);
         $html = $this->twig->render('pdf/tableau-croise.html.twig', [
             'linuxpath' => '/Users/davidannebicque/Sites/redigeTonBut/public/',
@@ -157,15 +167,15 @@ class GenerePdfTableaux
         ]);
         //  file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/tableaux/' . $name.'.html', $html);
 
-        $output = new PdfResponse(
-            $this->knpSnappyPdf->getOutputFromHtml($html, [
-                'enable-local-file-access' => true,
-                'zoom' => 0.75,
-            ]),
-            $name
-        );
-
-        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/tableaux/' . $name, $output);
+//        $output = new PdfResponse(
+//            $this->knpSnappyPdf->getOutputFromHtml($html, [
+//                'enable-local-file-access' => true,
+//                'zoom' => 0.75,
+//            ]),
+//            $name
+//        );
+//
+//        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/tableaux/' . $name, $output);
     }
 
     private function genereImage($getRessources, $getSaes, Departement $departement): void

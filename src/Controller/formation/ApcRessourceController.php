@@ -51,7 +51,6 @@ class ApcRessourceController extends BaseController
             }
 
             $form = $this->createForm(ApcRessourceType::class, $apcRessource, [
-                'departement' => $this->getDepartement(),
                 'version' => $this->getVersion(),
                 'editable' => $this->isGranted('ROLE_GT'),
                 'verouille_croise' => $this->getVersion()?->isVerouilleCroise(),
@@ -70,7 +69,7 @@ class ApcRessourceController extends BaseController
                     'Ressource ajoutée avec succès.'
                 );
 
-                if ($parcours instanceof \App\Entity\ApcParcours) {
+                if ($parcours instanceof ApcParcours) {
                     return $this->redirectToRoute('but_ressources_annee',
                         [
                             'annee' => $apcRessource->getSemestre()->getAnnee()->getId(),
@@ -104,7 +103,7 @@ class ApcRessourceController extends BaseController
         Request $request,
         ApcRessource $apcRessource
     ): Response {
-        if ($this->getVersion()->isPnVerouille() === false) {
+        if ($this->getVersion()?->isPnVerouille() === false) {
 
             $this->denyAccessUnlessGranted('edit', $apcRessource);
 

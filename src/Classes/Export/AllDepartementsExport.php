@@ -4,30 +4,28 @@ namespace App\Classes\Export;
 
 use App\Classes\Apc\ApcStructure;
 use App\Classes\Excel\ExcelWriter;
-use App\Repository\DepartementRepository;
+use App\Entity\Version;
 use App\Repository\VersionRepository;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class AllDepartementsExport
+readonly class AllDepartementsExport
 {
     public function __construct(
-        private readonly ExcelWriter       $excelWriter,
-        private readonly ApcStructure      $apcStructure,
-        private readonly VersionRepository $versionRepository,
+        private ExcelWriter       $excelWriter,
+        private ApcStructure      $apcStructure,
+        private VersionRepository $versionRepository,
 
     )
     {
     }
 
 
-    public function exportCompetences(int $annee): StreamedResponse
+    public function exportCompetences(Version $version): StreamedResponse
     {
-        $versions = $this->versionRepository->findByVersion($annee);
+        $versions = $this->versionRepository->findByVersion($version->getAnnee());
         $this->excelWriter->nouveauFichier();
 
         foreach ($versions as $version) {
-
-
             $tParcours = $this->apcStructure->parcoursNiveaux($version);
             $departement = $version->getDepartement();
             $this->excelWriter->createSheet($departement->getSigle());

@@ -4,6 +4,7 @@
 namespace App\DTO;
 
 
+use App\Entity\ApcRessource;
 use App\Entity\Semestre;
 
 class VolumesHorairesSemestre
@@ -47,7 +48,7 @@ class VolumesHorairesSemestre
 
     public function __construct(Semestre $semestre, $ressources)
     {
-        /** @var \App\Entity\ApcRessource $ressource */
+        /** @var ApcRessource $ressource */
         foreach ($ressources as $ressource) {
             $this->ressources[$ressource->getId()]['totalEnseignement'] = $ressource->getHeuresTotales();
             $this->ressources[$ressource->getId()]['dontTp'] = $ressource->getTpPpn();

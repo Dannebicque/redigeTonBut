@@ -89,7 +89,7 @@ class ApcSaeAddEdit
             }
         }
 
-
+        if ($request->request->has('ressources')) {
         $acs = $request->request->all()['ressources'];
         if (is_array($acs)) {
             foreach ($acs as $idAc) {
@@ -97,6 +97,7 @@ class ApcSaeAddEdit
                 $saeRes = new ApcSaeRessource($apcSae, $res);
                 $this->entityManager->persist($saeRes);
             }
+        }
         }
 
         //$apcSae->setCodeMatiere(Codification::codeSae($apcSae));

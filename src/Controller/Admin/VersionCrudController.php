@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Departement;
 use App\Entity\Version;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -23,7 +22,7 @@ class VersionCrudController extends AbstractCrudController
 {
     private RequestStack $requestStack;
 
-    public function __construct(private Security $security,RequestStack $requestStack)
+    public function __construct(private readonly Security $security, RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
     }

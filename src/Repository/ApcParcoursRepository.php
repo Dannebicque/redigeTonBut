@@ -10,8 +10,6 @@
 namespace App\Repository;
 
 use App\Entity\ApcParcours;
-use App\Entity\Departement;
-use App\Entity\Semestre;
 use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,7 +26,7 @@ class ApcParcoursRepository extends ServiceEntityRepository
         parent::__construct($registry, ApcParcours::class);
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         return $this->findBy([], ['ordre' => 'ASC', 'libelle' => 'ASC']);
     }

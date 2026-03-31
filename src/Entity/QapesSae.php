@@ -15,7 +15,7 @@ class QapesSae
     /**
      * @var ArrayCollection
      */
-    public $qapesSaeCritereReponses;
+    public ArrayCollection $qapesSaeCritereReponses;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
@@ -113,7 +113,7 @@ class QapesSae
     /**
      * @var Collection<int, QapesSaeCritereReponse>
      */
-    #[ORM\OneToMany(targetEntity: QapesSaeCritereReponse::class, mappedBy: 'sae', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'sae', targetEntity: QapesSaeCritereReponse::class, cascade: ['persist', 'remove'])]
     private Collection $qapesSaeCritereReponse;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

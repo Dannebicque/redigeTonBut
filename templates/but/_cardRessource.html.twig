@@ -2,6 +2,16 @@
     <div class="card {% if ressource.ficheAdaptationLocale == true %}bg-warning text-white{% endif %}">
         <div class="card-body">
             <h4 class="card-title">{{ ressource.display }}</h4>
+            {% set pdfStatusData = pdfStatusByRessource[ressource.id]|default({'status': 'absent', 'errorMessage': null}) %}
+            {% if compareMode|default(false) and ressourceDiff is not null %}
+                {% if ressourceDiff.status == 'added' %}
+                    <span class="badge bg-success mb-2">Ajoutee depuis N-1</span>
+                {% elseif ressourceDiff.status == 'changed' %}
+                    <span class="badge bg-warning text-dark mb-2">Modifiee</span>
+                {% else %}
+                    <span class="badge bg-secondary mb-2">Identique</span>
+                {% endif %}
+            {% endif %}
             <p class="card-subtitle mb-3 text-alternate">{{ ressource.motsCles }}</p>
             <p>
                 {% for competence in ressource.apcRessourceCompetences %}
@@ -26,12 +36,38 @@
                 </tr>
                 </tbody>
             </table>
+            {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.status == 'changed' and ressourceDiff.changes|length > 0 %}
+                <div class="small text-muted mb-2">
+                    {% if ressourceDiff.changes.libelle is defined %}
+                        <div><strong>Libelle:</strong> {{ ressourceDiff.changes.libelle.old }} -> {{ ressourceDiff.changes.libelle.new }}</div>
+                    {% endif %}
+                    {% if ressourceDiff.changes.heuresTotales is defined %}
+                        <div><strong>Heures:</strong> {{ ressourceDiff.changes.heuresTotales.old }} -> {{ ressourceDiff.changes.heuresTotales.new }}</div>
+                    {% endif %}
+                    {% if ressourceDiff.changes.tpPpn is defined %}
+                        <div><strong>TP PPN:</strong> {{ ressourceDiff.changes.tpPpn.old }} -> {{ ressourceDiff.changes.tpPpn.new }}</div>
+                    {% endif %}
+                    {% if ressourceDiff.changes.cmPreco is defined %}
+                        <div><strong>CM:</strong> {{ ressourceDiff.changes.cmPreco.old }} -> {{ ressourceDiff.changes.cmPreco.new }}</div>
+                    {% endif %}
+                    {% if ressourceDiff.changes.tdPreco is defined %}
+                        <div><strong>TD:</strong> {{ ressourceDiff.changes.tdPreco.old }} -> {{ ressourceDiff.changes.tdPreco.new }}</div>
+                    {% endif %}
+                    {% if ressourceDiff.changes.tpPreco is defined %}
+                        <div><strong>TP:</strong> {{ ressourceDiff.changes.tpPreco.old }} -> {{ ressourceDiff.changes.tpPreco.new }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
             <p>
+                {% set parcoursPdfId = parcours is defined and parcours is not null ? parcours.id : null %}
                 {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
-                    {% for parcours in ressource.apcRessourceParcours %}
-                        <span class="badge badge-parcours-{{ parcours.parcours.couleur }}">
-                            {{ parcours.parcours.libelle }}
+                    {% for parcoursItem in ressource.apcRessourceParcours %}
+                        <span class="badge badge-parcours-{{ parcoursItem.parcours.couleur }}">
+                            {{ parcoursItem.parcours.libelle }}
                         </span>
+                        {% if parcoursPdfId is null %}
+                            {% set parcoursPdfId = parcoursItem.parcours.id %}
+                        {% endif %}
                     {% else %}
                         <span class="badge bg-warning">
                             Pas de parcours associé
@@ -46,8 +82,28 @@
         </div>
         <div class="card-footer">
             <div class="col-12 d-flex align-items-center justify-content-md-end mb-2">
+                {% if pdfStatusData.status == 'present' %}
+                    <span class="badge bg-success me-2">PDF disponible</span>
+                {% elseif pdfStatusData.status == 'pending' %}
+                    <span class="badge bg-warning text-dark me-2">Generation en attente</span>
+                {% elseif pdfStatusData.status == 'error' %}
+                    <span class="badge bg-danger me-2" title="{{ pdfStatusData.errorMessage|default('Erreur de generation PDF') }}">Erreur PDF</span>
+                {% else %}
+                    <span class="badge bg-secondary me-2">PDF non genere</span>
+                {% endif %}
+                <a href="{{ path('pdf_show',
+                    {sourceType: 'ressource', 'sourceId': ressource.id, parcours: parcoursPdfId, documentKey: 'fiche' }) }}"
+                   class="btn btn-block btn-sm btn-icon btn-icon-start btn-outline-primary ms-1"
+                   target="_blank"
+                >
+                    <i class="bi-print"></i>
+                    <span class="d-none d-xxl-inline-block">Imprimer la fiche ressource</span>
+                </a>
+            </div>
+
+            <div class="col-12 d-flex align-items-center justify-content-md-end mb-2">
                 <a href="{{ path('but_fiche_ressource',
-                    {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null }) }}"
+                    {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null, compare: compareMode|default(false) ? 1 : null }) }}"
                    class="btn btn-block btn-sm btn-icon btn-icon-start btn-outline-primary ms-1"
                    target="_blank"
                 >

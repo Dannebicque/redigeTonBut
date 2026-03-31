@@ -6,8 +6,10 @@ use App\Classes\Apc\ApcStructure;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Version;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Knp\Snappy\Pdf;
+use Doctrine\Common\Collections\Collection;
+//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+//use Knp\Snappy\Pdf;
+use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Environment;
@@ -24,15 +26,15 @@ class GenerePdfCompetences
     private Version $version;
     private Departement $departement;
 
-    private ?\Doctrine\Common\Collections\Collection $competences = null;
+    private ?Collection $competences = null;
 
     private Filesystem $filesystem;
 
     public function __construct(
-        KernelInterface $kernel,
-        private Environment $twig,
-        private Pdf $knpSnappyPdf,
-        private ApcStructure $apcStructure
+        KernelInterface               $kernel,
+        private readonly Environment  $twig,
+//        private readonly Pdf          $knpSnappyPdf,
+        private readonly ApcStructure $apcStructure
 
     ) {
         $this->dir = $kernel->getProjectDir() . '/public/latex/';
@@ -66,8 +68,11 @@ class GenerePdfCompetences
         }
     }
 
-    public function generePdfCompetencesComplet(Departement $departement): void
+    public function generePdfCompetencesComplet(Version $version): void
     {
+        throw new Exception('Fonctionnalité temporairement indisponible');
+
+        $departement = $version->getDepartement();
         $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe().'/ref-competences/') ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe().'/ref-competences/');
 
         $this->departement = $departement;
@@ -77,18 +82,18 @@ class GenerePdfCompetences
             'competencesParcours' => $this->competencesParcours,
             'departement' => $departement,
             'competences' => $this->competences,
-            'parcours' => $departement->getApcParcours(),
+            'parcours' => $version->getApcParcours(),
             'parcoursNiveaux' => $this->tParcours,
         ]);
 
-        $output = new PdfResponse(
-            $this->knpSnappyPdf->getOutputFromHtml($html, [
-                'orientation' => 'Landscape'
-            ]),
-            $name
-        );
-
-        file_put_contents($this->dir . $departement->getNumeroAnnexe().'/ref-competences/' . $name, $output);
+//        $output = new PdfResponse(
+//            $this->knpSnappyPdf->getOutputFromHtml($html, [
+//                'orientation' => 'Landscape'
+//            ]),
+//            $name
+//        );
+//
+//        file_put_contents($this->dir . $departement->getNumeroAnnexe().'/ref-competences/' . $name, $output);
 
     }
 
@@ -113,16 +118,18 @@ class GenerePdfCompetences
 
     private function generePagePdf(string $name, string $template, array $data): void
     {
+        throw new Exception('Fonctionnalité temporairement indisponible');
+
         $html = $this->twig->render('pdf/' . $template . '.html.twig', $data);
 
-        $output = new PdfResponse(
-            $this->knpSnappyPdf->getOutputFromHtml($html, [
-                'orientation' => 'Landscape'
-            ]),
-            $name
-        );
-
-        file_put_contents($this->dir .  $this->departement->getNumeroAnnexe().'/ref-competences/' . $name . '.pdf', $output);
+//        $output = new PdfResponse(
+//            $this->knpSnappyPdf->getOutputFromHtml($html, [
+//                'orientation' => 'Landscape'
+//            ]),
+//            $name
+//        );
+//
+//        file_put_contents($this->dir .  $this->departement->getNumeroAnnexe().'/ref-competences/' . $name . '.pdf', $output);
     }
 
     private function generePageDeGarde(ApcParcours $parcours): void

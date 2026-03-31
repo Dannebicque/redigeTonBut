@@ -15,7 +15,6 @@ use App\Controller\BaseController;
 use App\Entity\ApcApprentissageCritique;
 use App\Entity\ApcNiveau;
 use App\Entity\Constantes;
-use App\Entity\Departement;
 use App\Entity\Version;
 use App\Form\ApcApprentissageCritiqueType;
 use App\Repository\ApcApprentissageCritiqueRepository;

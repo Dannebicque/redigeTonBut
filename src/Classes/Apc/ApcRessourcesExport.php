@@ -5,6 +5,7 @@ namespace App\Classes\Apc;
 use App\Classes\Word\MyWord;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
+use App\Entity\ApcRessource;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,9 +37,9 @@ class ApcRessourcesExport
     }
 
 
-    public function export(Annee $annee, string $_format, ?ApcParcours $parcours)
+    public function export(Annee $annee, string $_format, ?ApcParcours $parcours): ?Response
     {
-        if ($parcours instanceof \App\Entity\ApcParcours) {
+        if ($parcours instanceof ApcParcours) {
             $this->ressources = $this->apcRessourceParcoursRepository->findByAnneeArray($annee, $parcours);
         } else {
             $this->ressources = $this->apcRessourceRepository->findByAnneeArray($annee);
@@ -56,7 +57,7 @@ class ApcRessourcesExport
 
     }
 
-    private function exportZipWord(): \Symfony\Component\HttpFoundation\Response
+    private function exportZipWord(): Response
     {
         $zip = new ZipArchive();
         $fileName = 'ressources-' . date('YmdHis') . '.zip';
@@ -67,7 +68,7 @@ class ApcRessourcesExport
         $tabFiles = [];
 
         foreach ($this->ressources as $ressources) {
-            /** @var \App\Entity\ApcRessource $ressource */
+            /** @var ApcRessource $ressource */
             foreach ($ressources as $ressource) {
                 if ($ressource->getFicheAdaptationLocale() === false) {
                     $fichier = $this->myWord->exportAndSaveressource($ressource, $this->dir);

@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use App\Entity\Departement;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -21,10 +22,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ArrayFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Mailer\MailerInterface;
@@ -34,11 +35,11 @@ class UserCrudController extends BaseCrudController
     private array $roles = [];
 
     public function __construct(
-        private AdminUrlGenerator $adminUrlGenerator,
-        private MailerInterface   $mailer,
-        private RequestStack      $requestStack,
-        private readonly UserRepository $userRepository,
-        private readonly \Symfony\Component\Security\Core\Security $security,
+        private readonly AdminUrlGenerator      $adminUrlGenerator,
+        private readonly MailerInterface        $mailer,
+        private readonly RequestStack           $requestStack,
+        private readonly UserRepository         $userRepository,
+        private readonly Security               $security,
         private readonly EntityManagerInterface $entityManager)
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
@@ -64,14 +65,14 @@ class UserCrudController extends BaseCrudController
                 'Membre CPN (lecture)' => 'ROLE_CPN_LECTEUR',
                 'PACD' => 'ROLE_PACD',
             ];
-        } else if($this->security->isGranted('ROLE_CPN')) {
+        } else if ($this->security->isGranted('ROLE_CPN')) {
             $this->roles = [
                 'IUT' => 'ROLE_IUT',
                 'Editeur' => 'ROLE_EDITEUR',
                 'Lecteur' => 'ROLE_LECTEUR',
                 'PACD' => 'ROLE_PACD',
             ];
-        } else if($this->security->isGranted('ROLE_PACD')) {
+        } else if ($this->security->isGranted('ROLE_PACD')) {
             $this->roles = [
                 'IUT' => 'ROLE_IUT',
                 'Editeur' => 'ROLE_EDITEUR',
@@ -97,26 +98,13 @@ class UserCrudController extends BaseCrudController
             return $qb;
         }
 
-        if ($this->security->isGranted('ROLE_PACD')) {
-            // Filtrer par spécialité de l'utilisateur courant
+        if ($this->security->isGranted('ROLE_CPN') || $this->security->isGranted('ROLE_PACD')) {
+            $departements = $user->getCpnDepartements();
+            $qb->andWhere('entity.departement IN (:departements)')
+                ->setParameter('departements', $departements);
             $departement = $user->getDepartement();
-            $qb->andWhere('entity.departement = :departement')
+            $qb->orWhere('entity.departement = :departement')
                 ->setParameter('departement', $departement);
-        }
-
-        if ($this->security->isGranted('ROLE_CPN')) {
-            //peut se cumuler avec ROLE_PACD
-            // un membre CPN peut voir tous les utilisateurs de ses départements
-            $departements = $user->getCpnDepartements(); // À adapter selon ton modèle
-            if ($departements) {
-                $qb->orWhere('entity.departement IN (:departements)')
-                    ->setParameter('departements', $departements);
-            }
-
-//            // Filtrer par un ensemble de spécialités accessibles
-//            $specialites = $user->getCpnDepartements(); // À adapter selon ton modèle
-//            $qb->andWhere('entity.departement IN (:specialites)')
-//                ->setParameter('specialites', $specialites);
         }
 
         return $qb;
@@ -173,16 +161,31 @@ class UserCrudController extends BaseCrudController
                 ]),
         ];
 
-        if (
-            $this->security->isGranted('ROLE_ADMIN') // Pour l'admin qui édite
-            || (isset($_POST['roles']) && in_array('ROLE_CPN', (array)$_POST['roles']))
-        ) {
-            $fields[] = AssociationField::new('CpnDepartements')
-                ->setLabel('Départements CPN')
-                ->setCrudController(DepartementCrudController::class)
-                ->setFormTypeOption('multiple', true)
-                ->setRequired(false);
+
+        $currentUser = $this->security->getUser();
+        $cpnDepartementsField = AssociationField::new('CpnDepartements')
+            ->setLabel('Départements CPN')
+            ->setCrudController(DepartementCrudController::class)
+            ->setFormTypeOption('multiple', true)
+            ->setRequired(false);
+
+        if (!$this->security->isGranted('ROLE_ADMIN') && !$this->security->isGranted('ROLE_GT')) {
+            // ROLE_CPN : restreindre aux départements de son propre périmètre CPN
+            $allowedIds = array_map(
+                fn(Departement $d) => $d->getId(),
+                $currentUser->getCpnDepartements()->toArray()
+            );
+
+            $cpnDepartementsField->setQueryBuilder(
+                fn(QueryBuilder $qb) => $qb
+                    ->where('entity.id IN (:ids)')
+                    ->setParameter('ids', $allowedIds ?: [0])
+                    ->orderBy('entity.libelle', 'ASC')
+            );
         }
+
+        $fields[] = $cpnDepartementsField;
+
 
         return $fields;
     }

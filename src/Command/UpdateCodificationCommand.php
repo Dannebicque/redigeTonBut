@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Semestre;
 use App\Repository\DepartementRepository;
 use App\Utils\Codification;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,7 +67,7 @@ class UpdateCodificationCommand extends Command
                }
            }
 
-           /** @var \App\Entity\Semestre $semestre */
+           /** @var Semestre $semestre */
             foreach ($departement->getSemestres() as $semestre) {
                foreach ($semestre->getApcRessources() as $r)
                {

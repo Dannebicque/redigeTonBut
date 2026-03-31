@@ -21,6 +21,7 @@ use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\TemplateProcessor;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -41,10 +42,8 @@ class MyWord
 
     /**
      *
-     * @throws CopyFileException
-     * @throws CreateTemporaryFileException
      */
-    public function exportSae(ApcSae $apcSae): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function exportSae(ApcSae $apcSae): StreamedResponse
     {
         $templateProcessor = $this->genereWordSae($apcSae);
 
@@ -54,7 +53,7 @@ class MyWord
             static function() use ($templateProcessor): void {
                 $templateProcessor->saveAs('php://output');
             },
-            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+            Response::HTTP_OK,
             [
                 'Content-Description' => 'File Transfer',
                 'Content-Transfer-Encoding' => 'binary',
@@ -65,7 +64,7 @@ class MyWord
         );
     }
 
-    private function prepareTexte(?string $text)
+    private function prepareTexte(?string $text): array
     {
         $parseDown = new Parsedown();
         $phpWord = new PhpWord();
@@ -82,10 +81,8 @@ class MyWord
 
     /**
      *
-     * @throws CopyFileException
-     * @throws CreateTemporaryFileException
      */
-    public function exportRessource(ApcRessource $apcRessource): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function exportRessource(ApcRessource $apcRessource): StreamedResponse
     {
         $templateProcessor = $this->genereWord($apcRessource);
 
@@ -95,7 +92,7 @@ class MyWord
             static function() use ($templateProcessor): void {
                 $templateProcessor->saveAs('php://output');
             },
-            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+            Response::HTTP_OK,
             [
                 'Content-Description' => 'File Transfer',
                 'Content-Transfer-Encoding' => 'binary',
@@ -106,7 +103,7 @@ class MyWord
         );
     }
 
-    private function genereWord(ApcRessource $apcRessource): \PhpOffice\PhpWord\TemplateProcessor
+    private function genereWord(ApcRessource $apcRessource): TemplateProcessor
     {
         $templateProcessor = new TemplateProcessor($this->dir . 'ressource.docx');
 
@@ -185,7 +182,7 @@ class MyWord
         return $templateProcessor;
     }
 
-    private function genereWordSae(ApcSae $apcSae): \PhpOffice\PhpWord\TemplateProcessor
+    private function genereWordSae(ApcSae $apcSae): TemplateProcessor
     {
         $templateProcessor = new TemplateProcessor($this->dir . 'sae.docx');
         $templateProcessor->setValue('nomsae', $apcSae->getCodeMatiere() . ' - ' . $apcSae->getLibelle());

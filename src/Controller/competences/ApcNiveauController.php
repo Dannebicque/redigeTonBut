@@ -48,9 +48,9 @@ class ApcNiveauController extends BaseController
                 ['departement' => $apcComposanteEssentielle->getVersion()?->getId()]);
         }
 
-        return $this->renderForm('competences/apc_niveau/new.html.twig', [
+        return $this->render('competences/apc_niveau/new.html.twig', [
             'apc_niveau' => $apcComposanteEssentielle,
-            'form' => $form,
+            'form' => $form->createView(),
             'competence' => $competence
         ]);
     }

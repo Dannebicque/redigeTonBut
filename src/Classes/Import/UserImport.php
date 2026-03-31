@@ -11,6 +11,7 @@ use App\Repository\DepartementRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -22,7 +23,7 @@ class UserImport
 
     private UserRepository $userRepository;
 
-    private $departements;
+    private array $departements;
 
     private array $users = [];
 
@@ -177,7 +178,7 @@ class UserImport
         $this->entityManager->flush();
     }
 
-    private function openExcelFile(?string $fichier): \PhpOffice\PhpSpreadsheet\Spreadsheet
+    private function openExcelFile(?string $fichier): Spreadsheet
     {
         $reader = new Xlsx();
 

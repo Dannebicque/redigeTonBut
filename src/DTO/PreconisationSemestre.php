@@ -48,7 +48,7 @@ class PreconisationSemestre
 
         foreach ($semestre->getApcCompetenceSemestres() as $apc) {
             if (array_key_exists($apc->getCompetence()->getId(), $this->tCompetences)) {
-                if ($parcours instanceof \App\Entity\ApcParcours && $semestre->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
+                if ($parcours instanceof ApcParcours && $semestre->getVersion()->getDepartement()->getTypeStructure() !== Departement::TYPE3) {
                     //On est donc en S3->S6, hors type 3. Donc on peut différencier les ECTS
                     $this->tCompetences[$apc->getCompetence()->getId()]['ects'] = $apc->getEctsParcours() !== null ? $apc->getEctsParcours()[$parcours->getId()] : 0;
                     $this->tSemestre['nb_ects'] += $apc->getEctsParcours() !== null ? $apc->getEctsParcours()[$parcours->getId()] : 0;

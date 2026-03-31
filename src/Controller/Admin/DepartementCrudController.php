@@ -11,20 +11,18 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class DepartementCrudController extends BaseCrudController
 {
     public function __construct(
-        private RequestStack      $requestStack,
-        private Security $security, private readonly DepartementRepository $departementRepository)
+        private readonly RequestStack $requestStack,
+        private readonly Security     $security, private readonly DepartementRepository $departementRepository)
     {
     }
 

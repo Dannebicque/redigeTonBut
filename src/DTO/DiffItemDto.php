@@ -2,13 +2,13 @@
 
 namespace App\DTO;
 
-class DiffItemDto
+readonly class DiffItemDto
 {
     public function __construct(
-        public readonly string $path,
-        public readonly mixed $oldValue,
-        public readonly mixed $newValue,
-        public readonly string $type // 'ajout', 'suppression', 'modification', 'ordre'
+        public string $path,
+        public mixed  $oldValue,
+        public mixed  $newValue,
+        public string $type // 'ajout', 'suppression', 'modification', 'ordre'
     )
     {
     }

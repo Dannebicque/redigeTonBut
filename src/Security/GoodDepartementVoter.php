@@ -7,18 +7,19 @@ use App\Entity\Annee;
 use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Entity\User;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use \Symfony\Bundle\SecurityBundle\Security;
 
 class GoodDepartementVoter extends Voter
 {
     // these strings are just invented: you can use anything
-    public const NEW = 'new';
+    public const string NEW = 'new';
 
-    public const DUPLICATE = 'duplicate';
+    public const string DUPLICATE = 'duplicate';
 
-    public const CONSULTE = 'consulte';
+    public const string CONSULTE = 'consulte';
 
     private Security $security;
 
@@ -62,7 +63,7 @@ class GoodDepartementVoter extends Voter
                 return $this->canConsulte($post, $user);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canConsulte(Semestre|Annee|Departement $post, User $user): bool
@@ -79,12 +80,12 @@ class GoodDepartementVoter extends Voter
             return false;
         }
 
-        if (!$user->getDepartement() instanceof \App\Entity\Departement) {
+        if (!$user->getDepartement() instanceof Departement) {
             return false;
         }
 
         if ($post instanceof Departement) {
-            if (in_array('ROLE_CPN', $user->getRoles())) {
+            if (in_array('ROLE_CPN', $user->getRoles()) || in_array('ROLE_EDITEUR', $user->getRoles())) {
                 foreach ($user->getCpnDepartements() as $dpt) {
                     if ($dpt->getId() === $post->getId()) {
                         return true;
@@ -95,7 +96,7 @@ class GoodDepartementVoter extends Voter
             return $user->getDepartement()->getId() === $post->getId();
         }
 
-        if ($post instanceof Annee && $post->getDepartement() instanceof \App\Entity\Departement) {
+        if ($post instanceof Annee && $post->getDepartement() instanceof Departement) {
             if (in_array('ROLE_CPN', $user->getRoles())) {
                 foreach ($user->getCpnDepartements() as $dpt) {
                     if ($dpt->getId() === $post->getDepartement()->getId()) {

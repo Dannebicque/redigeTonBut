@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\VersionRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -69,10 +70,10 @@ class Version
     private ?bool $verouilleCroise = true;
 
     #[ORM\Column]
-    private ?\DateTime $dateVersionCompetence = null;
+    private ?DateTime $dateVersionCompetence = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTime $dateVersionFormation = null;
+    private ?DateTime $dateVersionFormation = null;
 
     #[ORM\Column]
     private ?bool $pnVerouille = true;
@@ -102,7 +103,7 @@ class Version
         $this->apcCompetences = new ArrayCollection();
         $this->apcParcours = new ArrayCollection();
         $this->qapesSaes = new ArrayCollection();
-        $this->dateVersionCompetence = new \DateTime();
+        $this->dateVersionCompetence = new DateTime();
     }
 
     public function __toString(): string
@@ -343,24 +344,24 @@ class Version
         return $this;
     }
 
-    public function getDateVersionCompetence(): ?\DateTime
+    public function getDateVersionCompetence(): ?DateTime
     {
         return $this->dateVersionCompetence;
     }
 
-    public function setDateVersionCompetence(?\DateTimeInterface $dateVersionCompetence): static
+    public function setDateVersionCompetence(?DateTimeInterface $dateVersionCompetence): static
     {
         $this->dateVersionCompetence = $dateVersionCompetence;
 
         return $this;
     }
 
-    public function getDateVersionFormation(): ?\DateTimeInterface
+    public function getDateVersionFormation(): ?DateTimeInterface
     {
         return $this->dateVersionFormation;
     }
 
-    public function setDateVersionFormation(?\DateTime $dateVersionFormation): static
+    public function setDateVersionFormation(?DateTime $dateVersionFormation): static
     {
         $this->dateVersionFormation = $dateVersionFormation;
 

@@ -3,6 +3,9 @@ twig:
     globals:
         # the value is the service's id
         user_data: '@App\Classes\DataUserSession'
+        mail_contact: 'david.annebicque@univ-reims.fr'
+        product_name: 'ORéBUT'
+        product_url: 'https://orebut.iut.fr'
 when@test:
     twig:
         strict_variables: true

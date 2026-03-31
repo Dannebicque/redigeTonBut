@@ -3,6 +3,7 @@ namespace App\Command;
 
 use App\Classes\Export\CompetencesExport;
 use App\Repository\DepartementRepository;
+use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Throwable;
 
 #[AsCommand(
     name: 'app:generate-competences-pdfs',
@@ -20,9 +22,9 @@ class GenerateAllCompetencesPdfsCommand extends Command
 {
     private string $projectDir = '';
     public function __construct(
-        private CompetencesExport $competencesExport,
-        private DepartementRepository $departementRepository,
-        KernelInterface $projectDir
+        private readonly CompetencesExport     $competencesExport,
+        private readonly DepartementRepository $departementRepository,
+        KernelInterface                        $projectDir
     ) {
         parent::__construct();
         $this->projectDir = $projectDir->getProjectDir();
@@ -63,9 +65,9 @@ class GenerateAllCompetencesPdfsCommand extends Command
                 $filePath = $outDir . DIRECTORY_SEPARATOR . $filename;
 
                 if (false === @file_put_contents($filePath, $content)) {
-                    throw new \RuntimeException('Impossible d\'écrire le fichier ' . $filePath);
+                    throw new RuntimeException('Impossible d\'écrire le fichier ' . $filePath);
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $io->error('Échec pour département ' . ($departement->getId() ?? '?') . ' : ' . $e->getMessage());
                 $errors++;
             }
@@ -78,7 +80,7 @@ class GenerateAllCompetencesPdfsCommand extends Command
         if ($errors > 0) {
             $io->warning("$errors erreurs rencontrées (voir messages ci‑dessus).");
         } else {
-            $io->success("Tous les PDF ont été générés dans : `{$outDir}`");
+            $io->success('Tous les PDF ont été générés dans : '.$outDir);
         }
 
         return Command::SUCCESS;

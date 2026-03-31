@@ -63,7 +63,7 @@ class ApcCompetence extends BaseEntity
 {
     use LifeCycleTrait;
 
-    public const COLOREXCEl =
+    public const array COLOREXCEl =
         [
             'c1' => '009C2B26',
             'c2' => '00D07740',
@@ -189,7 +189,7 @@ class ApcCompetence extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcComposanteEssentielle[]
+     * @return Collection
      */
     public function getApcComposanteEssentielles(): Collection
     {
@@ -220,7 +220,7 @@ class ApcCompetence extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcNiveau[]
+     * @return Collection
      */
     public function getApcNiveaux(): Collection
     {
@@ -251,7 +251,7 @@ class ApcCompetence extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcRessourceCompetence[]
+     * @return Collection
      */
     public function getApcRessourceCompetences(): Collection
     {
@@ -279,7 +279,7 @@ class ApcCompetence extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcSaeCompetence[]
+     * @return Collection
      */
     public function getApcSaeCompetences(): Collection
     {
@@ -307,7 +307,7 @@ class ApcCompetence extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcSituationProfessionnelle[]
+     * @return Collection
      */
     public function getApcSituationProfessionnelles(): Collection
     {
@@ -334,11 +334,13 @@ class ApcCompetence extends BaseEntity
         return $this;
     }
 
+    /** @deprecated */
     public function getDepartement(): ?Departement
     {
         return $this->departement;
     }
 
+    /** @deprecated */
     public function setDepartement(?Departement $departement): self
     {
         //todo: a adapter pour passer par Version
@@ -372,7 +374,7 @@ class ApcCompetence extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcCompetenceSemestre[]
+     * @return Collection
      */
     public function getApcCompetenceSemestres(): Collection
     {
@@ -406,7 +408,7 @@ class ApcCompetence extends BaseEntity
 
     public function isGoodParcours(?ApcParcours $apcParcours = null): bool
     {
-        if (!$apcParcours instanceof \App\Entity\ApcParcours) {
+        if (!$apcParcours instanceof ApcParcours) {
             return true;
         }
 

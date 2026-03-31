@@ -3,12 +3,9 @@
 namespace App\Controller;
 
 use App\Classes\Apc\ApcStructure;
-use App\Classes\Latex\GenereFile;
 use App\Classes\MyPdfLatex;
-use App\Classes\Word\MyWord;
 use App\Entity\ApcRessource;
 use App\Entity\ApcSae;
-use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;

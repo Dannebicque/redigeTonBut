@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}Interface GT - Accès aux exports{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="h4 mb-4">Sélection de la spécialité</h2>
+                        <div class="row">
+                            {% for type, dpts in {'Tertiaires': departements|filter(d => d.typeDepartement == 'tertiaire'), 'Secondaires': departements|filter(d => d.typeDepartement == 'secondaire')} %}
+                                <div class="col-md-6">
+                                    <h3 class="h5">{{ type }}</h3>
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        {% for dpt in dpts %}
+                                            <a href="{{ path('change_specialite', {departement: dpt.id, redirect: 'gt_index'}) }}"
+                                               class="btn {{ currentDepartement and currentDepartement.id == dpt.id ? 'btn-primary' : 'btn-outline-primary' }} btn-sm">
+                                                {{ dpt.sigle }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if currentDepartement %}
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="h4 mb-3">Exports pour la spécialité : {{ currentDepartement.libelle }} ({{ user_data.versionPn }})</h2>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Exports globaux</h5>
+                            <div class="d-flex flex-wrap gap-3">
+                                <a href="{{ path('export_referentiel_competences', {version: user_data.version.id}) }}" class="btn btn-info btn-sm">Référentiel compétences (PDF)</a>
+                                <a href="{{ path('export_referentiel_format_excel', {version: user_data.version.id}) }}" class="btn btn-success btn-sm">Référentiel formation (Excel)</a>
+                                <a href="{{ path('export_referentiel_format_word', {version: user_data.version.id}) }}" class="btn btn-primary btn-sm">Fiches Ressources/SAE (Word)</a>
+                                <a href="{{ path('export_referentiel_synthese_format_excel', {version: user_data.version.id}) }}" class="btn btn-success btn-sm">Synthèse VH (Excel)</a>
+                                <a href="{{ path('export_tableau_croise_et_volume_horaire', {version: user_data.version.id}) }}" class="btn btn-warning btn-sm">Tableau croisé + VH</a>
+                                <a href="{{ path('argumentaire_index', {version: user_data.version.id}) }}" class="btn btn-info btn-sm">Argumentaire GT</a>
+                                <a href="{{ path('pdf_show', {sourceType: 'argumentaire', sourceId: user_data.version.id, documentKey: 'fiche'}) }}" class="btn btn-outline-info btn-sm">Argumentaire GT (PDF)</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for annee in user_data.annees %}
+                        <h3 class="h5 mt-4 mb-3">B.U.T. {{ annee.ordre }}</h3>
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                            {% if currentDepartement.typeStructure == 'type3' or annee.ordre >= 2 %}
+                                {% for p in parcours %}
+                                    <div class="col">
+                                        <div class="card h-100 border-{{ p.couleur }}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ p.libelle }} ({{ p.code }})</h5>
+                                                <ul class="list-unstyled">
+                                                    <li class="mb-2">
+                                                        <a href="{{ path('export_ressources_annee', {annee: annee.id, parcours: p.id, _format:'docx'}) }}" class="text-decoration-none">
+                                                            <i class="bi bi-file-earmark-word"></i> Ressources
+                                                        </a>
+                                                    </li>
+                                                    <li class="mb-2">
+                                                        <a href="{{ path('export_saes_annee', {annee: annee.id, parcours: p.id, _format:'docx'}) }}" class="text-decoration-none">
+                                                            <i class="bi bi-file-earmark-word"></i> SAÉ
+                                                        </a>
+                                                    </li>
+                                                    <li class="mb-2">
+                                                        <a href="{{ path('export_tableau_croise_annee', {annee: annee.id, parcours: p.id}) }}" class="text-decoration-none">
+                                                            <i class="bi bi-table"></i> Tableau croisé
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id, parcours: p.id}) }}" class="text-decoration-none">
+                                                            <i class="bi bi-clock"></i> Volumes horaires
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="d-flex flex-wrap gap-4">
+                                                <a href="{{ path('export_ressources_annee', {annee: annee.id, _format:'docx'}) }}" class="text-decoration-none">
+                                                    <i class="bi bi-file-earmark-word"></i> Ressources
+                                                </a>
+                                                <a href="{{ path('export_saes_annee', {annee: annee.id, _format:'docx'}) }}" class="text-decoration-none">
+                                                    <i class="bi bi-file-earmark-word"></i> SAÉ
+                                                </a>
+                                                <a href="{{ path('export_tableau_croise_annee', {annee: annee.id}) }}" class="text-decoration-none">
+                                                    <i class="bi bi-table"></i> Tableau croisé
+                                                </a>
+                                                <a href="{{ path('export_tableau_horaire_annee', {annee: annee.id}) }}" class="text-decoration-none">
+                                                    <i class="bi bi-clock"></i> Volumes horaires
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Veuillez sélectionner une spécialité pour afficher les exports disponibles.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

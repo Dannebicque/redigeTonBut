@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -19,6 +18,11 @@ class SearchController extends BaseController
         if ($this->getDepartement() === null) {
             return $this->json([]);
         }
+
+        if ($this->getVersion() === null) {
+            return $this->json([]);
+        }
+
         $t = [];
         $saes = $apcSaeRepository->findByVersion($this->getVersion());
         $ressources = $apcRessourceRepository->findByVersion($this->getVersion());

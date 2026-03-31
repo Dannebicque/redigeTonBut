@@ -43,6 +43,7 @@ final class AdminVersionningCompetencesController extends AbstractController
         DepartementRepository $departementRepository,
     ): Response
     {
+        //todo: récupérer la version du fichier
         $departement = $departementRepository->find($request->request->get('departement'));
 
         if (!$departement) {
@@ -52,7 +53,7 @@ final class AdminVersionningCompetencesController extends AbstractController
         $tabAncien = json_decode(file_get_contents($filePath), true);
 
         // encoder le référentiel de compétences en base de données en JSON
-        $tabActuel = $departementExport->genereJson($departement);
+        $tabActuel = $departementExport->genereJson($version);
         // comparer les deux fichiers
         $compareJson->setTabAncien($tabAncien);
         $compareJson->setTabActuel($tabActuel);

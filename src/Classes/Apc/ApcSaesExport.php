@@ -5,6 +5,7 @@ namespace App\Classes\Apc;
 use App\Classes\Word\MyWord;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
+use App\Entity\ApcSae;
 use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,9 +37,9 @@ class ApcSaesExport
     }
 
 
-    public function export(Annee $annee, string $_format, ?ApcParcours $parcours)
+    public function export(Annee $annee, string $_format, ?ApcParcours $parcours): ?Response
     {
-        if ($parcours instanceof \App\Entity\ApcParcours) {
+        if ($parcours instanceof ApcParcours) {
             $this->saes = $this->apcSaeParcoursRepository->findByAnneeArray($annee, $parcours);
         } else {
             $this->saes = $this->apcSaeRepository->findByAnneeArray($annee);
@@ -56,7 +57,7 @@ class ApcSaesExport
 
     }
 
-    private function exportZipWord(): \Symfony\Component\HttpFoundation\Response
+    private function exportZipWord(): Response
     {
         $zip = new ZipArchive();
         $fileName = 'saes-' . date('YmdHis') . '.zip';
@@ -67,7 +68,7 @@ class ApcSaesExport
         $tabFiles = [];
 
         foreach ($this->saes as $saes) {
-            /** @var \App\Entity\ApcSae $sae */
+            /** @var ApcSae $sae */
             foreach ($saes as $sae) {
                 if ($sae->getFicheAdaptationLocale() === false) {
                     $fichier = $this->myWord->exportAndSaveSae($sae, $this->dir);

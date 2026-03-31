@@ -3,12 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ApcCompetence;
-use App\Entity\ApcParcours;
-use App\Entity\Departement;
 use App\Entity\Domaine;
-use App\Entity\Iut;
-use App\Entity\IutSite;
-use App\Entity\IutSiteParcours;
+use App\Entity\PdfDocument;
+use App\Entity\PdfJob;
+use App\Entity\Semestre;
 use App\Entity\User;
 use App\Entity\Version;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -44,16 +42,16 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
         yield MenuItem::section('Gestion des BUT');
-        yield MenuItem::linkToCrud('Départements', 'fas fa-list', Departement::class);
-      yield MenuItem::linkToCrud('Version 2021', 'fas fa-list', Version::class)->setQueryParameter('annee', 2021);
-        yield MenuItem::linkToCrud('Version 2027', 'fas fa-list', Version::class)->setQueryParameter('annee', 2027);
-        yield MenuItem::linkToCrud('Parcours', 'fas fa-list', ApcParcours::class);
+        yield MenuItem::linkTo(DepartementCrudController::class, 'Départements', 'fas fa-list');
+      yield MenuItem::linkTo(VersionCrudController::class, 'Version 2021', 'fas fa-list')->setQueryParameter('annee', 2021);
+        yield MenuItem::linkTo(VersionCrudController::class, 'Version 2027', 'fas fa-list')->setQueryParameter('annee', 2027);
+        yield MenuItem::linkTo(ApcParcoursCrudController::class, 'Parcours', 'fas fa-list');
 
         if ($this->isGranted('ROLE_GT')) {
             yield MenuItem::section('Gestion des IUT');
-            yield MenuItem::linkToCrud('IUT', 'fas fa-list', Iut::class);
-            yield MenuItem::linkToCrud('IUT - Site', 'fas fa-list', IutSite::class);
-            yield MenuItem::linkToCrud('IUT - Site / Parcours', 'fas fa-list', IutSiteParcours::class);
+            yield MenuItem::linkTo(IutCrudController::class, 'IUT', 'fas fa-list');
+            yield MenuItem::linkTo(IutSiteCrudController::class, 'IUT - Site', 'fas fa-list');
+            yield MenuItem::linkTo(IutSiteParcoursCrudController::class, 'IUT - Site / Parcours', 'fas fa-list');
         }
 
         yield MenuItem::section('Voir les modifications');
@@ -63,15 +61,18 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('Choix des exports', 'fa fa-file', 'administration_apc_referentiel_export');
 
         yield MenuItem::section('Gestion des utilisateurs');
-        yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-list', User::class);
+        yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list');
         if ($this->isGranted('ROLE_GT')) {
-            yield MenuItem::linkToCrud('Domaines autorisés', 'fas fa-list', Domaine::class);
+            yield MenuItem::linkTo(DomaineCrudController::class, 'Domaines autorisés', 'fas fa-list');
         }
 
         if ($this->isGranted('ROLE_ADMIN')) {
 
             yield MenuItem::section('Administration');
-            yield MenuItem::linkToCrud('Compétences', 'fas fa-list', ApcCompetence::class);
+            yield MenuItem::linkTo(ApcCompetenceCrudController::class, 'Compétences', 'fas fa-list');
+            yield MenuItem::linkTo(SemestreCrudController::class, 'Semestres', 'fas fa-list');
+            yield MenuItem::linkTo(PdfJobCrudController::class, 'PDF Job', 'fas fa-print');
+            yield MenuItem::linkTo(PdfDocumentCrudController::class, 'PDF Documents', 'fas fa-download');
         }
     }
 }

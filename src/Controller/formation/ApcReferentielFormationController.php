@@ -9,17 +9,12 @@
 
 namespace App\Controller\formation;
 
-use App\Classes\Apc\ApcCoefficient;
 use App\Controller\BaseController;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcRessourceCompetence;
-use App\Entity\ApcSae;
 use App\Entity\ApcSaeCompetence;
 use App\Entity\Constantes;
-use App\Entity\Departement;
-use App\Entity\Semestre;
 use App\Entity\Version;
-use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcRessourceCompetenceRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeCompetenceRepository;
@@ -64,7 +59,7 @@ class ApcReferentielFormationController extends BaseController
 //    }
 
 
-    #[Route("/ajax-edit/{id}/{competence}/{type}", name: "apc_referentiel_formation_ajax", methods: ["POST"], options: ["expose" => true])]
+    #[Route("/ajax-edit/{id}/{competence}/{type}", name: "apc_referentiel_formation_ajax", options: ["expose" => true], methods: ["POST"])]
     public function ajaxEdit(
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         ApcSaeRepository $apcSaeRepository,

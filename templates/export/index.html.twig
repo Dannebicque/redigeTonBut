@@ -34,7 +34,7 @@
                         <div class="card h-100 border-{{ parcours.couleur }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ parcours.libelle }}</h5>
-                                <p class="card-text">
+                                <div class="card-text">
                                 <ul>
                                     <li>
                                         <a href="{{ path('export_pdf_adaptation_locale', {parcours: parcours.id}) }}">
@@ -71,7 +71,7 @@
                                         </a>
                                     </li>
                                 </ul>
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>

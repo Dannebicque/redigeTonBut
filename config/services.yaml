@@ -6,6 +6,11 @@
 parameters:
     app.annee_but: [1,2,3]
     api_key: '%env(resolve:API_KEY)%'
+    pdf.storage_dir: '%kernel.project_dir%/var/pdfs'
+    pdf.remote.base_url: '%env(PDF_REMOTE_BASE_URL)%'
+    pdf.remote.api_token: '%env(PDF_REMOTE_API_TOKEN)%'
+    pdf.remote.hmac_secret: '%env(PDF_REMOTE_HMAC_SECRET)%'
+    pdf.callback.bearer: '%env(PDF_CALLBACK_BEARER)%'
 
 services:
     # default configuration for services in *this* file
@@ -28,3 +33,43 @@ services:
     App\Utils\Files:
         arguments:
             $kernelProjectDir: '%kernel.project_dir%'
+
+    _instanceof:
+        App\Pdf\PdfPayloadBuilderInterface:
+            tags: ['app.pdf_payload_builder']
+
+    App\Pdf\:
+        resource: '../src/Pdf/'
+        autowire: true
+        autoconfigure: true
+
+    App\Pdf\Builder\:
+        resource: '../src/Pdf/Builder/'
+        autowire: true
+        autoconfigure: true
+
+    App\Pdf\PdfPayloadBuilderRegistry:
+        arguments:
+            $builders: !tagged_iterator app.pdf_payload_builder
+
+    App\Controller\Pdf\:
+        resource: '../src/Controller/Pdf/'
+        tags: ['controller.service_arguments']
+
+    App\Pdf\HmacSigner:
+        arguments:
+            $secret: '%pdf.remote.hmac_secret%'
+
+    App\Pdf\PdfStorage:
+        arguments:
+            $storageDir: '%pdf.storage_dir%'
+
+    App\Pdf\PdfRemoteClient:
+        arguments:
+            $baseUrl: '%pdf.remote.base_url%'
+            $apiToken: '%pdf.remote.api_token%'
+
+    App\Controller\Pdf\PdfCallbackController:
+        arguments:
+            $callbackBearer: '%pdf.callback.bearer%'
+            $logger: '@monolog.logger.pdf_callback'

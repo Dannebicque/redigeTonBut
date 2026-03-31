@@ -14,8 +14,6 @@ use App\Entity\ApcCompetence;
 use App\Entity\ApcNiveau;
 use App\Entity\ApcParcours;
 use App\Entity\ApcParcoursNiveau;
-use App\Entity\Departement;
-use App\Entity\Diplome;
 use App\Entity\Semestre;
 use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -44,7 +42,7 @@ class ApcNiveauRepository extends ServiceEntityRepository
             ->orderBy('n.ordre', 'ASC')
             ->addOrderBy('c.couleur', 'ASC');
 
-        if ($semestre->getApcParcours() instanceof \App\Entity\ApcParcours) {
+        if ($semestre->getApcParcours() instanceof ApcParcours) {
             $query->innerJoin(ApcParcoursNiveau::class, 'pn', 'WITH', 'n.id = pn.niveau')
                 ->andWhere('pn.parcours = :parcours')
                 ->setParameter('parcours', $semestre->getApcParcours()->getId());

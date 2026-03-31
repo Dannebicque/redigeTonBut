@@ -13,7 +13,6 @@ use App\Controller\BaseController;
 use App\Entity\ApcNiveau;
 use App\Entity\ApcParcours;
 use App\Entity\ApcParcoursNiveau;
-use App\Entity\Diplome;
 use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcParcoursNiveauRepository;
 use Symfony\Component\HttpFoundation\Response;

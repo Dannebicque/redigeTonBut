@@ -6,9 +6,9 @@ class DiffObject
 {
 
     /**
-     * @param int|string $key
+     * @param string $key
      * @param mixed $itemActuel
-     * @param mixed|null $param
+     * @param string|array|null $itemAncien
      */
     public function __construct(
         public string $key,

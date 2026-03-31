@@ -8,26 +8,25 @@ use App\Entity\ApcCompetence;
 use App\Entity\ApcComposanteEssentielle;
 use App\Entity\ApcNiveau;
 use App\Entity\ApcParcours;
-use App\Entity\ApcRessource;
-use App\Entity\ApcSae;
 use App\Entity\ApcSituationProfessionnelle;
 use App\Entity\Departement;
 use App\Entity\User;
 use App\Entity\Version;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use \Symfony\Bundle\SecurityBundle\Security;
 
 class CompetencesVoter extends Voter
 {
     // these strings are just invented: you can use anything
-    public const COMPETENCES_VIEW = 'COMPETENCES_VIEW';
+    public const string COMPETENCES_VIEW = 'COMPETENCES_VIEW';
 
-    public const COMPETENCES_EDIT = 'COMPETENCES_EDIT';
+    public const string COMPETENCES_EDIT = 'COMPETENCES_EDIT';
 
-    public const COMPETENCES_DUPLICATE = 'COMPETENCES_DUPLICATE';
+    public const string COMPETENCES_DUPLICATE = 'COMPETENCES_DUPLICATE';
 
-    public const COMPETENCES_DELETE = 'COMPETENCES_DELETE';
+    public const string COMPETENCES_DELETE = 'COMPETENCES_DELETE';
 
     private Security $security;
 
@@ -71,7 +70,7 @@ class CompetencesVoter extends Voter
                 return $this->canDelete($post, $user);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(
@@ -128,11 +127,11 @@ class CompetencesVoter extends Voter
     public function getDepartementFromSubject(ApcCompetence|ApcComposanteEssentielle|ApcParcours|ApcSituationProfessionnelle|ApcNiveau|ApcApprentissageCritique|Departement $post): ?Departement
     {
         if ($post instanceof ApcCompetence) {
-            return $post->getDepartement();
+            return $post->getVersion()->getDepartement();
         }
 
         if ($post instanceof ApcApprentissageCritique) {
-            return $post->getDepartement();
+            return $post->getVersion()->getDepartement();
         }
 
         if ($post instanceof Departement) {
@@ -140,19 +139,19 @@ class CompetencesVoter extends Voter
         }
 
         if ($post instanceof ApcComposanteEssentielle) {
-            return $post->getDepartement();
+            return $post->getVersion()->getDepartement();
         }
 
         if ($post instanceof ApcParcours) {
-            return $post->getDepartement();
+            return $post->getVersion()->getDepartement();
         }
 
         if ($post instanceof ApcSituationProfessionnelle) {
-            return $post->getDepartement();
+            return $post->getVersion()->getDepartement();
         }
 
         if ($post instanceof ApcNiveau) {
-            return $post->getDepartement();
+            return $post->getVersion()->getDepartement();
         }
 
         return null;

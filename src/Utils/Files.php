@@ -52,7 +52,7 @@ class Files
         return null;
     }
 
-    public function getLastVersionReferentielFile(Departement $departement)
+    public function getLastVersionReferentielFile(Departement $departement): ?string
     {
         $directory = $this->projectDir . '/public/version-referentiel/' . $departement->getNumeroAnnexe();
         $files = scandir($directory);

@@ -25,7 +25,7 @@
                 <th class="text-center">ECARTS</th>
             </tr>
             </thead>
-            <tbody x-data="getUpdateStructure({% if codeParcours is defined %}{{ codeParcours }}{% else %}null{%
+            <tbody x-data="getUpdateStructure({% if (codeParcours is defined) %}{{ codeParcours }}{% else %}null{%
                 endif %})" x-init="donnees = await (await fetch(Routing.generate
                 ('tableau_api_structure', {parcours: {% if codeParcours is defined %}{{ codeParcours }}{% else %}null{%
                 endif %}})))

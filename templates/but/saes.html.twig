@@ -1,7 +1,38 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    {#  todo: bouton : Bouton export  #}
+    {% if compareMode|default(false) %}
+        <div class="alert alert-info mb-3">
+            Comparaison active: B.U.T. {{ anneePrecedente.ordre }} (version {{ versionPrecedente.id }}) -> B.U.T. {{ annee.ordre }}.
+            Le point de rapprochement est le code SAE.
+        </div>
+    {% endif %}
+    {% if pendingPdfSaes|default([])|length > 0 %}
+        <div class="alert alert-warning mb-3">
+            <strong>Demandes PDF en attente ({{ pendingPdfSaes|length }})</strong>
+            <ul class="mb-0 mt-2">
+                {% for item in pendingPdfSaes %}
+                    <li>{{ item.code }} - {{ item.libelle }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if errorPdfSaes|default([])|length > 0 %}
+        <div class="alert alert-danger mb-3">
+            <strong>Erreurs de generation PDF ({{ errorPdfSaes|length }})</strong>
+            <ul class="mb-0 mt-2">
+                {% for item in errorPdfSaes %}
+                    <li>
+                        {{ item.code }} - {{ item.libelle }}
+                        {% if item.errorMessage %}
+                            ({{ item.errorMessage }})
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
         {% for semestre in semestres %}
             <li class="nav-item" role="presentation">
@@ -56,9 +87,23 @@
                 </div>
                 <div class="row g-4 mb-4">
                 {% for sae in saes[semestre.ordreLmd] %}
+                    {% set codeKey = (sae.codeMatiere|trim)|upper %}
+                    {% set saeDiff = diffBySemestre[semestre.ordreLmd][codeKey]|default(null) %}
                     {{ include('but/_cardSae.html.twig') }}
                 {% endfor %}
                 </div>
+                {% if compareMode|default(false) and removedBySemestre[semestre.ordreLmd]|default([])|length > 0 %}
+                    <div class="card border-danger mb-4">
+                        <div class="card-header bg-danger text-white">SAE supprimees depuis la version precedente</div>
+                        <div class="card-body">
+                            <ul class="mb-0">
+                                {% for code, removed in removedBySemestre[semestre.ordreLmd] %}
+                                    <li><strong>{{ removed.codeMatiere }}</strong> - {{ removed.libelle }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="tab-pane" id="semestre_{{ semestre.id }}_tableau" role="tabpanel">
                 <div class="row">
@@ -83,23 +128,35 @@
                         </thead>
                         <tbody>
                         {% for sae in saes[semestre.ordreLmd]|filter(sae => sae.ficheAdaptationLocale == false) %}
+                            {% set codeKey = (sae.codeMatiere|trim)|upper %}
+                            {% set saeDiff = diffBySemestre[semestre.ordreLmd][codeKey]|default(null) %}
                             <tr {% if sae.ficheAdaptationLocale == true %}class="bg-warning text-white"{% endif %}>
                                 <td style="width:20%">
                                     <a href="{{ path('but_fiche_sae',
-                                        {'apcSae': sae.id, parcours: parcours != null ? parcours.id : null}) }}" target="_blank">
+                                        {'apcSae': sae.id, parcours: parcours != null ? parcours.id : null, compare: compareMode|default(false) ? 1 : null}) }}" target="_blank">
                                     {{ sae.codeMatiere }}
                                     </a>
+                                    {% if compareMode|default(false) and saeDiff is not null %}
+                                        {% if saeDiff.status == 'added' %}
+                                            <span class="badge bg-success ms-1">Ajoutee</span>
+                                        {% elseif saeDiff.status == 'changed' %}
+                                            <span class="badge bg-warning text-dark ms-1">Modifiee</span>
+                                        {% endif %}
+                                    {% endif %}
                                 </td>
                                 <td style="width:50%">
                                     <a href="{{ path('but_fiche_sae',
-                                        {'apcSae': sae.id, parcours: parcours != null ? parcours.id : null}) }}" target="_blank">
+                                        {'apcSae': sae.id, parcours: parcours != null ? parcours.id : null, compare: compareMode|default(false) ? 1 : null}) }}" target="_blank">
                                     {{ sae.libelle }}
+                                    {% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.libelle is defined %}
+                                        <br><small class="text-muted">N-1: {{ saeDiff.changes.libelle.old }}</small>
+                                    {% endif %}
                                     </a>
                                 </td>
                                 {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
-                                <td class="bg-warning text-center" style="width:10%">{{ sae.heuresTotales }}</td>
-                                <td class="bg-warning text-center" style="width:10%">{{ sae.tpPpn }}</td>
-                                <td class="bg-warning text-center" style="width:10%">{{ sae.projetPpn }}</td>
+                                <td class="bg-warning text-center" style="width:10%">{{ sae.heuresTotales }}{% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.heuresTotales is defined %}<br><small class="text-muted">({{ saeDiff.changes.heuresTotales.old }})</small>{% endif %}</td>
+                                <td class="bg-warning text-center" style="width:10%">{{ sae.tpPpn }}{% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.tpPpn is defined %}<br><small class="text-muted">({{ saeDiff.changes.tpPpn.old }})</small>{% endif %}</td>
+                                <td class="bg-warning text-center" style="width:10%">{{ sae.projetPpn }}{% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.projetPpn is defined %}<br><small class="text-muted">({{ saeDiff.changes.projetPpn.old }})</small>{% endif %}</td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -125,6 +182,30 @@
 {% endblock %}
 
 {% block bouton_header %}
-
+    {% if compareMode|default(false) %}
+        {% if parcours is not null %}
+            <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm btn-outline-secondary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-arrow-left"></i>
+                <span>Retour affichage</span>
+            </a>
+        {% else %}
+            <a href="{{ path('but_sae_annee', {annee: annee.id}) }}" class="btn btn-sm btn-outline-secondary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-arrow-left"></i>
+                <span>Retour affichage</span>
+            </a>
+        {% endif %}
+    {% elseif user_data.version.previousVersion is not null %}
+        {% if parcours is not null %}
+            <a href="{{ path('but_sae_annee_comparaison', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-file-diff"></i>
+                <span>Comparer N-1</span>
+            </a>
+        {% else %}
+            <a href="{{ path('but_sae_annee_comparaison', {annee: annee.id}) }}" class="btn btn-sm btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-file-diff"></i>
+                <span>Comparer N-1</span>
+            </a>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 

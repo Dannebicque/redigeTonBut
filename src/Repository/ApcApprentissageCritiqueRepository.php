@@ -38,7 +38,7 @@ class ApcApprentissageCritiqueRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByVersionBuilder(Version $version)
+    public function findByVersionBuilder(Version $version): \Doctrine\ORM\QueryBuilder
     {
         return $this->createQueryBuilder('a')
             ->innerJoin(ApcNiveau::class, 'n', 'WITH', 'a.niveau = n.id')

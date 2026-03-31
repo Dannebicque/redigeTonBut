@@ -19,8 +19,8 @@ class UpdatePppCommand extends Command
 
 
     public function __construct(
-        private ApcRessourceRepository $apcRessourceRepository,
-        private EntityManagerInterface $entityManager
+        private readonly ApcRessourceRepository $apcRessourceRepository,
+        private readonly EntityManagerInterface $entityManager
     ) {
         parent::__construct();
     }

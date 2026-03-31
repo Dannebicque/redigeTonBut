@@ -17,7 +17,7 @@ class UserCreateCompteSubscriber implements EventSubscriberInterface
     }
 
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             UserEvent::CREATION_COMPTE => 'onCreationCompte',

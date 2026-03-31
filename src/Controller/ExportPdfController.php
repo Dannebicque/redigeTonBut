@@ -10,8 +10,9 @@ use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use App\Repository\SemestreRepository;
 use DateTime;
-use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-use Knp\Snappy\Pdf;
+//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+//use Knp\Snappy\Pdf;
+use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -19,9 +20,10 @@ class ExportPdfController extends BaseController
 {
     #[Route('/export/pdf/parcours', name: 'export_pdf_parcours')]
     public function parcours(
-        Pdf $knpSnappyPdf,
+//        Pdf $knpSnappyPdf,
         ApcRessourceRepository $apcRessourceRepository
     ): Response {
+        throw new Exception('Fonctionnalité temporairement indisponible');
         $nbParcours = $this->getVersion()?->getApcParcours()->count();
         $semestres = $this->getVersion()->getSemestres();
 
@@ -46,26 +48,28 @@ class ExportPdfController extends BaseController
             'departement' => $this->getDepartement(),
             'semestres' => $semestres,
             'ressources' => $ressources,
+            'version' => $this->getVersion(),
         ]);
 
         $header = $this->renderView('export_pdf/_header.html.twig',
             ['sigle' => $this->getDepartement()->getSigle()]);
 
-        return new PdfResponse(
-            $knpSnappyPdf->getOutputFromHtml($html,
-                [
-                    'header-html' => $header,
-                ]
-            ),
-            $name
-        );
+//        return new PdfResponse(
+//            $knpSnappyPdf->getOutputFromHtml($html,
+//                [
+//                    'header-html' => $header,
+//                ]
+//            ),
+//            $name
+//        );
     }
 
     #[Route('/export/pdf/tronc-commun', name: 'export_pdf_tronc_commun')]
     public function troncCommun(
-        Pdf $knpSnappyPdf,
+//        Pdf $knpSnappyPdf,
         ApcRessourceRepository $apcRessourceRepository
     ): Response {
+        throw new Exception('Fonctionnalité temporairement indisponible');
         $nbParcours = $this->getVersion()?->getApcParcours()->count();
         $semestres = $this->getVersion()->getSemestres();
 
@@ -90,26 +94,27 @@ class ExportPdfController extends BaseController
         $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_tronc_commun_' . $day->format('dmYHis') . '.pdf';
         $html = $this->renderView('formation/export-referentiel.html.twig', [
             'allParcours' => $this->getVersion()->getApcParcours(),
-            'departement' => $this->getVersion(),
+            'departement' => $this->getDepartement(),
+            'version' => $this->getVersion(),
             'semestres' => $semestres,
             'ressources' => $ressources,
         ]);
 
         $header = $this->renderView('export_pdf/_header.html.twig', ['sigle' => $this->getDepartement()->getSigle()]);
 
-        return new PdfResponse(
-            $knpSnappyPdf->getOutputFromHtml($html,
-                [
-                    'header-html' => $header,
-                ]
-            ),
-            $name
-        );
+//        return new PdfResponse(
+//            $knpSnappyPdf->getOutputFromHtml($html,
+//                [
+//                    'header-html' => $header,
+//                ]
+//            ),
+//            $name
+//        );
     }
 
     #[Route('/export/pdf/{parcours}', name: 'export_pdf')]
     public function index(
-        Pdf $knpSnappyPdf,
+//        Pdf $knpSnappyPdf,
         SemestreRepository $semestreRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
@@ -117,6 +122,7 @@ class ExportPdfController extends BaseController
         ApcRessourceRepository $apcRessourceRepository,
         ApcParcours $parcours
     ): Response {
+        throw new Exception('Fonctionnalité temporairement indisponible');
         if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
             $semestres = $semestreRepository->findByParcours($parcours);
         } else {
@@ -141,6 +147,7 @@ class ExportPdfController extends BaseController
         $html = $this->renderView('formation/export-referentiel.html.twig', [
             'allParcours' => $this->getVersion()->getApcParcours(),
             'departement' => $this->getDepartement(),
+            'version' => $this->getVersion(),
             'semestres' => $semestres,
             'saes' => $saes,
             'ressources' => $ressources,
@@ -151,20 +158,20 @@ class ExportPdfController extends BaseController
             ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
         $this->renderView('export_pdf/_footer.html.twig');
 
-        return new PdfResponse(
-            $knpSnappyPdf->getOutputFromHtml($html,
-                [
-                    'header-html' => $header,
-//                    'footer-html' => $footer,
-                ]
-            ),
-            $name
-        );
+//        return new PdfResponse(
+//            $knpSnappyPdf->getOutputFromHtml($html,
+//                [
+//                    'header-html' => $header,
+////                    'footer-html' => $footer,
+//                ]
+//            ),
+//            $name
+//        );
     }
 
     #[Route('/export/al/pdf/{parcours}', name: 'export_pdf_adaptation_locale')]
     public function exportPdfAl(
-        Pdf $knpSnappyPdf,
+//        Pdf $knpSnappyPdf,
         SemestreRepository $semestreRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
@@ -172,6 +179,7 @@ class ExportPdfController extends BaseController
         ApcRessourceRepository $apcRessourceRepository,
         ApcParcours $parcours
     ): Response {
+        throw new Exception('Fonctionnalité temporairement indisponible');
         if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
             $semestres = $semestreRepository->findByParcours($parcours);
         } else {
@@ -196,6 +204,7 @@ class ExportPdfController extends BaseController
         $html = $this->renderView('formation/export-referentiel.html.twig', [
             'allParcours' => $this->getVersion()->getApcParcours(),
             'departement' => $this->getDepartement(),
+            'version' => $this->getVersion(),
             'semestres' => $semestres,
             'saes' => $saes,
             'ressources' => $ressources,
@@ -206,14 +215,14 @@ class ExportPdfController extends BaseController
             ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
         $this->renderView('export_pdf/_footer.html.twig');
 
-        return new PdfResponse(
-            $knpSnappyPdf->getOutputFromHtml($html,
-                [
-                    'header-html' => $header,
-//                    'footer-html' => $footer,
-                ]
-            ),
-            $name
-        );
+//        return new PdfResponse(
+//            $knpSnappyPdf->getOutputFromHtml($html,
+//                [
+//                    'header-html' => $header,
+////                    'footer-html' => $footer,
+//                ]
+//            ),
+//            $name
+//        );
     }
 }

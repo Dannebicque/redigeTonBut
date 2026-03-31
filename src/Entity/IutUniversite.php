@@ -25,7 +25,7 @@ class IutUniversite
     /**
      * @var Collection<int, Iut>
      */
-    #[ORM\OneToMany(targetEntity: Iut::class, mappedBy: 'universite')]
+    #[ORM\OneToMany(mappedBy: 'universite', targetEntity: Iut::class)]
     private Collection $iuts;
 
     public function __construct()

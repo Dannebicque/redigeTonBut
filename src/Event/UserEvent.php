@@ -8,9 +8,9 @@ use App\Entity\User;
 
 class UserEvent
 {
-    public const CREATION_COMPTE = 'creation.compte';
+    public const string CREATION_COMPTE = 'creation.compte';
 
-    public const INIT_PASSWORD = 'init.password';
+    public const string INIT_PASSWORD = 'init.password';
 
     protected User $user;
 

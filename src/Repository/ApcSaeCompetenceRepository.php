@@ -12,7 +12,6 @@ namespace App\Repository;
 use App\Entity\ApcCompetence;
 use App\Entity\ApcSae;
 use App\Entity\ApcSaeCompetence;
-use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

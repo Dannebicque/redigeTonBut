@@ -1,6 +1,19 @@
 <div class="row">
     <div class="col-md-6">
         <table class="table bg-white">
+            {% if compareMode|default(false) and saeDiff is not null %}
+                <tr>
+                    <td colspan="2">
+                        {% if saeDiff.status == 'added' %}
+                            <span class="badge bg-success">Ajoutee depuis N-1</span>
+                        {% elseif saeDiff.status == 'changed' %}
+                            <span class="badge bg-warning text-dark">Modifiee par rapport a N-1</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Identique a N-1</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Parcours</th>
                 <td>
@@ -20,7 +33,12 @@
             </tr>
             <tr>
                 <th>Code et Nom</th>
-                <td>{{ apc_sae.codeMatiere }} | {{ apc_sae.libelle }}</td>
+                <td>
+                    {{ apc_sae.codeMatiere }} | {{ apc_sae.libelle }}
+                    {% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.libelle is defined %}
+                        <br><small class="text-muted">N-1: {{ saeDiff.changes.libelle.old }}</small>
+                    {% endif %}
+                </td>
             </tr>
         </table>
     </div>
@@ -41,6 +59,16 @@
 <div class="row">
     <div class="col-md-6">
         <h3 class="mt-5 mb-3">Compétences ciblées</h3>
+        {% if compareMode|default(false) and saeDiff is not null and saeDiff.linkedChanges is defined and (saeDiff.linkedChanges.competences.added|length > 0 or saeDiff.linkedChanges.competences.removed|length > 0) %}
+            <div class="mb-2 small">
+                {% for item in saeDiff.linkedChanges.competences.added %}
+                    <span class="badge bg-success me-1">+ {{ item }}</span>
+                {% endfor %}
+                {% for item in saeDiff.linkedChanges.competences.removed %}
+                    <span class="badge bg-danger me-1">- {{ item }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
         {% for competence in apc_sae.apcSaeCompetences %}
             <div class="d-flex mb-2">
                 <span class="badge badge-{{ competence.competence.couleur }} me-2">&nbsp;</span>
@@ -49,14 +77,38 @@
         {% endfor %}
 
         <h3 class="mt-5 mb-3">Apprentissages critiques</h3>
+        {% if compareMode|default(false) and saeDiff is not null and saeDiff.linkedChanges is defined and (saeDiff.linkedChanges.acs.added|length > 0 or saeDiff.linkedChanges.acs.removed|length > 0) %}
+            <div class="mb-2 small">
+                {% for item in saeDiff.linkedChanges.acs.added %}
+                    <span class="badge bg-success me-1">+ {{ item }}</span>
+                {% endfor %}
+                {% for item in saeDiff.linkedChanges.acs.removed %}
+                    <span class="badge bg-danger me-1">- {{ item }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
         {% for ac in apc_sae.apcSaeApprentissageCritiques %}
+            {% if ac.apprentissageCritique.competence != null  %}
             <div class="d-flex mb-2">
                 <span class="badge badge-{{ ac.apprentissageCritique.competence.couleur }} me-2">{{ ac.apprentissageCritique.code }}</span>
                 <div>{{ ac.apprentissageCritique.libelle }}</div>
             </div>
+            {% else %}
+            Erreur AC
+                {% endif %}
         {% endfor %}
 
         <h3 class="mt-5 mb-3">Ressources mobilisées et combinées</h3>
+        {% if compareMode|default(false) and saeDiff is not null and saeDiff.linkedChanges is defined and (saeDiff.linkedChanges.ressources.added|length > 0 or saeDiff.linkedChanges.ressources.removed|length > 0) %}
+            <div class="mb-2 small">
+                {% for item in saeDiff.linkedChanges.ressources.added %}
+                    <span class="badge bg-success me-1">+ {{ item }}</span>
+                {% endfor %}
+                {% for item in saeDiff.linkedChanges.ressources.removed %}
+                    <span class="badge bg-danger me-1">- {{ item }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
         {% for ressource in ressources %}
             <div class="d-flex mb-2">
                 <span class="badge bg-primary me-2">{{ ressource.ressource.codeMatiere }}</span>
@@ -67,8 +119,34 @@
     <div class="col-md-6">
         <h3 class="mt-5">Objectifs et problématique professionnelle</h3>
         <p>{{ apc_sae.objectifs != null ? apc_sae.objectifs|markdown_to_html : '' }}</p>
+        {% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.objectifs is defined %}
+            <div class="alert alert-warning small">
+                <strong>Anciens objectifs (N-1)</strong><br>
+                {{ saeDiff.changes.objectifs.old != null ? saeDiff.changes.objectifs.old|markdown_to_html : '' }}
+            </div>
+        {% endif %}
         <h3 class="mt-5">Descriptif générique</h3>
         <p>{{ apc_sae.description != null ? apc_sae.description|markdown_to_html : '' }}</p>
+        {% if compareMode|default(false) and saeDiff is not null and saeDiff.changes.description is defined %}
+            <div class="alert alert-warning small">
+                <strong>Ancienne description (N-1)</strong><br>
+                {{ saeDiff.changes.description.old != null ? saeDiff.changes.description.old|markdown_to_html : '' }}
+            </div>
+        {% endif %}
+        {% if compareMode|default(false) and saeDiff is not null and (saeDiff.changes.portfolio is defined or saeDiff.changes.stage is defined or saeDiff.changes.ficheAdaptationLocale is defined) %}
+            <h3 class="mt-5">Champs de fiche</h3>
+            <div class="small">
+                {% if saeDiff.changes.portfolio is defined %}
+                    <div><strong>Portfolio:</strong> {{ saeDiff.changes.portfolio.old ? 'Oui' : 'Non' }} -> {{ saeDiff.changes.portfolio.new ? 'Oui' : 'Non' }}</div>
+                {% endif %}
+                {% if saeDiff.changes.stage is defined %}
+                    <div><strong>Stage:</strong> {{ saeDiff.changes.stage.old ? 'Oui' : 'Non' }} -> {{ saeDiff.changes.stage.new ? 'Oui' : 'Non' }}</div>
+                {% endif %}
+                {% if saeDiff.changes.ficheAdaptationLocale is defined %}
+                    <div><strong>Adaptation locale:</strong> {{ saeDiff.changes.ficheAdaptationLocale.old ? 'Oui' : 'Non' }} -> {{ saeDiff.changes.ficheAdaptationLocale.new ? 'Oui' : 'Non' }}</div>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
     <div class="col-md-12">
         <h3 class="mt-4">Exemple de mise en place de SAE</h3>

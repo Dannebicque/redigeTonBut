@@ -26,13 +26,13 @@ class QapesCritere
     /**
      * @var Collection<int, QapesSaeCritereReponse>
      */
-    #[ORM\OneToMany(targetEntity: QapesSaeCritereReponse::class, mappedBy: 'critere')]
+    #[ORM\OneToMany(mappedBy: 'critere', targetEntity: QapesSaeCritereReponse::class)]
     private Collection $qapesSaeCritereReponses;
 
     /**
      * @var Collection<int, QapesCritereReponse>
      */
-    #[ORM\OneToMany(targetEntity: QapesCritereReponse::class, mappedBy: 'qapesCritere', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'qapesCritere', targetEntity: QapesCritereReponse::class, cascade: ['persist', 'remove'])]
     private Collection $qapesCritereReponses;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]

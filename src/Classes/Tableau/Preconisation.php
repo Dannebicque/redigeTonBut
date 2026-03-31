@@ -16,13 +16,13 @@ use App\Repository\ApcSaeRepository;
 class Preconisation
 {
     /**
-     * @var \App\Repository\ApcSaeParcoursRepository
+     * @var ApcSaeParcoursRepository
      */
-    public $apcSaeParcoursRepository;
+    public ApcSaeParcoursRepository $apcSaeParcoursRepository;
     /**
-     * @var \App\Repository\ApcRessourceParcoursRepository
+     * @var ApcRessourceParcoursRepository
      */
-    public $apcRessourceParcoursRepository;
+    public ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
     private array $semestres;
     private array $donneesSemestres;
 

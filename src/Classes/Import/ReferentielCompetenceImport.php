@@ -21,13 +21,14 @@ use App\Entity\ApcSaeCompetence;
 use App\Entity\ApcSaeParcours;
 use App\Entity\ApcSaeRessource;
 use App\Entity\ApcSituationProfessionnelle;
-use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Entity\Version;
 use App\Utils\Codification;
 use App\Utils\Convert;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use SimpleXMLElement;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 class ReferentielCompetenceImport
@@ -277,7 +278,7 @@ class ReferentielCompetenceImport
 
     }
 
-    private function openXmlFile(): \SimpleXMLElement|false
+    private function openXmlFile(): SimpleXMLElement|false
     {
         if (file_exists($this->fichier)) {
             return simplexml_load_string(file_get_contents($this->fichier));
@@ -451,7 +452,7 @@ class ReferentielCompetenceImport
 
     }
 
-    private function openExcelFile(): \PhpOffice\PhpSpreadsheet\Spreadsheet
+    private function openExcelFile(): Spreadsheet
     {
         $reader = new Xlsx();
 

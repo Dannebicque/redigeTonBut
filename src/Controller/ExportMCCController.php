@@ -4,12 +4,9 @@ namespace App\Controller;
 
 use App\Classes\Excel\ExcelWriter;
 use App\Classes\Mcc;
-use App\Classes\Tableau\Structure;
-use App\Entity\ApcParcours;
-use App\Entity\Departement;
 use App\Repository\ApcParcoursRepository;
 use App\Repository\DepartementRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\VersionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -25,22 +22,22 @@ class ExportMCCController extends BaseController
 
     #[Route('/', name: 'index')]
     public function index(
-        DepartementRepository $departementRepository
+        VersionRepository $versionRepository
     ): Response
     {
         return $this->render('export/mcc/index.html.twig', [
-            'departements' => $departementRepository->findAll(),
+            'versions' => $versionRepository->findAll(),
         ]);
     }
 
     #[Route('/parcours', name: 'parcours')]
-    public function getParcours(DepartementRepository $departementRepository, Request $request): Response
+    public function getParcours(VersionRepository $versionRepository, Request $request): Response
     {
         //todo: passer par Version ?
-        $departement = $departementRepository->find($request->query->get('departement'));
-        if ($departement !== null) {
+        $version = $versionRepository->find($request->query->get('departement'));
+        if ($version !== null) {
             return $this->render('export/mcc/parcours.html.twig', [
-                'parcours' => $departement->getApcParcours(),
+                'parcours' => $version->getApcParcours(),
             ]);
         }
     }
@@ -48,21 +45,21 @@ class ExportMCCController extends BaseController
     #[Route('/genere', name: 'genere')]
     public function genere(
         ApcParcoursRepository $apcParcoursRepository,
-        DepartementRepository $departementRepository,
+        VersionRepository $departementRepository,
         Mcc $mcc, Request $request): Response
     {
-        $departement = $departementRepository->find($request->request->get('departement'));
+        $version = $departementRepository->find($request->request->get('departement'));
         $parcours = [];
-        $formParcours = $request->request->get('parcours');
+        $formParcours = $request->request->all()['parcours'];
         foreach ($formParcours as $id) {
             $parcours[$id] = $apcParcoursRepository->find($id);
         }
 
-        if ($departement !== null) {
+        if ($version !== null) {
             $iut = $request->request->get('iut');
             $type = $request->request->get('type');
 
-            return $mcc->genereFichierExcel($this->excelWriter, $departement, $iut, $parcours, $type === 'fi');
+            return $mcc->genereFichierExcel($this->excelWriter, $version, $iut, $parcours, $type === 'fi');
         }
     }
 }

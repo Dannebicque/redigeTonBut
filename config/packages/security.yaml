@@ -4,8 +4,8 @@ security:
     ROLE_LABSET: ROLE_IUT
     ROLE_GT: ROLE_CPN
     ROLE_CPN: ROLE_PACD
+    ROLE_EDITEUR: ROLE_CPN
     ROLE_PACD: ROLE_EDITEUR
-    ROLE_EDITEUR: ROLE_IUT
 
   password_hashers:
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
@@ -49,6 +49,7 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
+    - { path: ^/pdf/callback, roles: PUBLIC_ACCESS }
     - { path: ^/inscription, roles: PUBLIC_ACCESS }
     - { path: ^/api, roles: PUBLIC_ACCESS }
     - { path: ^/login, roles: PUBLIC_ACCESS }
@@ -57,4 +58,4 @@ security:
     - { path: ^/labset-public/, roles: [ ROLE_IUT ] }
     - { path: ^/labset, roles: [ ROLE_LABSET ] }
     - { path: ^/administration, roles: [ ROLE_GT, ROLE_PACD, ROLE_CPN ] }
-    - { path: ^/, roles: [ ROLE_GT, ROLE_PACD, ROLE_CPN, ROLE_CPN_LECTEUR, ROLE_IUT, ROLE_EDITEUR, ROLE_LECTEUR ] }
+    - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

@@ -48,14 +48,14 @@ class Semestre extends BaseEntity
     /**
      * @var Collection<int, ApcRessource>
      */
-    #[ORM\OneToMany(targetEntity: ApcRessource::class, mappedBy: 'semestre')]
+    #[ORM\OneToMany(mappedBy: 'semestre', targetEntity: ApcRessource::class)]
     #[ORM\OrderBy(['ordre' => 'ASC'])]
     private Collection $apcRessources;
 
     /**
      * @var Collection<int, ApcSae>
      */
-    #[ORM\OneToMany(targetEntity: ApcSae::class, mappedBy: 'semestre')]
+    #[ORM\OneToMany(mappedBy: 'semestre', targetEntity: ApcSae::class)]
     private Collection $apcSaes;
 
     #[ORM\Column(type: Types::FLOAT)]
@@ -76,7 +76,7 @@ class Semestre extends BaseEntity
     /**
      * @var Collection<int, ApcCompetenceSemestre>
      */
-    #[ORM\OneToMany(targetEntity: ApcCompetenceSemestre::class, mappedBy: 'semestre')]
+    #[ORM\OneToMany(mappedBy: 'semestre', targetEntity: ApcCompetenceSemestre::class)]
     private Collection $apcCompetenceSemestres;
 
     #[ORM\Column(type: Types::FLOAT)]
@@ -179,6 +179,11 @@ class Semestre extends BaseEntity
         $this->suivant = $suivant;
     }
 
+    public function __toString(): string
+    {
+        return $this->display();
+    }
+
     public function display(): string
     {
         if ($this->getAnnee() instanceof Annee) {
@@ -199,7 +204,7 @@ class Semestre extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcRessource[]
+     * @return Collection
      */
     public function getApcRessources(): Collection
     {
@@ -227,7 +232,7 @@ class Semestre extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcSae[]
+     * @return Collection
      */
     public function getApcSaes(): Collection
     {
@@ -315,7 +320,7 @@ class Semestre extends BaseEntity
     }
 
     /**
-     * @return Collection|ApcCompetenceSemestre[]
+     * @return Collection
      */
     public function getApcCompetenceSemestres(): Collection
     {
@@ -340,12 +345,6 @@ class Semestre extends BaseEntity
         }
 
         return $this;
-    }
-
-    /** @deprecated */
-    public function getDepartement(): ?Departement
-    {
-        return $this->getAnnee()?->getDepartement();
     }
 
     public function getVersion(): ?Version
@@ -523,16 +522,10 @@ class Semestre extends BaseEntity
 
     public function ordreAnneeXml(): ?int
     {
-        switch ($this->ordreLmd) {
-            case 1:
-            case 3:
-            case 5:
-                return 1;
-            case 2:
-            case 4:
-            case 6:
-                return 2;
-        }
-        return null;
+        return match ($this->ordreLmd) {
+            1, 3, 5 => 1,
+            2, 4, 6 => 2,
+            default => null,
+        };
     }
 }

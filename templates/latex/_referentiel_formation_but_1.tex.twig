@@ -1,6 +1,6 @@
 \chapter{Référentiel de la première année du B.U.T. commun à tous les parcours}
 
-{% for semestre in departement.semestres|filter(semestre => (semestre.ordreLmd == 1 or semestre.ordreLmd == 2)) %}
+{% for semestre in version.semestres|filter(semestre => (semestre.ordreLmd == 1 or semestre.ordreLmd == 2)) %}
 \section{Semestre {{semestre.ordreLmd}}}
 \subsection{Tableau croisé}
 

@@ -13,6 +13,7 @@ namespace App\Controller\formation;
 use App\Classes\Apc\ApcSaeAddEdit;
 use App\Classes\Apc\ApcSaeOrdre;
 use App\Controller\BaseController;
+use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
 use App\Entity\Constantes;
@@ -47,7 +48,6 @@ class ApcSaeController extends BaseController
             }
 
             $form = $this->createForm(ApcSaeType::class, $apcSae, [
-                'departement' => $this->getDepartement(),
                 'version' => $this->getVersion(),
                 'editable' => $this->isGranted('ROLE_GT'),
                 'verouille_croise' => $this->getVersion()?->isVerouilleCroise(),
@@ -66,7 +66,7 @@ class ApcSaeController extends BaseController
                     'SAÉ ajoutée avec succès.'
                 );
 
-                if ($parcours instanceof \App\Entity\ApcParcours) {
+                if ($parcours instanceof ApcParcours) {
                     return $this->redirectToRoute('but_sae_annee',
                         [
                             'annee' => $apcSae->getSemestre()->getAnnee()->getId(),
@@ -131,7 +131,7 @@ class ApcSaeController extends BaseController
                 $eventDispatcher->dispatch($saeEvent, SaeEvent::UPDATE_CODIFICATION);
 
 
-                if (null !== $request->request->get('btn_update') && $apcSae->getSemestre() instanceof Semestre && $apcSae->getSemestre()->getAnnee() instanceof \App\Entity\Annee) {
+                if (null !== $request->request->get('btn_update') && $apcSae->getSemestre() instanceof Semestre && $apcSae->getSemestre()->getAnnee() instanceof Annee) {
                     if ($parcours === null) {
                         return $this->redirectToRoute('but_sae_annee', [
                             'annee' => $apcSae->getSemestre()->getAnnee()->getId(),

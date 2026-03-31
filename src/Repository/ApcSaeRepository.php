@@ -11,8 +11,6 @@ namespace App\Repository;
 
 use App\Entity\Annee;
 use App\Entity\ApcSae;
-use App\Entity\ApcSaeParcours;
-use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -128,7 +126,7 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findOrdreMax(Semestre $semestre)
+    public function findOrdreMax(Semestre $semestre): array|float|int|string
     {
         return $this->createQueryBuilder('r')
             ->select('MAX(r.ordre) as ordreMax')

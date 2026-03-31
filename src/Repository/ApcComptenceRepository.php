@@ -10,7 +10,6 @@
 namespace App\Repository;
 
 use App\Entity\ApcCompetence;
-use App\Entity\Departement;
 use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,7 +48,7 @@ class ApcComptenceRepository extends ServiceEntityRepository
             ;
     }
 
-    public function findByVersionBuilder(Version $version)
+    public function findByVersionBuilder(Version $version): \Doctrine\ORM\QueryBuilder
     {
         return $this->createQueryBuilder('c')
             ->where('c.version = :version')

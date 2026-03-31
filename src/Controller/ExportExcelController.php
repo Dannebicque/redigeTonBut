@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Classes\Excel\ExcelWriter;
 use App\Classes\Tableau\Structure;
 use App\Entity\ApcParcours;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 

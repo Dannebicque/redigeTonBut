@@ -4,17 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Constantes;
 use App\Entity\Departement;
+use App\Entity\User;
+use App\Entity\Version;
 use App\Form\DepartementType;
+use App\Form\VersionType;
 use App\Repository\DepartementRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(name: 'administration_departement_')]
-class DepartementController extends AbstractController
+class DepartementController extends BaseController
 {
     #[Route('/administration/specialite/', name: 'index', methods: ['GET'])]
     public function index(
@@ -33,6 +37,7 @@ class DepartementController extends AbstractController
     ): Response {
         return $this->render('departement/show.html.twig', [
             'departement' => $departement,
+            'version' => $this->getVersion()
         ]);
     }
 
@@ -42,6 +47,7 @@ class DepartementController extends AbstractController
     ): Response {
         return $this->render('departement/showLecteur.html.twig', [
             'departement' => $departement,
+            'version' => $this->getVersion()
         ]);
     }
 
@@ -49,9 +55,9 @@ class DepartementController extends AbstractController
     public function edit(
         EntityManagerInterface $entityManager,
         Request $request,
-        Departement $departement
+        Version $departement
     ): Response {
-        $form = $this->createForm(DepartementType::class, $departement,
+        $form = $this->createForm(VersionType::class, $departement,
         ['droit' => !$this->isGranted('ROLE_GT')]);
         $form->handleRequest($request);
 
@@ -64,18 +70,18 @@ class DepartementController extends AbstractController
         }
 
         return $this->render('departement/edit.html.twig', [
-            'departement' => $departement,
+            'version' => $departement,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/administration/specialite/{departement}/update/ajax', name: 'update_ajax', methods: ['POST'], options: ["expose" => true])]
+    #[Route('/administration/specialite/{departement}/update/ajax', name: 'update_ajax', options: ["expose" => true], methods: ['POST'])]
     public function updateDepartement(
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
         Request $request,
         Departement $departement
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
+    ): JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -84,29 +90,25 @@ class DepartementController extends AbstractController
         switch ($parametersAsArray['field']) {
             case 'cpn':
                 $us = $departement->getCpn();
-                if ($us instanceof \App\Entity\User) {
+                if ($us instanceof User) {
                     $us->setRoles(['ROLE_LECTEUR']);
                 }
 
                 if ($parametersAsArray['value'] !== '') {
                     $user = $userRepository->find($parametersAsArray['value']);
-                    if ($user !== null) {
-                        $user->setRoles(['ROLE_CPN']);
-                    }
+                    $user?->setRoles(['ROLE_CPN']);
                 }
 
                 break;
             case 'pacd':
                 $us = $departement->getPacd();
-                if ($us instanceof \App\Entity\User) {
+                if ($us instanceof User) {
                     $us->setRoles(['ROLE_LECTEUR']);
                 }
 
                 if ($parametersAsArray['value'] !== '') {
                     $user = $userRepository->find($parametersAsArray['value']);
-                    if ($user !== null) {
-                        $user->setRoles(['ROLE_PACD']);
-                    }
+                    $user?->setRoles(['ROLE_PACD']);
                 }
 
                 break;

@@ -5,7 +5,6 @@ use App\Classes\Excel\ExcelWriter;
 use App\DTO\StructureDepartement;
 use App\DTO\StructureSemestre;
 use App\Entity\ApcParcours;
-use App\Entity\Departement;
 use App\Entity\Version;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 

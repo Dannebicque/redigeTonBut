@@ -2,10 +2,10 @@
 
 namespace App\Controller\api;
 
-use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\DepartementRepository;
 use App\Utils\Files;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,7 +28,7 @@ class GetRessourcesSpecialite extends AbstractController
         $departement = $departementRepository->findOneBy(['sigle' => $idDepartement]);
 
         if ($annee !== 2022) {
-            throw new \Exception('Année inconnue');
+            throw new Exception('Année inconnue');
         }
 
         if ($annee === 2022 && $departement !== null) {

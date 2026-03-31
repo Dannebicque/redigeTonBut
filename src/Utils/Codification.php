@@ -35,14 +35,16 @@ class Codification
 
     public static function codeSae(ApcSae $apcSae, $parcours) : string
     {
-        if ($apcSae->getPortfolio() === true) {
-            return 'PORTFOLIO';
+        if ($apcSae->getPortfolio() === true && (str_contains($apcSae->getLibelleCourt(), 'PAÉ') || str_contains($apcSae->getLibelleCourt(), 'PAE'))) {
+            return 'PAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).self::codeSurDeuxChiffres($apcSae->getOrdre());
         }
 
         if ($apcSae->getStage() === true) {
             $texte =  'STAGE.'.self::codeParcoursSae($parcours);
             return substr($texte, 0, -1);
         }
+
+
 
         return 'SAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).self::codeSurDeuxChiffres($apcSae->getOrdre());
     }
@@ -56,7 +58,7 @@ class Codification
         return $ordre;
     }
 
-    private static function codeParcoursAc(ApcApprentissageCritique $apcApprentissageCritique)
+    private static function codeParcoursAc(ApcApprentissageCritique $apcApprentissageCritique): null
     {
         $nbParcoursAC = $apcApprentissageCritique->getNiveau()?->getApcParcoursNiveaux();
         $nbParcoursComp = $apcApprentissageCritique->getCompetence()?->getVersion()?->getApcParcours();

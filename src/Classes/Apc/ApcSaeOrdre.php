@@ -47,9 +47,7 @@ class ApcSaeOrdre
         ]);
         $apcSae->setOrdre($ordreDestination);
 
-        if ($sae !== null) {
-            $sae->setOrdre($ordreInitial);
-        }
+        $sae?->setOrdre($ordreInitial);
 
         $this->entityManager->flush();
 

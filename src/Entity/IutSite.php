@@ -28,13 +28,13 @@ class IutSite
     /**
      * @var Collection<int, IutSiteParcours>
      */
-    #[ORM\OneToMany(targetEntity: IutSiteParcours::class, mappedBy: 'site')]
+    #[ORM\OneToMany(mappedBy: 'site', targetEntity: IutSiteParcours::class)]
     private Collection $iutSiteParcours;
 
     /**
      * @var Collection<int, QapesSae>
      */
-    #[ORM\OneToMany(targetEntity: QapesSae::class, mappedBy: 'iutSite')]
+    #[ORM\OneToMany(mappedBy: 'iutSite', targetEntity: QapesSae::class)]
     private Collection $qapesSaes;
 
     public function __construct()

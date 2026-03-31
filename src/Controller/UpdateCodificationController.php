@@ -30,7 +30,7 @@ class UpdateCodificationController extends BaseController
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         Semestre $semestre, ApcParcours $parcours = null): Response
     {
-        if (!$parcours instanceof \App\Entity\ApcParcours) {
+        if (!$parcours instanceof ApcParcours) {
             $ressources = $apcRessourceRepository->findBySemestre($semestre);
         } else {
             $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
@@ -52,7 +52,7 @@ class UpdateCodificationController extends BaseController
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
         Semestre $semestre, ApcParcours $parcours = null): Response
     {
-        if (!$parcours instanceof \App\Entity\ApcParcours) {
+        if (!$parcours instanceof ApcParcours) {
             $saes = $apcSaeRepository->findBySemestre($semestre);
         } else {
             $saes = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);

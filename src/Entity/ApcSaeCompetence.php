@@ -11,6 +11,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\LifeCycleTrait;
 use App\Repository\ApcSaeCompetenceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -27,7 +28,7 @@ class ApcSaeCompetence extends BaseEntity
     #[Groups(['read:sae'])]
     private ?ApcCompetence $competence;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Groups(['read:sae'])]
     private float $coefficient = 0;
 

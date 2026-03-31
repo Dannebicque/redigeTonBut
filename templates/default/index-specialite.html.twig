@@ -3,7 +3,8 @@
 {% block header %}Dashboard{% endblock %}
 
 {% block content %}
-    {% if is_granted('ROLE_IUT') %}
+    {% if is_granted('ROLE_ADMIN') or
+        is_granted('ROLE_GT') or is_granted('ROLE_EDITEUR') or is_granted('ROLE_CPN') or is_granted('ROLE_IUT') or is_granted('ROLE_CPN_LECTEUR') %}
         <section class="scroll-section mb-2" id="export">
             <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
             <div class="d-grid">
@@ -25,20 +26,20 @@
                             <div class="card h-100 border-{{ parcours.couleur }}">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ parcours.libelle }}</h5>
-                                    <p class="card-text">
-                                    <ul>
-                                        <li>
-                                            <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                <span class="label">Ressources du parcours</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                <span class="label">SAÉ du parcours</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    </p>
+                                    <div class="card-text">
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                    <span class="label">Ressources du parcours</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('but_sae_annee', {annee: annee.id, parcours: parcours.id}) }}">
+                                                    <span class="label">SAÉ du parcours</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

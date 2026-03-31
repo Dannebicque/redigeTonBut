@@ -9,7 +9,6 @@
 
 namespace App\Controller\competences;
 
-use App\Classes\Apc\ApcStructure;
 use App\Classes\Export\DepartementExport;
 use App\Classes\JsonDiffService;
 use App\Controller\BaseController;

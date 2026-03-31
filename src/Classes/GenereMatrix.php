@@ -4,10 +4,9 @@ namespace App\Classes;
 
 use App\Classes\Apc\ApcStructure;
 use App\Entity\Departement;
-use Knp\Snappy\Pdf;
-use Symfony\Component\Filesystem\Filesystem;
+use App\Entity\Version;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Twig\Environment;
 
 class GenereMatrix
 {
@@ -19,25 +18,27 @@ class GenereMatrix
     private array $competencesParcours;
 
     private Departement $departement;
+    private Version $version;
 
-    private ?\Doctrine\Common\Collections\Collection $competences = null;
+    private ?Collection $competences = null;
 
     public function __construct(
         KernelInterface $kernel,
-        private ApcStructure $apcStructure
+        private readonly ApcStructure $apcStructure
 
     ) {
         $this->dir = $kernel->getProjectDir() . '/public/matrix/';
 
     }
 
-    public function genereSpecialite(Departement $departement): void
+    public function genereSpecialite(Version $version): void
     {
-        $this->departement = $departement;
+        $this->version = $version;
+        $this->departement = $version->getDepartement();
         $this->getDataReferentiel();
 
 
-        foreach ($this->departement->getApcParcours() as $parcours) {
+        foreach ($this->version->getApcParcours() as $parcours) {
             $name = $this->departement->getSigle() . '-' . $parcours->getCode() . '.matrix';
             //pour chaque parcours
             $tab = [];
@@ -119,8 +120,8 @@ class GenereMatrix
 
     private function getDataReferentiel(): void
     {
-        $this->tParcours = $this->apcStructure->parcoursNiveaux($this->departement);
-        $this->competences = $this->departement->getApcCompetences();
+        $this->tParcours = $this->apcStructure->parcoursNiveaux($this->version);
+        $this->competences = $this->version->getApcCompetences();
         $tComp = [];
         foreach ($this->competences as $comp) {
             $tComp[$comp->getId()] = $comp;

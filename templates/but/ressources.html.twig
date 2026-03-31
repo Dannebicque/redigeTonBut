@@ -1,6 +1,38 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
+    {% if compareMode|default(false) %}
+        <div class="alert alert-info mb-3">
+            Comparaison active: B.U.T. {{ anneePrecedente.ordre }} (version {{ versionPrecedente.id }}) -> B.U.T. {{ annee.ordre }}.
+            Le point de rapprochement est le code ressource.
+        </div>
+    {% endif %}
+    {% if pendingPdfRessources|default([])|length > 0 %}
+        <div class="alert alert-warning mb-3">
+            <strong>Demandes PDF en attente ({{ pendingPdfRessources|length }})</strong>
+            <ul class="mb-0 mt-2">
+                {% for item in pendingPdfRessources %}
+                    <li>{{ item.code }} - {{ item.libelle }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if errorPdfRessources|default([])|length > 0 %}
+        <div class="alert alert-danger mb-3">
+            <strong>Erreurs de generation PDF ({{ errorPdfRessources|length }})</strong>
+            <ul class="mb-0 mt-2">
+                {% for item in errorPdfRessources %}
+                    <li>
+                        {{ item.code }} - {{ item.libelle }}
+                        {% if item.errorMessage %}
+                            ({{ item.errorMessage }})
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
     <ul class="nav nav-tabs nav-tabs-title nav-tabs-line-title responsive-tabs" id="lineTitleTabsContainer" role="tablist">
         {% for semestre in semestres %}
             <li class="nav-item" role="presentation">
@@ -57,9 +89,26 @@
 
                 <div class="row g-4 mb-4">
                     {% for ressource in ressources[semestre.ordreLmd] %}
+                        {% set codeKey = (ressource.codeMatiere|trim)|upper %}
+                        {% set ressourceDiff = diffBySemestre[semestre.ordreLmd][codeKey]|default(null) %}
                         {{ include('but/_cardRessource.html.twig') }}
                     {% endfor %}
                 </div>
+
+                {% if compareMode|default(false) and removedBySemestre[semestre.ordreLmd]|default([])|length > 0 %}
+                    <div class="card border-danger mb-4">
+                        <div class="card-header bg-danger text-white">
+                            Ressources supprimées depuis la version précedente
+                        </div>
+                        <div class="card-body">
+                            <ul class="mb-0">
+                                {% for code, removed in removedBySemestre[semestre.ordreLmd] %}
+                                    <li><strong>{{ removed.codeMatiere }}</strong> - {{ removed.libelle }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="tab-pane" id="semestre_{{ semestre.id }}_tableau" role="tabpanel">
                 <div class="row">
@@ -86,25 +135,62 @@
                        <tbody>
                        {% for ressource in ressources[semestre.ordreLmd]|filter(ressource => ressource
                        .ficheAdaptationLocale == false) %}
+                       {% set codeKey = (ressource.codeMatiere|trim)|upper %}
+                       {% set ressourceDiff = diffBySemestre[semestre.ordreLmd][codeKey]|default(null) %}
                        <tr {% if ressource.ficheAdaptationLocale == true %}class="bg-warning text-white"{% endif %}>
                            <td style="width:15%">
                                <a href="{{ path('but_fiche_ressource',
-                                   {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null }) }}" target="_blank">
+                                    {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null, compare: compareMode|default(false) ? 1 : null }) }}" target="_blank">
                                    {{ ressource.codeMatiere }}
                                </a>
+                               {% if compareMode|default(false) and ressourceDiff is not null %}
+                                   {% if ressourceDiff.status == 'added' %}
+                                       <span class="badge bg-success ms-1">Ajoutee</span>
+                                   {% elseif ressourceDiff.status == 'changed' %}
+                                       <span class="badge bg-warning text-dark ms-1">Modifiee</span>
+                                   {% endif %}
+                               {% endif %}
                            </td>
                            <td  style="width:35%">
                                <a href="{{ path('but_fiche_ressource',
-                                   {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null }) }}" target="_blank">
+                                    {'apcRessource': ressource.id, parcours: parcours != null ? parcours.id : null, compare: compareMode|default(false) ? 1 : null }) }}" target="_blank">
                                    {{ ressource.libelle }}
+                                   {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.libelle is defined %}
+                                       <br><small class="text-muted">N-1: {{ ressourceDiff.changes.libelle.old }}</small>
+                                   {% endif %}
                                </a>
                            </td>
-                           <td  style="width:10%" class="text-center">{{ ressource.heuresTotales }}</td>
-                           <td  style="width:10%" class="text-center"> {{ ressource.tpPpn }}</td>
+                           <td  style="width:10%" class="text-center">
+                               {{ ressource.heuresTotales }}
+                               {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.heuresTotales is defined %}
+                                   <br><small class="text-muted">({{ ressourceDiff.changes.heuresTotales.old }})</small>
+                               {% endif %}
+                           </td>
+                           <td  style="width:10%" class="text-center">
+                               {{ ressource.tpPpn }}
+                               {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tpPpn is defined %}
+                                   <br><small class="text-muted">({{ ressourceDiff.changes.tpPpn.old }})</small>
+                               {% endif %}
+                           </td>
                            {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
-                           <td class="bg-warning text-center"  style="width:10%">{{ ressource.cmPreco }}</td>
-                           <td class="bg-warning text-center"  style="width:10%">{{ ressource.tdPreco }}</td>
-                           <td class="bg-warning text-center"  style="width:10%">{{ ressource.tpPreco }}</td>
+                           <td class="bg-warning text-center"  style="width:10%">
+                               {{ ressource.cmPreco }}
+                               {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.cmPreco is defined %}
+                                   <br><small class="text-muted">({{ ressourceDiff.changes.cmPreco.old }})</small>
+                               {% endif %}
+                           </td>
+                           <td class="bg-warning text-center"  style="width:10%">
+                               {{ ressource.tdPreco }}
+                               {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tdPreco is defined %}
+                                   <br><small class="text-muted">({{ ressourceDiff.changes.tdPreco.old }})</small>
+                               {% endif %}
+                           </td>
+                           <td class="bg-warning text-center"  style="width:10%">
+                               {{ ressource.tpPreco }}
+                               {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tpPreco is defined %}
+                                   <br><small class="text-muted">({{ ressourceDiff.changes.tpPreco.old }})</small>
+                               {% endif %}
+                           </td>
                            {% endif %}
                        </tr>
                        {% endfor %}
@@ -130,6 +216,30 @@
 {% endblock %}
 
 {% block bouton_header %}
-
+    {% if compareMode|default(false) %}
+        {% if parcours is not null %}
+            <a href="{{ path('but_ressources_annee', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm btn-outline-secondary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-arrow-left"></i>
+                <span>Retour affichage</span>
+            </a>
+        {% else %}
+            <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}" class="btn btn-sm btn-outline-secondary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-arrow-left"></i>
+                <span>Retour affichage</span>
+            </a>
+        {% endif %}
+    {% elseif user_data.version.previousVersion is not null %}
+        {% if parcours is not null %}
+            <a href="{{ path('but_ressources_annee_comparaison', {annee: annee.id, parcours: parcours.id}) }}" class="btn btn-sm btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-file-diff"></i>
+                <span>Comparer N-1</span>
+            </a>
+        {% else %}
+            <a href="{{ path('but_ressources_annee_comparaison', {annee: annee.id}) }}" class="btn btn-sm btn-outline-primary btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+                <i class="bi-file-diff"></i>
+                <span>Comparer N-1</span>
+            </a>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 

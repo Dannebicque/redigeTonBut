@@ -3,14 +3,13 @@ namespace App\Security;
 
 use App\Entity\User as AppUser;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserChecker implements UserCheckerInterface
 {
-    public function __construct(private RouterInterface $router)
+    public function __construct(private readonly RouterInterface $router)
     {
     }
 

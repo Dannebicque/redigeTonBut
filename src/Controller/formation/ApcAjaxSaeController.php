@@ -25,6 +25,7 @@ use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRessourceRepository;
 use App\Repository\SemestreRepository;
 use App\Utils\Convert;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -32,7 +33,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/formation/api/sae', name: 'formation_')]
 class ApcAjaxSaeController extends BaseController
 {
-    #[Route('/ajax-ac', name: 'apc_sae_ajax_ac', methods: ['POST'], options: ['expose' => true])]
+    #[Route('/ajax-ac', name: 'apc_sae_ajax_ac', options: ['expose' => true], methods: ['POST'])]
     public function ajaxAc(
         SemestreRepository $semestreRepository,
         ApcSaeApprentissageCritiqueRepository $apcSaeApprentissageCritiqueRepository,
@@ -83,7 +84,7 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(false);
     }
 
-    #[Route('/ajax-ressources', name: 'apc_ressources_ajax', methods: ['POST'], options: ['expose' => true])]
+    #[Route('/ajax-ressources', name: 'apc_ressources_ajax', options: ['expose' => true], methods: ['POST'])]
     public function ajaxRessources(
         SemestreRepository $semestreRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
@@ -106,7 +107,7 @@ class ApcAjaxSaeController extends BaseController
 
             $datas = $apcRessourceRepository->findBySemestre($semestre);
 
-            if ($semestre->getDepartement()->getTypeStructure() === Departement::TYPE3) {
+            if ($semestre->getVersion()->getDepartement()->getTypeStructure() === Departement::TYPE3) {
                 $parcours = $semestre->getApcParcours();
                 if ($parcours !== null) {
                     $datas = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
@@ -131,7 +132,7 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(false);
     }
 
-    #[Route('/ajax-parcours', name: 'apc_sae_parcours_ajax', methods: ['POST'], options: ['expose' => true])]
+    #[Route('/ajax-parcours', name: 'apc_sae_parcours_ajax', options: ['expose' => true], methods: ['POST'])]
     public function ajaxParcours(
         SemestreRepository $semestreRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
@@ -169,14 +170,14 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(false);
     }
 
-    #[Route('/{sae}/{ac}/update_ajax', name: 'apc_sae_ac_update_ajax', methods: ['POST'], options: ['expose' => true])]
+    #[Route('/{sae}/{ac}/update_ajax', name: 'apc_sae_ac_update_ajax', options: ['expose' => true], methods: ['POST'])]
     public function updateAc(
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         ApcSaeApprentissageCritiqueRepository $apcSaeApprentissageCritiqueRepository,
         Request $request,
         ApcSae $sae,
         ApcApprentissageCritique $ac
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
+    ): JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -198,7 +199,7 @@ class ApcAjaxSaeController extends BaseController
             $acSae = new ApcSaeApprentissageCritique($sae, $ac);
             $this->entityManager->persist($acSae);
             $comp = $ac->getCompetence();
-            if ($comp instanceof \App\Entity\ApcCompetence) {
+            if ($comp instanceof ApcCompetence) {
                 $cp = $apcSaeCompetenceRepository->findOneBy([
                     'competence' => $comp->getId(),
                     'sae' => $sae->getId()
@@ -215,13 +216,13 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(true);
     }
 
-    #[Route('/{sae}/{competence}/update_coeff_ajax', name: 'apc_sae_coeff_update_ajax', methods: ['POST'], options: ['expose' => true])]
+    #[Route('/{sae}/{competence}/update_coeff_ajax', name: 'apc_sae_coeff_update_ajax', options: ['expose' => true], methods: ['POST'])]
     public function updateCoeff(
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
         Request $request,
         ApcSae $sae,
         ApcCompetence $competence
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
+    ): JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -251,12 +252,12 @@ class ApcAjaxSaeController extends BaseController
         return $this->json(true);
     }
 
-    #[Route('/{sae}/{type}/update_heures_ajax', name: 'apc_sae_heure_update_ajax', methods: ['POST'], options: ['expose' => true])]
+    #[Route('/{sae}/{type}/update_heures_ajax', name: 'apc_sae_heure_update_ajax', options: ['expose' => true], methods: ['POST'])]
     public function updateHeures(
         Request $request,
         ApcSae $sae,
         string $type
-    ): \Symfony\Component\HttpFoundation\JsonResponse {
+    ): JsonResponse {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);

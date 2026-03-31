@@ -22,7 +22,7 @@ class MyPdfLatex
     ) {
     }
 
-    public function exportRessource(ApcRessource $ressource): \Symfony\Component\HttpFoundation\Response
+    public function exportRessource(ApcRessource $ressource): Response
     {
         $output = $this->kernel->getProjectDir() . '/public/pdf/' . $ressource->getDepartement()->getNumeroAnnexe() . '/';
         $fichierLatex = $this->genereFileRessource->genereFile($ressource, $output);
@@ -58,13 +58,13 @@ class MyPdfLatex
         return $response;
     }
 
-    public function exportSae(ApcSae $sae): \Symfony\Component\HttpFoundation\Response
+    public function exportSae(ApcSae $sae): Response
     {
-        $output = $this->kernel->getProjectDir() . '/public/pdf/' . $sae->getDepartement()->getNumeroAnnexe() . '/';
+        $output = $this->kernel->getProjectDir() . '/public/pdf/' . $sae->getVersion()->getDepartement()->getNumeroAnnexe() . '/';
         $fichierLatex = $this->genereFileSae->genereFile($sae, $output);
 
         sleep(1);
-        $name = 'PN-BUT-' . $sae->getDepartement()->getSigle() . '-' . $sae->getSlugName();
+        $name = 'PN-BUT-' . $sae->getVersion()->getDepartement()->getSigle() . '-' . $sae->getSlugName();
         chmod($fichierLatex, 0744);
         shell_exec('/usr/bin/pdflatex/pdftex -output-directory /var/www/redigeTonBut/public/pdf/1/ ' . $fichierLatex);
 //        $text = shell_exec('php ' . $this->kernel->getProjectDir() . '/public/pdf/compileLatex.php ' . $fichierLatex . ' ' . $this->kernel->getProjectDir() . '/public/pdf/' . $sae->getDepartement()->getNumeroAnnexe());

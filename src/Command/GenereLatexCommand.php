@@ -23,11 +23,11 @@ class GenereLatexCommand extends Command
 
 
     public function __construct(
-        private GenereFile $genereFile,
-        private DepartementRepository $departementRepository,
-        private ApcStructure $apcStructure,
-        private KernelInterface $kernel,
-        private Environment $environment
+        private readonly GenereFile            $genereFile,
+        private readonly DepartementRepository $departementRepository,
+        private readonly ApcStructure          $apcStructure,
+        private readonly KernelInterface       $kernel,
+        private readonly Environment           $environment
     ) {
 
         parent::__construct();

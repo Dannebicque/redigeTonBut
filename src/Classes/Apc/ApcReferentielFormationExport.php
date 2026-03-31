@@ -4,6 +4,8 @@ namespace App\Classes\Apc;
 
 use App\Classes\Excel\ExcelWriter;
 use App\Classes\Word\MyWord;
+use App\Entity\ApcRessource;
+use App\Entity\ApcSae;
 use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Entity\Version;
@@ -54,7 +56,7 @@ class ApcReferentielFormationExport
     }
 
 
-    public function export(Version $version, string $_format)
+    public function export(Version $version, string $_format): \Symfony\Component\HttpFoundation\StreamedResponse|Response|null
     {
 
         if ($_format === 'al') {
@@ -66,19 +68,14 @@ class ApcReferentielFormationExport
         }
 
 
-
-        switch ($_format) {
-            case 'docx':
-            case 'al':
-                return $this->exportZipWord();
-            case 'xlsx':
-                return $this->exportExcel();
-
-        }
-        return null;
+        return match ($_format) {
+            'docx', 'al' => $this->exportZipWord(),
+            'xlsx' => $this->exportExcel(),
+            default => null,
+        };
     }
 
-    private function exportZipWord(): \Symfony\Component\HttpFoundation\Response
+    private function exportZipWord(): Response
     {
         $zip = new ZipArchive();
         $fileName = 'formation-' . date('YmdHis') . '.zip';
@@ -117,7 +114,7 @@ class ApcReferentielFormationExport
         return $response;
     }
 
-    private function exportExcel()
+    private function exportExcel(): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $this->excelWriter->nouveauFichier('');
         $this->excelWriter->createSheet('Ressources');
@@ -145,7 +142,7 @@ class ApcReferentielFormationExport
         $this->excelWriter->writeCellName('U1', 'H TP Préco.');
 
         $ligne = 2;
-        /** @var \App\Entity\ApcRessource $ressource */
+        /** @var ApcRessource $ressource */
         foreach ($this->ressources as $ressource) {
 
             $this->excelWriter->writeCellName('A' . $ligne, $ressource->getSemestre()?->getLibelle());
@@ -227,7 +224,7 @@ class ApcReferentielFormationExport
         $this->excelWriter->writeCellName('S1', 'Préco. Exemple');
 
         $ligne = 2;
-        /** @var \App\Entity\ApcSae $sae */
+        /** @var ApcSae $sae */
         foreach ($this->saes as $sae) {
 
             $this->excelWriter->writeCellName('A' . $ligne, $sae->getSemestre()?->getLibelle());
@@ -283,7 +280,7 @@ class ApcReferentielFormationExport
         return $this->excelWriter->genereFichier('tableau_referentiel_formation' . date('YmdHis'));
     }
 
-    public function exportSynthese(Version $version)
+    public function exportSynthese(Version $version): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $departement = $version->getDepartement();
         $this->excelWriter->nouveauFichier('');
@@ -365,7 +362,7 @@ class ApcReferentielFormationExport
         return $this->excelWriter->genereFichier('tableau_referentiel_synthese_formation' . date('YmdHis'));
     }
 
-    public function exportSyntheseAcd(Version $version)
+    public function exportSyntheseAcd(Version $version): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $departement = $version->getDepartement();
         $this->excelWriter->nouveauFichier('');

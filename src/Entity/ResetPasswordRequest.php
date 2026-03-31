@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ResetPasswordRequestRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestInterface;
@@ -22,7 +23,7 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
     #[ORM\JoinColumn(nullable: false)]
     private object $user;
 
-    public function __construct(object $user, \DateTimeInterface $expiresAt, string $selector, string $hashedToken)
+    public function __construct(object $user, DateTimeInterface $expiresAt, string $selector, string $hashedToken)
     {
         $this->user = $user;
         $this->initialize($expiresAt, $selector, $hashedToken);

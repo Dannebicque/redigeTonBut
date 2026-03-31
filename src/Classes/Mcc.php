@@ -3,6 +3,8 @@
 namespace App\Classes;
 
 use App\Entity\Departement;
+use App\Entity\Semestre;
+use App\Entity\Version;
 use App\Repository\ApcNiveauRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeRepository;
@@ -21,21 +23,23 @@ class Mcc
     private array $tabRefTotalParcours = [];
 
     public function __construct(
-        private ApcNiveauRepository $apcNiveauRepository,
-        private ApcRessourceRepository $apcRessourceRepository,
-        private ApcSaeRepository $apcSaeRepository
+        private readonly ApcNiveauRepository    $apcNiveauRepository,
+        private readonly ApcRessourceRepository $apcRessourceRepository,
+        private readonly ApcSaeRepository       $apcSaeRepository
     ) {
     }
 
     public function genereFichierExcel(
         Excel\ExcelWriter $excelWriter,
-        Departement $departement,
+        Version $version,
         string $iut = 'troyes',
         array $parcours = [],
         bool $fi = true
-    ) {
+    ): \Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        $departement = $version->getDepartement();
         $spreadsheet = $excelWriter->createFromTemplate('mcc_' . $iut . '.xlsx');
-        $semestres = $departement->getSemestres();
+        $semestres = $version->getSemestres();
 
         $tabRefParcours = [];
         $this->tabRefTotalParcours = [];
@@ -223,7 +227,7 @@ class Mcc
             $debutCompetencesBUT23 = $col + $i + 1;
         }
 
-        /** @var \App\Entity\Semestre $semestre */
+        /** @var Semestre $semestre */
         foreach ($semestres as $semestre) {
             $this->tabRefTotalParcours = $tabRefTotalParcours;
             if ($semestre->getOrdreLmd() < 3 && $departement->getTypeStructure() !== Departement::TYPE3) {

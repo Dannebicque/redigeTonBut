@@ -8,7 +8,6 @@ use App\Classes\Apc\ApcSaesExport;
 use App\Classes\Apc\TableauExport;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
-use App\Entity\Departement;
 use App\Entity\Version;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

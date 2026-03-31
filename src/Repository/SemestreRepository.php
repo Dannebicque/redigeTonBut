@@ -12,7 +12,6 @@ namespace App\Repository;
 use App\Entity\Annee;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
-use App\Entity\Diplome;
 use App\Entity\Semestre;
 use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

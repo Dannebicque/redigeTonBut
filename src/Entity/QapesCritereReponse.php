@@ -28,7 +28,7 @@ class QapesCritereReponse
     /**
      * @var Collection<int, QapesSaeCritereReponse>
      */
-    #[ORM\OneToMany(targetEntity: QapesSaeCritereReponse::class, mappedBy: 'reponse')]
+    #[ORM\OneToMany(mappedBy: 'reponse', targetEntity: QapesSaeCritereReponse::class)]
     private Collection $qapesSaeCritereReponses;
 
     public function __construct()

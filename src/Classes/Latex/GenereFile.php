@@ -6,6 +6,7 @@ namespace App\Classes\Latex;
 
 use App\Classes\Apc\ApcStructure;
 use App\Entity\Departement;
+use App\Entity\Version;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeParcoursRepository;
@@ -15,21 +16,21 @@ use Twig\Environment;
 class GenereFile
 {
     /**
-     * @var \App\Repository\ApcRessourceRepository
+     * @var ApcRessourceRepository
      */
-    public $apcRessourceRepository;
+    public ApcRessourceRepository $apcRessourceRepository;
     /**
-     * @var \App\Repository\ApcRessourceParcoursRepository
+     * @var ApcRessourceParcoursRepository
      */
-    public $apcRessourceParcoursRepository;
+    public ApcRessourceParcoursRepository $apcRessourceParcoursRepository;
     /**
-     * @var \App\Repository\ApcSaeRepository
+     * @var ApcSaeRepository
      */
-    public $apcSaeRepository;
+    public ApcSaeRepository $apcSaeRepository;
     /**
-     * @var \App\Repository\ApcSaeParcoursRepository
+     * @var ApcSaeParcoursRepository
      */
-    public $apcSaeParcoursRepository;
+    public ApcSaeParcoursRepository $apcSaeParcoursRepository;
     protected Departement $departement;
 
     protected Environment $twig;
@@ -55,11 +56,11 @@ class GenereFile
         $this->apcSaeParcoursRepository = $apcSaeParcoursRepository;
     }
 
-    public function genereFile(Departement $departement, string $chemin): string
+    public function genereFile(Version $version, string $chemin): string
     {
-        $parcours = $departement->getApcParcours();
-        $tParcours = $this->apcStructure->parcoursNiveaux($departement);
-        $competences = $departement->getApcCompetences();
+        $parcours = $version->getApcParcours();
+        $tParcours = $this->apcStructure->parcoursNiveaux($version);
+        $competences = $version->getApcCompetences();
 
         $tComp = [];
         foreach ($competences as $comp) {
@@ -77,9 +78,9 @@ class GenereFile
             }
         }
 
-        $semestres = $departement->getSemestres();
+        $semestres = $version->getSemestres();
 
-
+        $departement = $version->getDepartement();
         if ($departement->getTypeStructure() === Departement::TYPE3) {
             foreach ($semestres as $semestre) {
                 $tSemestres[$semestre->getApcParcours()->getId()][$semestre->getOrdreLmd()] = [];
@@ -110,6 +111,7 @@ class GenereFile
 
             $content = $this->twig->render('latex/annexe_specialite.tex.twig', [
                 'departement' => $departement,
+                'version' => $version,
                 'competencesParcours' => $competencesParcours,
                 'saes' => $saes,
                 'ressources' => $ressources,

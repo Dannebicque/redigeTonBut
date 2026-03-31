@@ -8,7 +8,7 @@ use App\Entity\ApcSae;
 
 class SaeEvent
 {
-    public const UPDATE_CODIFICATION = 'update.codification.sae';
+    public const string UPDATE_CODIFICATION = 'update.codification.sae';
 
     protected ApcSae $apcSae;
 

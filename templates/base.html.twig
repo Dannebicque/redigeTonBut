@@ -38,7 +38,7 @@
             </div>
             <!-- Logo End -->
 
-            {% if is_granted('ROLE_PACD') or is_granted('ROLE_CPN') or is_granted('ROLE_GT') %}
+            {% if is_granted('ROLE_LECTEUR') or is_granted('ROLE_PACD') or is_granted('ROLE_CPN') or is_granted('ROLE_EDITEUR') or is_granted('ROLE_GT') %}
                 <!-- Version PN Menu -->
                 <div class="user-container d-flex">
                     <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -218,6 +218,7 @@
                                             <span class="label">B.U.T. {{ annee.ordre }}</span>
                                         </a>
                                         <ul id="but{{ annee.ordre }}">
+                                            {% if user_data.departement.typeStructure != 'type3' %}
                                             <li>
                                                 <a href="{{ path('but_ressources_annee', {annee: annee.id}) }}">
                                                     <span class="label">Ressources</span>
@@ -228,6 +229,7 @@
                                                     <span class="label">SAÉ</span>
                                                 </a>
                                             </li>
+                                            {% endif %}
 
                                             {% if user_data.departement.typeStructure == 'type3' or annee.ordre >= 2 %}
                                                 {% for parcours in user_data.version.apcParcours %}
@@ -294,7 +296,7 @@
                                                                         <span class="label">Préconisations par semestre</span>
                                                                     </a>
                                                                 </li>
-                                                                {% if is_granted('ROLE_PACD') %}
+                                                                {% if is_granted('ROLE_PACD') or is_granted('ROLE_EDITEUR') %}
                                                                     <li>
                                                                         <a href="{{ path('tableau_horaire_annee', {annee: annee.id, parcours: parcours.id}) }}">
                                                                             <span class="label">Volumes horaires par semestre</span>
@@ -321,7 +323,7 @@
                                                             <span class="label">Préconisations par semestre</span>
                                                         </a>
                                                     </li>
-                                                    {% if is_granted('ROLE_PACD') %}
+                                                    {% if is_granted('ROLE_PACD') or is_granted('ROLE_EDITEUR') %}
                                                         <li>
                                                             <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">
                                                                 <span class="label">Volumes horaires par semestre</span>
@@ -471,6 +473,15 @@
 
                     <!-- 7. Sélection de spécialité (pour les rôles qui peuvent changer de spécialité) -->
                     {% if (is_granted('ROLE_GT') or is_granted('ROLE_IUT') or user_data.user.isCpn) %}
+                        {% if is_granted('ROLE_GT') %}
+                            <li>
+                                <a href="{{ path('gt_index') }}">
+                                    <i class="bi bi-person-badge icon"></i>
+                                    <span class="label">Espace GT</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
                         <li class="mega dropdown">
                             <a href="#specialites" data-href="specialites">
                                 <i class="bi bi-shuffle icon"></i>

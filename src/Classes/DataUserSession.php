@@ -11,7 +11,8 @@ use App\Entity\Version;
 use App\Repository\AnneeRepository;
 use App\Repository\DepartementRepository;
 use App\Repository\VersionRepository;
-use Symfony\Component\HttpFoundation\Request;
+use Exception;
+use Stringable;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -34,12 +35,12 @@ class DataUserSession
     private array $roleName;
 
 
-    public function __construct(TokenStorageInterface         $tokenStorage,
-                                private RequestStack          $requestStack,
-                                KernelInterface               $kernel,
-                                private DepartementRepository $departementRepository,
-                                private VersionRepository $versionRepository,
-                                AnneeRepository               $anneeRepository)
+    public function __construct(TokenStorageInterface                  $tokenStorage,
+                                private readonly RequestStack          $requestStack,
+                                KernelInterface                        $kernel,
+                                private readonly DepartementRepository $departementRepository,
+                                private readonly VersionRepository     $versionRepository,
+                                AnneeRepository                        $anneeRepository)
     {
         $this->anneeRepository = $anneeRepository;
         $this->dir = $kernel->getProjectDir();
@@ -52,7 +53,7 @@ class DataUserSession
 
     public function getDepartement()
     {
-        if (in_array('ROLE_ADMIN', $this->roleName) || in_array('ROLE_IUT', $this->roleName) || in_array('ROLE_GT', $this->roleName) || in_array('ROLE_CPN', $this->roleName) || in_array('ROLE_CPN_LECTEUR', $this->roleName)) {
+        if (in_array('ROLE_ADMIN', $this->roleName) || in_array('ROLE_IUT', $this->roleName) || in_array('ROLE_GT', $this->roleName) || in_array('ROLE_CPN', $this->roleName) || in_array('ROLE_EDITEUR', $this->roleName) || in_array('ROLE_CPN_LECTEUR', $this->roleName)) {
             if ($this->requestStack->getSession()->has('departement')) {
                 $this->departement = $this->departementRepository->find($this->requestStack->getSession()->get('departement'));
             } else {
@@ -60,6 +61,7 @@ class DataUserSession
             }
         } else {
             $this->departement = $this->user->getDepartement();
+            $this->requestStack->getSession()->set('departement', $this->departement->getId());
         }
 
         return $this->departement;
@@ -81,7 +83,7 @@ class DataUserSession
             return $this->versionRepository->findByVersion($annee);
         }
 
-        throw new \Exception('Annee inconnue');
+        throw new Exception('Annee inconnue');
     }
 
     public function getAnnees()
@@ -114,14 +116,18 @@ class DataUserSession
         return $composerData['version'];
     }
 
-    public function getUser(): UserInterface|\Stringable|string
+    public function getUser(): UserInterface|Stringable|string
     {
         return $this->user;
     }
 
-    public function getVersion(): Version
+    public function getVersion(): ?Version
     {
-        return $this->versionRepository->findOneByAnneeAndDepartement($this->getDepartement(), $this->versionPn());
+        if ($this->getDepartement() !== null) {
+            return $this->versionRepository->findOneByAnneeAndDepartement($this->getDepartement(), $this->versionPn());
+        }
+
+        return null;
     }
 
     public function versionPn(): int
