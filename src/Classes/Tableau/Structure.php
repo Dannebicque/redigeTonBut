@@ -5,7 +5,12 @@ use App\Classes\Excel\ExcelWriter;
 use App\DTO\StructureDepartement;
 use App\DTO\StructureSemestre;
 use App\Entity\ApcParcours;
+use App\Entity\ApcRessource;
+use App\Entity\Semestre;
 use App\Entity\Version;
+use App\Repository\ApcComptenceRepository;
+use App\Repository\ApcRessourceRepository;
+use App\Repository\ApcSaeRepository;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Structure
@@ -17,6 +22,13 @@ class Structure
     private StructureDepartement $donneesDepartement;
 
     private Version $version;
+
+    public function __construct(
+        private ApcComptenceRepository $apcCompetenceRepository,
+        private ApcRessourceRepository $apcRessourceRepository,
+        private ApcSaeRepository $apcSaeRepository,
+        )
+    {}
 
     public function setVersion(Version $version): self
     {
@@ -68,6 +80,7 @@ class Structure
         {
             $sem = new StructureSemestre($semestre);
             $json[$semestre->getOrdreLmd()] = $sem->getJson();
+            $json[$semestre->getOrdreLmd()]['structureSemestre'] = $this->getStructureSemestre($semestre);
             $this->donneesDepartement->addSemestre($sem);
         }
 
@@ -119,5 +132,50 @@ class Structure
         $excelWriter->setSpreadsheet($spreadsheet);
         return $excelWriter->genereFichier('structure_'.$departement->getSigle());
 
+    }
+
+    private function getStructureSemestre(Semestre $semestre): array
+    {
+        $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
+
+        $tRessources['ia'] = 0;
+        $tRessources['teds'] = 0;
+        $tRessources['ppp'] = 0;
+        $tRessources['expression'] = 0;
+        $tRessources['lve'] = 0;
+        $tRessources['ppp'] = 0;
+
+        /** @var ApcRessource $ressource */
+        foreach ($ressources as $ressource) {
+            if ($ressource->isRessourceIA()) {
+                $tRessources['ia'] += $ressource->getHeuresTotales();
+            }
+            if ($ressource->isRessourceTEDS()) {
+                $tRessources['teds'] += $ressource->getHeuresTotales();
+            }
+            if ($ressource->isRessourceLve()) {
+                $tRessources['lve'] += $ressource->getHeuresTotales();
+            }
+            if ($ressource->isRessourceExpression())
+            {
+                $tRessources['expression'] += $ressource->getHeuresTotales();
+            }
+
+            if ($ressource->isRessourcePpp())
+            {
+                $tRessources['ppp'] += $ressource->getHeuresTotales();
+            }
+
+        }
+
+
+        return [
+            'nbCompetences' => $this->apcCompetenceRepository->countBySemestre($semestre),
+            'nbRessources' => count( $ressources),
+            'nbSaes' => $this->apcSaeRepository->countBySemestre($semestre),
+            'nbSaesMonoCompetence' => $this->apcSaeRepository->countBySemestreMonoCompetence($semestre),
+            'nbSaesMultiCompetence' => $this->apcSaeRepository->countBySemestreMultiCompetence($semestre),
+            'ressources' => $tRessources,
+        ];
     }
 }

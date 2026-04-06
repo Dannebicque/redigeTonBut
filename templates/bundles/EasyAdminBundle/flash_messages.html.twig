@@ -1,0 +1,36 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContext #}
+{% set ea = ea() %}
+{% trans_default_domain null != ea ? ea.i18n.translationDomain : (translation_domain is defined ? translation_domain ?? 'messages') %}
+
+{% set flash_messages = app.flashes %}
+
+{% if flash_messages|length > 0 %}
+    <div id="ea-toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+        {% for label, messages in flash_messages %}
+            {% set toastClass = label in ['danger', 'error'] ? 'text-bg-danger' : (label == 'warning' ? 'text-bg-warning' : (label == 'success' ? 'text-bg-success' : 'text-bg-info')) %}
+            {% for message in messages %}
+                <div class="toast ea-toast {{ toastClass }} border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4500">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message|trans|raw }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!window.bootstrap || !window.bootstrap.Toast) {
+                return;
+            }
+
+            document.querySelectorAll('.ea-toast').forEach(function (element) {
+                window.bootstrap.Toast.getOrCreateInstance(element).show();
+            });
+        });
+    </script>
+{% endif %}
+

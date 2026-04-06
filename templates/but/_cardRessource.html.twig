@@ -1,13 +1,33 @@
 <div class="col-md-4 col-sm-12">
     <div class="card {% if ressource.ficheAdaptationLocale == true %}bg-warning text-white{% endif %}">
         <div class="card-body">
-            <h4 class="card-title">{{ ressource.display }}</h4>
+            <div class="card-title">
+                <h4>{{ ressource.display }}</h4>
+                <div>
+                    {% if ressource.isRessourceIA %}
+                    <span class="badge bg-info">IA</span>
+                    {% endif %}
+                    {% if ressource.isRessourceTEDS %}
+                        <span class="badge bg-info">TEDS</span>
+                    {% endif %}
+                    {% if ressource.isRessourceExpression %}
+                        <span class="badge bg-info">Expression</span>
+                    {% endif %}
+                    {% if ressource.isRessourceLve %}
+                        <span class="badge bg-info">LVE</span>
+                    {% endif %}
+
+                    {% if ressource.isRessourcePpp %}
+                        <span class="badge bg-info">PPP</span>
+                    {% endif %}
+                </div>
+            </div>
             {% set pdfStatusData = pdfStatusByRessource[ressource.id]|default({'status': 'absent', 'errorMessage': null}) %}
             {% if compareMode|default(false) and ressourceDiff is not null %}
                 {% if ressourceDiff.status == 'added' %}
-                    <span class="badge bg-success mb-2">Ajoutee depuis N-1</span>
+                    <span class="badge bg-success mb-2">Ajoutée depuis N-1</span>
                 {% elseif ressourceDiff.status == 'changed' %}
-                    <span class="badge bg-warning text-dark mb-2">Modifiee</span>
+                    <span class="badge bg-warning text-dark mb-2">Modifiée</span>
                 {% else %}
                     <span class="badge bg-secondary mb-2">Identique</span>
                 {% endif %}

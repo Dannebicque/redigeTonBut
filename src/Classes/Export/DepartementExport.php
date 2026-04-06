@@ -190,6 +190,7 @@ class DepartementExport
             'departement' => $departement,
             'competences' => $version->getApcCompetences(),
             'parcours' => $version->getApcParcours(),
+            'version' => $version,
         ]);
         $name = 'but-' . $departement->getSigle();
 
@@ -207,6 +208,7 @@ class DepartementExport
         $departement = $version->getDepartement();
         $xmlContent = $this->twig->render('xml/export-programme-but.xml.twig', [
             'semestres' => $version->getSemestres(),
+            'version' => $version,
         ]);
         $name = 'but-pn-' . $departement->getSigle();
 

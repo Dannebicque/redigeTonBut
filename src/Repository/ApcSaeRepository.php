@@ -242,4 +242,48 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function countBySemestre(Semestre $semestre)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.semestre = :semestre')
+            ->andWhere('c.ficheAdaptationLocale = false')
+            ->andWhere('c.stage = false')
+            ->setParameter('semestre', $semestre->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countBySemestreMonoCompetence(Semestre $semestre): int
+    {
+        //toutes les SAE non stage qui sont sur une seule compétence
+        return count($this->createQueryBuilder('c')
+            ->select('c.id')
+            ->join('c.apcSaeCompetences', 'cs')
+            ->where('c.semestre = :semestre')
+            ->andWhere('c.ficheAdaptationLocale = false')
+            ->andWhere('c.stage = false')
+            ->groupBy('c.id')
+            ->having('COUNT(DISTINCT IDENTITY(cs.competence)) = 1')
+            ->setParameter('semestre', $semestre->getId())
+            ->getQuery()
+            ->getScalarResult());
+    }
+
+    public function countBySemestreMultiCompetence(Semestre $semestre): int
+    {
+        //toutes les SAE non stage qui sont sur une seule compétence
+        return count($this->createQueryBuilder('c')
+            ->select('c.id')
+            ->join('c.apcSaeCompetences', 'cs')
+            ->where('c.semestre = :semestre')
+            ->andWhere('c.ficheAdaptationLocale = false')
+            ->andWhere('c.stage = false')
+            ->groupBy('c.id')
+            ->having('COUNT(DISTINCT IDENTITY(cs.competence)) > 1')
+            ->setParameter('semestre', $semestre->getId())
+            ->getQuery()
+            ->getScalarResult());
+    }
 }

@@ -130,6 +130,21 @@ class ApcRessource extends AbstractMatiere
     #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private ?float $tpPreco = 0;
 
+    #[ORM\Column]
+    private ?bool $isRessourceIA = false;
+
+    #[ORM\Column]
+    private ?bool $isRessourceTEDS = false;
+
+    #[ORM\Column]
+    private ?bool $isRessourcePpp = false;
+
+    #[ORM\Column]
+    private ?bool $isRessourceExpression = false;
+
+    #[ORM\Column]
+    private ?bool $isRessourceLve = false;
+
     public function __construct()
     {
         $this->apcRessourceCompetences = new ArrayCollection();
@@ -539,5 +554,65 @@ class ApcRessource extends AbstractMatiere
         }
 
         return $t;
+    }
+
+    public function isRessourceIA(): ?bool
+    {
+        return $this->isRessourceIA ?? false;
+    }
+
+    public function setIsRessourceIA(bool $isRessourceIA): static
+    {
+        $this->isRessourceIA = $isRessourceIA;
+
+        return $this;
+    }
+
+    public function isRessourceTEDS(): ?bool
+    {
+        return $this->isRessourceTEDS ?? false;
+    }
+
+    public function setIsRessourceTEDS(bool $isRessourceTEDS): static
+    {
+        $this->isRessourceTEDS = $isRessourceTEDS;
+
+        return $this;
+    }
+
+    public function isRessourcePpp(): ?bool
+    {
+        return $this->isRessourcePpp ?? false;
+    }
+
+    public function setIsRessourcePpp(bool $isRessourcePpp): static
+    {
+        $this->isRessourcePpp = $isRessourcePpp;
+
+        return $this;
+    }
+
+    public function isRessourceExpression(): ?bool
+    {
+        return $this->isRessourceExpression ?? false;
+    }
+
+    public function setIsRessourceExpression(bool $isRessourceExpression): static
+    {
+        $this->isRessourceExpression = $isRessourceExpression;
+
+        return $this;
+    }
+
+    public function isRessourceLve(): ?bool
+    {
+        return $this->isRessourceLve ?? false;
+    }
+
+    public function setIsRessourceLve(bool $isRessourceLve): static
+    {
+        $this->isRessourceLve = $isRessourceLve;
+
+        return $this;
     }
 }

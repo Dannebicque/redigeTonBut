@@ -81,6 +81,35 @@ class ApcRessourceType extends AbstractType
                     'required' => false,
                 ])
             ->add('heuresTotales', TextType::class, ['label' => 'Heures totales',])
+            ->add('isRessourceIA', ChoiceType::class, [
+                'label' => 'Ressource IA',
+                'expanded' => true,
+                'choices' => ['Oui' => true, 'Non' => false],
+                'disabled' => $this->verouille_croise
+            ])
+            ->add('isRessourceExpression', ChoiceType::class, [
+                'label' => 'Ressource expression/communication',
+                'expanded' => true,
+                'choices' => ['Oui' => true, 'Non' => false],
+                'disabled' => $this->verouille_croise
+            ])
+            ->add('isRessourceLve', ChoiceType::class, [
+                'label' => 'Ressource Langue Vivante',
+                'expanded' => true,
+                'choices' => ['Oui' => true, 'Non' => false],
+                'disabled' => $this->verouille_croise
+            ])
+            ->add('isRessourceTEDS', ChoiceType::class, [
+                'label' => 'Ressource TEDS',
+                'expanded' => true,
+                'choices' => ['Oui' => true, 'Non' => false],
+                'disabled' => $this->verouille_croise
+            ])            ->add('isRessourcePpp', ChoiceType::class, [
+                'label' => 'Ressource PPP',
+                'expanded' => true,
+                'choices' => ['Oui' => true, 'Non' => false],
+                'disabled' => $this->verouille_croise
+            ])
             ->add('tpPpn', TextType::class, ['label' => 'Dont heures TP',])
             ->add('cmPreco', TextType::class, [
                 'label' => 'Préconisation Heures CM',

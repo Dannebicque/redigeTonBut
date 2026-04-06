@@ -5,6 +5,9 @@ namespace App\DTO;
 
 
 use App\Entity\Semestre;
+use App\Repository\ApcComptenceRepository;
+use App\Repository\ApcRessourceRepository;
+use App\Repository\ApcSaeRepository;
 
 class StructureSemestre
 {
@@ -48,9 +51,13 @@ class StructureSemestre
 
     public float $nbHeuresTpLocale;
 
+    private Semestre $semestre;
 
-    public function __construct(Semestre $semestre)
+
+    public function __construct(
+        Semestre $semestre)
     {
+        $this->semestre = $semestre;
         $this->nbHeuresRessourcesSae = $semestre->getNbHeuresRessourceSae();
         $this->pourcentageAdaptationLocale = ceil($semestre->getPourcentageAdaptationLocale());
 
@@ -73,7 +80,6 @@ class StructureSemestre
         $this->nbMoyenneHeuresDemiJournee = $this->nbDemiJournees !== 0.0 ? $this->dureeHebdo / $this->nbDemiJournees : 0;
         $this->nbHeuresCoursHebdo = $this->nbSemainesCoursProjet !== 0 ? $this->nbHeuresRessourcesSae / $this->nbSemainesCoursProjet : 0;
         $this->nbHeuresHebdoProjet = $this->nbSemainesCoursProjet !== 0 ? $this->nbHeuresProjet / $this->nbSemainesCoursProjet : 0;
-
     }
 
     public function getJson(): array
@@ -98,8 +104,8 @@ class StructureSemestre
             'nbHeuresCoursHebdo' => round($this->nbHeuresCoursHebdo, 2),
             'nbHeuresHebdoProjet' => round($this->nbHeuresHebdoProjet, 2),
             'nbHeuresTpNational' => round($this->nbHeuresTpNational, 2),
-            'nbHeuresTpLocale' => round($this->nbHeuresTpLocale, 2)
+            'nbHeuresTpLocale' => round($this->nbHeuresTpLocale, 2),
+
         ];
     }
-
 }

@@ -6,12 +6,14 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use App\Entity\Departement;
@@ -28,10 +30,14 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCrudController extends BaseCrudController
 {
+    private const TEMP_PASSWORD_BYTES = 12;
+
     private array $roles = [];
 
     public function __construct(
@@ -40,6 +46,7 @@ class UserCrudController extends BaseCrudController
         private readonly RequestStack           $requestStack,
         private readonly UserRepository         $userRepository,
         private readonly Security               $security,
+        private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly EntityManagerInterface $entityManager)
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
@@ -54,7 +61,7 @@ class UserCrudController extends BaseCrudController
                 'Membre CPN (lecture)' => 'ROLE_CPN_LECTEUR',
                 'PACD' => 'ROLE_PACD',
             ];
-        } else if ($this->security->isGranted('ROLE_GT')) {
+        } elseif ($this->security->isGranted('ROLE_GT')) {
             $this->roles = [
                 'GT' => 'ROLE_GT',
                 'IUT' => 'ROLE_IUT',
@@ -65,14 +72,14 @@ class UserCrudController extends BaseCrudController
                 'Membre CPN (lecture)' => 'ROLE_CPN_LECTEUR',
                 'PACD' => 'ROLE_PACD',
             ];
-        } else if ($this->security->isGranted('ROLE_CPN')) {
+        } elseif ($this->security->isGranted('ROLE_CPN')) {
             $this->roles = [
                 'IUT' => 'ROLE_IUT',
                 'Editeur' => 'ROLE_EDITEUR',
                 'Lecteur' => 'ROLE_LECTEUR',
                 'PACD' => 'ROLE_PACD',
             ];
-        } else if ($this->security->isGranted('ROLE_PACD')) {
+        } elseif ($this->security->isGranted('ROLE_PACD')) {
             $this->roles = [
                 'IUT' => 'ROLE_IUT',
                 'Editeur' => 'ROLE_EDITEUR',
@@ -128,7 +135,7 @@ class UserCrudController extends BaseCrudController
     {
         $actions = parent::configureActions($actions);
 
-        $resendPassword = Action::new('resendPassword', 'Renvoyer le mot de passe')
+        $resendPassword = Action::new('resendPassword', 'Renvoyer le mot de passe', 'fa fa-envelope')
             ->linkToCrudAction('resendPassword')
             ->setCssClass('text-warning');
 
@@ -197,63 +204,83 @@ class UserCrudController extends BaseCrudController
             return;
         }
 
-        // Générer un mot de passe aléatoire
-        $newPassword = bin2hex(random_bytes(6));
-        $entityInstance->setPassword(password_hash($newPassword, PASSWORD_BCRYPT));
+        $newPassword = $this->assignTemporaryPassword($entityInstance);
 
         parent::persistEntity($entityManager, $entityInstance);
 
-        // Envoyer l'email
-        $email = (new TemplatedEmail())
-            ->from('orebut@iut.fr')
-            ->to($entityInstance->getEmail())
-            ->subject('[ORéBUT] Votre compte a été créé')
-            ->htmlTemplate('email/send_password.html.twig')
-            ->context([
-                'user' => $entityInstance,
-                'newPassword' => $newPassword,
-            ]);
-        $this->mailer->send($email);
+        try {
+            $this->sendPasswordEmail(
+                $entityInstance,
+                $newPassword,
+                '[ORéBUT] Votre compte a été créé',
+                'email/send_password.html.twig'
+            );
+            $this->addFlash('success', 'Compte créé et mot de passe envoyé par email.');
+        } catch (\Throwable) {
+            $this->addFlash('warning', 'Compte créé, mais l\'email d\'envoi du mot de passe a échoué.');
+        }
     }
 
-    public function resendPassword(): RedirectResponse
+    #[AdminRoute(path: '/resend-password', name: 'resend_password')]
+    public function resendPassword(AdminContext $context): Response
     {
-        $request = $this->requestStack->getCurrentRequest();
-        if (!$request || !$request->query->has('entityId')) {
-            $this->addFlash('danger', 'Aucun utilisateur sélectionné.');
-            $url = $this->adminUrlGenerator->setController(self::class)->setAction(Crud::PAGE_INDEX)->generateUrl();
-            return $this->redirect($url);
-        }
+        $user = $context->getEntity()->getInstance();
 
-        $userId = $request->query->get('entityId');
-        $user = $this->userRepository->find($userId);
-
-        if ($user) {
-            // Générer un nouveau mot de passe sécurisé
-            $newPassword = bin2hex(random_bytes(6));
-            $user->setPassword(password_hash($newPassword, PASSWORD_BCRYPT));
-            $this->entityManager->flush();
-
-            $email = (new TemplatedEmail())
-                ->from('orebut@iut.fr')
-                ->to($user->getEmail())
-                ->subject('[ORéBUT] Réinitialisation de votre mot de passe')
-                ->htmlTemplate('email/resend_password.html.twig')
-                ->context([
-                    'user' => $user,
-                    'newPassword' => $newPassword,
-                ]);
-
-            $this->mailer->send($email);
-
-            $this->addFlash('success', 'Le mot de passe a été renvoyé avec succès.');
-        } else {
+        if (!$user instanceof User) {
             $this->addFlash('danger', 'Utilisateur introuvable.');
+            return $this->redirectToCurrentAdminPage();
         }
 
-        $url = $this->adminUrlGenerator->setController(self::class)->setAction(Crud::PAGE_INDEX)->generateUrl();
-        return $this->redirect($url);
+        $newPassword = $this->assignTemporaryPassword($user);
+        $this->entityManager->flush();
+
+        try {
+            $this->sendPasswordEmail(
+                $user,
+                $newPassword,
+                '[ORéBUT] Réinitialisation de votre mot de passe',
+                'email/resend_password.html.twig'
+            );
+            $this->addFlash('success', 'Le mot de passe a été renvoyé avec succès.');
+        } catch (\Throwable $e) {
+            $this->addFlash('warning', 'Mot de passe mis à jour, mais l’email n’a pas pu être envoyé.');
+        }
+
+        return $this->redirectToCurrentAdminPage();
     }
+//    public function resendPassword(): RedirectResponse
+//    {
+//        dump('ici');
+//        $request = $this->requestStack->getCurrentRequest();
+//        if (!$request || !$request->query->has('entityId')) {
+//            $this->addFlash('danger', 'Aucun utilisateur sélectionné.');
+//            return $this->redirectToCurrentAdminPage();
+//        }
+//
+//        $userId = $request->query->get('entityId');
+//        $user = $this->userRepository->find($userId);
+//
+//        if ($user) {
+//            $newPassword = $this->assignTemporaryPassword($user);
+//            $this->entityManager->flush();
+//
+//            try {
+//                $this->sendPasswordEmail(
+//                    $user,
+//                    $newPassword,
+//                    '[ORéBUT] Réinitialisation de votre mot de passe',
+//                    'email/resend_password.html.twig'
+//                );
+//                $this->addFlash('success', 'Le mot de passe a été renvoyé avec succès.');
+//            } catch (\Throwable) {
+//                $this->addFlash('warning', 'Mot de passe mis à jour, mais l\'email n\'a pas pu être envoyé.');
+//            }
+//        } else {
+//            $this->addFlash('danger', 'Utilisateur introuvable.');
+//        }
+//
+//        return $this->redirectToCurrentAdminPage();
+//    }
 
     public function configureFilters(Filters $filters): Filters
     {
@@ -265,5 +292,54 @@ class UserCrudController extends BaseCrudController
                 ArrayFilter::new('roles')
                     ->setChoices($this->roles)
             );
+    }
+
+    private function assignTemporaryPassword(User $user): string
+    {
+        $newPassword = $this->generateTemporaryPassword();
+        $user->setPassword($this->passwordHasher->hashPassword($user, $newPassword));
+
+        return $newPassword;
+    }
+
+    private function generateTemporaryPassword(): string
+    {
+        try {
+            return bin2hex(random_bytes(self::TEMP_PASSWORD_BYTES));
+        } catch (\Throwable $exception) {
+            throw new \RuntimeException('Impossible de générer un mot de passe temporaire.', 0, $exception);
+        }
+    }
+
+    private function sendPasswordEmail(User $user, string $newPassword, string $subject, string $template): void
+    {
+        $email = (new TemplatedEmail())
+            ->from('orebut@iut.fr')
+            ->to($user->getEmail())
+            ->subject($subject)
+            ->htmlTemplate($template)
+            ->context([
+                'user' => $user,
+                'newPassword' => $newPassword,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+    private function redirectToCurrentAdminPage(): RedirectResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $referer = $request?->headers->get('referer');
+
+        if (is_string($referer) && $referer !== '') {
+            return $this->redirect($referer);
+        }
+
+        $url = $this->adminUrlGenerator
+            ->setController(self::class)
+            ->setAction(Crud::PAGE_INDEX)
+            ->generateUrl();
+
+        return $this->redirect($url);
     }
 }

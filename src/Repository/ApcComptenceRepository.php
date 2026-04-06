@@ -10,6 +10,7 @@
 namespace App\Repository;
 
 use App\Entity\ApcCompetence;
+use App\Entity\Semestre;
 use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -101,6 +102,17 @@ class ApcComptenceRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function countBySemestre(Semestre $semestre)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->join('c.apcCompetenceSemestres', 'cs')
+            ->where('cs.semestre = :semestre')
+            ->setParameter('semestre', $semestre->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 }

@@ -253,4 +253,14 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function countBySemestre(Semestre $semestre)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.semestre = :semestre')
+            ->setParameter('semestre', $semestre->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

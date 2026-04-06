@@ -108,8 +108,8 @@
     </div>
 
     <div class="note">
-        Ce PDF reprend les données comparatives disponibles dans l’argumentaire.
-        Les commentaires saisis dans le formulaire web ne sont pas inclus dans cette génération.
+        Ce PDF reprend les données comparatives disponibles dans l’argumentaire
+        ainsi que les commentaires saisis dans le formulaire web.
     </div>
 
     <h2>Présentation</h2>
@@ -126,11 +126,13 @@
             <th>Version précédente</th>
             <th>Version courante</th>
             <th>Écart</th>
+            <th>Commentaires / explications</th>
         </tr>
         </thead>
         <tbody>
         {% for i in 1..6 %}
             {% set diff = structureCurrent[i].nbHeuresCoursProjet - structurePrevious[i].nbHeuresCoursProjet %}
+            {% set commentVh = argumentairePayload['vh_com_s' ~ i]|default('') %}
             <tr>
                 <td class="text-center"><strong>S{{ i }}</strong></td>
                 <td>
@@ -142,6 +144,7 @@
                     <br><small>dont projet : {{ structureCurrent[i].nbHeuresProjet }} h</small>
                 </td>
                 <td class="text-center">{{ helper.diff_badge(diff) }}</td>
+                <td>{{ commentVh|nl2br }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -156,18 +159,21 @@
             <th>SAÉ local  courante</th>
             <th>Ressources précédente</th>
             <th>Ressources courante</th>
+            <th>Commentaires / explications</th>
         </tr>
         </thead>
         <tbody>
         {% for i in 1..6 %}
             {% set previousRessources = structurePrevious[i].nbHeuresEnseignementRessourceNational + structurePrevious[i].nbHeuresEnseignementRessourceLocale %}
             {% set currentRessources = structureCurrent[i].nbHeuresEnseignementRessourceNational + structureCurrent[i].nbHeuresEnseignementRessourceLocale %}
+            {% set commentSaeRes = argumentairePayload['sae_res_com_s' ~ i]|default('') %}
             <tr>
                 <td class="text-center"><strong>S{{ i }}</strong></td>
                 <td class="text-center">{{ structurePrevious[i].nbHeuresEnseignementSaeLocale }} h</td>
                 <td class="text-center">{{ structureCurrent[i].nbHeuresEnseignementSaeLocale }} h</td>
                 <td class="text-center">{{ previousRessources }} h</td>
                 <td class="text-center">{{ currentRessources }} h</td>
+                <td>{{ commentSaeRes|nl2br }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -182,16 +188,19 @@
             <th>TP courante</th>
             <th>Autonomie précédente</th>
             <th>Autonomie courante</th>
+            <th>Commentaires / explications</th>
         </tr>
         </thead>
         <tbody>
         {% for i in 1..6 %}
+            {% set commentTpAuton = argumentairePayload['tp_auton_com_s' ~ i]|default('') %}
             <tr>
                 <td class="text-center"><strong>S{{ i }}</strong></td>
                 <td class="text-center">{{ structurePrevious[i].nbHeuresTpNational + structurePrevious[i].nbHeuresTpLocale }} h</td>
                 <td class="text-center">{{ structureCurrent[i].nbHeuresTpNational + structureCurrent[i].nbHeuresTpLocale }} h</td>
                 <td class="text-center">{{ structurePrevious[i].nbHeuresProjet }} h</td>
                 <td class="text-center">{{ structureCurrent[i].nbHeuresProjet }} h</td>
+                <td>{{ commentTpAuton|nl2br }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -205,12 +214,14 @@
             <th>Version précédente</th>
             <th>Version courante</th>
             <th>Positionnement</th>
+            <th>Commentaires / explications</th>
         </tr>
         </thead>
         <tbody>
         {% for i in 1..6 %}
             {% set previousStage = structurePrevious[i].nbSemainesStageMin ~ ' - ' ~ structurePrevious[i].nbSemainesStageMax %}
             {% set currentStage = structureCurrent[i].nbSemainesStageMin ~ ' - ' ~ structureCurrent[i].nbSemainesStageMax %}
+            {% set commentStage = argumentairePayload['stage_com_s' ~ i]|default('') %}
             <tr>
                 <td class="text-center"><strong>S{{ i }}</strong></td>
                 <td class="text-center">
@@ -238,6 +249,7 @@
                         <span class="badge badge-secondary">Sans stage</span>
                     {% endif %}
                 </td>
+                <td>{{ commentStage|nl2br }}</td>
             </tr>
         {% endfor %}
         </tbody>

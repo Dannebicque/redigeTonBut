@@ -14,6 +14,7 @@ use App\Repository\ApcRessourceRepository;
 use App\Repository\ApcSaeParcoursRepository;
 use App\Repository\ApcSaeRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 use ZipArchive;
 
@@ -56,7 +57,7 @@ class ApcReferentielFormationExport
     }
 
 
-    public function export(Version $version, string $_format): \Symfony\Component\HttpFoundation\StreamedResponse|Response|null
+    public function export(Version $version, string $_format): StreamedResponse|Response|null
     {
 
         if ($_format === 'al') {
@@ -114,7 +115,7 @@ class ApcReferentielFormationExport
         return $response;
     }
 
-    private function exportExcel(): \Symfony\Component\HttpFoundation\StreamedResponse
+    private function exportExcel(): StreamedResponse
     {
         $this->excelWriter->nouveauFichier('');
         $this->excelWriter->createSheet('Ressources');
@@ -280,7 +281,7 @@ class ApcReferentielFormationExport
         return $this->excelWriter->genereFichier('tableau_referentiel_formation' . date('YmdHis'));
     }
 
-    public function exportSynthese(Version $version): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function exportSynthese(Version $version): StreamedResponse
     {
         $departement = $version->getDepartement();
         $this->excelWriter->nouveauFichier('');
@@ -362,7 +363,7 @@ class ApcReferentielFormationExport
         return $this->excelWriter->genereFichier('tableau_referentiel_synthese_formation' . date('YmdHis'));
     }
 
-    public function exportSyntheseAcd(Version $version): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function exportSyntheseAcd(Version $version): StreamedResponse
     {
         $departement = $version->getDepartement();
         $this->excelWriter->nouveauFichier('');

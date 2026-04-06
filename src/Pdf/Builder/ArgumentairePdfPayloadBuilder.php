@@ -9,6 +9,7 @@ use App\Entity\Version;
 use App\Pdf\PdfPayloadBuilderInterface;
 use App\Pdf\PdfSourceType;
 use App\Pdf\RemotePdfRequest;
+use App\Repository\ArgumentaireRepository;
 use App\Repository\VersionRepository;
 use Twig\Environment;
 
@@ -16,6 +17,7 @@ final readonly class ArgumentairePdfPayloadBuilder implements PdfPayloadBuilderI
 {
     public function __construct(
         private VersionRepository $versionRepository,
+        private ArgumentaireRepository $argumentaireRepository,
         private ArgumentaireDataProvider $argumentaireDataProvider,
         private Environment $twig,
     ) {
@@ -35,12 +37,14 @@ final readonly class ArgumentairePdfPayloadBuilder implements PdfPayloadBuilderI
         }
 
         $data = $this->argumentaireDataProvider->getData($version);
+        $argumentaire = $this->argumentaireRepository->findOneByVersion($version);
 
         $html = $this->twig->render('pdf/argumentaire/fiche.html.twig', [
             'version' => $version,
             'previousVersion' => $data['previousVersion'],
             'structureCurrent' => $data['structureCurrent'],
             'structurePrevious' => $data['structurePrevious'],
+            'argumentairePayload' => $argumentaire?->getPayload() ?? [],
             'parameters' => $parameters,
         ]);
 
@@ -67,4 +71,3 @@ final readonly class ArgumentairePdfPayloadBuilder implements PdfPayloadBuilderI
         );
     }
 }
-

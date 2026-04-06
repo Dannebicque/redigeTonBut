@@ -6,6 +6,7 @@ use App\Entity\Departement;
 use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Version>
@@ -37,5 +38,26 @@ class VersionRepository extends ServiceEntityRepository
             ->setParameter('departement', $getDepartement?->getId())
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findByUser(?UserInterface $user)
+    {
+        if ($user === null) {
+            return [];
+        }
+
+        // tester si l'utilisateur est pacd du département
+        if ($user->ispacd()) {
+            return [$user->getDepartement()];
+        }
+
+        $qb = $this->createquerybuilder('version')
+            ->innerjoin('version.departement', 'departement')
+        ->andwhere(':user member of departement.cpns')
+            ->setparameter('user', $user);
+
+
+        return $qb->getquery()->getresult();
+
     }
 }
