@@ -3,226 +3,117 @@
 namespace App\Controller;
 
 use App\Entity\ApcParcours;
-use App\Entity\Departement;
-use App\Repository\ApcRessourceParcoursRepository;
-use App\Repository\ApcRessourceRepository;
-use App\Repository\ApcSaeParcoursRepository;
-use App\Repository\ApcSaeRepository;
-use App\Repository\SemestreRepository;
-use DateTime;
-//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-//use Knp\Snappy\Pdf;
-use Exception;
-use Symfony\Component\HttpFoundation\Response;
+use App\Pdf\PdfManager;
+use App\Pdf\PdfSourceType;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ExportPdfController extends BaseController
 {
+    private const DOCUMENT_KEY_PARCOURS = 'export_latex_parcours';
+    private const DOCUMENT_KEY_TRONC_COMMUN = 'export_latex_tronc_commun';
+    private const DOCUMENT_KEY_PARCOURS_PREFIX = 'export_latex_parcours_';
+    private const DOCUMENT_KEY_ADAPTATION_LOCALE_PREFIX = 'export_latex_al_';
+
+    public function __construct(
+        private readonly PdfManager $pdfManager,
+    ) {
+    }
+
     #[Route('/export/pdf/parcours', name: 'export_pdf_parcours')]
     public function parcours(
-//        Pdf $knpSnappyPdf,
-        ApcRessourceRepository $apcRessourceRepository
-    ): Response {
-        throw new Exception('Fonctionnalité temporairement indisponible');
-        $nbParcours = $this->getVersion()?->getApcParcours()->count();
-        $semestres = $this->getVersion()->getSemestres();
-
-        $ressources = [];
-
-        foreach ($semestres as $semestre) {
-            $ressources[$semestre->getId()] = [];
-            if ($semestre->getOrdreLmd() > 2) {
-                $allRessources = $apcRessourceRepository->findBySemestre($semestre);
-                foreach ($allRessources as $ressource) {
-                    if ($ressource->getApcRessourceParcours()->count() > 0 && $ressource->getApcRessourceParcours()->count() < $nbParcours) {
-                        $ressources[$semestre->getId()][] = $ressource;
-                    }
-                }
-            }
-        }
-
-        $day = new DateTime('now');
-        $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_parcours_' . $day->format('dmYHis') . '.pdf';
-        $html = $this->renderView('formation/export-referentiel.html.twig', [
-            'allParcours' => $this->getVersion()->getApcParcours(),
-            'departement' => $this->getDepartement(),
-            'semestres' => $semestres,
-            'ressources' => $ressources,
-            'version' => $this->getVersion(),
-        ]);
-
-        $header = $this->renderView('export_pdf/_header.html.twig',
-            ['sigle' => $this->getDepartement()->getSigle()]);
-
-//        return new PdfResponse(
-//            $knpSnappyPdf->getOutputFromHtml($html,
-//                [
-//                    'header-html' => $header,
-//                ]
-//            ),
-//            $name
-//        );
+        Request $request,
+    ): BinaryFileResponse|JsonResponse|RedirectResponse {
+        return $this->handleDeferredReferentielExport(
+            $request,
+            self::DOCUMENT_KEY_PARCOURS,
+            ['scope' => 'parcours'],
+        );
     }
 
     #[Route('/export/pdf/tronc-commun', name: 'export_pdf_tronc_commun')]
     public function troncCommun(
-//        Pdf $knpSnappyPdf,
-        ApcRessourceRepository $apcRessourceRepository
-    ): Response {
-        throw new Exception('Fonctionnalité temporairement indisponible');
-        $nbParcours = $this->getVersion()?->getApcParcours()->count();
-        $semestres = $this->getVersion()->getSemestres();
-
-
-        $ressources = [];
-
-        foreach ($semestres as $semestre) {
-            if ($semestre->getOrdreLmd() < 3) {
-                $ressources[$semestre->getId()] = $apcRessourceRepository->findBySemestre($semestre);
-            } else {
-                $ressources[$semestre->getId()] = [];
-                $allRessources = $apcRessourceRepository->findBySemestre($semestre);
-                foreach ($allRessources as $ressource) {
-                    if ($ressource->getApcRessourceParcours()->count() === $nbParcours || $ressource->getApcRessourceParcours()->count() === 0) {
-                        $ressources[$semestre->getId()][] = $ressource;
-                    }
-                }
-            }
-        }
-
-        $day = new DateTime('now');
-        $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_tronc_commun_' . $day->format('dmYHis') . '.pdf';
-        $html = $this->renderView('formation/export-referentiel.html.twig', [
-            'allParcours' => $this->getVersion()->getApcParcours(),
-            'departement' => $this->getDepartement(),
-            'version' => $this->getVersion(),
-            'semestres' => $semestres,
-            'ressources' => $ressources,
-        ]);
-
-        $header = $this->renderView('export_pdf/_header.html.twig', ['sigle' => $this->getDepartement()->getSigle()]);
-
-//        return new PdfResponse(
-//            $knpSnappyPdf->getOutputFromHtml($html,
-//                [
-//                    'header-html' => $header,
-//                ]
-//            ),
-//            $name
-//        );
+        Request $request,
+    ): BinaryFileResponse|JsonResponse|RedirectResponse {
+        return $this->handleDeferredReferentielExport(
+            $request,
+            self::DOCUMENT_KEY_TRONC_COMMUN,
+            ['scope' => 'tronc_commun'],
+        );
     }
 
     #[Route('/export/pdf/{parcours}', name: 'export_pdf')]
     public function index(
-//        Pdf $knpSnappyPdf,
-        SemestreRepository $semestreRepository,
-        ApcSaeRepository $apcSaeRepository,
-        ApcSaeParcoursRepository $apcSaeParcoursRepository,
-        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
-        ApcRessourceRepository $apcRessourceRepository,
+        Request $request,
         ApcParcours $parcours
-    ): Response {
-        throw new Exception('Fonctionnalité temporairement indisponible');
-        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
-            $semestres = $semestreRepository->findByParcours($parcours);
-        } else {
-            $semestres = $this->getVersion()->getSemestres();
-        }
-
-        $ressources = [];
-        $saes = [];
-
-        foreach ($semestres as $semestre) {
-            if ($this->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $semestre->getOrdreLmd() < 3) {
-                $ressources[$semestre->getId()] = $apcRessourceRepository->findBySemestre($semestre);
-                $saes[$semestre->getId()] = $apcSaeRepository->findBySemestre($semestre);
-            } else {
-                $ressources[$semestre->getId()] = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
-                $saes[$semestre->getId()] = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
-            }
-        }
-
-        $day = new DateTime('now');
-        $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_' . $parcours->getCode() . '_' . $day->format('dmYHis') . '.pdf';
-        $html = $this->renderView('formation/export-referentiel.html.twig', [
-            'allParcours' => $this->getVersion()->getApcParcours(),
-            'departement' => $this->getDepartement(),
-            'version' => $this->getVersion(),
-            'semestres' => $semestres,
-            'saes' => $saes,
-            'ressources' => $ressources,
-            'parcours' => $parcours,
-        ]);
-
-        $header = $this->renderView('export_pdf/_header.html.twig',
-            ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
-        $this->renderView('export_pdf/_footer.html.twig');
-
-//        return new PdfResponse(
-//            $knpSnappyPdf->getOutputFromHtml($html,
-//                [
-//                    'header-html' => $header,
-////                    'footer-html' => $footer,
-//                ]
-//            ),
-//            $name
-//        );
+    ): BinaryFileResponse|JsonResponse|RedirectResponse {
+        return $this->handleDeferredReferentielExport(
+            $request,
+            self::DOCUMENT_KEY_PARCOURS_PREFIX . $parcours->getId(),
+            ['parcours' => (string) $parcours->getId(), 'adaptationLocale' => false],
+        );
     }
 
     #[Route('/export/al/pdf/{parcours}', name: 'export_pdf_adaptation_locale')]
     public function exportPdfAl(
-//        Pdf $knpSnappyPdf,
-        SemestreRepository $semestreRepository,
-        ApcSaeRepository $apcSaeRepository,
-        ApcSaeParcoursRepository $apcSaeParcoursRepository,
-        ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
-        ApcRessourceRepository $apcRessourceRepository,
+        Request $request,
         ApcParcours $parcours
-    ): Response {
-        throw new Exception('Fonctionnalité temporairement indisponible');
-        if ($this->getDepartement()->getTypeStructure() === Departement::TYPE3) {
-            $semestres = $semestreRepository->findByParcours($parcours);
-        } else {
-            $semestres = $this->getVersion()->getSemestres();
+    ): BinaryFileResponse|JsonResponse|RedirectResponse {
+        return $this->handleDeferredReferentielExport(
+            $request,
+            self::DOCUMENT_KEY_ADAPTATION_LOCALE_PREFIX . $parcours->getId(),
+            ['parcours' => (string) $parcours->getId(), 'adaptationLocale' => true],
+        );
+    }
+
+    private function handleDeferredReferentielExport(
+        Request $request,
+        string $documentKey,
+        array $parameters = [],
+    ): BinaryFileResponse|JsonResponse|RedirectResponse {
+        $version = $this->getVersion();
+        if ($version === null || $version->getId() === null) {
+            throw $this->createNotFoundException('Version active introuvable.');
         }
 
-        $ressources = [];
-        $saes = [];
+        $sourceId = (string) $version->getId();
+        $document = $this->pdfManager->getOrRequest(
+            PdfSourceType::REFERENTIEL,
+            $sourceId,
+            $documentKey,
+            $parameters,
+        );
 
-        foreach ($semestres as $semestre) {
-            if ($this->getDepartement()->getTypeStructure() !== Departement::TYPE3 && $semestre->getOrdreLmd() < 3) {
-                $ressources[$semestre->getId()] = $apcRessourceRepository->findBySemestreAl($semestre);
-                $saes[$semestre->getId()] = $apcSaeRepository->findBySemestreAl($semestre);
-            } else {
-                $ressources[$semestre->getId()] = $apcRessourceParcoursRepository->findBySemestreAl($semestre, $parcours);
-                $saes[$semestre->getId()] = $apcSaeParcoursRepository->findBySemestreAl($semestre, $parcours);
-            }
+        if ($document->isReady() && $document->getCurrentFilePath() && is_file($document->getCurrentFilePath())) {
+            $response = new BinaryFileResponse($document->getCurrentFilePath());
+            $response->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_INLINE,
+                sprintf('referentiel_%s_%s.pdf', $sourceId, $documentKey)
+            );
+
+            return $response;
         }
 
-        $day = new DateTime('now');
-        $name = 'referentiel-formation-' . $this->getDepartement()->getSigle() . '_' . $parcours->getCode() . '_' . $day->format('dmYHis') . '.pdf';
-        $html = $this->renderView('formation/export-referentiel.html.twig', [
-            'allParcours' => $this->getVersion()->getApcParcours(),
-            'departement' => $this->getDepartement(),
-            'version' => $this->getVersion(),
-            'semestres' => $semestres,
-            'saes' => $saes,
-            'ressources' => $ressources,
-            'parcours' => $parcours,
-        ]);
+        $job = $this->pdfManager->getLatestJob(PdfSourceType::REFERENTIEL, $sourceId, $documentKey);
 
-        $header = $this->renderView('export_pdf/_header.html.twig',
-            ['sigle' => $this->getDepartement()->getSigle(), 'parcours' => $parcours->getLibelle()]);
-        $this->renderView('export_pdf/_footer.html.twig');
+        if ($request->isXmlHttpRequest() || $request->getPreferredFormat() === 'json') {
+            return new JsonResponse([
+                'status' => $document->getStatus(),
+                'message' => 'Le PDF est en cours de génération.',
+                'job' => $job ? [
+                    'id' => (string) $job->getId(),
+                    'status' => $job->getStatus(),
+                    'errorMessage' => $job->getErrorMessage(),
+                ] : null,
+            ], 202);
+        }
 
-//        return new PdfResponse(
-//            $knpSnappyPdf->getOutputFromHtml($html,
-//                [
-//                    'header-html' => $header,
-////                    'footer-html' => $footer,
-//                ]
-//            ),
-//            $name
-//        );
+        $this->addFlash('warning', 'Le document est en cours de génération. Réessayez dans quelques instants.');
+
+        return $this->redirect($request->headers->get('referer', '/'));
     }
 }

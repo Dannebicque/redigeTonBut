@@ -98,19 +98,24 @@
             <section class="scroll-section mb-2" id="export">
                 <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
                 {% if user_data.departement.typeStructure != 'type3' %}
-                    <a href="{{ path('export_pdf_tronc_commun') }}" target="_blank">
+                    {% set troncCommunStatus = pdfReferentielStatuses.troncCommun|default({'status': 'absent', 'errorMessage': null}) %}
+                    {% set parcoursGlobalStatus = pdfReferentielStatuses.parcoursGlobal|default({'status': 'absent', 'errorMessage': null}) %}
+                    <a href="{{ path('export_pdf_tronc_commun') }}" >
                         Export d'une pré-version du PN pour le tronc commun
                     </a>
-                    <a href="{{ path('export_pdf_parcours') }}" target="_blank">
+                    {{ include('pdf/_generation_status_badge.html.twig', {statusData: troncCommunStatus}) }}
+                    <a href="{{ path('export_pdf_parcours') }}" >
                         Export d'une pré-version du PN pour les parcours
                     </a>
+                    {{ include('pdf/_generation_status_badge.html.twig', {statusData: parcoursGlobalStatus}) }}
                 {% endif %}
+                <br>
                 <br>
                 <a href="{{ asset('pn/PN-BUT-'~user_data.departement.sigle~'.pdf') }}" target="_blank" class="btn
                 btn-success
                 btn-outline
                 d-block">
-                    Récupérer la version du PN validée par la CCN et le CNESER.
+                    Récupérer la version du PN validée par la CCN et le CNESER (version 2021/2022).
                 </a>
                 <br>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
@@ -119,10 +124,12 @@
                             <div class="card h-100 border-{{ parcours.couleur }}">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ parcours.libelle }}</h5>
+                                    {% set parcoursStatus = pdfReferentielStatuses.parcoursById[parcours.id]|default({'status': 'absent', 'errorMessage': null}) %}
                                     <a href="{{ path('export_pdf', {parcours:parcours.id}) }}" target="_blank">
                                         Export d'une pré-version du PN pour le parcours
                                         {{ parcours.libelle }}
                                     </a>
+                                    {{ include('pdf/_generation_status_badge.html.twig', {statusData: parcoursStatus}) }}
                                 </div>
                             </div>
                         </div>

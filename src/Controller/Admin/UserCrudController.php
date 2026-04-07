@@ -107,11 +107,17 @@ class UserCrudController extends BaseCrudController
 
         if ($this->security->isGranted('ROLE_CPN') || $this->security->isGranted('ROLE_PACD')) {
             $departements = $user->getCpnDepartements();
-            $qb->andWhere('entity.departement IN (:departements)')
-                ->setParameter('departements', $departements);
             $departement = $user->getDepartement();
-            $qb->orWhere('entity.departement = :departement')
-                ->setParameter('departement', $departement);
+            // Regrouper les deux conditions dans un AND (...OR...) pour ne pas
+            // polluer le WHERE global (notamment lors des recherches textuelles).
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->in('entity.departement', ':departements'),
+                    $qb->expr()->eq('entity.departement', ':departement')
+                )
+            )
+            ->setParameter('departements', $departements)
+            ->setParameter('departement', $departement);
         }
 
         return $qb;

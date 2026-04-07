@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Classes\DataUserSession;
 use App\Entity\Departement;
+use App\Pdf\PdfManager;
+use App\Pdf\PdfSourceType;
 use App\Repository\DepartementRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,11 +15,70 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DefaultController extends AbstractController
 {
+    private const DOCUMENT_KEY_PARCOURS = 'export_latex_parcours';
+    private const DOCUMENT_KEY_TRONC_COMMUN = 'export_latex_tronc_commun';
+    private const DOCUMENT_KEY_PARCOURS_PREFIX = 'export_latex_parcours_';
+
+    public function __construct(
+        private readonly PdfManager $pdfManager,
+        private readonly DataUserSession $dataUserSession,
+    ) {
+    }
+
     #[Route('/', name: 'homepage')]
     public function index(): Response
     {
+        $version = $this->dataUserSession->getVersion();
+
         return $this->render('default/index.html.twig', [
+            'pdfReferentielStatuses' => $this->buildReferentielPdfStatuses($version),
         ]);
+    }
+
+    /**
+     * @return array{troncCommun: array{status: string, errorMessage: ?string}, parcoursGlobal: array{status: string, errorMessage: ?string}, parcoursById: array<int, array{status: string, errorMessage: ?string}>}
+     */
+    private function buildReferentielPdfStatuses(?\App\Entity\Version $version): array
+    {
+        $defaultStatus = [
+            'status' => PdfManager::DISPLAY_STATUS_ABSENT,
+            'errorMessage' => null,
+        ];
+
+        if ($version === null || $version->getId() === null) {
+            return [
+                'troncCommun' => $defaultStatus,
+                'parcoursGlobal' => $defaultStatus,
+                'parcoursById' => [],
+            ];
+        }
+
+        $sourceId = (string) $version->getId();
+
+        $statusForDocumentKey = function (string $documentKey) use ($sourceId, $defaultStatus): array {
+            $statuses = $this->pdfManager->getDisplayStatusesForSources(
+                PdfSourceType::REFERENTIEL,
+                [$sourceId],
+                $documentKey,
+            );
+
+            return $statuses[$sourceId] ?? $defaultStatus;
+        };
+
+        $parcoursById = [];
+        foreach ($version->getApcParcours() as $parcours) {
+            if ($parcours->getId() === null) {
+                continue;
+            }
+
+            $parcoursById[$parcours->getId()] = $statusForDocumentKey(self::DOCUMENT_KEY_PARCOURS_PREFIX.$parcours->getId());
+        }
+
+        return [
+            'troncCommun' => $statusForDocumentKey(self::DOCUMENT_KEY_TRONC_COMMUN),
+            'parcoursGlobal' => $statusForDocumentKey(self::DOCUMENT_KEY_PARCOURS),
+            'parcoursById' => $parcoursById,
+        ];
     }
 
     #[Route('/direct/{departement}', name: 'homepage_direct_specialite')]

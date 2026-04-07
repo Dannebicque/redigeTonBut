@@ -1,0 +1,11 @@
+{% set statusValue = statusData.status|default('absent') %}
+{% if statusValue == 'present' %}
+    <span class="badge bg-success ms-2">PDF disponible</span>
+{% elseif statusValue == 'pending' %}
+    <span class="badge bg-warning text-dark ms-2">Generation en attente</span>
+{% elseif statusValue == 'error' %}
+    <span class="badge bg-danger ms-2" title="{{ statusData.errorMessage|default('Erreur de generation PDF') }}">Erreur PDF</span>
+{% else %}
+    <span class="badge bg-secondary ms-2">PDF non genere</span>
+{% endif %}
+

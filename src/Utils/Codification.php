@@ -58,7 +58,7 @@ class Codification
         return $ordre;
     }
 
-    private static function codeParcoursAc(ApcApprentissageCritique $apcApprentissageCritique): null
+    private static function codeParcoursAc(ApcApprentissageCritique $apcApprentissageCritique): ?string
     {
         $nbParcoursAC = $apcApprentissageCritique->getNiveau()?->getApcParcoursNiveaux();
         $nbParcoursComp = $apcApprentissageCritique->getCompetence()?->getVersion()?->getApcParcours();
