@@ -1,0 +1,179 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{hyperref}
+\geometry{margin=1.5cm}
+
+{% macro payload_value(payload, key) %}
+{{ payload[key]|default('')|latex_purge|raw }}
+{% endmacro %}
+
+{% import _self as helper %}
+
+\begin{document}
+
+\section*{Argumentaire CPN}
+
+\textbf{Departement :} {{ version.departement.libelle|latex_purge|raw }} ({{ version.departement.sigle|latex_purge|raw }})\\
+\textbf{Version courante :} {{ version.libelle|latex_purge|raw }}{% if version.annee %} - {{ version.annee|latex_purge|raw }}{% endif %}\\
+\textbf{Version de comparaison :} {% if previousVersion %}{{ previousVersion.libelle|latex_purge|raw }}{% if previousVersion.annee %} - {{ previousVersion.annee|latex_purge|raw }}{% endif %}{% else %}Aucune version precedente{% endif %}
+
+\subsection*{Questions generales}
+{{ helper.payload_value(argumentairePayload, 'presentation_evolutions')|raw }}
+
+\subsection*{Tableau de structure pour le BUT}
+
+\subsubsection*{Volumes horaires par semestre}
+\begin{longtable}{|p{0.8cm}|p{2.2cm}|p{2.2cm}|p{1.3cm}|p{7.2cm}|}
+\hline
+S & 2022 & 2027 & Diff. & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{% set diff = structureCurrent[i].nbHeuresCoursProjet - structurePrevious[i].nbHeuresCoursProjet %}
+{{ i }} & {{ structurePrevious[i].nbHeuresCoursProjet }} (ptut: {{ structurePrevious[i].nbHeuresProjet }}) & {{ structureCurrent[i].nbHeuresCoursProjet }} (ptut: {{ structureCurrent[i].nbHeuresProjet }}) & {{ diff }} & {{ helper.payload_value(argumentairePayload, 'vh_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsubsection*{Equilibres SAE / Ressources}
+\begin{longtable}{|p{0.8cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|p{7.0cm}|}
+\hline
+S & SAE 2022 & SAE 2027 & Res 2022 & Res 2027 & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{% set previousRessources = structurePrevious[i].nbHeuresEnseignementRessourceNational + structurePrevious[i].nbHeuresEnseignementRessourceLocale %}
+{% set currentRessources = structureCurrent[i].nbHeuresEnseignementRessourceNational + structureCurrent[i].nbHeuresEnseignementRessourceLocale %}
+{{ i }} & {{ structurePrevious[i].nbHeuresEnseignementSaeLocale }} & {{ structureCurrent[i].nbHeuresEnseignementSaeLocale }} & {{ previousRessources }} & {{ currentRessources }} & {{ helper.payload_value(argumentairePayload, 'sae_res_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsubsection*{Adaptation locale}
+\begin{longtable}{|p{0.8cm}|p{2.0cm}|p{2.0cm}|p{2.0cm}|p{2.0cm}|p{6.2cm}|}
+\hline
+S & SAE 2022 & SAE 2027 & Res AL 2022 & Res AL 2027 & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{{ i }} & {{ structurePrevious[i].nbHeuresEnseignementSaeLocale }} & {{ structureCurrent[i].nbHeuresEnseignementSaeLocale }} & {{ structurePrevious[i].nbHeuresEnseignementRessourceLocale }} & {{ structureCurrent[i].nbHeuresEnseignementRessourceLocale }} & {{ helper.payload_value(argumentairePayload, 'al_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsubsection*{TP et autonomie}
+\begin{longtable}{|p{0.8cm}|p{1.7cm}|p{1.7cm}|p{1.7cm}|p{1.7cm}|p{7.2cm}|}
+\hline
+S & TP 2022 & TP 2027 & Auton 2022 & Auton 2027 & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{{ i }} & {{ structurePrevious[i].nbHeuresTpNational + structurePrevious[i].nbHeuresTpLocale }} & {{ structureCurrent[i].nbHeuresTpNational + structureCurrent[i].nbHeuresTpLocale }} & {{ structurePrevious[i].nbHeuresProjet }} & {{ structureCurrent[i].nbHeuresProjet }} & {{ helper.payload_value(argumentairePayload, 'tp_auton_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsection*{Stages}
+\begin{longtable}{|p{0.8cm}|p{2.5cm}|p{2.5cm}|p{2.4cm}|p{6.4cm}|}
+\hline
+S & 2022 & 2027 & Positionnement & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{% set previousStage = structurePrevious[i].nbSemainesStageMin ~ '-' ~ structurePrevious[i].nbSemainesStageMax %}
+{% set currentStage = structureCurrent[i].nbSemainesStageMin ~ '-' ~ structureCurrent[i].nbSemainesStageMax %}
+{{ i }} & {% if structurePrevious[i].nbSemainesStageMax > 0 %}{{ previousStage }}{% else %}-{% endif %} & {% if structureCurrent[i].nbSemainesStageMax > 0 %}{{ currentStage }}{% else %}-{% endif %} & {% if previousStage == currentStage %}Identique{% else %}Modification{% endif %} & {{ helper.payload_value(argumentairePayload, 'stage_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsection*{Alternance}
+\begin{longtable}{|p{2.3cm}|p{2.2cm}|p{2.2cm}|p{2.3cm}|p{6.0cm}|}
+\hline
+Niveau & 2022 & 2027 & Diff. & Commentaires \\
+\hline
+BUT 1 & {{ previousVersion ? previousVersion.altBut1 : '-' }}\% & {{ version.altBut1 }}\% & {% if previousVersion and previousVersion.altBut1 != version.altBut1 %}Modification{% else %}Identique{% endif %} & {{ helper.payload_value(argumentairePayload, 'alt_com_b1')|raw }} \\
+\hline
+BUT 2 & {{ previousVersion ? previousVersion.altBut2 : '-' }}\% & {{ version.altBut2 }}\% & {% if previousVersion and previousVersion.altBut2 != version.altBut2 %}Modification{% else %}Identique{% endif %} & {{ helper.payload_value(argumentairePayload, 'alt_com_b2')|raw }} \\
+\hline
+BUT 3 & {{ previousVersion ? previousVersion.altBut3 : '-' }}\% & {{ version.altBut3 }}\% & {% if previousVersion and previousVersion.altBut3 != version.altBut3 %}Modification{% else %}Identique{% endif %} & {{ helper.payload_value(argumentairePayload, 'alt_com_b3')|raw }} \\
+\hline
+\end{longtable}
+
+\subsection*{Les SAE}
+\subsubsection*{Organisation des SAE}
+\begin{longtable}{|p{0.8cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{4.0cm}|}
+\hline
+S & C22 & C27 & SAE22 & SAE27 & Mono22 & Mono27 & Pluri22 & Pluri27 & Diff & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{{ i }} & {{ structurePrevious[i].structureSemestre.nbCompetences }} & {{ structureCurrent[i].structureSemestre.nbCompetences }} & {{ structurePrevious[i].structureSemestre.nbSaes }} & {{ structureCurrent[i].structureSemestre.nbSaes }} & {{ structurePrevious[i].structureSemestre.nbSaesMonoCompetence }} & {{ structureCurrent[i].structureSemestre.nbSaesMonoCompetence }} & {{ structurePrevious[i].structureSemestre.nbSaesMultiCompetence }} & {{ structureCurrent[i].structureSemestre.nbSaesMultiCompetence }} & {{ structureCurrent[i].structureSemestre.nbSaes - structurePrevious[i].structureSemestre.nbSaes }} & {{ helper.payload_value(argumentairePayload, 'sae_org_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsubsection*{Fiches SAE}
+\begin{longtable}{|p{0.8cm}|p{4.0cm}|p{9.5cm}|}
+\hline
+S & Numeros & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{{ i }} & {{ helper.payload_value(argumentairePayload, 'sae_fiche_nb_s' ~ i)|raw }} & {{ helper.payload_value(argumentairePayload, 'sae_fiche_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsection*{Les ressources}
+\subsubsection*{Volumes horaires modifies}
+\begin{longtable}{|p{0.8cm}|p{4.0cm}|p{9.5cm}|}
+\hline
+S & Numeros & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{{ i }} & {{ helper.payload_value(argumentairePayload, 'res_vh_nb_s' ~ i)|raw }} & {{ helper.payload_value(argumentairePayload, 'res_vh_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\textbf{Objectif ressources :} {{ helper.payload_value(argumentairePayload, 'res_objectif')|raw }}
+
+\subsubsection*{PPP}
+\begin{longtable}{|p{0.8cm}|p{4.0cm}|p{9.5cm}|}
+\hline
+S & Volume horaire & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{{ i }} & {{ helper.payload_value(argumentairePayload, 'ppp_vh_s' ~ i)|raw }} & {{ helper.payload_value(argumentairePayload, 'ppp_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsubsection*{IA et TEDS}
+\textbf{Commentaire IA :} {{ helper.payload_value(argumentairePayload, 'ia_com')|raw }}\\
+\textbf{Commentaire TEDS :} {{ helper.payload_value(argumentairePayload, 'teds_com')|raw }}
+
+\subsubsection*{Expression et LVE}
+\begin{longtable}{|p{0.8cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{1.4cm}|p{2.0cm}|p{2.0cm}|p{5.2cm}|}
+\hline
+S & Expr22 & Expr27 & LVE22 & LVE27 & LVE2 2022 & LVE2 2027 & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{{ i }} & {{ structurePrevious[i].structureSemestre.ressources.expression }} & {{ structureCurrent[i].structureSemestre.ressources.expression }} & {{ structurePrevious[i].structureSemestre.ressources.lve }} & {{ structureCurrent[i].structureSemestre.ressources.lve }} & {{ helper.payload_value(argumentairePayload, 'lang_lve2_2022_s' ~ i)|raw }} & {{ helper.payload_value(argumentairePayload, 'lang_lve2_2027_s' ~ i)|raw }} & {{ helper.payload_value(argumentairePayload, 'lang_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\subsubsection*{Contenu des fiches ressources}
+\begin{longtable}{|p{0.8cm}|p{4.0cm}|p{9.5cm}|}
+\hline
+S & Numero ressource & Commentaires \\
+\hline
+{% for i in 1..6 %}
+{{ i }} & {{ helper.payload_value(argumentairePayload, 'res_fiche_nb_s' ~ i)|raw }} & {{ helper.payload_value(argumentairePayload, 'res_fiche_com_s' ~ i)|raw }} \\
+\hline
+{% endfor %}
+\end{longtable}
+
+\end{document}
+

@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Argumentaire\ArgumentaireDataProvider;
 use App\Entity\Argumentaire;
 use App\Entity\Version;
+use App\Pdf\PdfManager;
+use App\Pdf\PdfSourceType;
 use App\Repository\ArgumentaireRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ArgumentaireController extends BaseController
 {
+    public function __construct(
+        private readonly PdfManager $pdfManager,
+    ) {
+    }
+
     #[Route('/argumentaire/{version}', name: 'argumentaire_index')]
     public function index(
         Request $request,
@@ -21,8 +28,16 @@ class ArgumentaireController extends BaseController
         Version $version
     ): Response
     {
+        if (!$this->isGranted('FORMATION_EDIT', $version)) {
+            throw $this->createAccessDeniedException();
+        }
+
+
         $data = $argumentaireDataProvider->getData($version);
         $argumentaire = $this->findOrCreateArgumentaire($version, $argumentaireRepository);
+        $sourceId = (string) $version->getId();
+        $statusMap = $this->pdfManager->getDisplayStatusesForSources(PdfSourceType::ARGUMENTAIRE, [$sourceId]);
+        $pdfStatusData = $statusMap[$sourceId] ?? ['status' => PdfManager::DISPLAY_STATUS_ABSENT, 'errorMessage' => null];
 
         if ($request->isMethod('POST')) {
             $payload = $this->normalizePayload($request->request->all());
@@ -43,6 +58,7 @@ class ArgumentaireController extends BaseController
             'structurePrevious' => $data['structurePrevious'],
             'argumentairePayload' => $argumentaire->getPayload(),
             'argumentaireUpdatedAt' => $argumentaire->getUpdatedAt(),
+            'pdfStatusData' => $pdfStatusData,
         ]);
     }
 
@@ -53,6 +69,10 @@ class ArgumentaireController extends BaseController
         Version $version
     ): JsonResponse
     {
+        if (!$this->isGranted('FORMATION_EDIT', $version)) {
+            throw $this->createAccessDeniedException();
+        }
+
         $argumentaire = $this->findOrCreateArgumentaire($version, $argumentaireRepository);
 
         $content = json_decode($request->getContent(), true);

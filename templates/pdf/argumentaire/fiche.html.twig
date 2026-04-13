@@ -117,6 +117,11 @@
         Ce document a pour objectif d’éclairer la CCN sur les modifications proposées par les spécialités.
         Il constitue une aide à la lecture des évolutions envisagées du référentiel.
     </p>
+    {% if argumentairePayload.presentation_evolutions is defined %}
+        <div class="note">
+            {{ argumentairePayload.presentation_evolutions|default('')|nl2br }}
+        </div>
+    {% endif %}
 
     <h2>Volumes horaires par semestre</h2>
     <table class="table">
@@ -206,6 +211,24 @@
         </tbody>
     </table>
 
+    <h2>Adaptation locale</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>Commentaires / explications</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td>{{ argumentairePayload['al_com_s' ~ i]|default('')|nl2br }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
     <h2>Stages</h2>
     <table class="table">
         <thead>
@@ -250,6 +273,178 @@
                     {% endif %}
                 </td>
                 <td>{{ commentStage|nl2br }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Alternance</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Niveau</th>
+            <th>Version precedente</th>
+            <th>Version courante</th>
+            <th>Positionnement</th>
+            <th>Commentaires / explications</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><strong>BUT 1</strong></td>
+            <td class="text-center">{{ previousVersion ? previousVersion.altBut1 : '-' }} %</td>
+            <td class="text-center">{{ version.altBut1 }} %</td>
+            <td class="text-center">
+                {% if previousVersion and previousVersion.altBut1 != version.altBut1 %}
+                    <span class="badge badge-danger">Modification</span>
+                {% else %}
+                    <span class="badge badge-success">Identique</span>
+                {% endif %}
+            </td>
+            <td>{{ argumentairePayload.alt_com_b1|default('')|nl2br }}</td>
+        </tr>
+        <tr>
+            <td><strong>BUT 2</strong></td>
+            <td class="text-center">{{ previousVersion ? previousVersion.altBut2 : '-' }} %</td>
+            <td class="text-center">{{ version.altBut2 }} %</td>
+            <td class="text-center">
+                {% if previousVersion and previousVersion.altBut2 != version.altBut2 %}
+                    <span class="badge badge-danger">Modification</span>
+                {% else %}
+                    <span class="badge badge-success">Identique</span>
+                {% endif %}
+            </td>
+            <td>{{ argumentairePayload.alt_com_b2|default('')|nl2br }}</td>
+        </tr>
+        <tr>
+            <td><strong>BUT 3</strong></td>
+            <td class="text-center">{{ previousVersion ? previousVersion.altBut3 : '-' }} %</td>
+            <td class="text-center">{{ version.altBut3 }} %</td>
+            <td class="text-center">
+                {% if previousVersion and previousVersion.altBut3 != version.altBut3 %}
+                    <span class="badge badge-danger">Modification</span>
+                {% else %}
+                    <span class="badge badge-success">Identique</span>
+                {% endif %}
+            </td>
+            <td>{{ argumentairePayload.alt_com_b3|default('')|nl2br }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Organisation des SAE</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>Nb competences (2022 / 2027)</th>
+            <th>Nb SAE (2022 / 2027)</th>
+            <th>Mono (2022 / 2027)</th>
+            <th>Pluri (2022 / 2027)</th>
+            <th>Commentaires / explications</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td class="text-center">{{ structurePrevious[i].structureSemestre.nbCompetences }} / {{ structureCurrent[i].structureSemestre.nbCompetences }}</td>
+                <td class="text-center">{{ structurePrevious[i].structureSemestre.nbSaes }} / {{ structureCurrent[i].structureSemestre.nbSaes }}</td>
+                <td class="text-center">{{ structurePrevious[i].structureSemestre.nbSaesMonoCompetence }} / {{ structureCurrent[i].structureSemestre.nbSaesMonoCompetence }}</td>
+                <td class="text-center">{{ structurePrevious[i].structureSemestre.nbSaesMultiCompetence }} / {{ structureCurrent[i].structureSemestre.nbSaesMultiCompetence }}</td>
+                <td>{{ argumentairePayload['sae_org_com_s' ~ i]|default('')|nl2br }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Fiches SAE</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>Numeros des SAE</th>
+            <th>Commentaires / explications</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td>{{ argumentairePayload['sae_fiche_nb_s' ~ i]|default('')|nl2br }}</td>
+                <td>{{ argumentairePayload['sae_fiche_com_s' ~ i]|default('')|nl2br }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Ressources</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>Numeros ressources modifiees</th>
+            <th>Commentaires / explications</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td>{{ argumentairePayload['res_vh_nb_s' ~ i]|default('')|nl2br }}</td>
+                <td>{{ argumentairePayload['res_vh_com_s' ~ i]|default('')|nl2br }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>PPP</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>Volume horaire</th>
+            <th>Commentaires / explications</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td>{{ argumentairePayload['ppp_vh_s' ~ i]|default('') }}</td>
+                <td>{{ argumentairePayload['ppp_com_s' ~ i]|default('')|nl2br }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>IA, TEDS et langues</h2>
+    <p><strong>Objectif ressources :</strong> {{ argumentairePayload.res_objectif|default('')|nl2br }}</p>
+    <p><strong>Commentaire IA :</strong> {{ argumentairePayload.ia_com|default('')|nl2br }}</p>
+    <p><strong>Commentaire TEDS :</strong> {{ argumentairePayload.teds_com|default('')|nl2br }}</p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Semestre</th>
+            <th>LVE2 2022</th>
+            <th>LVE2 2027</th>
+            <th>Commentaires langues</th>
+            <th>Fiches ressources (numero / commentaire)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in 1..6 %}
+            <tr>
+                <td class="text-center"><strong>S{{ i }}</strong></td>
+                <td>{{ argumentairePayload['lang_lve2_2022_s' ~ i]|default('') }}</td>
+                <td>{{ argumentairePayload['lang_lve2_2027_s' ~ i]|default('') }}</td>
+                <td>{{ argumentairePayload['lang_com_s' ~ i]|default('')|nl2br }}</td>
+                <td>
+                    {{ argumentairePayload['res_fiche_nb_s' ~ i]|default('') }}
+                    <br>
+                    <small>{{ argumentairePayload['res_fiche_com_s' ~ i]|default('')|nl2br }}</small>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

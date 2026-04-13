@@ -12,6 +12,7 @@ use App\Pdf\RemotePdfRequest;
 use App\Repository\ArgumentaireRepository;
 use App\Repository\VersionRepository;
 use Twig\Environment;
+use ZipArchive;
 
 final readonly class ArgumentairePdfPayloadBuilder implements PdfPayloadBuilderInterface
 {

@@ -272,6 +272,11 @@
                                         <span class="label">Structure des 3 années</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ path('argumentaire_index', {version: user_data.version.id}) }}">
+                                        <span class="label">Argumentaires</span>
+                                    </a>
+                                </li>
 
                                     {% for annee in user_data.annees %}
                                         <li>
