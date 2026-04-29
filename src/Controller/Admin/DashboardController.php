@@ -58,7 +58,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('Ref de compétences', 'fa fa-not-equal', 'administration_versionning_competences');
 
         yield MenuItem::section('Exports');
-        yield MenuItem::linkToRoute('Choix des exports', 'fa fa-file', 'administration_apc_referentiel_export');
+        yield MenuItem::linkToRoute('Choix des exports', 'fa fa-file', 'admin_apc_referentiel_export');
 
         yield MenuItem::section('Gestion des utilisateurs');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-list');

@@ -11,10 +11,16 @@
         <div class="alert alert-danger" role="alert">{{ flashError }}</div>
     {% endfor %}
 
+    {% if alreadyRegistered %}
+        <div class="alert alert-info" role="alert">
+            <strong>Cet email : "{{ email ?? '' }}" est déjà enregistré.</strong> Vous pouvez réinitialiser votre mot de passe ci-dessous ou vous connecter directement.
+        </div>
+    {% endif %}
+
     <form class="tooltip-end-bottom" method="post">
 
         <div class="mb-3 filled form-group tooltip-end-top form-floating">
-            <input type="email" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+            <input type="email" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus value="{{ email ?? '' }}">
             <label for="inputEmail">Adresse email</label>
         </div>
         <div>

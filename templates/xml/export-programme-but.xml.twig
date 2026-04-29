@@ -1,6 +1,10 @@
 {% autoescape %}
 <?xml version="1.0" encoding="UTF-8"?>
-<referentiel_formation>
+<referentiel_formation
+    version="{{ version.annee }}"
+    sigle_specialite="{{ version.departement.sigle }}"
+    specialite="{{ version.departement.libelle }}"
+>
     {% for semestre in semestres %}
     <semestre numero="{{ semestre.ordreLmd }}" libelle="{{ semestre.libelle }}" ordreAnnee="{{ semestre.ordreAnneeXml
     }}">

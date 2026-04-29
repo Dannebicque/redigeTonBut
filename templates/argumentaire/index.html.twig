@@ -14,13 +14,27 @@
                     points que la CCN pourrait souhaiter examiner ou discuter.
                 </p>
 
-                <div class="d-flex justify-content-end mb-4">
+                <div class="d-flex justify-content-end align-items-center flex-wrap gap-2 mb-4">
                     <a href="{{ path('pdf_show', {sourceType: 'argumentaire', sourceId: version.id, documentKey: 'fiche'}) }}"
                        class="btn btn-outline-primary btn-icon btn-icon-start"
+                       target="_blank"
                     >
                         <i class="bi-print"></i>
-                        <span>Générer le PDF de l'argumentaire (pdf)</span>
+                        <span>
+                            Afficher / generer le PDF de l'argumentaire
+                            {% if pdfStatusData.lastGeneratedAt is defined and pdfStatusData.lastGeneratedAt is not null %}
+                                ({{ pdfStatusData.lastGeneratedAt|date('d/m/Y H:i') }})
+                            {% endif %}
+                        </span>
                     </a>
+                    <a href="{{ path('pdf_show', {sourceType: 'argumentaire', sourceId: version.id, documentKey: 'fiche', force: 1}) }}"
+                       class="btn btn-outline-warning btn-icon btn-icon-start"
+                       target="_blank"
+                    >
+                        <i class="bi-arrow-repeat"></i>
+                        <span>Forcer la mise a jour du PDF</span>
+                    </a>
+                    {{ include('pdf/_generation_status_badge.html.twig', {statusData: pdfStatusData}) }}
                 </div>
 
 
@@ -111,7 +125,7 @@
                                         <td>
                                             {% if identique == false %}
                                                 <textarea class="form-control" name="vh_com_s{{ i }}"
-                                                          rows="1"></textarea>
+                                                          rows="4"></textarea>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -189,7 +203,7 @@
                                         <td>
                                             {% if identique == false or identique2 == false %}
                                                 <textarea class="form-control" name="sae_res_com_s{{ i }}"
-                                                          rows="1"></textarea>
+                                                          rows="5"></textarea>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -265,7 +279,7 @@
                                         <td>
                                             {% if identique == false or identique2 == false %}
                                                 <textarea class="form-control" name="al_com_s{{ i }}"
-                                                          rows="1"></textarea>
+                                                          rows="5"></textarea>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -334,7 +348,7 @@
                                         </td>
                                         <td>
                                             {% if diffTp != 0 or diffAuton != 0 %}
-                                                <textarea class="form-control" name="tp_auton_com_s{{ i }}" rows="1"></textarea>
+                                                <textarea class="form-control" name="tp_auton_com_s{{ i }}" rows="5"></textarea>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -429,7 +443,7 @@
                                         <td>
                                             {% if previous != current %}
                                             <textarea class="form-control" name="stage_com_s{{ i }}"
-                                                      rows="1"></textarea>
+                                                      rows="5"></textarea>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -479,7 +493,7 @@
                                             {% endif %}
                                         </td>
                                         <td>
-                                            {% if modif == true %}<textarea class="form-control" name="alt_com_b1" rows="1"></textarea>
+                                            {% if modif == true %}<textarea class="form-control" name="alt_com_b1" rows="5"></textarea>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -498,7 +512,7 @@
                                             {% endif %}
                                         </td>
                                         <td>
-                                            {% if modif == true %}<textarea class="form-control" name="alt_com_b2" rows="1"></textarea>
+                                            {% if modif == true %}<textarea class="form-control" name="alt_com_b2" rows="5"></textarea>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -517,7 +531,7 @@
                                             {% endif %}
                                         </td>
                                         <td>
-                                            {% if modif == true %}<textarea class="form-control" name="alt_com_b3" rows="1"></textarea>
+                                            {% if modif == true %}<textarea class="form-control" name="alt_com_b3" rows="5"></textarea>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -624,7 +638,7 @@
 
                                         <td>
                                             <textarea class="form-control" name="sae_org_com_s{{ i }}"
-                                                      rows="1"></textarea>
+                                                      rows="5"></textarea>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -648,7 +662,7 @@
                                         <td class="font-weight-bold">S{{ i }}</td>
                                         <td><input type="text" class="form-control" name="sae_fiche_nb_s{{ i }}"></td>
                                         <td><textarea class="form-control" name="sae_fiche_com_s{{ i }}"
-                                                      rows="1"></textarea></td>
+                                                      rows="5"></textarea></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -685,7 +699,7 @@
                                         <td class="font-weight-bold">S{{ i }}</td>
                                         <td><input type="text" class="form-control" name="res_vh_nb_s{{ i }}"></td>
                                         <td><textarea class="form-control" name="res_vh_com_s{{ i }}"
-                                                      rows="1"></textarea></td>
+                                                      rows="5"></textarea></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -694,7 +708,7 @@
 
                         <div class="mb-4">
                             <p class="font-weight-bold">Dans quel objectif ? Comment ?</p>
-                            <textarea name="res_objectif" class="form-control" rows="3"></textarea>
+                            <textarea name="res_objectif" class="form-control" rows="5"></textarea>
                         </div>
 
                         <h3 class="h5 mb-3">PPP</h3>
@@ -712,7 +726,7 @@
                                     <tr>
                                         <td class="font-weight-bold">S{{ i }}</td>
                                         <td><input type="text" class="form-control" name="ppp_vh_s{{ i }}"></td>
-                                        <td><textarea class="form-control" name="ppp_com_s{{ i }}" rows="1"></textarea>
+                                        <td><textarea class="form-control" name="ppp_com_s{{ i }}" rows="5"></textarea>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -749,14 +763,14 @@
                                                 {{ structureCurrent[i].structureSemestre.ressources.ia }}
                                             </td>
                                         {% endfor %}
-                                        <td><textarea class="form-control" name="ia_com" rows="1"></textarea></td>
+                                        <td><textarea class="form-control" name="ia_com" rows="5"></textarea></td>
                                     </tr>
                                     <tr>
                                         <td class="text-start">Problématiques TEDS</td>
                                         {% for i in 1..6 %}
                                             <td> {{ structureCurrent[i].structureSemestre.ressources.teds }}</td>
                                         {% endfor %}
-                                        <td><textarea class="form-control" name="teds_com" rows="1"></textarea></td>
+                                        <td><textarea class="form-control" name="teds_com" rows="5"></textarea></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -816,7 +830,7 @@
 
                                         <td><input type="text" class="form-control" name="lang_lve2_2022_s{{ i }}"></td>
                                         <td><input type="text" class="form-control" name="lang_lve2_2027_s{{ i }}"></td>
-                                        <td><textarea class="form-control" name="lang_com_s{{ i }}" rows="1"></textarea>
+                                        <td><textarea class="form-control" name="lang_com_s{{ i }}" rows="5"></textarea>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -842,7 +856,7 @@
                                         <td class="font-weight-bold">S{{ i }}</td>
                                         <td><input type="text" class="form-control" name="res_fiche_nb_s{{ i }}"></td>
                                         <td><textarea class="form-control" name="res_fiche_com_s{{ i }}"
-                                                      rows="1"></textarea></td>
+                                                      rows="5"></textarea></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

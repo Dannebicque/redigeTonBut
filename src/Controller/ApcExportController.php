@@ -13,12 +13,14 @@ use App\Classes\Export\AllDepartementsExport;
 use App\Classes\Export\DepartementExport;
 use App\Repository\DepartementRepository;
 use App\Repository\VersionRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route("/apc/export/referentiel", name: "administration_apc_referentiel_")]
+#[AdminRoute(path: '/apc/export/referentiel', name: 'apc_referentiel')]
 class ApcExportController extends BaseController
 {
     #[Route("/competences", name: "competence_export")]
@@ -45,7 +47,7 @@ class ApcExportController extends BaseController
         return $departementExport->exportProgramme($this->getVersion());
     }
 
-    #[Route('/', name: 'export', methods: ['GET'])]
+    #[AdminRoute(path: '', name: 'export', options: ['methods' => ['GET']])]
     public function export(
         VersionRepository $versionRepository
     ): Response
@@ -62,7 +64,7 @@ class ApcExportController extends BaseController
         );
     }
 
-    #[Route('/', name: 'export_post', methods: ['POST'])]
+    #[AdminRoute(path: '', name: 'export_post', options: ['methods' => ['POST']])]
     public function exportPost(
         Request           $request,
         DepartementExport $departementExport,
@@ -81,18 +83,18 @@ class ApcExportController extends BaseController
             throw $this->createNotFoundException('Département introuvable');
         }
 
-        if ($typeExport === 'competences') {
-            if ($typeFichier === 'xml') {
+        if ($typeFichier === 'competences') {
+            if ($typeExport === 'xml') {
                 return $departementExport->exportRefentiel($version);
             }
 
-        } elseif ($typeExport === 'formation') {
-            if ($typeFichier === 'xml') {
+        } elseif ($typeFichier === 'formation') {
+            if ($typeExport === 'xml') {
                 return $departementExport->exportProgramme($version);
             }
         }
         $this->addFlashBag('error', 'Type d\'export ou type de fichier non pris en charge');
-        return $this->redirectToRoute('administration_apc_referentiel_export');
+        return $this->redirectToRoute('admin_apc_referentiel_export');
 
     }
 }

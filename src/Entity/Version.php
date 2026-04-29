@@ -43,6 +43,7 @@ class Version
      * @var Collection<int, ApcParcours>
      */
     #[ORM\OneToMany(mappedBy: 'version', targetEntity: ApcParcours::class)]
+    #[ORM\OrderBy(["ordre" => "ASC"])]
     private Collection $apcParcours;
 
     /**

@@ -2,41 +2,30 @@
 
 namespace App\Pdf\Builder;
 
-use App\Classes\Apc\ApcStructure;
-use App\Entity\ApcParcours;
-use App\Entity\Departement;
+use App\Classes\Latex\GenereFile;
 use App\Entity\Version;
 use App\Pdf\PdfPayloadBuilderInterface;
 use App\Pdf\PdfSourceType;
 use App\Pdf\RemotePdfRequest;
-use App\Repository\ApcParcoursRepository;
-use App\Repository\ApcRessourceParcoursRepository;
-use App\Repository\ApcRessourceRepository;
-use App\Repository\ApcSaeParcoursRepository;
-use App\Repository\ApcSaeRepository;
-use App\Repository\SemestreRepository;
 use App\Repository\VersionRepository;
-use Twig\Environment;
 use ZipArchive;
 
 final class ReferentielPdfPayloadBuilder implements PdfPayloadBuilderInterface
 {
+    public const DOCUMENT_KEY_COMPLETE = 'export_latex_complet';
+
     public function __construct(
         private readonly VersionRepository $versionRepository,
-        private readonly ApcParcoursRepository $apcParcoursRepository,
-        private readonly SemestreRepository $semestreRepository,
-        private readonly ApcRessourceRepository $apcRessourceRepository,
-        private readonly ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
-        private readonly ApcSaeRepository $apcSaeRepository,
-        private readonly ApcSaeParcoursRepository $apcSaeParcoursRepository,
-        private readonly ApcStructure $apcStructure,
-        private readonly Environment $twig,
-    ) {
+        private readonly GenereFile $genereFile,
+        private readonly string $projectDir,
+    )
+    {
     }
 
     public function supports(PdfSourceType $sourceType, string $documentKey): bool
     {
-        return $sourceType === PdfSourceType::REFERENTIEL && str_starts_with($documentKey, 'export_latex');
+        return $sourceType === PdfSourceType::REFERENTIEL
+            && $documentKey === self::DOCUMENT_KEY_COMPLETE;
     }
 
     public function build(string $sourceId, string $documentKey, array $parameters = []): RemotePdfRequest
@@ -47,9 +36,7 @@ final class ReferentielPdfPayloadBuilder implements PdfPayloadBuilderInterface
             throw new \RuntimeException('Version de référentiel introuvable.');
         }
 
-        $mode = $this->resolveMode($documentKey);
-        $parcours = $this->resolveParcours($documentKey, $version);
-        $data = $this->buildLatexData($version, $mode, $parcours);
+        $includeAssets = ($parameters['includeAssets'] ?? true) !== false;
 
         $workDir = sys_get_temp_dir() . '/pdf_' . uniqid('', true);
         if (!is_dir($workDir) && !mkdir($workDir, 0777, true) && !is_dir($workDir)) {
@@ -61,7 +48,7 @@ final class ReferentielPdfPayloadBuilder implements PdfPayloadBuilderInterface
         $zipPath = $workDir . '/archive.zip';
 
         try {
-            $latex = $this->twig->render('latex/remote_referentiel_export.tex.twig', $data);
+            $latex = $this->genereFile->renderContent($version, $includeAssets);
             file_put_contents($mainTexPath, $latex);
 
             $zip = new ZipArchive();
@@ -70,6 +57,14 @@ final class ReferentielPdfPayloadBuilder implements PdfPayloadBuilderInterface
             }
 
             $zip->addFile($mainTexPath, $entrypoint);
+
+            $archiveAssets = $this->genereFile->getArchiveAssets($version, $includeAssets);
+            foreach ($archiveAssets as $archivePath => $sourcePath) {
+                if ($zip->addFile($sourcePath, $archivePath) !== true) {
+                    throw new \RuntimeException(sprintf('Impossible d’ajouter l’asset LaTeX %s à l’archive.', $archivePath));
+                }
+            }
+
             $zip->close();
 
             $zipContent = file_get_contents($zipPath);
@@ -77,7 +72,11 @@ final class ReferentielPdfPayloadBuilder implements PdfPayloadBuilderInterface
                 throw new \RuntimeException('Impossible de lire l’archive ZIP LaTeX.');
             }
 
+            $this->persistDebugArtifacts($sourceId, $documentKey, $latex, $zipContent, $parameters, $entrypoint, array_keys($archiveAssets));
+
             $zipBase64 = base64_encode($zipContent);
+
+            $stableLatex = $this->buildStableLatexFingerprint($latex);
 
             return new RemotePdfRequest(
                 type: 'latex',
@@ -96,7 +95,9 @@ final class ReferentielPdfPayloadBuilder implements PdfPayloadBuilderInterface
                 sourceHash: hash('sha256', json_encode([
                     'type' => 'latex',
                     'documentKey' => $documentKey,
-                    'latex' => $latex,
+                    'latex' => $stableLatex,
+                    'includeAssets' => $includeAssets,
+                    'assets' => $this->buildAssetFingerprints($archiveAssets),
                     'parameters' => $parameters,
                 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)),
             );
@@ -107,155 +108,85 @@ final class ReferentielPdfPayloadBuilder implements PdfPayloadBuilderInterface
         }
     }
 
-    private function resolveMode(string $documentKey): string
+    /**
+     * Sauvegarde une copie exacte du contenu envoyé au service distant pour diagnostic.
+     */
+    private function persistDebugArtifacts(
+        string $sourceId,
+        string $documentKey,
+        string $latex,
+        string $zipContent,
+        array  $parameters,
+        string $entrypoint,
+        array $archiveEntries,
+    ): void
     {
-        if ($documentKey === 'export_latex_tronc_commun') {
-            return 'tronc_commun';
+        try {
+            $rootDir = $this->projectDir . '/var/pdf-debug/referentiel';
+            if (!is_dir($rootDir) && !mkdir($rootDir, 0777, true) && !is_dir($rootDir)) {
+                return;
+            }
+
+            $safeSourceId = preg_replace('/[^A-Za-z0-9_-]/', '_', $sourceId) ?? 'source';
+            $safeDocumentKey = preg_replace('/[^A-Za-z0-9_-]/', '_', $documentKey) ?? 'document';
+            $dumpDirName = sprintf('%s_%s_%s_%s', date('Ymd_His'), $safeSourceId, $safeDocumentKey, substr(bin2hex(random_bytes(6)), 0, 12));
+            $dumpDir = $rootDir . '/' . $dumpDirName;
+
+            if (!mkdir($dumpDir, 0777, true) && !is_dir($dumpDir)) {
+                return;
+            }
+
+            file_put_contents($dumpDir . '/main.tex', $latex);
+            file_put_contents($dumpDir . '/archive.zip', $zipContent);
+
+            $meta = [
+                'createdAt' => date('c'),
+                'sourceId' => $sourceId,
+                'documentKey' => $documentKey,
+                'entrypoint' => $entrypoint,
+                'engine' => 'pdflatex',
+                'latexBytes' => strlen($latex),
+                'zipBytes' => strlen($zipContent),
+                'latexSha256' => hash('sha256', $latex),
+                'zipSha256' => hash('sha256', $zipContent),
+                'parameters' => $parameters,
+                'archiveEntries' => $archiveEntries,
+            ];
+
+            $metaJson = json_encode($meta, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            if (is_string($metaJson)) {
+                file_put_contents($dumpDir . '/meta.json', $metaJson);
+            }
+        } catch (\Throwable) {
+            // Le diagnostic ne doit jamais bloquer la génération.
         }
-
-        if ($documentKey === 'export_latex_parcours') {
-            return 'parcours';
-        }
-
-        if (str_starts_with($documentKey, 'export_latex_al_')) {
-            return 'adaptation_locale';
-        }
-
-        if (str_starts_with($documentKey, 'export_latex_parcours_')) {
-            return 'parcours_detail';
-        }
-
-        return 'parcours';
-    }
-
-    private function resolveParcours(string $documentKey, Version $version): ?ApcParcours
-    {
-        if (preg_match('/^export_latex_(?:parcours|al)_(\d+)$/', $documentKey, $matches) !== 1) {
-            return null;
-        }
-
-        $parcours = $this->apcParcoursRepository->find((int) $matches[1]);
-        if (!$parcours instanceof ApcParcours) {
-            throw new \RuntimeException('Parcours introuvable pour l\'export.');
-        }
-
-        if ($parcours->getVersion()?->getId() !== $version->getId()) {
-            throw new \RuntimeException('Le parcours ne correspond pas à la version demandée.');
-        }
-
-        return $parcours;
     }
 
     /**
-     * @return array<string, mixed>
+     * @param array<string, string> $archiveAssets
+     *
+     * @return array<string, string>
      */
-    private function buildLatexData(Version $version, string $mode, ?ApcParcours $parcours): array
+    private function buildAssetFingerprints(array $archiveAssets): array
     {
-        $departement = $version->getDepartement();
-        if (!$departement instanceof Departement) {
-            throw new \RuntimeException('Département introuvable pour la version.');
-        }
+        $fingerprints = [];
 
-        $competencesParcours = $this->buildCompetencesParcours($version);
-        $semestres = [];
-        $ressources = [];
-        $saes = [];
-
-        if ($mode === 'tronc_commun' || $mode === 'parcours') {
-            $nbParcours = $version->getApcParcours()->count();
-
-            foreach ($version->getSemestres() as $semestre) {
-                $semestres[] = $semestre;
-                $ressources[$semestre->getId()] = [];
-                $allRessources = $this->apcRessourceRepository->findBySemestre($semestre);
-
-                if ($mode === 'tronc_commun' && $semestre->getOrdreLmd() < 3) {
-                    $ressources[$semestre->getId()] = $allRessources;
-                    continue;
-                }
-
-                foreach ($allRessources as $ressource) {
-                    $nbAffectations = $ressource->getApcRessourceParcours()->count();
-
-                    if ($mode === 'tronc_commun' && ($nbAffectations === $nbParcours || $nbAffectations === 0)) {
-                        $ressources[$semestre->getId()][] = $ressource;
-                    }
-
-                    if ($mode === 'parcours' && $semestre->getOrdreLmd() > 2 && $nbAffectations > 0 && $nbAffectations < $nbParcours) {
-                        $ressources[$semestre->getId()][] = $ressource;
-                    }
-                }
+        foreach ($archiveAssets as $archivePath => $sourcePath) {
+            $hash = hash_file('sha256', $sourcePath);
+            if ($hash !== false) {
+                $fingerprints[$archivePath] = $hash;
             }
         }
 
-        if ($mode === 'parcours_detail' || $mode === 'adaptation_locale') {
-            if (!$parcours instanceof ApcParcours) {
-                throw new \RuntimeException('Parcours obligatoire pour cet export.');
-            }
+        ksort($fingerprints);
 
-            $isAdaptationLocale = $mode === 'adaptation_locale';
-            $semestres = $departement->getTypeStructure() === Departement::TYPE3
-                ? $this->semestreRepository->findByParcours($parcours)
-                : $version->getSemestres();
-
-            foreach ($semestres as $semestre) {
-                if ($departement->getTypeStructure() !== Departement::TYPE3 && $semestre->getOrdreLmd() < 3) {
-                    $ressources[$semestre->getId()] = $isAdaptationLocale
-                        ? $this->apcRessourceRepository->findBySemestreAl($semestre)
-                        : $this->apcRessourceRepository->findBySemestre($semestre);
-
-                    $saes[$semestre->getId()] = $isAdaptationLocale
-                        ? $this->apcSaeRepository->findBySemestreAl($semestre)
-                        : $this->apcSaeRepository->findBySemestre($semestre);
-
-                    continue;
-                }
-
-                $ressources[$semestre->getId()] = $isAdaptationLocale
-                    ? $this->apcRessourceParcoursRepository->findBySemestreAl($semestre, $parcours)
-                    : $this->apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
-
-                $saes[$semestre->getId()] = $isAdaptationLocale
-                    ? $this->apcSaeParcoursRepository->findBySemestreAl($semestre, $parcours)
-                    : $this->apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
-            }
-        }
-
-        return [
-            'mode' => $mode,
-            'version' => $version,
-            'departement' => $departement,
-            'parcours' => $parcours,
-            'allParcours' => $version->getApcParcours(),
-            'semestres' => $semestres,
-            'ressources' => $ressources,
-            'saes' => $saes,
-            'competencesParcours' => $competencesParcours,
-        ];
+        return $fingerprints;
     }
 
-    /**
-     * @return array<int, array<int, mixed>>
-     */
-    private function buildCompetencesParcours(Version $version): array
+    private function buildStableLatexFingerprint(string $latex): string
     {
-        $competences = [];
-        foreach ($version->getApcCompetences() as $competence) {
-            $competences[$competence->getId()] = $competence;
-        }
+        $withoutVolatileHeader = preg_replace('/^%%\s*Fichier généré le .*\R?/mu', '', $latex);
 
-        $parcoursNiveaux = $this->apcStructure->parcoursNiveaux($version);
-        $result = [];
-
-        foreach ($parcoursNiveaux as $parcoursId => $niveauxByCompetence) {
-            $result[$parcoursId] = [];
-            foreach ($niveauxByCompetence as $competenceId => $niveaux) {
-                if (isset($competences[$competenceId])) {
-                    $result[$parcoursId][] = $competences[$competenceId];
-                }
-            }
-        }
-
-        return $result;
+        return is_string($withoutVolatileHeader) ? $withoutVolatileHeader : $latex;
     }
 }

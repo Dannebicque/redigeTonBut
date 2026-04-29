@@ -516,7 +516,7 @@ class ButController extends BaseController
     }
 
     /**
-     * @return array{0: array<string, array{status: string, errorMessage: ?string}>, 1: array<int, array{code: string, libelle: string, errorMessage: ?string}>, 2: array<int, array{code: string, libelle: string, errorMessage: ?string}>}
+     * @return array{0: array<string, array{status: string, errorMessage: ?string, lastGeneratedAt: ?\DateTimeImmutable}>, 1: array<int, array{code: string, libelle: string, errorMessage: ?string}>, 2: array<int, array{code: string, libelle: string, errorMessage: ?string}>}
      */
     private function buildPdfDisplayData(array $itemsBySemestre, PdfSourceType $sourceType): array
     {
@@ -536,6 +536,7 @@ class ButController extends BaseController
             $statusData = $statusesById[$itemId] ?? [
                 'status' => PdfManager::DISPLAY_STATUS_ABSENT,
                 'errorMessage' => null,
+                'lastGeneratedAt' => null,
             ];
 
             if ($statusData['status'] === PdfManager::DISPLAY_STATUS_PENDING) {

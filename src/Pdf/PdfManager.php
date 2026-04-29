@@ -44,11 +44,13 @@ final class PdfManager
             $normalizedParameters,
             $parametersHash
         ) {
-            $document = $this->pdfDocumentRepository->findOneByIdentity(
+            $documents = $this->pdfDocumentRepository->findAllByIdentity(
                 $sourceType->value,
                 $sourceId,
                 $documentKey
             );
+
+            $document = $this->selectCanonicalDocument($documents);
 
             if (!$document) {
                 $document = new PdfDocument(
@@ -60,9 +62,36 @@ final class PdfManager
                 );
                 $this->entityManager->persist($document);
                 $this->entityManager->flush();
+                $documents = [$document];
+            }
+
+            if (count($documents) > 1) {
+                $this->removeDuplicateDocuments($documents, $document);
+                $this->entityManager->flush();
             }
 
             $this->entityManager->lock($document, LockMode::PESSIMISTIC_WRITE);
+
+            $sameParameters = $document->getParametersHash() === $parametersHash;
+
+            // Fast-path: document deja pret pour la meme variante de parametres.
+            if (
+                $sameParameters
+                && $document->isReady()
+                && $document->getCurrentFilePath()
+                && is_file($document->getCurrentFilePath())
+            ) {
+                return $document;
+            }
+
+            if (!$sameParameters) {
+                $document->syncParameters($normalizedParameters, $parametersHash);
+                $this->entityManager->flush();
+            }
+
+            if ($document->getStatus() === PdfDocument::STATUS_GENERATING) {
+                return $document;
+            }
 
             $builder = $this->builderRegistry->getBuilder($sourceType, $documentKey);
             $remoteRequest = $builder->build($sourceId, $documentKey, $normalizedParameters);
@@ -73,10 +102,6 @@ final class PdfManager
                 && $document->getCurrentFilePath()
                 && is_file($document->getCurrentFilePath())
             ) {
-                return $document;
-            }
-
-            if ($document->getStatus() === PdfDocument::STATUS_GENERATING) {
                 return $document;
             }
 
@@ -120,16 +145,17 @@ final class PdfManager
         ?string $documentKey = null,
     ): void {
         if ($documentKey !== null) {
-            $document = $this->pdfDocumentRepository->findOneByIdentity(
+            $documents = $this->pdfDocumentRepository->findAllByIdentity(
                 $sourceType->value,
                 $sourceId,
                 $documentKey
             );
 
-            if ($document) {
+            foreach ($documents as $document) {
                 $document->invalidate();
-                $this->entityManager->flush();
             }
+
+            $this->entityManager->flush();
 
             return;
         }
@@ -161,7 +187,7 @@ final class PdfManager
     /**
      * @param string[] $sourceIds
      *
-     * @return array<string, array{status: string, errorMessage: ?string}>
+     * @return array<string, array{status: string, errorMessage: ?string, lastGeneratedAt: ?\DateTimeImmutable}>
      */
     public function getDisplayStatusesForSources(
         PdfSourceType $sourceType,
@@ -190,6 +216,7 @@ final class PdfManager
                 $statuses[$sourceId] = [
                     'status' => self::DISPLAY_STATUS_PRESENT,
                     'errorMessage' => null,
+                    'lastGeneratedAt' => $document->getUpdatedAt(),
                 ];
                 continue;
             }
@@ -201,6 +228,7 @@ final class PdfManager
                 $statuses[$sourceId] = [
                     'status' => self::DISPLAY_STATUS_ERROR,
                     'errorMessage' => $job?->getErrorMessage(),
+                    'lastGeneratedAt' => null,
                 ];
                 continue;
             }
@@ -212,6 +240,7 @@ final class PdfManager
                 $statuses[$sourceId] = [
                     'status' => self::DISPLAY_STATUS_PENDING,
                     'errorMessage' => null,
+                    'lastGeneratedAt' => null,
                 ];
                 continue;
             }
@@ -219,9 +248,42 @@ final class PdfManager
             $statuses[$sourceId] = [
                 'status' => self::DISPLAY_STATUS_ABSENT,
                 'errorMessage' => null,
+                'lastGeneratedAt' => null,
             ];
         }
 
         return $statuses;
+    }
+
+    /**
+     * @param PdfDocument[] $documents
+     */
+    private function selectCanonicalDocument(array $documents): ?PdfDocument
+    {
+        if (count($documents) === 0) {
+            return null;
+        }
+
+        foreach ($documents as $document) {
+            if ($document->isReady() && $document->getCurrentFilePath() && is_file($document->getCurrentFilePath())) {
+                return $document;
+            }
+        }
+
+        return $documents[0];
+    }
+
+    /**
+     * @param PdfDocument[] $documents
+     */
+    private function removeDuplicateDocuments(array $documents, PdfDocument $documentToKeep): void
+    {
+        foreach ($documents as $document) {
+            if ($document === $documentToKeep) {
+                continue;
+            }
+
+            $this->entityManager->remove($document);
+        }
     }
 }

@@ -32,7 +32,7 @@ class DataUserSession
     /**
      * @var string[]
      */
-    private array $roleName;
+    private array $roleName = [];
 
 
     public function __construct(TokenStorageInterface                  $tokenStorage,

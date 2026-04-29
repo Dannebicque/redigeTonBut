@@ -97,44 +97,32 @@
         {% if is_granted('ROLE_PACD') or is_granted('ROLE_CPN') or is_granted('ROLE_LECTEUR') %}
             <section class="scroll-section mb-2" id="export">
                 <h2 class="small-title">Export Référentiel de formation B.U.T. {{ user_data.departement.sigle }}</h2>
-                {% if user_data.departement.typeStructure != 'type3' %}
-                    {% set troncCommunStatus = pdfReferentielStatuses.troncCommun|default({'status': 'absent', 'errorMessage': null}) %}
-                    {% set parcoursGlobalStatus = pdfReferentielStatuses.parcoursGlobal|default({'status': 'absent', 'errorMessage': null}) %}
-                    <a href="{{ path('export_pdf_tronc_commun') }}" >
-                        Export d'une pré-version du PN pour le tronc commun
+                {% set completeStatus = pdfReferentielStatuses.complete|default({'status': 'absent', 'errorMessage': null}) %}
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <a href="{{ path('export_pdf') }}" target="_blank" class="btn btn-outline-primary btn-icon btn-icon-start">
+                        <i class="bi-print"></i>
+                        <span>
+                            Afficher / generer la pre-version PDF
+                            {% if completeStatus.lastGeneratedAt is defined and completeStatus.lastGeneratedAt is not null %}
+                                ({{ completeStatus.lastGeneratedAt|date('d/m/Y H:i') }})
+                            {% endif %}
+                        </span>
                     </a>
-                    {{ include('pdf/_generation_status_badge.html.twig', {statusData: troncCommunStatus}) }}
-                    <a href="{{ path('export_pdf_parcours') }}" >
-                        Export d'une pré-version du PN pour les parcours
+                    <a href="{{ path('export_pdf', {force: 1}) }}" target="_blank" class="btn btn-outline-warning btn-icon btn-icon-start">
+                        <i class="bi-arrow-repeat"></i>
+                        <span>Forcer la mise a jour du PDF</span>
                     </a>
-                    {{ include('pdf/_generation_status_badge.html.twig', {statusData: parcoursGlobalStatus}) }}
-                {% endif %}
+                </div>
+                {{ include('pdf/_generation_status_badge.html.twig', {statusData: completeStatus}) }}
                 <br>
                 <br>
-                <a href="{{ asset('pn/PN-BUT-'~user_data.departement.sigle~'.pdf') }}" target="_blank" class="btn
+                <a href="{{ asset('pn/PN-BUT-'~user_data.departement.sigle~'.pdf') }}" target="_blank"
+                   class="btn
                 btn-success
                 btn-outline
                 d-block">
                     Récupérer la version du PN validée par la CCN et le CNESER (version 2021/2022).
                 </a>
-                <br>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 mb-5">
-                    {% for parcours in user_data.version.apcParcours %}
-                        <div class="col">
-                            <div class="card h-100 border-{{ parcours.couleur }}">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ parcours.libelle }}</h5>
-                                    {% set parcoursStatus = pdfReferentielStatuses.parcoursById[parcours.id]|default({'status': 'absent', 'errorMessage': null}) %}
-                                    <a href="{{ path('export_pdf', {parcours:parcours.id}) }}" target="_blank">
-                                        Export d'une pré-version du PN pour le parcours
-                                        {{ parcours.libelle }}
-                                    </a>
-                                    {{ include('pdf/_generation_status_badge.html.twig', {statusData: parcoursStatus}) }}
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
             </section>
         {% endif %}
     {% endif %}

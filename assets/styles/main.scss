@@ -89,3 +89,99 @@ input {
 textarea {
     border: 1px solid #575759 !important;
 }
+
+/* =====================================================
+   Fix : menu horizontal trop long
+   On s'assure que les blocs Version PN et User restent
+   toujours visibles quelle que soit la longueur du menu.
+   ===================================================== */
+
+/* Le conteneur du menu peut se rétrécir,
+   les autres éléments de la barre de nav ne le peuvent pas */
+html[data-placement='horizontal'] .nav-container .menu-container {
+    min-width: 0;
+    position: relative;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+}
+
+html[data-placement='horizontal'] .nav-container .menu-container.menu-container--dropdown-open {
+    overflow: visible;
+}
+
+html[data-placement='horizontal'] .nav-container .menu-container::-webkit-scrollbar {
+    display: none; /* Chrome / Safari */
+}
+
+/* Boutons flèches de scroll – masqués par défaut, affichés via JS */
+.nav-scroll-arrow {
+    display: none;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 100%;
+    min-height: 40px; /* repli si le parent n'a pas de hauteur explicite */
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: var(--border-radius-md, 4px);
+    cursor: pointer;
+    color: var(--light-text, #fff);
+    transition: background 0.15s ease;
+    padding: 0;
+    z-index: 10;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.nav-scroll-arrow--visible {
+    display: inline-flex !important;
+}
+
+.nav-scroll-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+html[data-placement='horizontal'] .nav-container .user-container {
+    flex-shrink: 0 !important;
+}
+
+html[data-placement='horizontal'] .nav-container .menu-icons {
+    flex-shrink: 0 !important;
+}
+
+html[data-placement='horizontal'] .nav-container .logo {
+    flex-shrink: 0 !important;
+}
+
+/* À partir de 1400 px : réduire les paddings des items */
+@media (max-width: 1399.98px) {
+    html[data-placement='horizontal'] .nav-container .menu-container .menu > li > a {
+        padding: 0 0.6rem !important;
+    }
+}
+
+/* En-deçà de 1200 px : masquer les labels texte, garder uniquement les icônes */
+@media (max-width: 1199.98px) {
+    html[data-placement='horizontal'] .nav-container .menu-container .menu > li > a .label {
+        display: none !important;
+    }
+
+    html[data-placement='horizontal'] .nav-container .menu-container .menu > li > a .icon {
+        display: inline-block !important;
+        font-size: 1.1rem;
+    }
+
+    html[data-placement='horizontal'] .nav-container .menu-container .menu > li > a {
+        padding: 0 0.5rem !important;
+    }
+
+    /* Réduire aussi la largeur du nom de l'utilisateur */
+    html[data-placement='horizontal'] .nav-container .user-container .user .name {
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+

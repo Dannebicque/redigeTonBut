@@ -4,11 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
+use App\Entity\Version;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -28,9 +30,9 @@ class ApcParcoursCrudController extends BaseCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            AssociationField::new('departement')
-                ->setLabel('Département')
-                ->setCrudController(Departement::class)
+            AssociationField::new('version')
+                ->setLabel('Version')
+                ->setCrudController(Version::class)
                 ->setRequired(true)
                 ->setQueryBuilder(function (QueryBuilder $qb) {
                     $user = $this->security->getUser();
@@ -45,6 +47,7 @@ class ApcParcoursCrudController extends BaseCrudController
                         ->orderBy('d.libelle', 'ASC');
                 }),
             TextField::new('libelle', 'Libellé'),
+            NumberField::new('ordre', 'Ordre'),
             TextField::new('code', 'Sigle'),
             ChoiceField::new('couleur', 'Couleur du parcours')
                 ->setHelp('Pour l\'affichage des parcours dans les maquettes')

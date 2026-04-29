@@ -53,7 +53,11 @@ class GenereLatexCommand extends Command
                 return Command::FAILURE;
             }
 
-            $this->genereFile->genereFile($departement, $this->kernel->getProjectDir() . '/public/latex/');
+            //récupérer la dernière version du département
+
+            $version = $departement->getVersions()->last();
+
+            $this->genereFile->genereFile($version, $this->kernel->getProjectDir() . '/public/latex/');
 
         }
 

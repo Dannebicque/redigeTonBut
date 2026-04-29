@@ -2,13 +2,14 @@
 %% Fichier généré le {{ 'now'|date('d/m/Y H:i') }}
 %% on définit le pied de pages ici car le nom de la mention est présent
 \pagestyle{fancy}
-%%\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage{parskip}
 \usepackage{pdflscape} %% éventuellement \usepackage{pdflscape}
 \fancyhead[L,C,R]{}
 \fancyfoot[C]{}
 \fancyfoot[L]{\textcopyright Ministère de l'Enseignement sup\'erieur, de la Recherche et de l'Innovation - Programmes nationaux 2022 – mis à jour en 2023 -
-http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ sae.version.departement.libelle|latex_purge|raw }}}
+https://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ sae.version.departement.libelle|latex_purge|raw }}}
 \fancyfoot[R]{\thepage}
 
 \begin{document}

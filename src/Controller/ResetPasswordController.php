@@ -33,8 +33,13 @@ class ResetPasswordController extends AbstractController
     #[Route('/', name: 'app_forgot_password_request')]
     public function request(
         UserRepository $userRepository,
-        Request $request, MailerInterface $mailer): Response
+        Request $request,
+        MailerInterface $mailer
+    ): Response
     {
+        $email = $request->query->get('email');
+        $alreadyRegistered = $request->query->getBoolean('alreadyRegistered');
+
         if ($request->isMethod('POST')) {
             return $this->processSendingPasswordResetEmail(
                 $userRepository,
@@ -44,6 +49,8 @@ class ResetPasswordController extends AbstractController
         }
 
         return $this->render('reset_password/request.html.twig', [
+            'email' => $email,
+            'alreadyRegistered' => $alreadyRegistered,
         ]);
     }
 

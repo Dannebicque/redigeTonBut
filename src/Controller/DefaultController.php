@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Classes\DataUserSession;
 use App\Entity\Departement;
+use App\Entity\Version;
+use App\Pdf\Builder\ReferentielPdfPayloadBuilder;
 use App\Pdf\PdfManager;
 use App\Pdf\PdfSourceType;
 use App\Repository\DepartementRepository;
@@ -15,10 +17,6 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DefaultController extends AbstractController
 {
-    private const DOCUMENT_KEY_PARCOURS = 'export_latex_parcours';
-    private const DOCUMENT_KEY_TRONC_COMMUN = 'export_latex_tronc_commun';
-    private const DOCUMENT_KEY_PARCOURS_PREFIX = 'export_latex_parcours_';
-
     public function __construct(
         private readonly PdfManager $pdfManager,
         private readonly DataUserSession $dataUserSession,
@@ -36,48 +34,32 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @return array{troncCommun: array{status: string, errorMessage: ?string}, parcoursGlobal: array{status: string, errorMessage: ?string}, parcoursById: array<int, array{status: string, errorMessage: ?string}>}
+     * @return array{complete: array{status: string, errorMessage: ?string, lastGeneratedAt: ?\DateTimeImmutable}}
      */
-    private function buildReferentielPdfStatuses(?\App\Entity\Version $version): array
+    private function buildReferentielPdfStatuses(?Version $version): array
     {
         $defaultStatus = [
             'status' => PdfManager::DISPLAY_STATUS_ABSENT,
             'errorMessage' => null,
+            'lastGeneratedAt' => null,
         ];
 
         if ($version === null || $version->getId() === null) {
             return [
-                'troncCommun' => $defaultStatus,
-                'parcoursGlobal' => $defaultStatus,
-                'parcoursById' => [],
+                'complete' => $defaultStatus,
             ];
         }
 
         $sourceId = (string) $version->getId();
 
-        $statusForDocumentKey = function (string $documentKey) use ($sourceId, $defaultStatus): array {
-            $statuses = $this->pdfManager->getDisplayStatusesForSources(
-                PdfSourceType::REFERENTIEL,
-                [$sourceId],
-                $documentKey,
-            );
-
-            return $statuses[$sourceId] ?? $defaultStatus;
-        };
-
-        $parcoursById = [];
-        foreach ($version->getApcParcours() as $parcours) {
-            if ($parcours->getId() === null) {
-                continue;
-            }
-
-            $parcoursById[$parcours->getId()] = $statusForDocumentKey(self::DOCUMENT_KEY_PARCOURS_PREFIX.$parcours->getId());
-        }
+        $statuses = $this->pdfManager->getDisplayStatusesForSources(
+            PdfSourceType::REFERENTIEL,
+            [$sourceId],
+            ReferentielPdfPayloadBuilder::DOCUMENT_KEY_COMPLETE,
+        );
 
         return [
-            'troncCommun' => $statusForDocumentKey(self::DOCUMENT_KEY_TRONC_COMMUN),
-            'parcoursGlobal' => $statusForDocumentKey(self::DOCUMENT_KEY_PARCOURS),
-            'parcoursById' => $parcoursById,
+            'complete' => $statuses[$sourceId] ?? $defaultStatus,
         ];
     }
 
@@ -135,7 +117,7 @@ class DefaultController extends AbstractController
                 $requestStack->getSession()->set('versionPn', $annee);
 
 
-                return $this->redirectToRoute('homepage_specialite');
+                return $this->redirectToRoute('homepage');
             }
 
             throw new \RuntimeException('Fonctionnalité interdite au regard de vos droits.');

@@ -37,6 +37,10 @@ final class PdfController extends AbstractController
             $parameters['parcours'] = $parcoursId;
         }
 
+        if ($request->query->getBoolean('force')) {
+            $this->pdfManager->invalidate($pdfSourceType, $sourceId, $documentKey);
+        }
+
         $document = $this->pdfManager->getOrRequest(
             $pdfSourceType,
             $sourceId,

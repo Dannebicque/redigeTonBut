@@ -4,6 +4,7 @@ namespace App\Pdf\Builder;
 
 use App\Entity\ApcParcours;
 use App\Entity\ApcSae;
+use App\Latex\LatexSanitizer;
 use App\Pdf\PdfPayloadBuilderInterface;
 use App\Pdf\PdfSourceType;
 use App\Pdf\RemotePdfRequest;
@@ -18,6 +19,7 @@ final readonly class SaePdfPayloadBuilder implements PdfPayloadBuilderInterface
         private ApcSaeRepository $saeRepository,
         private ApcParcoursRepository $parcoursRepository,
         private Environment      $twig,
+        private LatexSanitizer $latexSanitizer,
     ) {
     }
 
@@ -52,6 +54,7 @@ final readonly class SaePdfPayloadBuilder implements PdfPayloadBuilderInterface
                 'parcours' => $parcours,
                 'parameters' => $parameters,
             ]);
+            $latex = $this->latexSanitizer->normalizeLatexDocument($latex);
 
             file_put_contents($mainTexPath, $latex);
 
@@ -70,6 +73,8 @@ final readonly class SaePdfPayloadBuilder implements PdfPayloadBuilderInterface
 
             $zipBase64 = base64_encode($zipContent);
 
+            $stableLatex = $this->buildStableLatexFingerprint($latex);
+
             return new RemotePdfRequest(
                 type: 'latex',
                 options: [
@@ -86,7 +91,7 @@ final readonly class SaePdfPayloadBuilder implements PdfPayloadBuilderInterface
                 filename: sprintf('sae_%s.pdf', $sae->getId()),
                 sourceHash: hash('sha256', json_encode([
                     'type' => 'latex',
-                    'latex' => $latex,
+                    'latex' => $stableLatex,
                     'parameters' => $parameters,
                 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)),
             );
@@ -110,5 +115,12 @@ final readonly class SaePdfPayloadBuilder implements PdfPayloadBuilderInterface
         }
 
         return $sae->isGoodParcours($parcours) ? $parcours : null;
+    }
+
+    private function buildStableLatexFingerprint(string $latex): string
+    {
+        $withoutVolatileHeader = preg_replace('/^%%\s*Fichier généré le .*\R?/mu', '', $latex);
+
+        return is_string($withoutVolatileHeader) ? $withoutVolatileHeader : $latex;
     }
 }

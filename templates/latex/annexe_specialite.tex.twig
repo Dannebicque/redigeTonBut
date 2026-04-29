@@ -2,22 +2,25 @@
 %% Fichier généré le {{ 'now'|date('d/m/Y H:i') }}
 %% on définit le pied de pages ici car le nom de la mention est présent
 \pagestyle{fancy}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc} %%nécessaire avec PDFLatex ?
-
+\usepackage{lmodern}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\usepackage[unicode]{hyperref}
 {#%% filigrane#}
-{#\usepackage{draftwatermark}#}
-\usepackage{amsfonts}
-{#\usepackage{xcolor}#}
-{#\SetWatermarkColor{gray!40}#}
-{#\SetWatermarkFontSize{1.5cm}#}
-{#\SetWatermarkText{Validé CCN. \\ En attente de validation CNESER}#}
+\usepackage{draftwatermark}
+\usepackage{xcolor}
+\SetWatermarkColor{gray!40}
+\SetWatermarkFontSize{2.5cm}
+\SetWatermarkText{Document non Validé CCN.}
 {#%% fin filigrane#}
 \usepackage{parskip}
 \usepackage{pdflscape} %% éventuellement \usepackage{pdflscape}
 \fancyhead[L,C,R]{}
 \fancyfoot[C]{}
-\fancyfoot[L]{\textcopyright Ministère de l'Enseignement sup\'erieur, de la Recherche et de l'Innovation - Programmes nationaux 2022 – mis à jour en 2023 -
-http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|latex_purge|raw }}}
+\fancyfoot[L]{\textcopyright Ministère de l'Enseignement sup\'erieur, de la Recherche et de l'Innovation - Programmes nationaux 2027 – mis à jour en 2026 -
+https://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|latex_purge|raw }}}
 \fancyfoot[R]{\thepage}
 
 \makeatletter
@@ -29,9 +32,17 @@ http://www.enseignementsup-recherche.gouv.fr - B.U.T. {{ departement.libelle|lat
 
 \newgeometry{margin=0in} %pour enlever les marges dans la page de titre
 \begin{titlepage}
+{% if includeAssets %}
 \begin{center}
 \includegraphics[width=19.7cm]{couverture/couv_{{ departement.numeroAnnexe }}.pdf}
 \end{center}
+{% else %}
+\vspace*{4cm}
+\begin{center}
+{\Huge B.U.T. {{ departement.libelle|latex_purge|raw }}\\[1cm]}
+{\Large Pré-version sans assets externes}
+\end{center}
+{% endif %}
 \end{titlepage}
 \setcounter{page}{2}
 \restoregeometry
@@ -69,12 +80,16 @@ Ce document présente le programme national du B.U.T. {{ departement.libelle|lat
 \chapter{Structure générale des six semestres de formation}
 
 %% Tableau structurel
+{% if includeAssets %}
 \begin{landscape}
 \begin{center}
 %%si type 1 ou 2
 \includegraphics[scale=0.8]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-structure.pdf}' }}
 \end{center}
 \end{landscape}
+{% else %}
+Le tableau de structure n'est pas inclus dans cette pré-version sans assets.
+{% endif %}
 
 %%
 %% Partie commune BUT1 si type 1 ou 2.
@@ -104,9 +119,13 @@ Ce tableau détaille par ailleurs la répartition du volume horaire global des h
 \item[--] le volume horaire, dont les heures TP, relevant d’une partie de l’adaptation locale et pouvant être affecté de manière non exclusive soit aux SAÉ, soit aux ressources définies nationalement ou localement.
 \end{itemize}
 
+{% if includeAssets %}
 \begin{center}
 \includegraphics[width=19.7cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre.id~'-'~parcours.id~'.pdf}' }}
 \end{center}
+{% else %}
+Le tableau croisé graphique n'est pas inclus dans cette pré-version sans assets.
+{% endif %}
 \newpage
 \subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
 
@@ -127,12 +146,16 @@ Ce tableau détaille par ailleurs la répartition du volume horaire global des h
 \section{Structure générale des six semestres du parcours {{ parcours.libelle|latex_purge }}}
 
 %% Tableau structurel
+{% if includeAssets %}
 \begin{landscape}
 \begin{center}
 %%si type 3 / Structure.
  \includegraphics[scale=0.8]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-structure-'~parcours.id~'.pdf}' }}
 \end{center}
 \end{landscape}
+{% else %}
+Le tableau de structure du parcours n'est pas inclus dans cette pré-version sans assets.
+{% endif %}
 
 {#  type 3 #}
 {% for key in semestres[parcours.id] %}
@@ -151,9 +174,13 @@ Ce tableau détaille par ailleurs la répartition du volume horaire global des h
 \item[--] le volume horaire, dont les heures TP, relevant d’une partie de l’adaptation locale et pouvant être affecté de manière non exclusive soit aux SAÉ, soit aux ressources définies nationalement ou localement.
 \end{itemize}
 
+{% if includeAssets %}
 \begin{center}
 \includegraphics[width=19.7cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre.id~'-'~parcours.id~'.pdf}' }}
 \end{center}
+{% else %}
+Le tableau croisé graphique n'est pas inclus dans cette pré-version sans assets.
+{% endif %}
 \newpage
 \subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
 

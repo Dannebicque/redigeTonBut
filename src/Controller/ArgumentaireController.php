@@ -37,7 +37,11 @@ class ArgumentaireController extends BaseController
         $argumentaire = $this->findOrCreateArgumentaire($version, $argumentaireRepository);
         $sourceId = (string) $version->getId();
         $statusMap = $this->pdfManager->getDisplayStatusesForSources(PdfSourceType::ARGUMENTAIRE, [$sourceId]);
-        $pdfStatusData = $statusMap[$sourceId] ?? ['status' => PdfManager::DISPLAY_STATUS_ABSENT, 'errorMessage' => null];
+        $pdfStatusData = $statusMap[$sourceId] ?? [
+            'status' => PdfManager::DISPLAY_STATUS_ABSENT,
+            'errorMessage' => null,
+            'lastGeneratedAt' => null,
+        ];
 
         if ($request->isMethod('POST')) {
             $payload = $this->normalizePayload($request->request->all());

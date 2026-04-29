@@ -210,10 +210,16 @@ class DepartementExport
             'semestres' => $version->getSemestres(),
             'version' => $version,
         ]);
-        $name = 'but-pn-' . $departement->getSigle();
+        $name = 'but-pn-' . $departement->getSigle().'-'.$version->getAnnee();
 
+        $date = new DateTime('now');
+        $name .= '-' . $date->format('dmY-His');
+        $response = new Response($xmlContent);
+        $response->headers->set('Content-type', 'text/xml');
+        $response->headers->set('Content-Disposition', 'attachment;filename="' . $name . '.xml"');
 
-        return $this->exportFichier($xmlContent, $name);
+        return $response;
+
     }
 
     public function genereJsonReferentiel(Version $version): array

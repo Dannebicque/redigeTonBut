@@ -102,6 +102,13 @@ class PdfDocument
         return $this->parametersHash;
     }
 
+    public function syncParameters(array $parameters, string $parametersHash): void
+    {
+        $this->parameters = $parameters;
+        $this->parametersHash = $parametersHash;
+        $this->touch();
+    }
+
     public function getStatus(): string
     {
         return $this->status;

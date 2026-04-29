@@ -1,6 +1,10 @@
 \setcounter{section}{0}
+{% if includeAssets %}
 {% for parcours in version.apcParcours %}
 {{ include('latex/_ref_competence_parcours.tex.twig', {parcours:parcours}) }}
 {% endfor %}
+{% else %}
+Le référentiel de compétences illustré n'est pas embarqué dans cette pré-version sans assets.
+{% endif %}
 
 

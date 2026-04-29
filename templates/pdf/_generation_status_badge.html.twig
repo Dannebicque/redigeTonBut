@@ -9,3 +9,7 @@
     <span class="badge bg-secondary ms-2">PDF non genere</span>
 {% endif %}
 
+{% if statusData.lastGeneratedAt is defined and statusData.lastGeneratedAt is not null %}
+    <small class="text-muted ms-2">Derniere version: {{ statusData.lastGeneratedAt|date('d/m/Y H:i') }}</small>
+{% endif %}
+

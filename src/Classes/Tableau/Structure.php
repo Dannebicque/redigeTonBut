@@ -4,6 +4,7 @@ namespace App\Classes\Tableau;
 use App\Classes\Excel\ExcelWriter;
 use App\DTO\StructureDepartement;
 use App\DTO\StructureSemestre;
+use App\Entity\ApcRessourceParcours;
 use App\Entity\ApcParcours;
 use App\Entity\ApcRessource;
 use App\Entity\Semestre;
@@ -138,34 +139,48 @@ class Structure
     {
         $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
 
-        $tRessources['ia'] = 0;
-        $tRessources['teds'] = 0;
-        $tRessources['ppp'] = 0;
-        $tRessources['expression'] = 0;
-        $tRessources['lve'] = 0;
-        $tRessources['ppp'] = 0;
+        $tRessources = [
+            'ia' => ['sum' => 0.0, 'weight' => 0.0],
+            'teds' => ['sum' => 0.0, 'weight' => 0.0],
+            'ppp' => ['sum' => 0.0, 'weight' => 0.0],
+            'expression' => ['sum' => 0.0, 'weight' => 0.0],
+            'lve' => ['sum' => 0.0, 'weight' => 0.0],
+        ];
 
         /** @var ApcRessource $ressource */
         foreach ($ressources as $ressource) {
+            $heures = (float) $ressource->getHeuresTotales();
+            $poids = (float) $this->getPoidsParcoursRessource($ressource);
+
             if ($ressource->isRessourceIA()) {
-                $tRessources['ia'] += $ressource->getHeuresTotales();
+                $tRessources['ia']['sum'] += $heures * $poids;
+                $tRessources['ia']['weight'] += $poids;
             }
             if ($ressource->isRessourceTEDS()) {
-                $tRessources['teds'] += $ressource->getHeuresTotales();
+                $tRessources['teds']['sum'] += $heures * $poids;
+                $tRessources['teds']['weight'] += $poids;
             }
             if ($ressource->isRessourceLve()) {
-                $tRessources['lve'] += $ressource->getHeuresTotales();
+                $tRessources['lve']['sum'] += $heures * $poids;
+                $tRessources['lve']['weight'] += $poids;
             }
             if ($ressource->isRessourceExpression())
             {
-                $tRessources['expression'] += $ressource->getHeuresTotales();
+                $tRessources['expression']['sum'] += $heures * $poids;
+                $tRessources['expression']['weight'] += $poids;
             }
 
             if ($ressource->isRessourcePpp())
             {
-                $tRessources['ppp'] += $ressource->getHeuresTotales();
+                $tRessources['ppp']['sum'] += $heures * $poids;
+                $tRessources['ppp']['weight'] += $poids;
             }
 
+        }
+
+        $ressourcesMoyenne = [];
+        foreach ($tRessources as $key => $stats) {
+            $ressourcesMoyenne[$key] = $stats['weight'] > 0.0 ? $stats['sum'] / $stats['weight'] : 0.0;
         }
 
 
@@ -175,7 +190,41 @@ class Structure
             'nbSaes' => $this->apcSaeRepository->countBySemestre($semestre),
             'nbSaesMonoCompetence' => $this->apcSaeRepository->countBySemestreMonoCompetence($semestre),
             'nbSaesMultiCompetence' => $this->apcSaeRepository->countBySemestreMultiCompetence($semestre),
-            'ressources' => $tRessources,
+            'ressources' => $ressourcesMoyenne,
         ];
+    }
+
+    private function getPoidsParcoursRessource(ApcRessource $ressource): int
+    {
+        $totalParcours = $this->version->getApcParcours()->count();
+
+        // Cas limite: si la version n'a pas de parcours, on garde un poids neutre.
+        if ($totalParcours === 0) {
+            return 1;
+        }
+
+        // Pas de restriction explicite: la ressource porte sur tous les parcours.
+        if ($ressource->getApcRessourceParcours()->count() === 0) {
+            return $totalParcours;
+        }
+
+        $parcoursIds = [];
+        foreach ($ressource->getApcRessourceParcours() as $ressourceParcours) {
+            if (!$ressourceParcours instanceof ApcRessourceParcours) {
+                continue;
+            }
+
+            $parcours = $ressourceParcours->getParcours();
+            if ($parcours instanceof ApcParcours && $parcours->getId() !== null) {
+                $parcoursIds[$parcours->getId()] = true;
+            }
+        }
+
+        $nbParcoursRessource = count($parcoursIds);
+        if ($nbParcoursRessource === 0) {
+            return $totalParcours;
+        }
+
+        return min($nbParcoursRessource, $totalParcours);
     }
 }

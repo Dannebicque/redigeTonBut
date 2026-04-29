@@ -23,7 +23,8 @@ class RegistrationController extends AbstractController
         EntityManagerInterface       $entityManager,
         MailerInterface             $mailer,
         Request                     $request,
-        UserPasswordHasherInterface $passwordEncoder
+        UserPasswordHasherInterface $passwordEncoder,
+        UserRepository              $userRepository
     ): Response
     {
         $user = new User();
@@ -47,7 +48,18 @@ class RegistrationController extends AbstractController
                 $email = substr($email, strpos($email, '@'), strlen($email));
             }
 
-            $user->setEmail($email . '@' . $form->get('domaine')->getData()->getUrl());
+            $emailComplet = $email . '@' . $form->get('domaine')->getData()->getUrl();
+
+            // Vérifier si l'email existe déjà
+            $existingUser = $userRepository->findOneBy(['email' => $emailComplet]);
+            if ($existingUser !== null) {
+                return $this->redirectToRoute('app_forgot_password_request', [
+                    'email' => $emailComplet,
+                    'alreadyRegistered' => true
+                ]);
+            }
+
+            $user->setEmail($emailComplet);
 
             $user->setActif(true);
             $entityManager->persist($user);

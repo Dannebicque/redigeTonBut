@@ -21,6 +21,7 @@ import './js/base/init'
 import './js/common'
 import './js/scripts'
 import './js/base/loader'
+import { initNavScroll } from './js/base/nav-scroll'
 
 var toastElList = [].slice.call(document.querySelectorAll('.toast'))
 var toastList = toastElList.map(function (toastEl) {
@@ -55,6 +56,9 @@ ready(() => {
   toastList.forEach((toast) => {
     toast.show()
   })
+
+  // Indicateurs de scroll du menu de navigation
+  initNavScroll()
 
   document.querySelectorAll('.changeSemestreRessources').forEach((elem) => {
     elem.addEventListener('click', updateBoutonRessource)

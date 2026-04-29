@@ -17,9 +17,13 @@ Ce tableau détaille par ailleurs la répartition du volume horaire global des h
 \end{itemize}
 \newpage
 
+{% if includeAssets %}
 \begin{center}
 \includegraphics[width=19cm]{{'{'~departement.numeroAnnexe~'/tableaux/tableau-croise-'~semestre.id~'.pdf}' }}
 \end{center}
+{% else %}
+Le tableau croisé graphique du semestre {{ semestre.ordreLmd }} n'est pas inclus dans cette pré-version sans assets.
+{% endif %}
 \newpage
 \subsection{Fiches Situations d'apprentissage et d'évaluation (SAÉ)}
 

@@ -121,6 +121,10 @@ class FormationVoter extends Voter
 
     public function getDepartementFromSubject(Version|Departement|Semestre|ApcSae|ApcRessource $post): ?Departement
     {
+        if ($post instanceof Version) {
+            return $post->getDepartement();
+        }
+
         return $post->getVersion()?->getDepartement();
     }
 }

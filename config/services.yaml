@@ -48,6 +48,14 @@ services:
         autowire: true
         autoconfigure: true
 
+    App\Pdf\Builder\ReferentielPdfPayloadBuilder:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Classes\Latex\GenereFile:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
     App\Pdf\PdfPayloadBuilderRegistry:
         arguments:
             $builders: !tagged_iterator app.pdf_payload_builder

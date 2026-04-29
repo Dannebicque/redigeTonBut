@@ -28,15 +28,15 @@ class LatexExtension extends AbstractExtension
 
     public function markdownToLatex($text): array|string
     {
-        $text = $this->latexSanitizer->normalizeUnicode((string) $text);
+        $text = $this->latexSanitizer->sanitizeForLatex((string) $text);
         $text = nl2br($text);
         $text = str_replace(['SAé', ' BUT.', ' BUT ', '•	','<br/>', '<br />','<br>'], ['SAÉ', ' B.U.T.', ' B.U.T. ','* ',"\r\n\r\n","\r\n\r\n","\r\n\r\n"], $text);
 
         $parse = new Parsedown();
         $text = $parse->text($text);
         $text = str_replace(
-            ['<em>','</em>','<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>','&', 'œ', '’','«','»', '°','\&lt;','%','→','…', 'ℤ','\&quot;', '\&amp;','℃', '<ol start="'],
-            ['','','',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item[--] ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\&', '\oe{}', "'",'\og','\fg ', '$ ^\circ$ ', '> ','\%','->','...','$\mathbb{Z}$','"','\&','$ ^\circ$C', '\begin{enumerate}\setcounter{enumi}{'], $text);
+            ['<em>','</em>','<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>', '#', 'œ', '’','«','»', '°','\&lt;','%','→','…', 'ℤ','\&quot;', '\&amp;', '&amp;','℃', '<ol start="'],
+            ['','','',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item[--] ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\#', '\oe{}', "'",'\og','\fg ', '$ ^\circ$ ', '> ','\%','->','...','$\mathbb{Z}$','"','\&','\&','$ ^\circ$C', '\begin{enumerate}\setcounter{enumi}{'], $text);
 
         return $this->latexSanitizer->normalizeUnicode(str_replace('">', '-1}', $text));
     }
@@ -48,9 +48,9 @@ class LatexExtension extends AbstractExtension
 
     public function keyWords($text): array|string
     {
-        $text = $this->latexSanitizer->normalizeUnicode((string) $text);
+        $text = $this->latexSanitizer->sanitizeForLatex((string) $text);
         $text = str_replace([' - ', ' – ', ', ', ';', ','], [' -- ', ' -- ', ' -- ', ' -- ', ' -- '], $text);
 
-        return $this->latexSanitizer->sanitizeForLatex($text);
+        return $this->latexSanitizer->normalizeUnicode($text);
     }
 }

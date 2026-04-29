@@ -22,7 +22,7 @@
                     {% endif %}
                 </div>
             </div>
-            {% set pdfStatusData = pdfStatusByRessource[ressource.id]|default({'status': 'absent', 'errorMessage': null}) %}
+            {% set pdfStatusData = pdfStatusByRessource[ressource.id]|default({'status': 'absent', 'errorMessage': null, 'lastGeneratedAt': null}) %}
             {% if compareMode|default(false) and ressourceDiff is not null %}
                 {% if ressourceDiff.status == 'added' %}
                     <span class="badge bg-success mb-2">Ajoutée depuis N-1</span>
@@ -111,13 +111,24 @@
                 {% else %}
                     <span class="badge bg-secondary me-2">PDF non genere</span>
                 {% endif %}
+                {% if pdfStatusData.lastGeneratedAt is not null %}
+                    <small class="text-muted me-2">{{ pdfStatusData.lastGeneratedAt|date('d/m/Y H:i') }}</small>
+                {% endif %}
                 <a href="{{ path('pdf_show',
                     {sourceType: 'ressource', 'sourceId': ressource.id, parcours: parcoursPdfId, documentKey: 'fiche' }) }}"
                    class="btn btn-block btn-sm btn-icon btn-icon-start btn-outline-primary ms-1"
                    target="_blank"
                 >
                     <i class="bi-print"></i>
-                    <span class="d-none d-xxl-inline-block">Imprimer la fiche ressource</span>
+                    <span class="d-none d-xxl-inline-block">Afficher / generer le PDF</span>
+                </a>
+                <a href="{{ path('pdf_show',
+                    {sourceType: 'ressource', 'sourceId': ressource.id, parcours: parcoursPdfId, documentKey: 'fiche', force: 1 }) }}"
+                   class="btn btn-block btn-sm btn-icon btn-icon-start btn-outline-warning ms-1"
+                   target="_blank"
+                >
+                    <i class="bi-arrow-repeat"></i>
+                    <span class="d-none d-xxl-inline-block">Forcer la mise a jour</span>
                 </a>
             </div>
 

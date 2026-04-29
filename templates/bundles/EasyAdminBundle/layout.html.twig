@@ -1,0 +1,45 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block head_favicon %}
+    {% if ea.dashboardFaviconPath is not empty %}
+        <link rel="shortcut icon" href="{{ asset(ea.dashboardFaviconPath) }}">
+    {% endif %}
+{% endblock %}
+
+{% block flash_messages %}
+    {{ include('@EasyAdmin/flash_messages.html.twig') }}
+{% endblock %}
+
+{% block responsive_header_logo %}
+    {% if ea.dashboardRouteName is not empty %}
+        <a class="responsive-logo" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+            {{ ea.dashboardTitle|raw }}
+        </a>
+    {% else %}
+        <span class="responsive-logo" title="{{ ea.dashboardTitle|striptags }}">
+            {{ ea.dashboardTitle|raw }}
+        </span>
+    {% endif %}
+{% endblock %}
+
+{% block header_logo %}
+    {% if ea.dashboardRouteName is not empty %}
+        <a class="logo" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+            <span class="logo-custom">{{ ea.dashboardTitle|raw }}</span>
+            <span class="logo-compact"><twig:ea:Icon name="internal:home" /></span>
+        </a>
+    {% else %}
+        <span class="logo" title="{{ ea.dashboardTitle|striptags }}">
+            <span class="logo-custom">{{ ea.dashboardTitle|raw }}</span>
+            <span class="logo-compact"><twig:ea:Icon name="internal:home" /></span>
+        </span>
+    {% endif %}
+{% endblock %}
+
+{% block main_menu_wrapper %}
+    {% set mainMenuTemplate = ea.templatePath('main_menu') %}
+    {% if mainMenuTemplate is not empty %}
+        {{ include(mainMenuTemplate) }}
+    {% endif %}
+{% endblock %}
+
