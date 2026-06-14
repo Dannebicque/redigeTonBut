@@ -430,7 +430,7 @@ class ApcSae extends AbstractMatiere
         $t = [];
         foreach ($ressources as $ressource)
         {
-            if ($ressource->getRessource()->isGoodParcours($apcParcours)) {
+            if ($ressource->getRessource()?->isGoodParcours($apcParcours)) {
 
                 $t[$ressource->getRessource()->getOrdre()] = $ressource->getRessource();
             }
@@ -446,7 +446,7 @@ class ApcSae extends AbstractMatiere
         $t = [];
         foreach ($acs as $ac)
         {
-            if ($ac->getApprentissageCritique()->getCompetence()->isGoodParcours($apcParcours)) {
+            if ($ac->getApprentissageCritique()->getCompetence()?->isGoodParcours($apcParcours)) {
                 if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $t)) {
                     $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];
                 }

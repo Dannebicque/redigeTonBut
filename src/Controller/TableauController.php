@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/tableau', name: 'tableau_')]
 class TableauController extends BaseController
@@ -310,6 +311,7 @@ class TableauController extends BaseController
     }
 
     #[Route('/preconisations/{annee}/{parcours}', name: 'preconisations_annee', requirements: ['annee' => '\d+'])]
+    #[IsGranted('ROLE_GT')]
     public function tableauPreconisations(
         SemestreRepository $semestreRepository,
         Annee $annee,

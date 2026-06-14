@@ -1,29 +1,28 @@
-{% if sae.portfolio == true %}
-\subsubsection{ {{ sae.codeMatiere }} : D\'emarche portfolio}
-{% else %}
-\subsubsection{ {{ sae.codeMatiere }} : {{ sae.libelle|latex_purge|raw }}}
-{% endif %}
+{#{% if sae.portfolio == true %}#}
+{#\subsubsection{ {{ sae.codeMatiere|latex_purge }} : D\'emarche portfolio}#}
+{#{% else %}#}
+\subsubsection{ {{ sae.codeMatiere|latex_purge }} : {{ sae.libelle|latex_purge|raw }}}
+{#{% endif %}#}
 
-{%  if sae.apcSaeCompetences|length > 1 %}
+{% set competences = sae.apcSaeCompetences
+    |filter(competence => competence.competence != null and competence.competence.isGoodParcours(parcours))
+%}
+
+{% if competences|length > 1 %}
 \textbf{Comp\'etences cibl\'ees :}
 {% else %}
 \textbf{Comp\'etence cibl\'ee :}
 {% endif %}
 
-{% set itemize = false %}
-{% for competence in sae.apcSaeCompetences|filter(competence => competence.competence.isGoodParcours
-(parcours)) %}
-{% if loop.first %}
+{% if competences|length > 0 %}
 \begin{itemize}
-{% set itemize = true %}
-{% endif %}
-\item[--] {{ competence.competence.libelle|latex_purge|raw }}
-
+{% for competence in competences %}
+    \item[--] {{ competence.competence.libelle|latex_purge|raw }}
 {% endfor %}
-{% if itemize %}
 \end{itemize}
+{% else %}
+--- Pas de comp\'etence associ\'ee ---
 {% endif %}
-{% set itemize = false %}
 
 \textbf{Objectifs et probl\'ematique professionnelle :}
 
@@ -36,45 +35,124 @@
 {% endif %}
 
 {% if sae.portfolio == false %}
-{%  if sae.apcSaeApprentissageCritiques|length > 1 %}
+{% set apprentissages = sae.apcSaeApprentissageCritiquesOrdre(parcours) %}
+
+{% if sae.apcSaeApprentissageCritiques|length > 1 %}
 \textbf{Apprentissages critiques : }
 {% else %}
 \textbf{Apprentissage critique : }
 {% endif %}
 
-{% for comp in sae.apcSaeApprentissageCritiquesOrdre(parcours) %}
-{% if loop.first %}
+{% if apprentissages|length > 0 %}
 \begin{itemize}
-{% set itemize = true %}
-{% endif %}
+{% for comp in apprentissages %}
 {% for ac in comp %}
-\item[--] {{ ac.code }} | {{ ac.libelle|latex_purge|raw }}
+    \item[--] {{ ac.code|latex_purge }} | {{ ac.libelle|latex_purge|raw }}
 {% endfor %}
 {% endfor %}
-{% if itemize%}
 \end{itemize}
+{% else %}
+--- Pas d'apprentissage critique associ\'e ---
 {% endif %}
 {% endif %}
-{% set itemize = false %}
 
-{% for ressource in sae.apcSaeRessourcesOrdre(parcours) %}
-{% if loop.first %}
+{% set ressources = sae.apcSaeRessourcesOrdre(parcours) %}
+
+{% if ressources|length > 0 %}
 \textbf{Ressources mobilis\'ees et combin\'ees : }
 
 \begin{itemize}
-{% set itemize = true %}
-{% endif %}
-\item[--] {{ ressource.codeMatiere }} | {{ ressource.libelle|latex_purge|raw }}
-
+{% for ressource in ressources %}
+    \item[--] {{ ressource.codeMatiere|latex_purge }} | {{ ressource.libelle|latex_purge|raw }}
 {% endfor %}
-{% if itemize%}
 \end{itemize}
 {% endif %}
-{% set itemize = false %}
 
 {% if sae.stage == false %}
 \textbf{Volume horaire : }
 
 Volume horaire : \`a d\'efinir localement par chaque IUT
 {% endif %}
+
+{#{% if sae.portfolio == true %}#}
+{#\subsubsection{ {{ sae.codeMatiere }} : D\'emarche portfolio}#}
+{#{% else %}#}
+{#\subsubsection{ {{ sae.codeMatiere }} : {{ sae.libelle|latex_purge|raw }}}#}
+{#{% endif %}#}
+
+{#{%  if sae.apcSaeCompetences|length > 1 %}#}
+{#\textbf{Comp\'etences cibl\'ees :}#}
+{#{% else %}#}
+{#\textbf{Comp\'etence cibl\'ee :}#}
+{#{% endif %}#}
+
+{#{% set itemize = false %}#}
+
+{#{% for competence in sae.apcSaeCompetences|filter(competence => (competence.competence != null and competence.competence.isGoodParcours(parcours))) %}#}
+{#{% if loop.first %}#}
+{#\begin{itemize}#}
+{#{% set itemize = true %}#}
+{#{% endif %}#}
+{#\item[--] {{ competence.competence.libelle|latex_purge|raw }}#}
+
+{#{% endfor %}#}
+{#{% if itemize %}#}
+{#\end{itemize}#}
+{#{% endif %}#}
+
+{#{% set itemize = false %}#}
+
+{#\textbf{Objectifs et probl\'ematique professionnelle :}#}
+
+{#{{ sae.objectifs != null ? sae.objectifs|markdown_to_latex : '' }}#}
+
+{#{% if sae.stage == false %}#}
+{#\textbf{Descriptif g\'en\'erique : }#}
+
+{#{{ sae.description != null ? sae.description|markdown_to_latex : '' }}#}
+{#{% endif %}#}
+
+{#{% if sae.portfolio == false %}#}
+{#{%  if sae.apcSaeApprentissageCritiques|length > 1 %}#}
+{#\textbf{Apprentissages critiques : }#}
+{#{% else %}#}
+{#\textbf{Apprentissage critique : }#}
+{#{% endif %}#}
+
+{#{% for comp in sae.apcSaeApprentissageCritiquesOrdre(parcours) %}#}
+{#{% if loop.first %}#}
+{#\begin{itemize}#}
+{#{% set itemize = true %}#}
+{#{% endif %}#}
+{#{% for ac in comp %}#}
+{#\item[--] {{ ac.code }} | {{ ac.libelle|latex_purge|raw }}#}
+{#{% endfor %}#}
+{#{% endfor %}#}
+{#{% if itemize%}#}
+{#\end{itemize}#}
+{#{% endif %}#}
+{#{% endif %}#}
+
+{#{% set itemize = false %}#}
+
+{#{% for ressource in sae.apcSaeRessourcesOrdre(parcours) %}#}
+{#{% if loop.first %}#}
+{#\textbf{Ressources mobilis\'ees et combin\'ees : }#}
+
+{#\begin{itemize}#}
+{#{% set itemize = true %}#}
+{#{% endif %}#}
+{#\item[--] {{ ressource.codeMatiere }} | {{ ressource.libelle|latex_purge|raw }}#}
+
+{#{% endfor %}#}
+{#{% if itemize%}#}
+{#\end{itemize}#}
+{#{% endif %}#}
+{#{% set itemize = false %}#}
+
+{#{% if sae.stage == false %}#}
+{#\textbf{Volume horaire : }#}
+
+{#Volume horaire : \`a d\'efinir localement par chaque IUT#}
+{#{% endif %}#}
 

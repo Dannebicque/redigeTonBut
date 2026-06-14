@@ -21,6 +21,7 @@ class GenereFileRessource
     {
         $content = $this->twig->render('latex/exemple_ressource.tex.twig', [
             'ressource' => $ressource,
+            'version' => $ressource->getVersion(),
         ]);
         $content = $this->latexSanitizer->normalizeLatexDocument($content);
         $name = $chemin.'PN-BUT-' . $ressource->getVersion()?->getDepartement()->getSigle().'-'.$ressource->getSlugName().'.tex';

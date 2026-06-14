@@ -296,11 +296,11 @@
                                                                         <span class="label">Tableau croisé par semestre</span>
                                                                     </a>
                                                                 </li>
-                                                                <li>
-                                                                    <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">
-                                                                        <span class="label">Préconisations par semestre</span>
-                                                                    </a>
-                                                                </li>
+{#                                                                <li>#}
+{#                                                                    <a href="{{ path('tableau_preconisations_annee', {annee: annee.id, parcours: parcours.id}) }}">#}
+{#                                                                        <span class="label">Préconisations par semestre</span>#}
+{#                                                                    </a>#}
+{#                                                                </li>#}
                                                                 {% if is_granted('ROLE_PACD') or is_granted('ROLE_EDITEUR') %}
                                                                     <li>
                                                                         <a href="{{ path('tableau_horaire_annee', {annee: annee.id, parcours: parcours.id}) }}">
@@ -323,11 +323,11 @@
                                                             <span class="label">Tableau croisé par semestre</span>
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">
-                                                            <span class="label">Préconisations par semestre</span>
-                                                        </a>
-                                                    </li>
+{#                                                    <li>#}
+{#                                                        <a href="{{ path('tableau_preconisations_annee', {annee: annee.id}) }}">#}
+{#                                                            <span class="label">Préconisations par semestre</span>#}
+{#                                                        </a>#}
+{#                                                    </li>#}
                                                     {% if is_granted('ROLE_PACD') or is_granted('ROLE_EDITEUR') %}
                                                         <li>
                                                             <a href="{{ path('tableau_horaire_annee', {annee: annee.id}) }}">

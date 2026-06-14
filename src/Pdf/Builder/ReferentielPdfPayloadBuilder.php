@@ -49,6 +49,7 @@ final class ReferentielPdfPayloadBuilder implements PdfPayloadBuilderInterface
 
         try {
             $latex = $this->genereFile->renderContent($version, $includeAssets);
+//            dd($latex);
             file_put_contents($mainTexPath, $latex);
 
             $zip = new ZipArchive();

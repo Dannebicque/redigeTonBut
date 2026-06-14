@@ -286,4 +286,23 @@ class ApcSaeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getScalarResult());
     }
+
+    public function findPaeBySemestres(array $ordresLmd): array
+    {
+        if ($ordresLmd === []) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('s')
+            ->innerJoin('s.semestre', 'sem')
+            ->andWhere('s.portfolio = true')
+            ->andWhere('sem.ordreLmd IN (:ordres)')
+            ->andWhere('s.codeMatiere LIKE :codeMatiere')
+            ->setParameter('ordres', $ordresLmd)
+            ->setParameter('codeMatiere', 'PAE%')
+            ->orderBy('sem.ordreLmd', 'ASC')
+            ->addOrderBy('s.codeMatiere', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

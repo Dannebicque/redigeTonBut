@@ -52,6 +52,7 @@ final class RessourcePdfPayloadBuilder implements PdfPayloadBuilderInterface
                 'ressource' => $ressource,
                 'semestre' => $ressource->getSemestre(),
                 'parcours' => $parcours,
+                'version' => $ressource->getVersion(),
                 'parameters' => $parameters,
             ]);
             $latex = $this->latexSanitizer->normalizeLatexDocument($latex);

@@ -19,8 +19,8 @@
     <tr>
         <td>
             {% for parcours in apc_ressource.apcRessourceParcours %}
-                <span class="badge badge-parcours-{{ parcours.parcours != null ? parcours.parcours.couleur : ''}}">
-                        {{  parcours.parcours != null ? parcours.parcours.libelle : 'err'}}</span>
+                <span class="badge badge-parcours-{{ parcours.parcours != null ? parcours.parcours.couleur : '' }}">
+                        {{ parcours.parcours != null ? parcours.parcours.libelle : 'err' }}</span>
             {% else %}
                 <span class="badge bg-success">
                         Tous les parcours</span>
@@ -40,51 +40,53 @@
             {% endif %}
         </td>
         <td>
-            {{ apc_ressource.heuresTotales }}h dont  {{ apc_ressource.tpPpn }}h TP
+            {{ apc_ressource.heuresTotales }}h dont {{ apc_ressource.tpPpn }}h TP
             {% if compareMode|default(false) and ressourceDiff is not null and (ressourceDiff.changes.heuresTotales is defined or ressourceDiff.changes.tpPpn is defined) %}
                 <br><small class="text-muted">
-                    N-1: {{ ressourceDiff.changes.heuresTotales is defined ? ressourceDiff.changes.heuresTotales.old : apc_ressource.heuresTotales }}h
-                    dont {{ ressourceDiff.changes.tpPpn is defined ? ressourceDiff.changes.tpPpn.old : apc_ressource.tpPpn }}h TP
-                </small>
+                N-1: {{ ressourceDiff.changes.heuresTotales is defined ? ressourceDiff.changes.heuresTotales.old : apc_ressource.heuresTotales }}
+                h
+                dont {{ ressourceDiff.changes.tpPpn is defined ? ressourceDiff.changes.tpPpn.old : apc_ressource.tpPpn }}
+                h TP
+            </small>
             {% endif %}
         </td>
     </tr>
 </table>
 <br>
 {% if not is_granted('ROLE_GT') and not is_granted('ROLE_IUT') %}
-<h3>Préconisation heures (non publié)</h3>
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>CM</th>
-        <th>TD</th>
-        <th>TP</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>
-            {{ apc_ressource.cmPreco }}
-            {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.cmPreco is defined %}
-                <br><small class="text-muted">N-1: {{ ressourceDiff.changes.cmPreco.old }}</small>
-            {% endif %}
-        </td>
-        <td>
-            {{ apc_ressource.tdPreco }}
-            {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tdPreco is defined %}
-                <br><small class="text-muted">N-1: {{ ressourceDiff.changes.tdPreco.old }}</small>
-            {% endif %}
-        </td>
-        <td>
-            {{ apc_ressource.tpPreco }}
-            {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tpPreco is defined %}
-                <br><small class="text-muted">N-1: {{ ressourceDiff.changes.tpPreco.old }}</small>
-            {% endif %}
-        </td>
-    </tr>
-    </tbody>
-</table>
-<br>
+    <h3>Préconisation heures (non publié)</h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>CM</th>
+            <th>TD</th>
+            <th>TP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                {{ apc_ressource.cmPreco }}
+                {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.cmPreco is defined %}
+                    <br><small class="text-muted">N-1: {{ ressourceDiff.changes.cmPreco.old }}</small>
+                {% endif %}
+            </td>
+            <td>
+                {{ apc_ressource.tdPreco }}
+                {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tdPreco is defined %}
+                    <br><small class="text-muted">N-1: {{ ressourceDiff.changes.tdPreco.old }}</small>
+                {% endif %}
+            </td>
+            <td>
+                {{ apc_ressource.tpPreco }}
+                {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.changes.tpPreco is defined %}
+                    <br><small class="text-muted">N-1: {{ ressourceDiff.changes.tpPreco.old }}</small>
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
 {% endif %}
 <h3>Compétences ciblées</h3>
 {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.linkedChanges is defined %}
@@ -99,14 +101,14 @@
         </div>
     {% endif %}
 {% else %}
-<p>
-    {% for competence in apc_ressource.apcRessourceCompetences|filter(competence => competence.competence !=
-        null) %}
-        <span class="badge badge-lg badge-{{ competence.competence.couleur }}">
+    <p>
+        {% for competence in apc_ressource.apcRessourceCompetences|filter(competence => competence.competence !=
+            null) %}
+            <span class="badge badge-lg badge-{{ competence.competence.couleur }}">
                     {{ competence.competence.libelle }}
                 </span>
-    {% endfor %}
-</p>
+        {% endfor %}
+    </p>
 {% endif %}
 <h3>Apprentissages critiques</h3>
 {% if compareMode|default(false) and ressourceDiff is not null and ressourceDiff.linkedChanges is defined %}
@@ -121,29 +123,37 @@
         </div>
     {% endif %}
 {% else %}
-<p>
-    {% for ac in apc_ressource.apcRessourceApprentissageCritiques|filter(ac => ac.apprentissageCritique !=
-        null) %}
-        <span class="badge badge-lg badge-{{ ac.apprentissageCritique.niveau.competence.couleur }}">
+    <p>
+        {% for ac in apc_ressource.apcRessourceApprentissageCritiques|filter(ac => ac.apprentissageCritique !=
+            null) %}
+            <span class="badge badge-lg badge-{{ ac.apprentissageCritique.niveau.competence.couleur }}">
                     {{ ac.apprentissageCritique.code }} | {{ ac.apprentissageCritique.libelle }}</span>
-    {% endfor %}
-</p>
+        {% endfor %}
+    </p>
 {% endif %}
 <h3>SAÉ concernées</h3>
 <p>
     {% for sae in saes %}
-        {% if apc_ressource.apcRessourceParcours.get(0).parcours is defined %}
-            {% if sae.sae.isGoodParcours(apc_ressource.apcRessourceParcours.get(0).parcours) %}
-    <a href="{{ path('but_fiche_sae', {apcSae:sae.sae.id}) }}"><span class="badge bg-primary"
-                  data-provide="tooltip"
-                  title="{{ sae.sae.libelle }}"
-            >{{ sae.sae.codeMatiere }}</span></a>
-            {% endif %}
-        {% else %}
+        {# si ressource sur tous les parcour (commune), toutes les SAE sans filtre, sinon filtre #}
+        {% if apc_ressource.apcRessourceParcours|length == 0 or apc_ressource.apcRessourceParcours|length == user_data.version.apcParcours|length  %}
             <a href="{{ path('but_fiche_sae', {apcSae:sae.sae.id}) }}"><span class="badge bg-primary"
-                  data-provide="tooltip"
-                  title="{{ sae.sae.libelle }}"
-    >{{ sae.sae.codeMatiere }}</span></a>
+                                                                             data-provide="tooltip"
+                                                                             title="{{ sae.sae.libelle }}"
+                >{{ sae.sae.codeMatiere }}</span></a>
+        {% else %}
+            {% if apc_ressource.apcRessourceParcours.get(0).parcours is defined %}
+                {% if sae.sae.isGoodParcours(apc_ressource.apcRessourceParcours.get(0).parcours) %}
+                    <a href="{{ path('but_fiche_sae', {apcSae:sae.sae.id}) }}"><span class="badge bg-primary"
+                                                                                     data-provide="tooltip"
+                                                                                     title="{{ sae.sae.libelle }}"
+                        >{{ sae.sae.codeMatiere }}</span></a>
+                {% endif %}
+            {% else %}
+                <a href="{{ path('but_fiche_sae', {apcSae:sae.sae.id}) }}"><span class="badge bg-primary"
+                                                                                 data-provide="tooltip"
+                                                                                 title="{{ sae.sae.libelle }}"
+                    >{{ sae.sae.codeMatiere }}</span></a>
+            {% endif %}
         {% endif %}
     {% endfor %}
 </p>
@@ -172,15 +182,16 @@
         </div>
     {% endif %}
 {% else %}
-<p>
-    {% for prerequis in apc_ressource.ressourcesPreRequises %}
-        <a href="{{ path('but_fiche_ressource', {apcRessource: prerequis.id, compare: compareMode|default(false) ? 1 : null}) }}"><span class="badge bg-primary">
+    <p>
+        {% for prerequis in apc_ressource.ressourcesPreRequises %}
+            <a href="{{ path('but_fiche_ressource', {apcRessource: prerequis.id, compare: compareMode|default(false) ? 1 : null}) }}"><span
+                        class="badge bg-primary">
             {{ prerequis.codeMatiere }} | {{ prerequis.libelle }}
             </span></a>
         {% else %}
             <span class="badge bg-info">Pas de prérequis</span>
-    {% endfor %}
-</p>
+        {% endfor %}
+    </p>
 {% endif %}
 
 <h3>Mots clés</h3>

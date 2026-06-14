@@ -112,6 +112,18 @@
             </div>
             <div class="tab-pane" id="semestre_{{ semestre.id }}_tableau" role="tabpanel">
                 <div class="row">
+
+                    <div class="alert alert-info mb-3 mt-3">
+                        <a href="{{ path('export_referentiel_format_excel', {version: user_data.version.id}) }}"
+                           class="btn btn-success btn-sm">Référentiel formation (Excel)</a>
+                        <a href="{{ path('export_referentiel_format_word', {version: user_data.version.id}) }}"
+                           class="btn btn-primary btn-sm">Fiches Ressources/SAE (Word)</a>
+                        <a href="{{ path('export_referentiel_synthese_format_excel', {version: user_data.version.id}) }}"
+                           class="btn btn-success btn-sm">Synthèse VH (Excel)</a>
+                        <a href="{{ path('export_tableau_croise_et_volume_horaire', {version: user_data.version.id}) }}"
+                           class="btn btn-warning btn-sm">Tableau croisé + VH</a>
+                    </div>
+
                    <table class="table table-striped">
                        <thead>
                        <tr>

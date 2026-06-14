@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\ApcParcours;
 use App\Pdf\Builder\ReferentielPdfPayloadBuilder;
 use App\Pdf\PdfManager;
 use App\Pdf\PdfSourceType;

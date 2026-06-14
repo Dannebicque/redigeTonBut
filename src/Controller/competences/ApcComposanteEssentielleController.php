@@ -21,7 +21,7 @@ class ApcComposanteEssentielleController extends BaseController
         ApcComposanteEssentielleOrdre $apcComposanteEssentielleOrdre,
         ApcCompetence $competence): Response
     {
-        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getDepartement()?->getId() !== $competence->getDepartement()?->getId()) {
+        if ($this->getVersion()?->isVerouilleCompetences() === true || $this->getVersion()?->getId() !== $competence->getVersion()?->getId()) {
             throw new AccessDeniedException();
         }
 
@@ -42,7 +42,7 @@ class ApcComposanteEssentielleController extends BaseController
                 'Composante essentielle ajoutée avec succès.'
             );
             return $this->redirectToRoute('administration_apc_referentiel_index',
-                ['departement' => $apcComposanteEssentielle->getVersion()?->getId()]);
+                ['version' => $apcComposanteEssentielle->getVersion()?->getId()]);
         }
 
         return $this->render('competences/apc_composante_essentielle/new.html.twig', [

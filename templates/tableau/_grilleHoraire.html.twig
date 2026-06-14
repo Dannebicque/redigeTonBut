@@ -130,7 +130,8 @@
             </td>
             <td colspan="2" class="text-end cell-jaune">rappel tableau global 6 semestres →</td>
             <td class="text-center cell-jaune">
-                {{ semestre.pourcentageAdaptationLocale }} %
+                {{ semestre.pourcentageAdaptationLocale }} % ({{ semestre.nbHeuresEnseignementLocale }})
+                {% if semestre.nbHeuresEnseignementLocale != donnees[semestre.ordreLmd].totalAdaptationLocaleEnseignement %}<span class="badge bg-danger">Différence !</span>{% endif %}
             </td>
         </tr>
 

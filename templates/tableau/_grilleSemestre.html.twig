@@ -1,4 +1,7 @@
 <div style="overflow-x: auto">
+    <div class="alert alert-warning mb-2">
+        <strong>Les coefficients sont définis dans chaque CFVU et ne sont plus à saisir dans ORéBUT.</strong>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -129,11 +132,12 @@
         <tbody>
 
         {% for niveau in niveaux %}
-            {% if is_granted('ROLE_IUT') %}
-                {% set nb = 1 %}
-            {% else %}
-                {% set nb = 2 %}
-            {% endif %}
+{#            {% if is_granted('ROLE_IUT') %}#}
+{#                {% set nb = 1 %}#}
+{#            {% else %}#}
+{#                {% set nb = 2 %}#}
+{#            {% endif %}#}
+            {% set nb = 1 %}
             <tr>
                 <th rowspan="{{ niveau.apcApprentissageCritiques|length + nb }}" class="bg_{{ niveau.competence
                 .couleur }}">
@@ -210,101 +214,101 @@
                     {% endfor %}
                 </tr>
             {% endfor %}
-            {% if not is_granted('ROLE_IUT') %}
-                <tr>
-                    <th>Coeff.</th>
-                    <th>&nbsp;</th>
+{#            {% if not is_granted('ROLE_IUT') %}#}
+{#                <tr>#}
+{#                    <th>Coeff.</th>#}
+{#                    <th>&nbsp;</th>#}
 
-                    {% for sae in saes %}
-                        <td class="text-center">
-                            {% if is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false %}
-                                <input type="text" class="form-control changeCoeffSae"
-                                       style="min-width: 50px"
-                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}
-                                       data-sae="{{ sae.id }}"
-                                       data-competence="{{ niveau.competence.id }}"
-                                        {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
-                                        .id].saes[sae.id] is defined %}
-                                            value="{{ coefficients[niveau.competence.id].saes[sae.id] }}"
-                                        {% endif %}
-                                />
-                            {% else %}
-                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence.id].saes[sae.id] is defined %}
-                                    {{ coefficients[niveau.competence.id].saes[sae.id] }}
-                                {% endif %}
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                    {% for sae in saesAl %}
-                        <td class="text-center bg-warning text-white adaptationLocale d-none">
-                            {% if is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false %}
-                                <input type="text" class="form-control changeCoeffSae"
-                                       style="min-width: 50px"
-                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}
-                                       data-sae="{{ sae.id }}"
-                                       data-competence="{{ niveau.competence.id }}"
-                                        {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
-                                        .id].saesAl[sae.id] is defined %}
-                                            value="{{ coefficients[niveau.competence.id].saesAl[sae.id] }}"
-                                        {% endif %}
-                                />
-                            {% else %}
-                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence.id].saesAl[sae.id] is defined %}
-                                    {{ coefficients[niveau.competence.id].saesAl[sae.id] }}
-                                {% endif %}
+{#                    {% for sae in saes %}#}
+{#                        <td class="text-center">#}
+{#                            {% if is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false %}#}
+{#                                <input type="text" class="form-control changeCoeffSae"#}
+{#                                       style="min-width: 50px"#}
+{#                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}#}
+{#                                       data-sae="{{ sae.id }}"#}
+{#                                       data-competence="{{ niveau.competence.id }}"#}
+{#                                        {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence#}
+{#                                        .id].saes[sae.id] is defined %}#}
+{#                                            value="{{ coefficients[niveau.competence.id].saes[sae.id] }}"#}
+{#                                        {% endif %}#}
+{#                                />#}
+{#                            {% else %}#}
+{#                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence.id].saes[sae.id] is defined %}#}
+{#                                    {{ coefficients[niveau.competence.id].saes[sae.id] }}#}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+{#                        </td>#}
+{#                    {% endfor %}#}
+{#                    {% for sae in saesAl %}#}
+{#                        <td class="text-center bg-warning text-white adaptationLocale d-none">#}
+{#                            {% if is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false %}#}
+{#                                <input type="text" class="form-control changeCoeffSae"#}
+{#                                       style="min-width: 50px"#}
+{#                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}#}
+{#                                       data-sae="{{ sae.id }}"#}
+{#                                       data-competence="{{ niveau.competence.id }}"#}
+{#                                        {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence#}
+{#                                        .id].saesAl[sae.id] is defined %}#}
+{#                                            value="{{ coefficients[niveau.competence.id].saesAl[sae.id] }}"#}
+{#                                        {% endif %}#}
+{#                                />#}
+{#                            {% else %}#}
+{#                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence.id].saesAl[sae.id] is defined %}#}
+{#                                    {{ coefficients[niveau.competence.id].saesAl[sae.id] }}#}
+{#                                {% endif %}#}
 
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                    <th>&nbsp;</th>
-                    {% for ressource in ressources %}
-                        <td class="text-center">
-                            {% if is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false %}
-                                <input type="text"
-                                       style="min-width: 50px"
-                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}
-                                       data-ressource="{{ ressource.id }}"
-                                       data-competence="{{ niveau.competence.id }}"
-                                       class="form-control changeCoeffRessource"
-                                        {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
-                                        .id].ressources[ressource.id] is defined %}
-                                            value="{{ coefficients[niveau.competence.id].ressources[ressource.id] }}"
-                                        {% endif %}
-                                />
-                            {% else %}
-                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
-                                .id].ressources[ressource.id] is defined %}
-                                    {{ coefficients[niveau.competence.id].ressources[ressource.id] }}
-                                {% endif %}
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                    {% for ressource in ressourcesAl %}
-                        <td class="text-center bg-warning text-white adaptationLocale d-none">
-                            {% if is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false %}
-                                <input type="text"
-                                       style="min-width: 50px"
-                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}
-                                       data-ressource="{{ ressource.id }}"
-                                       data-competence="{{ niveau.competence.id }}"
-                                       class="form-control changeCoeffRessource"
-                                        {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
-                                        .id].ressourcesAl[ressource.id] is defined %}
-                                            value="{{ coefficients[niveau.competence.id].ressourcesAl[ressource.id] }}"
-                                        {% endif %}
-                                />
+{#                            {% endif %}#}
+{#                        </td>#}
+{#                    {% endfor %}#}
+{#                    <th>&nbsp;</th>#}
+{#                    {% for ressource in ressources %}#}
+{#                        <td class="text-center">#}
+{#                            {% if is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false %}#}
+{#                                <input type="text"#}
+{#                                       style="min-width: 50px"#}
+{#                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}#}
+{#                                       data-ressource="{{ ressource.id }}"#}
+{#                                       data-competence="{{ niveau.competence.id }}"#}
+{#                                       class="form-control changeCoeffRessource"#}
+{#                                        {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence#}
+{#                                        .id].ressources[ressource.id] is defined %}#}
+{#                                            value="{{ coefficients[niveau.competence.id].ressources[ressource.id] }}"#}
+{#                                        {% endif %}#}
+{#                                />#}
+{#                            {% else %}#}
+{#                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence#}
+{#                                .id].ressources[ressource.id] is defined %}#}
+{#                                    {{ coefficients[niveau.competence.id].ressources[ressource.id] }}#}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+{#                        </td>#}
+{#                    {% endfor %}#}
+{#                    {% for ressource in ressourcesAl %}#}
+{#                        <td class="text-center bg-warning text-white adaptationLocale d-none">#}
+{#                            {% if is_granted('FORMATION_EDIT', semestre) and user_data.version.pnVerouille == false %}#}
+{#                                <input type="text"#}
+{#                                       style="min-width: 50px"#}
+{#                                       {% if user_data.version.verouilleCroise == true %}disabled{% endif %}#}
+{#                                       data-ressource="{{ ressource.id }}"#}
+{#                                       data-competence="{{ niveau.competence.id }}"#}
+{#                                       class="form-control changeCoeffRessource"#}
+{#                                        {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence#}
+{#                                        .id].ressourcesAl[ressource.id] is defined %}#}
+{#                                            value="{{ coefficients[niveau.competence.id].ressourcesAl[ressource.id] }}"#}
+{#                                        {% endif %}#}
+{#                                />#}
 
-                            {% else %}
-                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence
-                                .id].ressourcesAl[ressource.id] is defined %}
-                                    {{ coefficients[niveau.competence.id].ressourcesAl[ressource.id] }}
-                                {% endif %}
+{#                            {% else %}#}
+{#                                {% if coefficients[niveau.competence.id] is defined and coefficients[niveau.competence#}
+{#                                .id].ressourcesAl[ressource.id] is defined %}#}
+{#                                    {{ coefficients[niveau.competence.id].ressourcesAl[ressource.id] }}#}
+{#                                {% endif %}#}
 
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endif %}
+{#                            {% endif %}#}
+{#                        </td>#}
+{#                    {% endfor %}#}
+{#                </tr>#}
+{#            {% endif %}#}
             <tr>
                 <td colspan="{{ 6 + ressources|length + saes|length }}"></td>
             </tr>

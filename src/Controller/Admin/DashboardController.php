@@ -71,6 +71,7 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::section('Administration');
             yield MenuItem::linkTo(ApcCompetenceCrudController::class, 'Compétences', 'fas fa-list');
             yield MenuItem::linkTo(ApcRessourceCrudController::class, 'Ressources', 'fas fa-list');
+            yield MenuItem::linkTo(ApcSaeCrudController::class, 'SAE', 'fas fa-list');
             yield MenuItem::linkTo(SemestreCrudController::class, 'Semestres', 'fas fa-list');
             yield MenuItem::linkTo(PdfJobCrudController::class, 'PDF Job', 'fas fa-print');
             yield MenuItem::linkTo(PdfDocumentCrudController::class, 'PDF Documents', 'fas fa-download');

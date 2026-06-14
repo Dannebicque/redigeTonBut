@@ -246,7 +246,7 @@ class ApcRessource extends AbstractMatiere
         $t = [];
         foreach ($saes as $sae)
         {
-            if ($sae->getSae()->isGoodParcours($apcParcours)) {
+            if ($sae->getSae()?->isGoodParcours($apcParcours)) {
 
                 $t[$sae->getSae()->getOrdre()] = $sae->getSae();
             }
@@ -510,12 +510,12 @@ class ApcRessource extends AbstractMatiere
 
     public function isGoodParcoursAndSemestre(Semestre $semestre, ?ApcParcours $apcParcours = null): bool
     {
-        if ($semestre->getId() !== $this->getSemestre()?->getId()) {
-            //pas le semestre en cours on supprime.
-            return false;
-        }
+//        if ($semestre->getId() !== $this->getSemestre()?->getId()) {
+//            //pas le semestre en cours on supprime.
+//            return false;
+//        }
 
-        if (!$apcParcours instanceof ApcParcours) {
+        if ($apcParcours === null) {
             return true;
         }
 
@@ -539,7 +539,7 @@ class ApcRessource extends AbstractMatiere
         $t = [];
         foreach ($acs as $ac)
         {
-            if ($ac->getApprentissageCritique()->getCompetence()->isGoodParcours($apcParcours)) {
+            if ($ac->getApprentissageCritique()->getCompetence()?->isGoodParcours($apcParcours)) {
                 if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $t)) {
                     $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];
                 }

@@ -36,7 +36,7 @@ class LatexExtension extends AbstractExtension
         $text = $parse->text($text);
         $text = str_replace(
             ['<em>','</em>','<p>','</p>','<ul>','</ul>','<li>','</li>','<ol>','</ol>','<strong>','</strong>', '#', 'œ', '’','«','»', '°','\&lt;','%','→','…', 'ℤ','\&quot;', '\&amp;', '&amp;','℃', '<ol start="'],
-            ['','','',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item[--] ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\#', '\oe{}', "'",'\og','\fg ', '$ ^\circ$ ', '> ','\%','->','...','$\mathbb{Z}$','"','\&','\&','$ ^\circ$C', '\begin{enumerate}\setcounter{enumi}{'], $text);
+            ['','','',"\r\n\r\n",'\begin{itemize}'."\r\n", '\end{itemize}'."\r\n", '\item[--] ','','\begin{enumerate}'."\r\n",'\end{enumerate}'."\r\n",'\textbf{','}','\#', '\oe{}', "'",'\og ',' r\fg ', '$ ^\circ$ ', '> ','\%','->','...','$\mathbb{Z}$','"','\&','\&','$ ^\circ$C', '\begin{enumerate}\setcounter{enumi}{'], $text);
 
         return $this->latexSanitizer->normalizeUnicode(str_replace('">', '-1}', $text));
     }

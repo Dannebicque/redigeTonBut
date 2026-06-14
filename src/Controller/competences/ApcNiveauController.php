@@ -65,7 +65,7 @@ class ApcNiveauController extends BaseController
         }
 
         $form = $this->createForm(ApcNiveauType::class, $apcNiveau, [
-            'departement' => $apcNiveau->getCompetence()?->getVersion(),
+            'version' => $apcNiveau->getCompetence()?->getVersion(),
         ]);
         $form->handleRequest($request);
 
