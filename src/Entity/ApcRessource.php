@@ -240,16 +240,65 @@ class ApcRessource extends AbstractMatiere
         return $this->apcSaeRessources;
     }
 
-    public function getApcSaeRessourcesOrdre(?ApcParcours $apcParcours = null): Collection | array
+    public function getApcSaeRessourcesOrdre(?ApcParcours $apcParcours = null): Collection|array
     {
         $saes = $this->apcSaeRessources;
         $t = [];
-        foreach ($saes as $sae)
-        {
-            if ($sae->getSae()?->isGoodParcours($apcParcours)) {
+        $departementType = $apcParcours?->getVersion()?->getDepartement()?->getTypeStructure();
+        foreach ($saes as $sae) {
+            if ($departementType === Departement::TYPE3) {
+                // Pour TYPE3, on trie par parcours puis ordre sans écraser les mêmes ordres entre parcours.
+                $saeEntity = $sae->getSae();
+                if (null === $saeEntity) {
+                    continue;
+                }
 
-                $t[$sae->getSae()->getOrdre()] = $sae->getSae();
+                $ordre = $saeEntity->getOrdre() ?? 0;
+                $saeParcoursCollection = $saeEntity->getApcSaeParcours();
+
+                if (count($saeParcoursCollection) === 0) {
+                    if (!array_key_exists('', $t)) {
+                        $t[''] = [];
+                    }
+                    if (!array_key_exists($ordre, $t[''])) {
+                        $t[''][$ordre] = [];
+                    }
+
+                    $t[''][$ordre][] = $saeEntity;
+                    continue;
+                }
+
+                foreach ($saeParcoursCollection as $saeParcours) {
+                    $parcoursKey = $saeParcours->getParcours()?->getCode() ?? '';
+                    if (!array_key_exists($parcoursKey, $t)) {
+                        $t[$parcoursKey] = [];
+                    }
+                    if (!array_key_exists($ordre, $t[$parcoursKey])) {
+                        $t[$parcoursKey][$ordre] = [];
+                    }
+
+                    $t[$parcoursKey][$ordre][] = $saeEntity;
+                }
+            } else {
+                if ($sae->getSae()?->isGoodParcours($apcParcours)) {
+                    $t[$sae->getSae()->getOrdre()] = $sae->getSae();
+                }
             }
+        }
+
+        if ($departementType === Departement::TYPE3) {
+            ksort($t);
+            $flatten = [];
+            foreach ($t as $saesParParcours) {
+                ksort($saesParParcours);
+                foreach ($saesParParcours as $saesByOrdre) {
+                    foreach ($saesByOrdre as $saeEntity) {
+                        $flatten[] = $saeEntity;
+                    }
+                }
+            }
+
+            return $flatten;
         }
 
         ksort($t);
@@ -412,7 +461,7 @@ class ApcRessource extends AbstractMatiere
         return $this;
     }
 
-    public function getVersion():?Version
+    public function getVersion(): ?Version
     {
         return $this->getSemestre()?->getAnnee()?->getVersion();
     }
@@ -495,8 +544,7 @@ class ApcRessource extends AbstractMatiere
     {
         $ressources = $this->ressourcesPreRequises;
         $t = [];
-        foreach ($ressources as $ressource)
-        {
+        foreach ($ressources as $ressource) {
             if ($ressource->isGoodParcoursAndSemestre($semestre, $apcParcours)) {
 
                 $t[$ressource->getOrdre()] = $ressource;
@@ -533,12 +581,11 @@ class ApcRessource extends AbstractMatiere
         return false;
     }
 
-    public function apcRessourceApprentissageCritiquesOrdre(?ApcParcours $apcParcours = null): Collection | array
+    public function apcRessourceApprentissageCritiquesOrdre(?ApcParcours $apcParcours = null): Collection|array
     {
         $acs = $this->apcRessourceApprentissageCritiques;
         $t = [];
-        foreach ($acs as $ac)
-        {
+        foreach ($acs as $ac) {
             if ($ac->getApprentissageCritique()->getCompetence()?->isGoodParcours($apcParcours)) {
                 if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $t)) {
                     $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];

@@ -17,18 +17,35 @@ use App\Entity\ApcCompetenceSemestre;
 use App\Entity\Constantes;
 use App\Entity\Departement;
 use App\Entity\Semestre;
+use App\Entity\Version;
 use App\Form\ApcCompetenceType;
+use App\Repository\ApcApprentissageCritiqueRepository;
 use App\Repository\ApcCompetenceSemestreRepository;
+use App\Repository\ApcComptenceRepository;
 use App\Repository\ApcParcoursRepository;
+use App\Repository\ApcSaeCompetenceRepository;
 use App\Utils\Convert;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route("/apc/competence")]
 class ApcCompetenceController extends BaseController
 {
+
+    #[Route('/', name: 'administration_apc_competence_index', methods: ['GET'])]
+    public function index(
+        ApcComptenceRepository $apcCompetenceRepository,
+    ): Response {
+        $competences = $apcCompetenceRepository->findByVersion($this->getVersion());
+
+        return $this->render('competences/apc_competence/index.html.twig', [
+            'competences' => $competences,
+        ]);
+    }
+
     //création de la compétence
     #[Route("/new", name:"administration_apc_competence_new", methods:["GET","POST"])]
     public function new(

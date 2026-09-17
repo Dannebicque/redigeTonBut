@@ -4,6 +4,10 @@
     Tableau Croisé semestre {{ semestre.ordreLmd }} {% if parcours != null %} | {{ parcours.libelle }}{% endif %}| {{ departement.libelle }}
 {% endblock %}
 
+{% block styles %}
+    @page { size: landscape; }
+{% endblock %}
+
 {% block content %}
     {#    <h1>Tableau croisé pour le B.U.T {{ departement.libelle }}, semestre {{ semestre.ordreLmd }}</h1> #}
     {#    {% if parcours != null %} #}
@@ -16,14 +20,21 @@
             <th>AC</th>
             {% for sae in saes %}
                 <th class="tdsae">
-                    <img src="{{ linuxpath }}{{ asset('latex/'~departement.numeroAnnexe~'/tableaux/sae_'~sae.id~'.png')
-                    }}">
+                    {% if saeImages[sae.id] is defined %}
+                        <img src="{{ saeImages[sae.id] }}">
+                    {% else %}
+                        <img src="{{ linuxpath|default('') }}{{ asset('latex/'~departement.numeroAnnexe~'/tableaux/sae_'~sae.id~'.png') }}">
+                    {% endif %}
                 </th>
             {% endfor %}
 
             {% for ressource in ressources %}
                 <th>
-                    <img src="{{ linuxpath }}{{ asset('latex/'~departement.numeroAnnexe~'/tableaux/ressource_'~ressource.id~'.png') }}">
+                    {% if ressourceImages[ressource.id] is defined %}
+                        <img src="{{ ressourceImages[ressource.id] }}">
+                    {% else %}
+                        <img src="{{ linuxpath|default('') }}{{ asset('latex/'~departement.numeroAnnexe~'/tableaux/ressource_'~ressource.id~'.png') }}">
+                    {% endif %}
                 </th>
             {% endfor %}
         </tr>
@@ -64,6 +75,7 @@
                 <td colspan="{{ ressources|length + saes|length + 2 }}"></td>
             </tr>
         {% endfor %}
+        {% set donneesSemestre = donnees[semestre.ordreLmd] ?? null %}
         <tr>
             <th colspan="2">Volume total</th>
             <td colspan="{{ saes|length }}" class="text-center tdsae">&nbsp;</td>
@@ -72,7 +84,7 @@
                     {{ ressource.heuresTotales }}
                 </td>
             {% endfor %}
-            <td class="text-center">{{ donnees[semestre.ordreLmd]['totalEnseignementRessources'] }}</td>
+            <td class="text-center">{{ donneesSemestre is not null ? donneesSemestre.totalEnseignementRessources : '' }}</td>
         </tr>
         <tr>
             <th colspan="2">Dont TP</th>
@@ -82,27 +94,26 @@
                     {{ ressource.tpPpn }}
                 </td>
             {% endfor %}
-            <td class="text-center">{{ donnees[semestre.ordreLmd]['totalDontTpRessources'] }}</td>
+            <td class="text-center">{{ donneesSemestre is not null ? donneesSemestre.totalDontTpRessources : '' }}</td>
         </tr>
 
         <tr>
             <th colspan="2">Adaptation Locale (SAÉ)</th>
-            <td colspan="{{ saes|length }}" class="text-center tdsae">{{ donnees[semestre
-                .ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
+            <td colspan="{{ saes|length }}" class="text-center tdsae">{{ donneesSemestre is not null ? donneesSemestre.vhNbHeuresEnseignementSae : '' }}</td>
             <td class="text-center" colspan="{{ ressources|length }}">
                 &nbsp;
             </td>
-            <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresEnseignementSae'] }}</td>
+            <td class="text-center">{{ donneesSemestre is not null ? donneesSemestre.vhNbHeuresEnseignementSae : '' }}</td>
         </tr>
         <tr>
             <th colspan="2">Adaptation Locale <br>(Ressources ou SAÉ)</th>
-            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
-            <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeureeEnseignementSaeRessource'] }}</td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{ donneesSemestre is not null ? donneesSemestre.vhNbHeureeEnseignementSaeRessource : '' }}</td>
+            <td class="text-center">{{ donneesSemestre is not null ? donneesSemestre.vhNbHeureeEnseignementSaeRessource : '' }}</td>
         </tr>
         <tr>
             <th colspan="2">TP Adaptation locale</th>
-            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
-            <td class="text-center">{{ donnees[semestre.ordreLmd]['vhNbHeuresDontTpSaeRessource'] }}</td>
+            <td colspan="{{ saes|length + ressources|length }}" class="text-center">{{ donneesSemestre is not null ? donneesSemestre.vhNbHeuresDontTpSaeRessource : '' }}</td>
+            <td class="text-center">{{ donneesSemestre is not null ? donneesSemestre.vhNbHeuresDontTpSaeRessource : '' }}</td>
         </tr>
         </tbody>
     </table>

@@ -13,6 +13,7 @@ use App\Classes\DataUserSession;
 use App\DTO\Secondaire;
 use App\DTO\Tertiaire;
 use App\Entity\Departement;
+use App\Entity\User;
 use App\Entity\Version;
 use App\Repository\DepartementRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,11 +38,13 @@ class BaseController extends AbstractController
 
     protected TranslatorInterface $translator;
 
-    protected FlashBagInterface $flashBag;
+    protected ?FlashBagInterface $flashBag = null;
 
-    protected SessionInterface $session;
+    protected ?SessionInterface $session = null;
 
-    private ?Departement $departement;
+    protected RequestStack $requestStack;
+
+    private ?Departement $departement = null;
 
     protected DataUserSession $dataUserSession;
 
@@ -64,21 +67,44 @@ class BaseController extends AbstractController
     }
 
     #[Required]
-    public function setSession(RequestStack $session): void
+    public function setRequestStack(RequestStack $requestStack): void
     {
-        $this->session = $session->getSession();
-    }
-
-    #[Required]
-    public function setFlashBagInterface(RequestStack $session): void
-    {
-        $this->flashBag = $session->getSession()->getFlashBag();
+        $this->requestStack = $requestStack;
     }
 
     #[Required]
     public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
+    }
+
+    protected function getSession(): ?SessionInterface
+    {
+        if ($this->session !== null) {
+            return $this->session;
+        }
+
+        if (isset($this->requestStack) && $this->requestStack->getMainRequest()?->hasSession()) {
+            return $this->session = $this->requestStack->getSession();
+        }
+
+        return null;
+    }
+
+    protected function getFlashBag(): ?FlashBagInterface
+    {
+        if ($this->flashBag !== null) {
+            return $this->flashBag;
+        }
+
+        $session = $this->getSession();
+        if ($session !== null && method_exists($session, 'getFlashBag')) {
+            /** @var FlashBagInterface $flashBag */
+            $flashBag = $session->getFlashBag();
+            return $this->flashBag = $flashBag;
+        }
+
+        return null;
     }
 
     public function getCaracteristiques(): Tertiaire|Secondaire|null
@@ -101,15 +127,17 @@ class BaseController extends AbstractController
             $this->isGranted('ROLE_ADMIN') ||
             $this->isGranted('ROLE_GT') || $this->isGranted('ROLE_EDITEUR') || $this->isGranted('ROLE_CPN') || $this->isGranted('ROLE_IUT') || $this->isGranted('ROLE_CPN_LECTEUR')
         ) {
-            if ($this->session->get('departement') !== null) {
-                return $this->dptRepository->find($this->session->get('departement'));
+            $session = $this->getSession();
+            if ($session !== null && $session->get('departement') !== null) {
+                return $this->dptRepository->find($session->get('departement'));
             }
 
             return null;
         }
 
-        if ($this->getUser() instanceof UserInterface && $this->getUser()->getDepartement() !== null) {
-            return $this->getUser()?->getDepartement();
+        $user = $this->getUser();
+        if ($user instanceof User && $user->getDepartement() !== null) {
+            return $user->getDepartement();
         }
 
         return null;
@@ -137,7 +165,12 @@ class BaseController extends AbstractController
 
     public function addFlashBag(string $type, string $message): void
     {
-        $this->flashBag->add($type, $message);
+        $flashBag = $this->getFlashBag();
+        if ($flashBag !== null) {
+            $flashBag->add($type, $message);
+        } else {
+            $this->addFlash($type, $message);
+        }
     }
 
     public function getDataUserSession(): DataUserSession

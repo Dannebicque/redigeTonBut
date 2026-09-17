@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ressources IA{% endblock %}
+
+{% block content %}
+    <h1>Ressources IA</h1>
+    <a href="{{ path('ressources_ia_export') }}" class="btn btn-primary">Export Excel</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Semestre</th>
+                <th>Spécialité</th>
+                <th>Parcours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ressource in ressources %}
+                <tr>
+                    <td>{{ ressource.libelle }}</td>
+                    <td>{{ ressource.semestre ? ressource.semestre.libelle : '-' }}</td>
+                    <td>{{ ressource.version.departement.sigle }}</td>
+                    <td>{{ ressource.semestre and ressource.semestre.apcParcours ? ressource.semestre.apcParcours.libelle : '-' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

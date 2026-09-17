@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        @page {
+            size: landscape;
+        }
+
         {{ include('pdf/stylepdf.css.twig') }}
     </style>
     <title>PDF - Référentiel de compétences {{ departement.sigle }}</title>
@@ -12,7 +16,7 @@
 <!--Conteneur principal -->
 <div class="container-fluid" id="content">
     {% for parcour in parcours %}
-        {{ include('pdf/pageDeGardeParcours.html.twig', {parcours: parcour}) }}
+        {{ include('pdf/pageDeGardeParcours.html.twig', {parcours: parcour, version: version}) }}
         <div style="page-break-after: always"></div>
         {{ include('pdf/pageCompetencesComposantes.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
         <div style="page-break-after: always"></div>
@@ -25,7 +29,7 @@
         <div style="page-break-after: always"></div>
         {% for competence in competencesParcours[parcour.id] %}
             <div>
-                {{ include('pdf/pageCompetence.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id]}) }}
+                {{ include('pdf/pageCompetence.html.twig', {parcours: parcour, competences: competencesParcours[parcour.id], competence: competence}) }}
             </div>
             <div style="page-break-after: always"></div>
         {% endfor %}
@@ -34,4 +38,3 @@
 
 </body>
 </html>
-

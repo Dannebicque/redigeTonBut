@@ -12,6 +12,7 @@ use App\Entity\Semestre;
 
 class Codification
 {
+    //todo: si un seul parcours ne pas mettre le préfixe sur les codifs ?
     public static function codeRessource(ApcRessource $apcRessource, $parcours) : string
     {
         return 'R'.$apcRessource->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursRessource($parcours).self::codeSurDeuxChiffres($apcRessource->getOrdre());
@@ -36,7 +37,8 @@ class Codification
     public static function codeSae(ApcSae $apcSae, $parcours) : string
     {
         if ($apcSae->getPortfolio() === true && (str_contains($apcSae->getLibelleCourt(), 'PAÉ') || str_contains($apcSae->getLibelleCourt(), 'PAE'))) {
-            return 'PAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeParcoursSae($parcours).self::codeSurDeuxChiffres($apcSae->getOrdre());
+            //pour les PAE pas de code parcours self::codeParcoursSae($parcours).
+            return 'PAÉ '.$apcSae->getSemestre()?->getOrdreLmd().'.'.self::codeSurDeuxChiffres($apcSae->getOrdre());
         }
 
         if ($apcSae->getStage() === true) {

@@ -271,6 +271,13 @@ class ExcelWriter
         );
     }
 
+    public function saveFichier(string $filePath): void
+    {
+        $this->pageSetup(pathinfo($filePath, PATHINFO_FILENAME));
+        $writer = new Xlsx($this->spreadsheet);
+        $writer->save($filePath);
+    }
+
     public function pageSetup(string $name): void
     {
         $this->spreadsheet->getProperties()->setTitle($name);

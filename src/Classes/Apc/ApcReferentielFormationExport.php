@@ -115,7 +115,7 @@ class ApcReferentielFormationExport
         return $response;
     }
 
-    private function exportExcel(): StreamedResponse
+    private function prepareExcel(): void
     {
         $this->excelWriter->nouveauFichier('');
         $this->excelWriter->createSheet('Ressources');
@@ -203,82 +203,95 @@ class ApcReferentielFormationExport
         $this->excelWriter->getColumnsAutoSize('A', 'U');
 
         $this->excelWriter->createSheet('Saes');
-//Semestre	Code	Libellé	Libellé court	Ordre	Compétence 1	Compétence 2	Compétence 3	Compétence 4	Compétence 5	Compétence 6	Ressources	parcours concernés	Objectifs	Descriptif	HeuresTotales	DontTp	PrécoProjet	Préco Exemples
-        $this->excelWriter->writeCellName('A1', 'Semestre');
-        $this->excelWriter->writeCellName('B1', 'Code');
-        $this->excelWriter->writeCellName('C1', 'Libellé');
-        $this->excelWriter->writeCellName('D1', 'Libellé court');
-        $this->excelWriter->writeCellName('E1', 'Ordre');
-        $this->excelWriter->writeCellName('F1', 'Compétence 1');
-        $this->excelWriter->writeCellName('G1', 'Compétence 2');
-        $this->excelWriter->writeCellName('H1', 'Compétence 3');
-        $this->excelWriter->writeCellName('I1', 'Compétence 4');
-        $this->excelWriter->writeCellName('J1', 'Compétence 5');
-        $this->excelWriter->writeCellName('K1', 'Compétence 6');
-        $this->excelWriter->writeCellName('L1', 'Ressources');
-        $this->excelWriter->writeCellName('M1', 'parcours concernés');
-        $this->excelWriter->writeCellName('N1', 'Objectifs');
-        $this->excelWriter->writeCellName('O1', 'Descriptif');
-        $this->excelWriter->writeCellName('P1', 'Préco. Heures Totales');
-        $this->excelWriter->writeCellName('Q1', 'Préco. Dont Tp');
-        $this->excelWriter->writeCellName('R1', 'Préco. Heures Projet.');
-        $this->excelWriter->writeCellName('S1', 'Préco. Exemple');
+$this->excelWriter->writeCellName('A1', 'Semestre');
+$this->excelWriter->writeCellName('B1', 'Code');
+$this->excelWriter->writeCellName('C1', 'Libellé');
+$this->excelWriter->writeCellName('D1', 'Libellé court');
+$this->excelWriter->writeCellName('E1', 'Ordre');
+$this->excelWriter->writeCellName('F1', 'Compétence 1');
+$this->excelWriter->writeCellName('G1', 'Compétence 2');
+$this->excelWriter->writeCellName('H1', 'Compétence 3');
+$this->excelWriter->writeCellName('I1', 'Compétence 4');
+$this->excelWriter->writeCellName('J1', 'Compétence 5');
+$this->excelWriter->writeCellName('K1', 'Compétence 6');
+$this->excelWriter->writeCellName('L1', 'Ressources');
+$this->excelWriter->writeCellName('M1', 'parcours concernés');
+$this->excelWriter->writeCellName('N1', 'Objectifs');
+$this->excelWriter->writeCellName('O1', 'Descriptif');
+$this->excelWriter->writeCellName('P1', 'Préco. Heures Totales');
+$this->excelWriter->writeCellName('Q1', 'Préco. Dont Tp');
+$this->excelWriter->writeCellName('R1', 'Préco. Heures Projet.');
+$this->excelWriter->writeCellName('S1', 'Préco. Exemple');
 
-        $ligne = 2;
-        /** @var ApcSae $sae */
-        foreach ($this->saes as $sae) {
+$ligne = 2;
+/** @var ApcSae $sae */
+foreach ($this->saes as $sae) {
 
-            $this->excelWriter->writeCellName('A' . $ligne, $sae->getSemestre()?->getLibelle());
-            $this->excelWriter->writeCellName('B' . $ligne, $sae->getCodeMatiere());
-            $this->excelWriter->writeCellName('C' . $ligne, $sae->getLibelle());
-            $this->excelWriter->writeCellName('D' . $ligne, $sae->getLibelleCourt());
-            $this->excelWriter->writeCellName('E' . $ligne, $sae->getOrdre());
+    $this->excelWriter->writeCellName('A' . $ligne, $sae->getSemestre()?->getLibelle());
+    $this->excelWriter->writeCellName('B' . $ligne, $sae->getCodeMatiere());
+    $this->excelWriter->writeCellName('C' . $ligne, $sae->getLibelle());
+    $this->excelWriter->writeCellName('D' . $ligne, $sae->getLibelleCourt());
+    $this->excelWriter->writeCellName('E' . $ligne, $sae->getOrdre());
 
-            $tComp = [];
-            foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
-                if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $tComp)) {
-                    $tComp[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];
-                }
-
-                $tComp[$ac->getApprentissageCritique()->getCompetence()->getCouleur()][] = $ac->getApprentissageCritique()->getCode();
-            }
-
-            for ($i = 1; $i <= 6; $i++) {
-                $comp = '';
-                if (array_key_exists('c' . $i, $tComp)) {
-                    $comp = implode(';', $tComp['c' . $i]);
-                }
-
-                $this->excelWriter->writeCellXY(5 + $i, $ligne, $comp);
-            }
-
-            $ressources = '';
-            foreach ($sae->getApcSaeRessources() as $apcRessources) {
-                $ressources .= $apcRessources->getRessource()->getCodeMatiere() . ';';
-            }
-
-            $this->excelWriter->writeCellName('L' . $ligne, $ressources);
-
-            $parcours = '';
-            foreach ($sae->getApcSaeParcours() as $apcSaeParcour) {
-                $parcours .= $apcSaeParcour->getParcours()->getLibelle() . ';';
-            }
-
-            $this->excelWriter->writeCellName('M' . $ligne, $parcours);
-
-            $this->excelWriter->writeCellName('N' . $ligne, $sae->getObjectifs());
-            $this->excelWriter->writeCellName('O' . $ligne, $sae->getDescription());
-            $this->excelWriter->writeCellName('P' . $ligne, $sae->getHeuresTotales());
-            $this->excelWriter->writeCellName('Q' . $ligne, $sae->getTpPpn());
-            $this->excelWriter->writeCellName('R' . $ligne, $sae->getProjetPpn());
-            $this->excelWriter->writeCellName('S' . $ligne, $sae->getExemples());
-            $ligne++;
+    $tComp = [];
+    foreach ($sae->getApcSaeApprentissageCritiques() as $ac) {
+        if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $tComp)) {
+            $tComp[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];
         }
 
-        $this->excelWriter->getColumnsAutoSize('A', 'S');
+        $tComp[$ac->getApprentissageCritique()->getCompetence()->getCouleur()][] = $ac->getApprentissageCritique()->getCode();
+    }
 
+    for ($i = 1; $i <= 6; $i++) {
+        $comp = '';
+        if (array_key_exists('c' . $i, $tComp)) {
+            $comp = implode(';', $tComp['c' . $i]);
+        }
 
-        return $this->excelWriter->genereFichier('tableau_referentiel_formation' . date('YmdHis'));
+        $this->excelWriter->writeCellXY(5 + $i, $ligne, $comp);
+    }
+
+    $ressources = '';
+    foreach ($sae->getApcSaeRessources() as $apcRessources) {
+        $ressources .= $apcRessources->getRessource()->getCodeMatiere() . ';';
+    }
+
+    $this->excelWriter->writeCellName('L' . $ligne, $ressources);
+
+    $parcours = '';
+    foreach ($sae->getApcSaeParcours() as $apcSaeParcour) {
+        $parcours .= $apcSaeParcour->getParcours()->getLibelle() . ';';
+    }
+
+    $this->excelWriter->writeCellName('M' . $ligne, $parcours);
+
+    $this->excelWriter->writeCellName('N' . $ligne, $sae->getObjectifs());
+    $this->excelWriter->writeCellName('O' . $ligne, $sae->getDescription());
+    $this->excelWriter->writeCellName('P' . $ligne, $sae->getHeuresTotales());
+    $this->excelWriter->writeCellName('Q' . $ligne, $sae->getTpPpn());
+    $this->excelWriter->writeCellName('R' . $ligne, $sae->getProjetPpn());
+    $this->excelWriter->writeCellName('S' . $ligne, $sae->getExemples());
+    $ligne++;
+}
+
+$this->excelWriter->getColumnsAutoSize('A', 'S');
+    }
+
+    public function exportToFile(Version $version, string $filePath): string
+    {
+$this->ressources = $this->apcRessourceRepository->findByVersion($version);
+$this->saes = $this->apcSaeRepository->findByVersion($version);
+$this->prepareExcel();
+$this->excelWriter->saveFichier($filePath);
+
+return $filePath;
+    }
+
+    private function exportExcel(): StreamedResponse
+    {
+$this->prepareExcel();
+
+return $this->excelWriter->genereFichier('tableau_referentiel_formation' . date('YmdHis'));
     }
 
     public function exportSynthese(Version $version): StreamedResponse

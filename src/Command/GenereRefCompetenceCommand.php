@@ -30,9 +30,8 @@ class GenereRefCompetenceCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('specialite', InputArgument::REQUIRED, 'Nom de la spécialité')
-            ->addArgument('version', InputArgument::REQUIRED, 'Version du PN' )
-        ;
+            ->addArgument('specialite', InputArgument::OPTIONAL, 'Nom de la spécialité ou "all"', 'all')
+            ->addArgument('version', InputArgument::OPTIONAL, 'Version du PN', 2027);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -42,21 +41,28 @@ class GenereRefCompetenceCommand extends Command
 
         if ($arg1 === 'all') {
             $io->note('Génération pour toutes les spécialités');
-            //toutes les spécialites
-            $specialites = $this->departementRepository->findAll();
-            foreach ($specialites as $specialite) {
-                $io->note(sprintf('Génération pour la spécialité %s', $specialite->getLibelle()));
-                $this->generePdfCompetences->generePdfCompetencesParPage($specialite);
-                $this->generePdfCompetences->generePdfCompetencesComplet($specialite);
+            $versions = $this->versionRepository->findBy(['annee' => (int) $input->getArgument('version')]);
+            foreach ($versions as $version) {
+                $departement = $version->getDepartement();
+                if ($departement === null) {
+                    continue;
+                }
+
+                $io->note(sprintf('Génération pour la spécialité %s', $departement->getLibelle()));
+                $this->generePdfCompetences->generePdfCompetencesParPage($version);
+                $this->generePdfCompetences->generePdfCompetencesComplet($version);
             }
         } else {
             $io->note(sprintf('Génération pour la spécialité %s', $arg1));
-            //une spécialité
             $specialite = $this->departementRepository->findOneBy(['sigle' => $arg1]);
-
-
             if ($specialite !== null) {
                 $version = $this->versionRepository->findOneBy(['annee' => $input->getArgument('version'), 'departement' => $specialite->getId()]);
+                if ($version === null) {
+                    $io->error('Version introuvable pour cette spécialité.');
+
+                    return Command::FAILURE;
+                }
+
                 $this->generePdfCompetences->generePdfCompetencesParPage($version);
                 $this->generePdfCompetences->generePdfCompetencesComplet($version);
             } else {

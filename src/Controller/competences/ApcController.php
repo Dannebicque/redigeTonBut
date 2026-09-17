@@ -19,20 +19,32 @@ use App\Entity\Constantes;
 use App\Entity\Version;
 use App\Repository\DepartementRepository;
 use App\Classes\JsonDiffService;
+use App\Pdf\Builder\CompetencesReferentielPdfPayloadBuilder;
+use App\Pdf\PdfManager;
+use App\Pdf\PdfSourceType;
 use App\Utils\Files;
 use Exception;
 //use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 //use Knp\Snappy\Pdf;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route("/apc/referentiel-competences")]
 class ApcController extends BaseController
 {
+    public function __construct(
+        private readonly PdfManager $pdfManager,
+    ) {
+    }
+
     #[Route("/consulter/{version}", name:"administration_apc_referentiel_index", methods:["GET"])]
     public function referentiel(
-        ApcStructure $apcStructure, Version $version = null): Response
+        ApcStructure $apcStructure, ?Version $version = null): Response
     {
         if (null === $version) {
             throw new Exception('Departement inconnu');
@@ -56,6 +68,17 @@ class ApcController extends BaseController
             }
         }
 
+        $sourceId = (string) $version->getId();
+        $statusMap = $this->pdfManager->getDisplayStatusesForSources(
+            PdfSourceType::REFERENTIEL,
+            [$sourceId],
+            CompetencesReferentielPdfPayloadBuilder::DOCUMENT_KEY,
+        );
+        $pdfStatusData = $statusMap[$sourceId] ?? [
+            'status' => PdfManager::DISPLAY_STATUS_ABSENT,
+            'errorMessage' => null,
+            'lastGeneratedAt' => null,
+        ];
 
         return $this->render('competences/referentiel.html.twig', [
             'competencesParcours' => $competencesParcours,
@@ -64,55 +87,66 @@ class ApcController extends BaseController
             'competences' => $competences,
             'parcours' => $version->getApcParcours(),
             'parcoursNiveaux' => $tParcours,
+            'pdfStatusData' => $pdfStatusData,
         ]);
     }
 
     #[Route('/exporter/{version}', name: 'export_referentiel_competences', methods: ['GET'])]
     public function exportReferentiel(
-//        Pdf $knpSnappyPdf,
-        ApcStructure $apcStructure, Version $version = null)
+        Request $request,
+        ?Version $version = null
+    ): BinaryFileResponse|JsonResponse|RedirectResponse
     {
-        throw new Exception('Fonctionnalité temporairement indisponible');
         if (null === $version) {
             throw new Exception('Departement inconnu');
         }
 
-        $tParcours = $apcStructure->parcoursNiveaux($version);
-        $competences = $version->getApcCompetences();
-        $tComp = [];
-        foreach ($competences as $comp) {
-            $tComp[$comp->getId()] = $comp;
+        $sourceId = (string) $version->getId();
+        $documentKey = CompetencesReferentielPdfPayloadBuilder::DOCUMENT_KEY;
+
+        if ($request->query->getBoolean('force')) {
+            $this->pdfManager->invalidate(PdfSourceType::REFERENTIEL, $sourceId, $documentKey);
         }
 
-        $competencesParcours = [];
+        $document = $this->pdfManager->getOrRequest(
+            PdfSourceType::REFERENTIEL,
+            $sourceId,
+            $documentKey,
+        );
 
-        foreach ($tParcours as $key => $parc) {
-            $competencesParcours[$key] = [];
-            foreach ($parc as $k => $v) {
-                $competencesParcours[$key][] = $tComp[$k];
-            }
+        if ($document->isReady() && $document->getCurrentFilePath() && is_file($document->getCurrentFilePath())) {
+            $response = new BinaryFileResponse($document->getCurrentFilePath());
+            $response->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_INLINE,
+                sprintf('referentiel-competence-%s.pdf', $version->getDepartement()->getSigle())
+            );
+
+            return $response;
         }
 
-        $html = $this->renderView('competences/export-referentiel.html.twig',[
-            'competencesParcours' => $competencesParcours,
-            'departement' => $version->getDepartement(),
-            'competences' => $competences,
-            'parcours' => $version->getApcParcours(),
-            'parcoursNiveaux' => $tParcours,
-        ]);
+        $job = $this->pdfManager->getLatestJob(PdfSourceType::REFERENTIEL, $sourceId, $documentKey);
 
-//        return new PdfResponse(
-//            $knpSnappyPdf->getOutputFromHtml($html, [
-//                'orientation'=>'Landscape'
-//            ]),
-//            'referentiel-competence-'.$version->getDepartement()->getSigle().'.pdf'
-//        );
+        if ($request->isXmlHttpRequest() || $request->getPreferredFormat() === 'json') {
+            return new JsonResponse([
+                'status' => $document->getStatus(),
+                'message' => 'Le PDF est en cours de génération.',
+                'job' => $job ? [
+                    'id' => (string) $job->getId(),
+                    'status' => $job->getStatus(),
+                    'errorMessage' => $job->getErrorMessage(),
+                ] : null,
+            ], 202);
+        }
+
+        $this->addFlash('warning', 'Le document est en cours de génération. Réessayez dans quelques instants.');
+
+        return $this->redirect($request->headers->get('referer', '/'));
     }
 
     #[Route('/exporter-versionning/{version}', name: 'export_versionning_referentiel_competences', methods: ['GET'])]
     public function exportVersionReferentiel(
         CompetencesExport $competencesExport,
-        Version $version = null): Response //PdfResponse
+        ?Version $version = null): Response //PdfResponse
     {
         return $competencesExport->generePdfVersionCompetences($version);
     }
@@ -121,7 +155,7 @@ class ApcController extends BaseController
     public function voirVersionReferentiel(
         Files $files,
         DepartementExport $departementExport,
-        ApcStructure $apcStructure, Version $version = null): Response //PdfResponse
+        ApcStructure $apcStructure, ?Version $version = null): Response //PdfResponse
     {
         if (null === $version) {
             throw new Exception('Departement inconnu');

@@ -89,7 +89,6 @@ class TableauController extends BaseController
         }
 
         $json = $volumesHoraires->setSemestres($semestres, $parcours)->getDataJson();
-
         return $this->json($json);
     }
 
@@ -357,11 +356,15 @@ class TableauController extends BaseController
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
         ApcSaeRepository $apcSaeRepository,
         ApcRessourceRepository $apcRessourceRepository,
+        VolumesHoraires $volumesHoraires,
         Semestre $semestre,
         ?ApcParcours $parcours = null
     ): Response
     {
-        if (!$parcours instanceof ApcParcours) {
+        $typeStructure = $semestre->getAnnee()->getVersion()->getDepartement()->getTypeStructure();
+        $isCommon = $typeStructure !== Departement::TYPE3 && $semestre->getOrdreLmd() <= 2;
+
+        if (!$parcours instanceof ApcParcours || $isCommon) {
             $saes = $apcSaeRepository->findBySemestre($semestre);
             $ressources = $apcRessourceRepository->findBySemestre($semestre);
         } else {
@@ -369,11 +372,15 @@ class TableauController extends BaseController
             $ressources = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
         }
 
+        $donnees = $volumesHoraires->setSemestres([$semestre], $parcours)->getDataJson();
+
         return $this->render('tableau/_grilleHoraire.html.twig',
             [
                 'semestre' => $semestre,
                 'saes' => $saes,
                 'ressources' => $ressources,
+                'parcours' => $parcours,
+                'donnees' => $donnees,
             ]);
     }
 

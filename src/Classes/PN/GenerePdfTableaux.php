@@ -9,12 +9,15 @@ use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Semestre;
 use App\Entity\Version;
+use App\Pdf\Builder\TableauxSynthesePdfPayloadBuilder;
+use App\Pdf\PdfManager;
+use App\Pdf\PdfPayloadBuilderRegistry;
+use App\Pdf\PdfSourceType;
+use App\Repository\PdfDocumentRepository;
 use App\Repository\SemestreRepository;
-//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-//use Knp\Snappy\Pdf;
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -36,9 +39,12 @@ class GenerePdfTableaux
         private readonly Environment        $twig,
         private readonly SemestreRepository $semestreRepository,
         private readonly TableauCroise      $tableauCroise,
-//        private readonly Pdf                $knpSnappyPdf,
         private readonly Structure          $structure,
-        protected VolumesHoraires           $volumesHoraires
+        protected VolumesHoraires           $volumesHoraires,
+        private readonly PdfManager         $pdfManager,
+        private readonly PdfDocumentRepository $pdfDocumentRepository,
+        private readonly PdfPayloadBuilderRegistry $pdfPayloadBuilderRegistry,
+        private readonly HttpClientInterface $httpClient,
     ) {
         $this->kernel = $kernel;
         $this->dir = $kernel->getProjectDir() . '/public/latex/';
@@ -52,11 +58,12 @@ class GenerePdfTableaux
             $parcours = $version->getApcParcours();
             foreach ($parcours as $parcour) {
                 $semestres = $this->semestreRepository->findByParcours($parcour);
-                $this->genereStructureSemestres($semestres, $version, $parcour);
+                $name = 'tableau-structure-' . $parcour->getId() . '.pdf';
+                $this->genereStructureSemestres($semestres, $version, $name, $parcour);
             }
         } else {
-            $semestres = $version->getSemestres();
-            $this->genereStructureSemestres($semestres, $version);
+            $name = 'tableau-structure.pdf';
+            $this->genereStructureSemestres($version->getSemestres(), $version, $name);
         }
     }
 
@@ -100,36 +107,19 @@ class GenerePdfTableaux
     private function genereStructureSemestres(
         array $semestres,
         Version $version,
+        string $filename = 'tableau-structure.pdf',
         ?ApcParcours $parcours = null
     ): void {
-        throw new Exception('Fonctionnalité temporairement indisponible');
-        $json = $this->structure->setSemestres($semestres)->setVersion($version)->getDataJson();
+        $this->structure->setSemestres($semestres)->setVersion($version)->getDataJson();
+        $parameters = [
+            'parcoursId' => $parcours?->getId(),
+            'filename' => $filename,
+        ];
 
-        $html = $this->twig->render('pdf/tableau-structure.html.twig', [
-            'departement' => $version->getDepartement(),
-            'version' => $version,
-            'donnees' => $json,
-            'parcours' => $parcours,
-        ]);
-        if (!$parcours instanceof ApcParcours) {
-            $name = 'tableau-structure.pdf';
-            //  $nameHtml = 'tableau-structure.html';
-        } else {
-            $name = 'tableau-structure-' . $parcours->getId() . '.pdf';
-            //   $nameHtml = 'tableau-structure-' . $parcours->getId() . '.html';
-        }
+        $request = $this->pdfPayloadBuilderRegistry->getBuilder(PdfSourceType::REFERENTIEL, TableauxSynthesePdfPayloadBuilder::DOCUMENT_KEY_STRUCTURE)
+            ->build((string) $version->getId(), TableauxSynthesePdfPayloadBuilder::DOCUMENT_KEY_STRUCTURE, $parameters);
 
-        ///  file_put_contents($this->dir . $departement->getNumeroAnnexe() . '/tableaux/' . $nameHtml, $html);
-
-
-//        $output = new PdfResponse(
-//            $this->knpSnappyPdf->getOutputFromHtml($html, [
-//                'orientation' => 'Landscape'
-//            ]),
-//            $name
-//        );
-//
-//        file_put_contents($this->dir . $version->getDepartement()->getNumeroAnnexe() . '/tableaux/' . $name, $output);
+        $this->generatePdfFromHtml($version, $request->payload['html'] ?? '', $filename);
     }
 
     private function afficheParcours(ApcParcours $parcours, Semestre $semestre, array $semestres): void
@@ -150,32 +140,117 @@ class GenerePdfTableaux
 
     private function generePdfCroise(TableauCroise $tableauCroise, $donnees, string $name, Semestre $semestre, ?ApcParcours $parcours = null): void
     {
-        throw new Exception('Fonctionnalité temporairement indisponible');
-
         $this->genereImage($tableauCroise->getRessources(), $tableauCroise->getSaes(), $this->departement);
-        $html = $this->twig->render('pdf/tableau-croise.html.twig', [
-            'linuxpath' => '/Users/davidannebicque/Sites/redigeTonBut/public/',
-            'departement' => $this->departement,
-            'donnees' => $donnees,
-            'semestre' => $semestre,
-            'niveaux' => $tableauCroise->getNiveaux(),
-            'saes' => $tableauCroise->getSaes(),
-            'ressources' => $tableauCroise->getRessources(),
-            'tab' => $tableauCroise->getTab(),
-            'coefficients' => $tableauCroise->getCoefficients(),
-            'parcours' => $parcours,
-        ]);
-        //  file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/tableaux/' . $name.'.html', $html);
+        $version = $semestre->getVersion();
+        if ($version === null) {
+            return;
+        }
 
-//        $output = new PdfResponse(
-//            $this->knpSnappyPdf->getOutputFromHtml($html, [
-//                'enable-local-file-access' => true,
-//                'zoom' => 0.75,
-//            ]),
-//            $name
-//        );
-//
-//        file_put_contents($this->dir . $this->departement->getNumeroAnnexe() . '/tableaux/' . $name, $output);
+        $parameters = [
+            'semestreId' => $semestre->getId(),
+            'parcoursId' => $parcours?->getId(),
+            'filename' => $name,
+        ];
+
+        $request = $this->pdfPayloadBuilderRegistry->getBuilder(PdfSourceType::REFERENTIEL, TableauxSynthesePdfPayloadBuilder::DOCUMENT_KEY_CROISE)
+            ->build((string) $version->getId(), TableauxSynthesePdfPayloadBuilder::DOCUMENT_KEY_CROISE, $parameters);
+
+        $this->generatePdfFromHtml($version, $request->payload['html'] ?? '', $name);
+    }
+
+    private function generatePdfFromHtml(Version $version, string $html, string $filename): void
+    {
+        if (trim($html) === '') {
+            return;
+        }
+
+        $departement = $version->getDepartement();
+        if ($departement === null || $departement->getNumeroAnnexe() === null) {
+            return;
+        }
+
+        $targetDir = $this->dir . $departement->getNumeroAnnexe() . '/tableaux';
+        $pdfDir = $targetDir . '/pdf';
+        if (!is_dir($targetDir) && !mkdir($targetDir, 0777, true) && !is_dir($targetDir)) {
+            return;
+        }
+        if (!is_dir($pdfDir) && !mkdir($pdfDir, 0777, true) && !is_dir($pdfDir)) {
+            return;
+        }
+
+        $boundary = '----GotenbergBoundary' . bin2hex(random_bytes(16));
+        $parts = [
+            [
+                'name' => 'files',
+                'filename' => 'index.html',
+                'contentType' => 'text/html',
+                'contents' => $html,
+            ],
+            ['name' => 'landscape', 'contents' => 'true'],
+            ['name' => 'printBackground', 'contents' => 'true'],
+            ['name' => 'preferCSSPageSize', 'contents' => 'true'],
+            ['name' => 'marginTop', 'contents' => '10mm'],
+            ['name' => 'marginRight', 'contents' => '10mm'],
+            ['name' => 'marginBottom', 'contents' => '10mm'],
+            ['name' => 'marginLeft', 'contents' => '10mm'],
+        ];
+
+        $body = '';
+        foreach ($parts as $part) {
+            $body .= "--{$boundary}\r\n";
+            $body .= 'Content-Disposition: form-data; name="' . $part['name'] . '"';
+            if (isset($part['filename'])) {
+                $body .= '; filename="' . $part['filename'] . '"';
+            }
+            $body .= "\r\n";
+
+            if (isset($part['contentType'])) {
+                $body .= 'Content-Type: ' . $part['contentType'] . "\r\n";
+            }
+
+            $body .= "\r\n";
+            $body .= (string) $part['contents'];
+            $body .= "\r\n";
+        }
+        $body .= "--{$boundary}--\r\n";
+
+        $response = $this->httpClient->request('POST', 'http://gotenberg:3000/forms/chromium/convert/html', [
+            'timeout' => 180,
+            'headers' => [
+                'Accept' => 'application/pdf',
+                'Content-Type' => 'multipart/form-data; boundary=' . $boundary,
+            ],
+            'body' => $body,
+        ]);
+
+        if ($response->getStatusCode() !== 200) {
+            $message = sprintf(
+                'Erreur Gotenberg pour %s (status %d): %s',
+                $filename,
+                $response->getStatusCode(),
+                $response->getContent(false)
+            );
+
+            throw new \RuntimeException($message);
+        }
+
+        file_put_contents($pdfDir . '/' . $filename, $response->getContent());
+    }
+
+    private function copyToLatexTableaux(Version $version, string $sourceFilePath, string $filename): void
+    {
+        $departement = $version->getDepartement();
+        if ($departement !== null && $departement->getNumeroAnnexe() !== null && is_file($sourceFilePath)) {
+            $targetDir = $this->dir . $departement->getNumeroAnnexe() . '/tableaux';
+            $pdfDir = $targetDir . '/pdf';
+            if (!is_dir($targetDir) && !mkdir($targetDir, 0777, true) && !is_dir($targetDir)) {
+                return;
+            }
+            if (!is_dir($pdfDir) && !mkdir($pdfDir, 0777, true) && !is_dir($pdfDir)) {
+                return;
+            }
+            @copy($sourceFilePath, $pdfDir . '/' . $filename);
+        }
     }
 
     private function genereImage($getRessources, $getSaes, Departement $departement): void

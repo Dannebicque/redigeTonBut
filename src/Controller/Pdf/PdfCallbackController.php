@@ -2,8 +2,10 @@
 
 namespace App\Controller\Pdf;
 
+use App\Entity\Version;
 use App\Repository\PdfDocumentRepository;
 use App\Repository\PdfJobRepository;
+use App\Repository\VersionRepository;
 use App\Pdf\HmacSigner;
 use App\Pdf\PdfStorage;
 use Doctrine\DBAL\LockMode;
@@ -12,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -28,6 +31,8 @@ final class PdfCallbackController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly HttpClientInterface $httpClient,
         private readonly LoggerInterface $logger,
+        private readonly VersionRepository $versionRepository,
+        private readonly KernelInterface $kernel,
     ) {
     }
 
@@ -205,7 +210,7 @@ final class PdfCallbackController extends AbstractController
 
         $oldPath = $document->getCurrentFilePath();
 
-        $this->entityManager->wrapInTransaction(function () use ($document, $job, $newPath, $sha256, $oldPath, $logs) {
+        $this->entityManager->wrapInTransaction(function () use ($document, $job, $newPath, $sha256, $logs) {
             $this->entityManager->lock($document, LockMode::PESSIMISTIC_WRITE);
 
             $job->markSuccess($job->getResultTempUrl(), is_string($logs) ? $logs : null);
@@ -218,6 +223,8 @@ final class PdfCallbackController extends AbstractController
             $this->storage->deleteIfExists($oldPath);
         }
 
+        $this->syncLocalLatexTableauxIfApplicable($job, $newPath, is_string($filename) ? $filename : 'document.pdf');
+
         $this->logger->info('PDF callback processed successfully', [
             'jobId' => $jobId,
             'bytes' => $bytesWritten,
@@ -226,6 +233,55 @@ final class PdfCallbackController extends AbstractController
         ]);
 
         return new Response('OK', 200);
+    }
+
+    private function syncLocalLatexTableauxIfApplicable(object $job, string $newPath, string $filename): void
+    {
+        $tableauxKeys = [
+            'tableau_structure',
+            'tableau_croise',
+            'tableaux_synthese',
+            'tableau-structure',
+            'tableau-croise',
+            'tableau_synthese',
+        ];
+
+        if (
+            method_exists($job, 'getSourceType')
+            && method_exists($job, 'getDocumentKey')
+            && method_exists($job, 'getSourceId')
+            && $job->getSourceType() === 'referentiel'
+            && in_array($job->getDocumentKey(), $tableauxKeys, true)
+        ) {
+            try {
+                $version = $this->versionRepository->find($job->getSourceId());
+                if (!$version instanceof Version) {
+                    return;
+                }
+
+                $departement = $version->getDepartement();
+                $numeroAnnexe = $departement?->getNumeroAnnexe();
+                if ($numeroAnnexe === null) {
+                    return;
+                }
+
+                $latexDir = $this->kernel->getProjectDir() . '/public/latex/' . $numeroAnnexe . '/tableaux';
+                if (!is_dir($latexDir) && !mkdir($latexDir, 0777, true) && !is_dir($latexDir)) {
+                    $this->logger->warning('Unable to create local latex tableaux directory', ['dir' => $latexDir]);
+                    return;
+                }
+
+                $targetPath = $latexDir . '/' . $filename;
+                if (@copy($newPath, $targetPath)) {
+                    $this->logger->info('PDF callback copied generated tableau to local latex dir', [
+                        'targetPath' => $targetPath,
+                        'jobId' => method_exists($job, 'getId') ? (string) $job->getId() : null,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                $this->logger->warning('PDF callback error while copying tableau to local latex dir: ' . $e->getMessage());
+            }
+        }
     }
 
     private function writeProbe(string $step, string $probeId, Request $request, ?array $context): void
@@ -245,7 +301,7 @@ final class PdfCallbackController extends AbstractController
         }
 
         @file_put_contents(
-            $this->getParameter('kernel.project_dir').self::PROBE_LOG_FILE,
+            $this->kernel->getProjectDir().self::PROBE_LOG_FILE,
             $line.PHP_EOL,
             FILE_APPEND
         );

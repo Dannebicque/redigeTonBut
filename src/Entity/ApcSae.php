@@ -333,7 +333,7 @@ class ApcSae extends AbstractMatiere
         return $this;
     }
 
-    public function getVersion():?Version
+    public function getVersion(): ?Version
     {
         return $this->getSemestre()?->getAnnee()?->getVersion();
     }
@@ -424,28 +424,76 @@ class ApcSae extends AbstractMatiere
         return false;
     }
 
-    public function apcSaeRessourcesOrdre(?ApcParcours $apcParcours = null): Collection | array
+    public function apcSaeRessourcesOrdre(?ApcParcours $apcParcours = null): Collection|array
     {
         $ressources = $this->apcSaeRessources;
         $t = [];
-        foreach ($ressources as $ressource)
-        {
-            if ($ressource->getRessource()?->isGoodParcours($apcParcours)) {
+        $departementType = $apcParcours?->getVersion()?->getDepartement()?->getTypeStructure();
+        foreach ($ressources as $ressource) {
+            if ($departementType === Departement::TYPE3) {
+                // Pour TYPE3, on trie par parcours puis ordre sans écraser les mêmes ordres entre parcours.
+                $ressourceEntity = $ressource->getRessource();
+                if (null === $ressourceEntity) {
+                    continue;
+                }
 
-                $t[$ressource->getRessource()->getOrdre()] = $ressource->getRessource();
+                $ordre = $ressourceEntity->getOrdre() ?? 0;
+                $ressourceParcoursCollection = $ressourceEntity->getApcRessourceParcours();
+
+                if (count($ressourceParcoursCollection) === 0) {
+                    if (!array_key_exists('', $t)) {
+                        $t[''] = [];
+                    }
+                    if (!array_key_exists($ordre, $t[''])) {
+                        $t[''][$ordre] = [];
+                    }
+
+                    $t[''][$ordre][] = $ressourceEntity;
+                    continue;
+                }
+
+                foreach ($ressourceParcoursCollection as $ressourceParcours) {
+                    $parcoursKey = $ressourceParcours->getParcours()?->getCode() ?? '';
+                    if (!array_key_exists($parcoursKey, $t)) {
+                        $t[$parcoursKey] = [];
+                    }
+                    if (!array_key_exists($ordre, $t[$parcoursKey])) {
+                        $t[$parcoursKey][$ordre] = [];
+                    }
+
+                    $t[$parcoursKey][$ordre][] = $ressourceEntity;
+                }
+            } else {
+                if ($ressource->getRessource()?->isGoodParcours($apcParcours)) {
+                    $t[$ressource->getRessource()->getOrdre()] = $ressource->getRessource();
+                }
             }
+        }
+
+        if ($departementType === Departement::TYPE3) {
+            ksort($t);
+            $flatten = [];
+            foreach ($t as $ressourcesParParcours) {
+                ksort($ressourcesParParcours);
+                foreach ($ressourcesParParcours as $ressourcesByOrdre) {
+                    foreach ($ressourcesByOrdre as $ressourceEntity) {
+                        $flatten[] = $ressourceEntity;
+                    }
+                }
+            }
+
+            return $flatten;
         }
 
         ksort($t);
         return $t;
     }
 
-    public function apcSaeApprentissageCritiquesOrdre(?ApcParcours $apcParcours = null): Collection | array
+    public function apcSaeApprentissageCritiquesOrdre(?ApcParcours $apcParcours = null): Collection|array
     {
         $acs = $this->apcSaeApprentissageCritiques;
         $t = [];
-        foreach ($acs as $ac)
-        {
+        foreach ($acs as $ac) {
             if ($ac->getApprentissageCritique()->getCompetence()?->isGoodParcours($apcParcours)) {
                 if (!array_key_exists($ac->getApprentissageCritique()->getCompetence()->getCouleur(), $t)) {
                     $t[$ac->getApprentissageCritique()->getCompetence()->getCouleur()] = [];

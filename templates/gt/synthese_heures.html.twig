@@ -1,0 +1,346 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+Synthèse - Volumes Horaires par Spécialité {{ currentDepartement.sigle }} {% if parcours != null %} | Parcours : {{ parcours.libelle }}{% endif %}
+    {% endblock %}
+
+    {% block bouton_header %}
+        <a href="{{ path('gt_index') }}" class="btn btn-sm
+    btn-outline-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2">
+            <i class="bi bi-arrow-left"></i>
+            <span>Retour à l'accueil GT</span>
+        </a>
+    {% endblock %}
+
+    {% block content %}
+        <div class="container-fluid py-4"
+             style="background: radial-gradient(circle at 10% 20%, rgba(246, 249, 252, 1) 0%, rgba(239, 244, 249, 1) 90.1%); min-height: 100vh;">
+            {# Specialty & Version Card #}
+            <div class="card border-0 shadow-sm mb-4"
+                 style="border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white;">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                    <span class="badge bg-white text-primary mb-2 px-3 py-2 fw-bold text-uppercase shadow-sm"
+                          style="font-size: 0.75rem; letter-spacing: 0.05em;">
+                        {{ currentDepartement.sigle }}
+                    </span>
+                            <h2 class="h3 fw-bold mb-1 text-white" style="letter-spacing: -0.02em;">
+                                {{ currentDepartement.libelle }}
+                            </h2>
+                            <p class="mb-0 text-white-50 fs-6">
+                                Version : <span class="text-white fw-semibold">{{ version.libelle }}</span> &bull;
+                                Structure : <span
+                                        class="text-white fw-semibold">{{ currentDepartement.typeStructure|upper }}</span>
+                            </p>
+                        </div>
+                        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                            <div class="p-3 bg-white-10 rounded-3 d-inline-block backdrop-blur"
+                                 style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);">
+                                <div class="text-white-50 fs-7 text-uppercase fw-bold mb-1">Total Enseignement</div>
+                                <div class="h3 mb-0 fw-bold text-white">{{ butTotal.total }}h</div>
+                                <div class="text-white-50 fs-8 fw-semibold">(dont TP {{ butTotal.tp_total }}h)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Parcours selector (if structure has parcours or multiple parcours exist) #}
+            {% if allParcours|length > 0 %}
+                <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px;">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary-light p-2 rounded-3 me-3 text-primary"
+                                 style="background-color: rgba(13, 110, 253, 0.08);">
+                                <i class="bi bi-signpost-split fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0 fw-bold">Parcours de formation</h5>
+                                <p class="text-tp fs-7 mb-0">Sélectionnez un parcours pour filtrer la synthèse des
+                                    volumes horaires</p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for p in allParcours %}
+                                <a href="{{ path('gt_synthese_heures', {parcours: p.id}) }}"
+                                   class="btn btn-sm px-4 py-2 text-decoration-none transition-all d-flex align-items-center gap-2 {{ parcours and parcours.id == p.id ? 'btn-primary shadow-sm' : 'btn-outline-primary' }}"
+                                   style="border-radius: 8px; font-weight: 500;">
+                                    {% if p.couleur %}
+                                        <span class="d-inline-block rounded-circle"
+                                              style="width: 10px; height: 10px; background-color: {{ p.couleur }};"></span>
+                                    {% endif %}
+                                    {{ p.libelle }} <span
+                                            class="badge {{ parcours and parcours.id == p.id ? 'bg-white text-primary' : 'bg-primary-light text-primary' }}">{{ p.code }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# KPI Dashboard #}
+            <div class="row g-4 mb-4">
+                {# card 1: ressources #}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card border-0 shadow-sm h-100 transition-all hover-translate-y"
+                         style="border-radius: 16px;">
+                        <div class="card-body p-4 d-flex align-items-center">
+                            <div class="p-3 bg-blue-light rounded-4 text-primary me-4"
+                                 style="background-color: rgba(13, 110, 253, 0.08);">
+                                <i class="bi bi-journal-text fs-3"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-tp text-uppercase fw-bold fs-7 mb-1" style="letter-spacing: 0.05em;">
+                                    Ressources Nationales</h6>
+                                <h3 class="mb-1 fw-bold text-gray-800">{{ butTotal.ressources }}h</h3>
+                                <div class="text-tp fs-8">(dont TP {{ butTotal.tp_ressources }}h)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# card 2: SAÉ #}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card border-0 shadow-sm h-100 transition-all hover-translate-y"
+                         style="border-radius: 16px;">
+                        <div class="card-body p-4 d-flex align-items-center">
+                            <div class="p-3 bg-warning-light rounded-4 text-warning me-4"
+                                 style="background-color: rgba(255, 193, 7, 0.08);">
+                                <i class="bi bi-puzzle fs-3"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-tp text-uppercase fw-bold fs-7 mb-1" style="letter-spacing: 0.05em;">
+                                    SAÉ Locale</h6>
+                                <h3 class="mb-0 fw-bold text-gray-800">{{ butTotal.sae }}h</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# card 3: Adaptation locale ressources #}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card border-0 shadow-sm h-100 transition-all hover-translate-y"
+                         style="border-radius: 16px;">
+                        <div class="card-body p-4 d-flex align-items-center">
+                            <div class="p-3 bg-info-light rounded-4 text-info me-4"
+                                 style="background-color: rgba(13, 202, 240, 0.08);">
+                                <i class="bi bi-geo fs-3"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-tp text-uppercase fw-bold fs-7 mb-1" style="letter-spacing: 0.05em;">
+                                    Adaptation Locale</h6>
+                                <h3 class="mb-1 fw-bold text-gray-800">{{ butTotal.adaptation }}h</h3>
+                                <div class="text-tp fs-8">(dont TP {{ butTotal.tp_adaptation }}h)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# card 4: Projet tutore #}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card border-0 shadow-sm h-100 transition-all hover-translate-y"
+                         style="border-radius: 16px;">
+                        <div class="card-body p-4 d-flex align-items-center">
+                            <div class="p-3 bg-purple-light rounded-4 text-purple me-4"
+                                 style="background-color: rgba(111, 66, 193, 0.08); color: #6f42c1;">
+                                <i class="bi bi-terminal fs-3"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-tp text-uppercase fw-bold fs-7 mb-1"
+                                    style="letter-spacing: 0.05em; color: #6f42c1;">Projet Tutoré</h6>
+                                <h3 class="mb-0 fw-bold text-gray-800">{{ butTotal.projet }}h</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# card 5: Total enseignement #}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card border-0 shadow-sm h-100 transition-all hover-translate-y"
+                         style="border-radius: 16px; background: linear-gradient(135deg, rgba(25, 135, 84, 0.05) 0%, rgba(25, 135, 84, 0.1) 100%);">
+                        <div class="card-body p-4 d-flex align-items-center">
+                            <div class="p-3 bg-success-light rounded-4 text-success me-4"
+                                 style="background-color: rgba(25, 135, 84, 0.12);">
+                                <i class="bi bi-award fs-3"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-success text-uppercase fw-bold fs-7 mb-1"
+                                    style="letter-spacing: 0.05em;">Total Enseignements</h6>
+                                <h3 class="mb-1 fw-bold text-success">{{ butTotal.total }}h</h3>
+                                <div class="text-success opacity-75 fs-8 fw-semibold">(dont TP {{ butTotal.tp_total }}h)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# card 6: Total + projet #}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card border-0 shadow-sm h-100 transition-all hover-translate-y"
+                         style="border-radius: 16px; background: linear-gradient(135deg, rgba(13, 110, 253, 0.05) 0%, rgba(13, 110, 253, 0.1) 100%);">
+                        <div class="card-body p-4 d-flex align-items-center">
+                            <div class="p-3 bg-primary-light rounded-4 text-primary me-4"
+                                 style="background-color: rgba(13, 110, 253, 0.12);">
+                                <i class="bi bi-plus-circle-fill fs-3"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-primary text-uppercase fw-bold fs-7 mb-1"
+                                    style="letter-spacing: 0.05em;">Grand Total (avec Projets)</h6>
+                                <h3 class="mb-1 fw-bold text-primary">{{ butTotal.totalAvecProjet }}h</h3>
+                                <div class="text-primary opacity-75 fs-8 fw-semibold">(dont TP {{ butTotal.tp_total }}h)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Main Data Table #}
+            <div class="card border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;">
+                <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between border-bottom-0">
+                    <h5 class="mb-0 fw-bold text-gray-800">Détail des volumes horaires</h5>
+                    <span class="text-tp fs-7">Tous les volumes sont exprimés en heures</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" style="min-width: 800px;">
+                        <thead class="table-light">
+                        <tr class="fs-7 text-uppercase fw-bold text-tp border-top border-bottom"
+                            style="letter-spacing: 0.05em; background-color: #f8f9fa;">
+                            <th class="py-3 px-4" style="width: 180px;">Période</th>
+                            <th class="py-3 text-center">Ressources (Nat.)</th>
+                            <th class="py-3 text-center">SAÉ (Loc.)</th>
+                            <th class="py-3 text-center">Adapt. Locale (Ress.)</th>
+                            <th class="py-3 text-center bg-success-light"
+                                style="background-color: rgba(25, 135, 84, 0.03);">Total Enseignements
+                            </th>
+                            <th class="py-3 text-center">Projet Tutoré</th>
+                            <th class="py-3 text-center bg-primary-light font-weight-bold"
+                                style="background-color: rgba(13, 110, 253, 0.03);">Grand Total
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for yKey, yData in yearsData %}
+                            <tr class="table-group-header" style="background-color: rgba(0, 0, 0, 0.02);">
+                                <td colspan="7" class="py-2 px-4 fw-bold text-primary fs-6">{{ yData.label }}</td>
+                            </tr>
+
+                            {# Semesters #}
+                            {% for sId in yData.semestres %}
+                                {% if semestresData[sId] is defined %}
+                                    {% set sem = semestresData[sId] %}
+                                    <tr>
+                                        <td class="py-3 px-4 fw-medium text-gray-700">Semestre {{ sId }}</td>
+                                        <td class="py-3 text-center">
+                                            {{ sem.ressources }} h
+                                            <div class="text-tp fs-8">dont TP {{ sem.tp_ressources }} h</div>
+                                        </td>
+                                        <td class="py-3 text-center">{{ sem.sae }} h</td>
+                                        <td class="py-3 text-center">
+                                            {{ sem.adaptation }} h
+                                            <div class="text-tp fs-8">dont TP {{ sem.tp_adaptation }} h</div>
+                                        </td>
+                                        <td class="py-3 text-center bg-success-light fw-semibold text-success"
+                                            style="background-color: rgba(25, 135, 84, 0.03);">
+                                            {{ sem.total }} h
+                                            <div class="text-success opacity-75 fw-normal fs-8">dont TP {{ sem.tp_total }} h</div>
+                                        </td>
+                                        <td class="py-3 text-center">{{ sem.projet }} h</td>
+                                        <td class="py-3 text-center bg-primary-light fw-bold text-primary"
+                                            style="background-color: rgba(13, 110, 253, 0.03);">
+                                            {{ sem.totalAvecProjet }} h
+                                            <div class="text-primary opacity-75 fw-normal fs-8">dont TP {{ sem.tp_total }} h</div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+
+                            {# Year subtotal #}
+                            <tr class="border-bottom-double"
+                                style="background-color: rgba(13, 110, 253, 0.02); border-bottom: 2px solid rgba(0,0,0,0.1);">
+                                <td class="py-3 px-4 fw-bold text-gray-800">Sous-total {{ yData.label }}</td>
+                                <td class="py-3 text-center fw-bold text-gray-800">
+                                    {{ yData.ressources }} h
+                                    <div class="text-tp fw-normal fs-8">dont TP {{ yData.tp_ressources }} h</div>
+                                </td>
+                                <td class="py-3 text-center fw-bold text-gray-800">{{ yData.sae }} h</td>
+                                <td class="py-3 text-center fw-bold text-gray-800">
+                                    {{ yData.adaptation }} h
+                                    <div class="text-tp fw-normal fs-8">dont TP {{ yData.tp_adaptation }} h</div>
+                                </td>
+                                <td class="py-3 text-center bg-success-light fw-bold text-success"
+                                    style="background-color: rgba(25, 135, 84, 0.05);">
+                                    {{ yData.total }} h
+                                    <div class="text-success opacity-75 fw-normal fs-8">dont TP {{ yData.tp_total }} h</div>
+                                </td>
+                                <td class="py-3 text-center fw-bold text-gray-800">{{ yData.projet }} h</td>
+                                <td class="py-3 text-center bg-primary-light fw-bold text-primary"
+                                    style="background-color: rgba(13, 110, 253, 0.05);">
+                                    {{ yData.totalAvecProjet }} h
+                                    <div class="text-primary opacity-75 fw-normal fs-8">dont TP {{ yData.tp_total }} h</div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot class="table-light">
+                        <tr class="fs-7 text-uppercase fw-bold text-tp border-top border-bottom"
+                            style="letter-spacing: 0.05em; background-color: #f8f9fa;">
+                            <td class="py-3 px-4">TOTAL BUT (3 ans)</td>
+                            <td class="py-3 text-center">
+                                {{ butTotal.ressources }} h
+                                <div class="text-tp fw-normal fs-8">dont TP {{ butTotal.tp_ressources }} h</div>
+                            </td>
+                            <td class="py-3 text-center">{{ butTotal.sae }} h</td>
+                            <td class="py-3 text-center">
+                                {{ butTotal.adaptation }} h
+                                <div class="text-tp fw-normal fs-8">dont TP {{ butTotal.tp_adaptation }} h</div>
+                            </td>
+                            <td class="py-3 text-center text-white"
+                                style="background-color: #198754;">
+                                {{ butTotal.total }} h
+                                <div class="text-white opacity-75 fw-normal fs-8">dont TP {{ butTotal.tp_total }} h</div>
+                            </td>
+                            <td class="py-3 text-center">{{ butTotal.projet }} h</td>
+                            <td class="py-3 text-center text-white"
+                                style="background-color: #0d6efd;">
+                                {{ butTotal.totalAvecProjet }} h
+                                <div class="text-white opacity-75 fw-normal fs-8">dont TP {{ butTotal.tp_total }} h</div>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .transition-all {
+                transition: all 0.25s ease-in-out;
+            }
+
+            .hover-translate-y:hover {
+                transform: translateY(-4px);
+            }
+
+            .backdrop-blur {
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            .fs-7 {
+                font-size: 0.85rem;
+            }
+
+            .fs-8 {
+                font-size: 0.725rem;
+            }
+
+            .border-bottom-double {
+                border-bottom-style: double !important;
+            }
+
+            .text-tp {
+                color: #606563;
+            }
+        </style>
+    {% endblock %}

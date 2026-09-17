@@ -203,9 +203,13 @@ class Structure
             return 1;
         }
 
+        if ($ressource->getApcRessourceParcours()->count() === $totalParcours) {
+            return 1;
+        }
+
         // Pas de restriction explicite: la ressource porte sur tous les parcours.
         if ($ressource->getApcRessourceParcours()->count() === 0) {
-            return $totalParcours;
+            return 1;
         }
 
         $parcoursIds = [];

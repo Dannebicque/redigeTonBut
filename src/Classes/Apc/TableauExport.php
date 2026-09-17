@@ -189,7 +189,10 @@ class TableauExport
 
         $this->excelWriter->nouveauFichier('');
         foreach ($semestres as $semestre) {
-            if (!$parcours instanceof ApcParcours) {
+            $typeStructure = $semestre->getAnnee()->getVersion()->getDepartement()->getTypeStructure();
+            $isCommon = $typeStructure !== Departement::TYPE3 && $semestre->getOrdreLmd() <= 2;
+
+            if (!$parcours instanceof ApcParcours || $isCommon) {
                 $saes = $this->apcSaeRepository->findBySemestre($semestre);
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {

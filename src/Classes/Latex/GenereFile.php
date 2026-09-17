@@ -71,7 +71,7 @@ class GenereFile
     public function renderContent(Version $version, bool $includeAssets = true): string
     {
         return $this->latexSanitizer->normalizeLatexDocument(
-            $this->twig->render('latex/annexe_specialite.tex.twig', $this->buildRenderContext($version, $includeAssets))
+            $this->twig->render('latex_runtime/annexe_specialite.tex.twig', $this->buildRenderContext($version, $includeAssets))
         );
     }
 
@@ -190,8 +190,7 @@ class GenereFile
                 }
             }
         }
-dump($includeAssets);
-        return [
+return [
             'departement' => $departement,
             'version' => $version,
             'competencesParcours' => $competencesParcours,

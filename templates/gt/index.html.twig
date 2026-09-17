@@ -76,6 +76,8 @@
                                    class="btn btn-success btn-sm">Synthèse VH (Excel)</a>
                                 <a href="{{ path('export_tableau_croise_et_volume_horaire', {version: user_data.version.id}) }}"
                                    class="btn btn-warning btn-sm">Tableau croisé + VH</a>
+                                <a href="{{ path('gt_synthese_heures') }}"
+                                   class="btn btn-primary btn-sm"><i class="bi bi-clock"></i> Synthèse des volumes horaires</a>
                                 <a href="{{ path('argumentaire_index', {version: user_data.version.id}) }}"
                                    class="btn btn-info btn-sm">Argumentaire GT</a>
                                 <a href="{{ path('pdf_show', {sourceType: 'argumentaire', sourceId: user_data.version.id, documentKey: 'fiche'}) }}"

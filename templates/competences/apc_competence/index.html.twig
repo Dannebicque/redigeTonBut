@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Code Compétence</th>
+                                <th>Libellé</th>
+                                <th>libellé court</th>
+                                {% if is_granted('ROLE_PACD') and user_data.version.verouilleCompetences == false %}
+                                <th>Edition</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for ac in competences %}
+                                    <tr>
+                                        <td>{{ ac.couleur }}</td>
+                                        <td>{{ac.libelle}}</td>
+                                        <td><span class="badge badge-{{ ac.couleur }}">{{ ac
+                                                .nomCourt}}</span></td>
+                                        {% if is_granted('ROLE_PACD') and user_data.version.verouilleCompetences == false %}
+                                        <td>
+                                            <a href="{{ path('administration_apc_competence_edit',
+                                                {id:ac.id}) }}" class="text-black text-small">
+                                                <i class="bi bi-pencil"></i> Modifier
+                                            </a>
+                                        </td>
+                                        {% endif %}
+                                    </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+{% endblock %}
+
+{% block header %}
+    Liste des apprentissages critiques de {{ user_data.departement.sigle }}
+{% endblock %}
+
+{% block bouton_header %}
+    <a href="{{ path('administration_apc_apprentissage_critique_export') }}" class="btn btn-sm btn-outline-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-download"></i>
+        <span>Export Excel</span>
+    </a>
+{% endblock %}

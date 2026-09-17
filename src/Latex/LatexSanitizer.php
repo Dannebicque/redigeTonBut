@@ -404,7 +404,7 @@ final class LatexSanitizer
                 '→', '←', '↔', '⇒', '⇐', '≤', '≥', '≠',
                 '×', '÷', '−', '∫', '∑', '∞', '≈',
                 '℃', '€', '™', '®', '©',
-                'SAé', ' BUT.', ' BUT ', '_'
+                'SAé', ' BUT.', ' BUT '
             ],
             [
                 'Ï', 'Ï','o','â',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
@@ -419,7 +419,7 @@ final class LatexSanitizer
                 '->', '<-', '<->', '=>', '<=', '<=', '>=', '!=',
                 'x', '/', '-','\\ensuremath{\\int}', '\\ensuremath{\\sum}', '\\ensuremath{\\infty}', '\\ensuremath{\\approx}',
                 ' deg C', 'EUR', '(TM)', '(R)', '(c)',
-                'SAÉ', ' B.U.T.', ' B.U.T. ', ''
+                'SAÉ', ' B.U.T.', ' B.U.T. '
             ],
             $text,
         );
@@ -612,4 +612,3 @@ final class LatexSanitizer
         return str_replace($search, $replace, $text);
     }
 }
-

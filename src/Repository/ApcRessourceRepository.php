@@ -254,6 +254,15 @@ class ApcRessourceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findRessourceIA(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.isRessourceIA = :val')
+            ->setParameter('val', true)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function countBySemestre(Semestre $semestre)
     {
         return $this->createQueryBuilder('c')

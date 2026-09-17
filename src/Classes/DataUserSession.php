@@ -7,6 +7,7 @@ namespace App\Classes;
 use App\DTO\Secondaire;
 use App\DTO\Tertiaire;
 use App\Entity\Departement;
+use App\Entity\User;
 use App\Entity\Version;
 use App\Repository\AnneeRepository;
 use App\Repository\DepartementRepository;
@@ -54,14 +55,16 @@ class DataUserSession
     public function getDepartement()
     {
         if (in_array('ROLE_ADMIN', $this->roleName) || in_array('ROLE_IUT', $this->roleName) || in_array('ROLE_GT', $this->roleName) || in_array('ROLE_CPN', $this->roleName) || in_array('ROLE_EDITEUR', $this->roleName) || in_array('ROLE_CPN_LECTEUR', $this->roleName)) {
-            if ($this->requestStack->getSession()->has('departement')) {
+            if ($this->requestStack->getMainRequest()?->hasSession() && $this->requestStack->getSession()->has('departement')) {
                 $this->departement = $this->departementRepository->find($this->requestStack->getSession()->get('departement'));
             } else {
                 $this->departement = null;
             }
         } else {
-            $this->departement = $this->user->getDepartement();
-            $this->requestStack->getSession()->set('departement', $this->departement->getId());
+            $this->departement = ($this->user instanceof User) ? $this->user->getDepartement() : null;
+            if ($this->departement !== null && $this->requestStack->getMainRequest()?->hasSession()) {
+                $this->requestStack->getSession()->set('departement', $this->departement->getId());
+            }
         }
 
         return $this->departement;
@@ -133,6 +136,10 @@ class DataUserSession
     public function versionPn(): int
     {
         //on récupére dans la session, sinon 2021 par défaut
+        if (!$this->requestStack->getMainRequest()?->hasSession()) {
+            return 2021;
+        }
+
         return $this->requestStack->getSession()->get('versionPn', 2021);
     }
 

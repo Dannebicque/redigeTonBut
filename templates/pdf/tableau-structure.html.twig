@@ -5,14 +5,52 @@
 {% endblock %}
 
 {% block styles %}
-    @page { size: A4; }
+    @page { size: A4 landscape; margin: 8mm; }
 
     body {
+    font-size: 11px;
+    }
+
+    h1 {
+    font-size: 18px;
+    margin: 0 0 8px;
+    }
+
+    h2 {
     font-size: 14px;
+    margin: 0 0 8px;
+    }
+
+    .table {
+    width: 100%;
+    table-layout: fixed;
     }
 
     .table th {
-    padding: 5px;
+    padding: 3px 4px;
+    font-size: 10px;
+    line-height: 1.15;
+    }
+
+    .table td {
+    padding: 3px 4px;
+    font-size: 10px;
+    line-height: 1.15;
+    }
+
+    .table .text-small {
+    font-size: 8px;
+    margin: 2px 0 0;
+    }
+
+    .table .col-semestre,
+    .table .col-total {
+    width: 8%;
+    }
+
+    .table tbody th.text-left {
+    width: 36%;
+    font-size: 9px;
     }
 {% endblock %}
 
@@ -40,8 +78,9 @@
             white">Nbre d'heures d'enseignement (ressources + SAé)
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].nbHeuresRessourcesSae }}
+                    {{ sem is not null ? sem.nbHeuresRessourcesSae : '' }}
                 </td>
             {% endfor %}
             <td class="text-center">
@@ -56,8 +95,9 @@
             white">Dont % d'adaptation locale<br>
                 <p class="text-small">max 40% du volume d'enseignement</p></th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].pourcentageAdaptationLocale }} %
+                    {{ sem is not null ? sem.pourcentageAdaptationLocale : '' }} %
                 </td>
             {% endfor %}
             <td class="text-center">
@@ -70,8 +110,9 @@
             white">Nbre d'heures d'enseignement définies localement
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].nbHeuresEnseignementLocale }}
+                    {{ sem is not null ? sem.nbHeuresEnseignementLocale : '' }}
                 </td>
             {% endfor %}
             <td class="text-center">
@@ -83,8 +124,9 @@
             white">Nbre heures d'enseignement SAÉ définies localement
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].nbHeuresEnseignementSaeLocale }}
+                    {{ sem is not null ? sem.nbHeuresEnseignementSaeLocale : '' }}
                 </td>
             {% endfor %}
             <td>
@@ -95,8 +137,9 @@
             white">Nbre heures d'enseignement à définir localement dans les Ressources ou les SAÉ
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].nbHeuresEnseignementRessourceLocale }}
+                    {{ sem is not null ? sem.nbHeuresEnseignementRessourceLocale : '' }}
                 </td>
             {% endfor %}
             <td></td>
@@ -107,8 +150,9 @@
             white">Nbre heures d'enseignement des ressources définies nationalement
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].nbHeuresEnseignementRessourceNational }}
+                    {{ sem is not null ? sem.nbHeuresEnseignementRessourceNational : '' }}
                 </td>
             {% endfor %}
             <td>
@@ -120,8 +164,9 @@
             white">Nbre heures de tp définies nationalement
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].nbHeuresTpNational }}
+                    {{ sem is not null ? sem.nbHeuresTpNational : '' }}
                 </td>
             {% endfor %}
             <td class="text-center" rowspan="2">
@@ -133,8 +178,9 @@
             white">Nbre heures de tp à définir localement
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].nbHeuresTpLocale }}
+                    {{ sem is not null ? sem.nbHeuresTpLocale : '' }}
                 </td>
             {% endfor %}
         </tr>
@@ -147,8 +193,9 @@
             white">Nbre d'heures de projet tutoré
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {{ donnees[i].nbHeuresProjet }}
+                    {{ sem is not null ? sem.nbHeuresProjet : '' }}
                 </td>
             {% endfor %}
             <td class="text-center">
@@ -160,8 +207,10 @@
             white">Nbre heures de projet/année min 150 h / max 250h
             </th>
             {% for i in range(1, 6, 2) %}
+                {% set sem1 = donnees[i] ?? null %}
+                {% set sem2 = donnees[i + 1] ?? null %}
                 <td class="text-center" colspan="2">
-                    {{ donnees[i].nbHeuresProjet + donnees[i + 1].nbHeuresProjet }}
+                    {{ sem1 is not null and sem2 is not null ? sem1.nbHeuresProjet + sem2.nbHeuresProjet : '' }}
                 </td>
             {% endfor %}
             <td class="text-center">
@@ -179,14 +228,17 @@
                                        12 à 16 semaines BUT 3</p>
             </th>
             {% for i in 1..6 %}
+                {% set sem = donnees[i] ?? null %}
                 <td class="text-center">
-                    {% if donnees[i].nbSemainesStageMin == 0 and donnees[i].nbSemainesStageMax == 0 %}
+                    {% if sem is not null and sem.nbSemainesStageMin == 0 and sem.nbSemainesStageMax == 0 %}
                         0
-                    {% elseif donnees[i].nbSemainesStageMin == donnees[i].nbSemainesStageMax %}
-                        {{ donnees[i].nbSemainesStageMin }}
+                    {% elseif sem is not null and sem.nbSemainesStageMin == sem.nbSemainesStageMax %}
+                        {{ sem.nbSemainesStageMin }}
+                    {% elseif sem is not null %}
+                        {{ sem.nbSemainesStageMin }} à
+                        {{ sem.nbSemainesStageMax }}
                     {% else %}
-                        {{ donnees[i].nbSemainesStageMin }} à
-                        {{ donnees[i].nbSemainesStageMax }}
+                        
                     {% endif %}
                 </td>
             {% endfor %}

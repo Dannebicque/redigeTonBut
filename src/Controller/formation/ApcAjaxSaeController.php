@@ -35,11 +35,12 @@ class ApcAjaxSaeController extends BaseController
 {
     #[Route('/ajax-ac', name: 'apc_sae_ajax_ac', options: ['expose' => true], methods: ['POST'])]
     public function ajaxAc(
-        SemestreRepository $semestreRepository,
+        SemestreRepository                    $semestreRepository,
         ApcSaeApprentissageCritiqueRepository $apcSaeApprentissageCritiqueRepository,
-        ApcApprentissageCritiqueRepository $apcApprentissageCritiqueRepository,
-        Request $request
-    ): Response {
+        ApcApprentissageCritiqueRepository    $apcApprentissageCritiqueRepository,
+        Request                               $request
+    ): Response
+    {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -86,12 +87,13 @@ class ApcAjaxSaeController extends BaseController
 
     #[Route('/ajax-ressources', name: 'apc_ressources_ajax', options: ['expose' => true], methods: ['POST'])]
     public function ajaxRessources(
-        SemestreRepository $semestreRepository,
+        SemestreRepository             $semestreRepository,
         ApcRessourceParcoursRepository $apcRessourceParcoursRepository,
-        ApcSaeRessourceRepository $apcSaeRessourceRepository,
-        ApcRessourceRepository $apcRessourceRepository,
-        Request $request
-    ): Response {
+        ApcSaeRessourceRepository      $apcSaeRessourceRepository,
+        ApcRessourceRepository         $apcRessourceRepository,
+        Request                        $request
+    ): Response
+    {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -105,14 +107,19 @@ class ApcAjaxSaeController extends BaseController
                 $tabAcSae = [];
             }
 
-            $datas = $apcRessourceRepository->findBySemestre($semestre);
 
             if ($semestre->getVersion()->getDepartement()->getTypeStructure() === Departement::TYPE3) {
-                $parcours = $semestre->getApcParcours();
-                if ($parcours !== null) {
-                    $datas = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
-                    //$datas = array_merge($datas, $datas2);
+                $allParcours = $semestre->getVersion()->getApcParcours();
+                $datas = [];
+                foreach ($allParcours as $parcours) {
+                    $precDatas = $apcRessourceParcoursRepository->findBySemestre($semestre, $parcours);
+                    foreach ($precDatas as $sae) {
+                        $datas[$sae->getId()] = $sae;
+                    }
                 }
+                $datas = array_values($datas);
+            } else {
+                $datas = $apcRessourceRepository->findBySemestre($semestre);
             }
 
             $t = [];
@@ -134,10 +141,11 @@ class ApcAjaxSaeController extends BaseController
 
     #[Route('/ajax-parcours', name: 'apc_sae_parcours_ajax', options: ['expose' => true], methods: ['POST'])]
     public function ajaxParcours(
-        SemestreRepository $semestreRepository,
+        SemestreRepository       $semestreRepository,
         ApcSaeParcoursRepository $apcSaeParcoursRepository,
-        Request $request
-    ): Response {
+        Request                  $request
+    ): Response
+    {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -172,12 +180,13 @@ class ApcAjaxSaeController extends BaseController
 
     #[Route('/{sae}/{ac}/update_ajax', name: 'apc_sae_ac_update_ajax', options: ['expose' => true], methods: ['POST'])]
     public function updateAc(
-        ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
+        ApcSaeCompetenceRepository            $apcSaeCompetenceRepository,
         ApcSaeApprentissageCritiqueRepository $apcSaeApprentissageCritiqueRepository,
-        Request $request,
-        ApcSae $sae,
-        ApcApprentissageCritique $ac
-    ): JsonResponse {
+        Request                               $request,
+        ApcSae                                $sae,
+        ApcApprentissageCritique              $ac
+    ): JsonResponse
+    {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -219,10 +228,11 @@ class ApcAjaxSaeController extends BaseController
     #[Route('/{sae}/{competence}/update_coeff_ajax', name: 'apc_sae_coeff_update_ajax', options: ['expose' => true], methods: ['POST'])]
     public function updateCoeff(
         ApcSaeCompetenceRepository $apcSaeCompetenceRepository,
-        Request $request,
-        ApcSae $sae,
-        ApcCompetence $competence
-    ): JsonResponse {
+        Request                    $request,
+        ApcSae                     $sae,
+        ApcCompetence              $competence
+    ): JsonResponse
+    {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);
@@ -233,7 +243,6 @@ class ApcAjaxSaeController extends BaseController
             'sae' => $sae->getId(),
             'competence' => $competence->getId()
         ]);
-
 
 
         if ($acRessource !== null) {
@@ -255,9 +264,10 @@ class ApcAjaxSaeController extends BaseController
     #[Route('/{sae}/{type}/update_heures_ajax', name: 'apc_sae_heure_update_ajax', options: ['expose' => true], methods: ['POST'])]
     public function updateHeures(
         Request $request,
-        ApcSae $sae,
-        string $type
-    ): JsonResponse {
+        ApcSae  $sae,
+        string  $type
+    ): JsonResponse
+    {
         $parametersAsArray = [];
         if ($content = $request->getContent()) {
             $parametersAsArray = json_decode($content, true);

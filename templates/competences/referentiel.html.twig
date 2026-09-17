@@ -176,12 +176,24 @@
 {#        <span>Export versionning PDF</span>#}
 {#    </a>#}
 
-{#    <a href="{{ path('export_referentiel_competences', {departement:departement.id}) }}" class="btn btn-sm#}
-{#    btn-success#}
-{#        btn-icon btn-icon-end w-100 w-sm-auto mx-2"#}
-{#    >#}
-{#        <i class="bi-download"></i>#}
-{#        <span>Export PDF</span>#}
-{#    </a>#}
+    <a href="{{ path('export_referentiel_competences', {version:version.id}) }}" class="btn btn-sm
+    btn-success
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-download"></i>
+        <span>
+            Export PDF
+            {% if pdfStatusData.lastGeneratedAt is defined and pdfStatusData.lastGeneratedAt is not null %}
+                ({{ pdfStatusData.lastGeneratedAt|date('d/m/Y H:i') }})
+            {% endif %}
+        </span>
+    </a>
+    <a href="{{ path('export_referentiel_competences', {version:version.id, force: 1}) }}" class="btn btn-sm
+    btn-outline-warning
+        btn-icon btn-icon-end w-100 w-sm-auto mx-2"
+    >
+        <i class="bi-arrow-repeat"></i>
+        <span>Forcer la mise à jour du PDF</span>
+    </a>
+    {{ include('pdf/_generation_status_badge.html.twig', {statusData: pdfStatusData}) }}
 {% endblock %}
-

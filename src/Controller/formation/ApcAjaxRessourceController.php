@@ -106,14 +106,22 @@ class ApcAjaxRessourceController extends BaseController
                 $tabAcSae = [];
             }
 
-            $datas = $apcSaeRepository->findBySemestre($semestre);
+
+
 
             if ($semestre->getVersion()->getDepartement()->getTypeStructure() === Departement::TYPE3) {
-                $parcours = $semestre->getApcParcours();
-                if ($parcours !== null) {
-                    $datas = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
-                    //$datas = array_merge($datas, $datas2);
+                // si type 3, fait sur l'ordre de tous les parcours et pas juste un semestre
+                $allParcours = $semestre->getVersion()->getApcParcours();
+                $datas = [];
+                foreach ($allParcours as $parcours) {
+                    $precDatas = $apcSaeParcoursRepository->findBySemestre($semestre, $parcours);
+                    foreach ($precDatas as $sae) {
+                        $datas[$sae->getId()] = $sae;
+                    }
                 }
+                $datas = array_values($datas);
+            } else {
+                $datas = $apcSaeRepository->findBySemestre($semestre);
             }
 
             $t = [];

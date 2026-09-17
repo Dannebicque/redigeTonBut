@@ -6,6 +6,7 @@ namespace App\Classes\Tableau;
 use App\DTO\VolumesHorairesSemestre;
 use App\Entity\ApcParcours;
 use App\Entity\Semestre;
+use App\Entity\Departement;
 use App\Repository\ApcRessourceParcoursRepository;
 use App\Repository\ApcRessourceRepository;
 
@@ -47,7 +48,10 @@ class VolumesHoraires
         /** @var Semestre $semestre */
         foreach ($this->semestres as $semestre)
         {
-            if (!$this->parcours instanceof ApcParcours) {
+            $typeStructure = $semestre->getAnnee()->getVersion()->getDepartement()->getTypeStructure();
+            $isCommon = $typeStructure !== Departement::TYPE3 && $semestre->getOrdreLmd() <= 2;
+
+            if (!$this->parcours instanceof ApcParcours || $isCommon) {
                 $ressources = $this->apcRessourceRepository->findBySemestre($semestre);
             } else {
                 $ressources = $this->apcRessourceParcoursRepository->findBySemestre($semestre, $this->parcours);

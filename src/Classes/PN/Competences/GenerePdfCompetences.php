@@ -6,24 +6,25 @@ use App\Classes\Apc\ApcStructure;
 use App\Entity\ApcParcours;
 use App\Entity\Departement;
 use App\Entity\Version;
+use App\Pdf\Builder\CompetencesReferentielPdfPayloadBuilder;
+use App\Pdf\PdfPayloadBuilderRegistry;
+use App\Pdf\PdfSourceType;
 use Doctrine\Common\Collections\Collection;
-//use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
-//use Knp\Snappy\Pdf;
-use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Twig\Environment;
 
 class GenerePdfCompetences
 {
-
     private string $dir;
 
-    private array $tParcours;
+    private array $tParcours = [];
 
-    private array $competencesParcours;
+    private array $competencesParcours = [];
 
     private Version $version;
+
     private Departement $departement;
 
     private ?Collection $competences = null;
@@ -31,15 +32,14 @@ class GenerePdfCompetences
     private Filesystem $filesystem;
 
     public function __construct(
-        KernelInterface               $kernel,
-        private readonly Environment  $twig,
-//        private readonly Pdf          $knpSnappyPdf,
-        private readonly ApcStructure $apcStructure
-
+        KernelInterface $kernel,
+        private readonly Environment $twig,
+        private readonly ApcStructure $apcStructure,
+        private readonly PdfPayloadBuilderRegistry $pdfPayloadBuilderRegistry,
+        private readonly HttpClientInterface $httpClient,
     ) {
         $this->dir = $kernel->getProjectDir() . '/public/latex/';
         $this->filesystem = new Filesystem();
-
     }
 
     public function generePdfCompetencesParPage(Version $version): void
@@ -47,22 +47,16 @@ class GenerePdfCompetences
         $this->departement = $version->getDepartement();
         $this->version = $version;
 
-        $this->filesystem->exists($this->dir.$this->departement->getNumeroAnnexe().'/ref-competences/') ?: $this->filesystem->mkdir($this->dir.$this->departement->getNumeroAnnexe().'/ref-competences/');
+        $this->filesystem->mkdir($this->dir . $this->departement->getNumeroAnnexe() . '/ref-competences/', 0777);
         $this->getDataReferentiel();
 
         foreach ($this->version->getApcParcours() as $parcours) {
-            //pour chaque parcours
-            // -> page de garde
             $this->generePageDeGarde($parcours);
-
-            // ->page compétences / AC
             $this->generePageCompetencesComposantes($parcours);
-            //-> Situation professionnelles
             $this->generePageSituationProfessionnelles($parcours);
-            //-> Niveaux
             $this->generePageNiveaux($parcours);
+
             foreach ($this->competencesParcours[$parcours->getId()] as $competence) {
-                //-> page compétence
                 $this->generePageCompetence($parcours, $competence);
             }
         }
@@ -70,31 +64,18 @@ class GenerePdfCompetences
 
     public function generePdfCompetencesComplet(Version $version): void
     {
-        throw new Exception('Fonctionnalité temporairement indisponible');
-
         $departement = $version->getDepartement();
-        $this->filesystem->exists($this->dir.$departement->getNumeroAnnexe().'/ref-competences/') ?: $this->filesystem->mkdir($this->dir.$departement->getNumeroAnnexe().'/ref-competences/');
+        $this->filesystem->mkdir($this->dir . $departement->getNumeroAnnexe() . '/ref-competences/', 0777);
 
-        $this->departement = $departement;
-        $this->getDataReferentiel();
-        $name = 'referentiel-competences-' . $departement->getSigle() . '.pdf';
-        $html = $this->twig->render('competences/export-referentiel.html.twig', [
-            'competencesParcours' => $this->competencesParcours,
-            'departement' => $departement,
-            'competences' => $this->competences,
-            'parcours' => $version->getApcParcours(),
-            'parcoursNiveaux' => $this->tParcours,
-        ]);
+        $request = $this->pdfPayloadBuilderRegistry
+            ->getBuilder(PdfSourceType::REFERENTIEL, CompetencesReferentielPdfPayloadBuilder::DOCUMENT_KEY)
+            ->build((string) $version->getId(), CompetencesReferentielPdfPayloadBuilder::DOCUMENT_KEY);
 
-//        $output = new PdfResponse(
-//            $this->knpSnappyPdf->getOutputFromHtml($html, [
-//                'orientation' => 'Landscape'
-//            ]),
-//            $name
-//        );
-//
-//        file_put_contents($this->dir . $departement->getNumeroAnnexe().'/ref-competences/' . $name, $output);
-
+        $this->writePdf(
+            $departement,
+            $request->payload['html'] ?? '',
+            sprintf('referentiel-competence-%s.pdf', $departement->getSigle())
+        );
     }
 
     private function getDataReferentiel(): void
@@ -118,18 +99,76 @@ class GenerePdfCompetences
 
     private function generePagePdf(string $name, string $template, array $data): void
     {
-        throw new Exception('Fonctionnalité temporairement indisponible');
-
         $html = $this->twig->render('pdf/' . $template . '.html.twig', $data);
+        $this->writePdf($this->departement, $html, $name . '.pdf');
+    }
 
-//        $output = new PdfResponse(
-//            $this->knpSnappyPdf->getOutputFromHtml($html, [
-//                'orientation' => 'Landscape'
-//            ]),
-//            $name
-//        );
-//
-//        file_put_contents($this->dir .  $this->departement->getNumeroAnnexe().'/ref-competences/' . $name . '.pdf', $output);
+    private function writePdf(Departement $departement, string $html, string $filename): void
+    {
+        if (trim($html) === '') {
+            return;
+        }
+
+        $targetDir = $this->dir . $departement->getNumeroAnnexe() . '/ref-competences';
+        if (!is_dir($targetDir) && !mkdir($targetDir, 0777, true) && !is_dir($targetDir)) {
+            return;
+        }
+
+        $boundary = '----GotenbergBoundary' . bin2hex(random_bytes(16));
+        $parts = [
+            [
+                'name' => 'files',
+                'filename' => 'index.html',
+                'contentType' => 'text/html',
+                'contents' => $html,
+            ],
+            ['name' => 'landscape', 'contents' => 'true'],
+            ['name' => 'printBackground', 'contents' => 'true'],
+            ['name' => 'preferCSSPageSize', 'contents' => 'true'],
+            ['name' => 'marginTop', 'contents' => '10mm'],
+            ['name' => 'marginRight', 'contents' => '10mm'],
+            ['name' => 'marginBottom', 'contents' => '10mm'],
+            ['name' => 'marginLeft', 'contents' => '10mm'],
+        ];
+
+        $body = '';
+        foreach ($parts as $part) {
+            $body .= "--{$boundary}\r\n";
+            $body .= 'Content-Disposition: form-data; name="' . $part['name'] . '"';
+            if (isset($part['filename'])) {
+                $body .= '; filename="' . $part['filename'] . '"';
+            }
+            $body .= "\r\n";
+
+            if (isset($part['contentType'])) {
+                $body .= 'Content-Type: ' . $part['contentType'] . "\r\n";
+            }
+
+            $body .= "\r\n";
+            $body .= (string) $part['contents'];
+            $body .= "\r\n";
+        }
+        $body .= "--{$boundary}--\r\n";
+
+        $response = $this->httpClient->request('POST', 'http://gotenberg:3000/forms/chromium/convert/html', [
+            'timeout' => 180,
+            'headers' => [
+                'Accept' => 'application/pdf',
+                'Content-Type' => 'multipart/form-data; boundary=' . $boundary,
+            ],
+            'body' => $body,
+        ]);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new \RuntimeException(sprintf(
+                'Erreur Gotenberg pour %s (status %d): %s',
+                $filename,
+                $response->getStatusCode(),
+                $response->getContent(false)
+            ));
+        }
+
+        file_put_contents($targetDir . '/' . $filename, $response->getContent());
     }
 
     private function generePageDeGarde(ApcParcours $parcours): void
@@ -137,7 +176,7 @@ class GenerePdfCompetences
         $this->generePagePdf('page_1_garde_' . $parcours->getId(), 'pageDeGardeParcours', [
             'parcours' => $parcours,
             'version' => $this->version,
-            'departement' => $this->departement
+            'departement' => $this->departement,
         ]);
     }
 
@@ -146,18 +185,17 @@ class GenerePdfCompetences
         $this->generePagePdf('page_2_CompetencesComposantes_' . $parcours->getId(), 'pageCompetencesComposantes', [
             'parcours' => $parcours,
             'departement' => $this->departement,
-            'competences' => $this->competencesParcours[$parcours->getId()]
+            'competences' => $this->competencesParcours[$parcours->getId()],
         ]);
     }
 
     private function generePageSituationProfessionnelles(ApcParcours $parcours): void
     {
-        $this->generePagePdf('page_3_SituationProfessionnelles_' . $parcours->getId(), 'pageSituationProfessionnelles',
-            [
-                'parcours' => $parcours,
-                'departement' => $this->departement,
-                'competences' => $this->competencesParcours[$parcours->getId()]
-            ]);
+        $this->generePagePdf('page_3_SituationProfessionnelles_' . $parcours->getId(), 'pageSituationProfessionnelles', [
+            'parcours' => $parcours,
+            'departement' => $this->departement,
+            'competences' => $this->competencesParcours[$parcours->getId()],
+        ]);
     }
 
     private function generePageNiveaux(ApcParcours $parcours): void
@@ -169,20 +207,19 @@ class GenerePdfCompetences
             'departement' => $this->departement,
             'competences' => $this->competencesParcours[$parcours->getId()],
             'parcoursNiveaux' => $this->tParcours,
-            'width' => $width - 2
+            'width' => $width - 2,
         ]);
     }
 
     private function generePageCompetence(ApcParcours $parcours, mixed $competence): void
     {
-        $this->generePagePdf('page_5_Competence_' . $parcours->getId() . '_' . $competence->getId(), 'pageCompetence',
-            [
-                'competence' => $competence,
-                'competencesParcours' => $this->competencesParcours,
-                'departement' => $this->departement,
-                'competences' => $this->competences,
-                'parcours' => $parcours,
-                'parcoursNiveaux' => $this->tParcours,
-            ]);
+        $this->generePagePdf('page_5_Competence_' . $parcours->getId() . '_' . $competence->getId(), 'pageCompetence', [
+            'competence' => $competence,
+            'competencesParcours' => $this->competencesParcours,
+            'departement' => $this->departement,
+            'competences' => $this->competences,
+            'parcours' => $parcours,
+            'parcoursNiveaux' => $this->tParcours,
+        ]);
     }
 }
